@@ -1,0 +1,17 @@
+---
+import { Compass, BookOpen, Dumbbell, Search } from '@lucide/astro';
+const items = [
+  { href: '/tracks', label: 'Tracks', Icon: Compass },
+  { href: '/concepts', label: 'Concepts', Icon: BookOpen },
+  { href: '/exercises', label: 'Exercises', Icon: Dumbbell },
+  { href: '/search', label: 'Search', Icon: Search },
+];
+const path = Astro.url.pathname;
+---
+<nav class="lg:hidden fixed bottom-0 inset-x-0 z-50 h-14 grid grid-cols-4 border-t border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 text-[10px] text-zinc-500">
+  {items.map(({ href, label, Icon }) => (
+    <a href={href} class:list={["grid place-items-center", path.startsWith(href) ? 'text-brand' : '']}>
+      <Icon class="w-4 h-4" />{label}
+    </a>
+  ))}
+</nav>

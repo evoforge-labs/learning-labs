@@ -1,0 +1,55 @@
+---
+import type { GraphNode, GraphEdge } from '../../lib/types';
+interface Props { nodes: GraphNode[]; edges: GraphEdge[]; }
+const { nodes, edges } = Astro.props;
+const TYPE_HEX: Record<string, string> = { concept: '#3b82f6', lesson: '#22c55e', exercise: '#f59e0b', session: '#8b5cf6', rubric: '#f43f5e', template: '#64748b', track: '#6366f1' };
+// Pass data to the client via a JSON island. A `define:vars` script is rendered
+// INLINE (not bundled) and cannot use ESM `import`, so we use a bundled module
+// script below and read the payload from this tag instead.
+const payload = JSON.stringify({ nodes, edges, colors: TYPE_HEX });
+---
+<div id="cy" class="w-full h-[70vh] rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900"></div>
+<script type="application/json" id="cy-data" set:html={payload}></script>
+<script>
+  import cytoscape from 'cytoscape';
+  import cola from 'cytoscape-cola';
+  cytoscape.use(cola);
+
+  let running: any = null; // stop the simulation when leaving the page
+
+  function renderGraph() {
+    const el = document.getElementById('cy');
+    const dataEl = document.getElementById('cy-data');
+    if (!el || !dataEl) return; // not on this page
+    const { nodes, edges, colors } = JSON.parse(dataEl.textContent || '{}');
+    const cy = cytoscape({
+      container: el,
+      elements: [
+        ...nodes.map((n: any) => ({ data: { id: n.id, label: n.label, url: n.url, color: colors[n.type] || '#888' } })),
+        ...edges.map((e: any, i: number) => ({ data: { id: `e${i}`, source: e.source, target: e.target } })),
+      ],
+      style: [
+        { selector: 'node', style: { 'background-color': 'data(color)', label: 'data(label)', color: '#a1a1aa', 'font-size': 10, 'text-valign': 'bottom', 'text-margin-y': 4 } },
+        { selector: 'edge', style: { width: 1.5, 'line-color': '#a1a1aa66', 'curve-style': 'bezier' } },
+      ],
+    });
+    // Continuous physics layout: dragging a node pushes/pulls its neighbours live.
+    const layout = cy.layout({
+      name: 'cola',
+      infinite: true,          // keep simulating so drags perturb the whole graph
+      fit: false,
+      avoidOverlap: true,
+      handleDisconnected: true, // spread disconnected nodes (templates) apart
+      nodeSpacing: 16,
+      edgeLength: 130,
+    } as any);
+    layout.run();
+    running = layout;
+    setTimeout(() => cy.animate({ fit: { eles: cy.elements(), padding: 40 }, duration: 400 }), 600);
+    cy.on('tap', 'node', (evt) => { const url = evt.target.data('url'); if (url) location.href = url; });
+  }
+
+  // Stop the running simulation before navigating away (avoid wasted CPU).
+  document.addEventListener('astro:before-swap', () => { running?.stop?.(); running = null; });
+  document.addEventListener('astro:page-load', renderGraph);
+</script>

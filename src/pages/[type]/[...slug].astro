@@ -1,0 +1,62 @@
+---
+import type { GetStaticPaths } from 'astro';
+import { render } from 'astro:content';
+import ReadingLayout from '../../components/layout/ReadingLayout.astro';
+import MetaBadges from '../../components/content/MetaBadges.astro';
+import RelatedLinks from '../../components/content/RelatedLinks.astro';
+import Callout from '../../components/content/Callout.astro';
+import Mermaid from '../../components/content/Mermaid.astro';
+import Ask from '../../components/content/Ask.astro';
+import Answer from '../../components/content/Answer.astro';
+import Explain from '../../components/content/Explain.astro';
+import { COLLECTION_TYPES, typeColor } from '../../lib/types';
+import { getAll, usedIn } from '../../lib/content';
+
+export const getStaticPaths = (async () => {
+  const paths = [];
+  for (const type of COLLECTION_TYPES) {
+    const entries = await getAll(type as any) as any[];
+    for (const entry of entries) paths.push({ params: { type, slug: entry.id }, props: { entry } });
+  }
+  return paths;
+}) satisfies GetStaticPaths;
+
+const { entry } = Astro.props as { entry: any };
+const d = entry.data;
+const { Content, headings } = await render(entry);
+const components = { Callout, Mermaid, Ask, Answer, Explain };
+
+const kicker = d.type === 'session' ? `Session · ${d.exercise}` :
+  d.module ? `${d.module}` : d.skill ? `${d.skill}` : d.type;
+const trackLabel = d.track;
+const related = [...(d.prerequisites ?? []), ...(d.related ?? [])];
+const usedInLinks = d.type === 'concept' ? await usedIn(d.id) : [];
+---
+<ReadingLayout title={d.title} kicker={kicker} trackLabel={trackLabel}
+  headings={headings.filter((h: any) => h.depth === 2).map((h: any) => ({ text: h.text, slug: h.slug }))}>
+  <div class="anim mt-6">
+    <MetaBadges type={d.type} status={d.status} level={d.level} minutes={d.estimatedMinutes} reviewedBy={d.reviewedBy} score={d.score} />
+  </div>
+  <hr class="anim my-8 border-zinc-200 dark:border-zinc-800" />
+  <div class="anim read-body text-zinc-700 dark:text-zinc-300 prose dark:prose-invert max-w-none prose-headings:font-read">
+    <Content components={components} />
+  </div>
+  {d.type === 'concept' && d.aliases?.length > 0 && (
+    <div class="anim mt-8 flex flex-wrap gap-2 text-xs items-center"><span class="text-zinc-400">aka:</span>
+      {d.aliases.map((a: string) => <span class="px-2 py-0.5 rounded-full border border-zinc-200 dark:border-zinc-700 text-zinc-500">{a}</span>)}
+    </div>
+  )}
+  {usedInLinks.length > 0 && (
+    <div class="anim mt-12 rounded-xl border border-zinc-200 dark:border-zinc-800 p-5">
+      <div class="text-[11px] uppercase tracking-wider text-zinc-400 mb-3">Used in</div>
+      <div class="flex flex-wrap gap-2 text-sm">
+        {usedInLinks.map((link) => (
+          <a href={`/${link.type}/${link.slug}`} class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-zinc-200 dark:border-zinc-800 hover:border-brand/50">
+            <span class="w-2 h-2 rounded-full" style={`background:${typeColor(link.dataType)}`}></span>{link.title}
+          </a>
+        ))}
+      </div>
+    </div>
+  )}
+  {related.length > 0 && <div class="anim"><RelatedLinks ids={related} title="Related · từ frontmatter" /></div>}
+</ReadingLayout>

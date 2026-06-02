@@ -1,0 +1,11 @@
+---
+interface Props { chart: string; }
+const { chart } = Astro.props;
+---
+<pre class="mermaid not-prose my-6 flex justify-center">{chart}</pre>
+<script>
+  import mermaid from 'mermaid';
+  const dark = document.documentElement.classList.contains('dark');
+  mermaid.initialize({ startOnLoad: true, theme: dark ? 'dark' : 'default' });
+  document.addEventListener('astro:page-load', () => mermaid.run());
+</script>

@@ -1,0 +1,30 @@
+---
+import type { GetStaticPaths } from 'astro';
+import BaseLayout from '../../components/layout/BaseLayout.astro';
+import Card from '../../components/ui/Card.astro';
+import Badge from '../../components/ui/Badge.astro';
+import { COLLECTION_TYPES } from '../../lib/types';
+import { getAll } from '../../lib/content';
+
+export const getStaticPaths = (() =>
+  COLLECTION_TYPES.map((type) => ({ params: { type } }))) satisfies GetStaticPaths;
+
+const { type } = Astro.params;
+const entries = await getAll(type as any);
+const labels: Record<string, string> = { tracks: 'Tracks', concepts: 'Concepts', lessons: 'Lessons', exercises: 'Exercises', sessions: 'Sessions', rubrics: 'Rubrics', templates: 'Templates' };
+---
+<BaseLayout title={labels[type!]}>
+  <main class="max-w-6xl mx-auto px-4 py-10">
+    <h1 class="text-2xl font-bold tracking-tight text-zinc-900 dark:text-white mb-6">{labels[type!]}</h1>
+    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      {entries.map((e: any) => (
+        <Card href={`/${type}/${e.id}`} class="group">
+          <div class="mb-2"><Badge type={e.data.type} /></div>
+          <h3 class="font-semibold text-zinc-900 dark:text-white group-hover:text-brand">{e.data.title}</h3>
+          {e.data.tags?.length > 0 && <div class="mt-2 text-xs text-zinc-400">{e.data.tags.join(' · ')}</div>}
+        </Card>
+      ))}
+      {entries.length === 0 && <p class="text-zinc-400 text-sm">Chưa có nội dung.</p>}
+    </div>
+  </main>
+</BaseLayout>

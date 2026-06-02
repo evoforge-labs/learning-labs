@@ -1,0 +1,43 @@
+---
+import '../../styles/global.css';
+import '@fontsource-variable/inter';
+import '@fontsource/spectral/400.css';
+import '@fontsource/spectral/600.css';
+import '@fontsource/spectral/700.css';
+import { ClientRouter } from 'astro:transitions';
+import Header from './Header.astro';
+import BottomNav from './BottomNav.astro';
+import Drawer from './Drawer.astro';
+interface Props { title: string; }
+const { title } = Astro.props;
+---
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>{title} · Learning Lab</title>
+    {/* Apply theme before paint on first load AND after every view-transition swap.
+        Astro reconciles <html> to the server markup on nav (which has no .dark),
+        so we must re-apply on astro:after-swap or dark mode is lost when navigating. */}
+    <script is:inline>
+      (function () {
+        function applyTheme() {
+          const s = localStorage.getItem('theme');
+          const dark = s === 'dark' || (!s && matchMedia('(prefers-color-scheme: dark)').matches);
+          document.documentElement.classList.toggle('dark', dark);
+        }
+        applyTheme();
+        document.addEventListener('astro:after-swap', applyTheme);
+      })();
+    </script>
+    <ClientRouter />
+  </head>
+  <body class="bg-zinc-50 text-zinc-800 dark:bg-zinc-950 dark:text-zinc-200 antialiased pb-16 lg:pb-0">
+    <Header />
+    <Drawer />
+    <slot />
+    <BottomNav />
+  </body>
+</html>

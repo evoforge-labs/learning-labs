@@ -1,0 +1,56 @@
+---
+import BaseLayout from '../components/layout/BaseLayout.astro';
+import Card from '../components/ui/Card.astro';
+import Badge from '../components/ui/Badge.astro';
+import SectionHeader from '../components/ui/SectionHeader.astro';
+import Button from '../components/ui/Button.astro';
+import { Compass, GitFork } from '@lucide/astro';
+import { getAll } from '../lib/content';
+
+const tracks = await getAll('tracks');
+const counts = async (track: string) => {
+  const [l, e, c] = await Promise.all([getAll('lessons'), getAll('exercises'), getAll('concepts')]);
+  return {
+    lessons: l.filter((x: any) => x.data.track === track).length,
+    exercises: e.filter((x: any) => x.data.track === track).length,
+    concepts: c.length,
+  };
+};
+const trackCards = await Promise.all(tracks.map(async (t: any) => ({ t, c: await counts(t.id) })));
+
+const recent = (await Promise.all((['lessons', 'exercises', 'concepts', 'rubrics'] as const).map(getAll)))
+  .flat().slice(0, 6);
+---
+<BaseLayout title="Home">
+  <main class="max-w-6xl mx-auto px-4 py-10">
+    <div class="mb-10">
+      <h1 class="text-3xl sm:text-4xl font-bold tracking-tight text-zinc-900 dark:text-white">Your personal knowledge gym</h1>
+      <p class="mt-3 max-w-2xl text-zinc-500 dark:text-zinc-400">Lộ trình học, kiến thức canonical, bài luyện tập, lịch sử session — tất cả trong một repo MDX.</p>
+      <div class="mt-5 flex gap-2">
+        <Button href="/tracks"><Compass class="w-4 h-4" />Tracks</Button>
+        <Button href="/knowledge-map" variant="outline"><GitFork class="w-4 h-4" />Knowledge Map</Button>
+      </div>
+    </div>
+
+    <SectionHeader title="Tracks" href="/tracks" />
+    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      {trackCards.map(({ t, c }) => (
+        <Card href={`/tracks/${t.id}`} class="group">
+          <div class="flex items-center gap-2 mb-2"><span class="w-2 h-2 rounded-full" style="background:var(--type-track)"></span><span class="text-[11px] uppercase tracking-wide text-zinc-400">Track</span></div>
+          <h3 class="font-semibold text-zinc-900 dark:text-white group-hover:text-brand">{t.data.title}</h3>
+          <p class="mt-1 text-sm text-zinc-500 dark:text-zinc-400">{t.data.summary}</p>
+          <div class="mt-4 flex gap-3 text-xs text-zinc-500"><span>{c.concepts} concepts</span><span>·</span><span>{c.lessons} lessons</span><span>·</span><span>{c.exercises} exercises</span></div>
+        </Card>
+      ))}
+    </div>
+
+    <div class="mt-10"><SectionHeader title="Recently added" /></div>
+    <div class="grid sm:grid-cols-2 gap-3">
+      {recent.map((e: any) => (
+        <a href={`/${e.collection}/${e.id}`} class="flex items-center gap-3 rounded-lg border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 px-4 py-3">
+          <Badge type={e.data.type} /><span class="text-sm flex-1">{e.data.title}</span>
+        </a>
+      ))}
+    </div>
+  </main>
+</BaseLayout>

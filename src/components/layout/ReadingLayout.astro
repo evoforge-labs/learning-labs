@@ -1,0 +1,38 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import { X } from '@lucide/astro';
+interface Props { title: string; kicker?: string; trackLabel?: string; headings?: { text: string; slug: string }[]; }
+const { title, kicker, trackLabel, headings = [] } = Astro.props;
+---
+<BaseLayout title={title}>
+  <div class="border-b border-zinc-200/70 dark:border-zinc-800/80">
+    <div class="max-w-5xl mx-auto px-4 h-14 flex items-center">
+      <a href="javascript:history.back()" class="w-9 h-9 grid place-items-center rounded-md hover:bg-zinc-100 dark:hover:bg-zinc-900 text-zinc-500"><X class="w-4 h-4" /></a>
+      {trackLabel && <div class="mx-auto text-sm text-zinc-500">{trackLabel}</div>}
+      <div class="w-9"></div>
+    </div>
+  </div>
+  {headings.length > 0 && (
+    <div class="toc-wrap hidden xl:block fixed left-8 top-1/2 -translate-y-1/2 z-40">
+      <div class="toc-handle space-y-1.5 cursor-pointer transition"><div class="w-6 h-0.5 bg-zinc-400/70 rounded"></div><div class="w-5 h-0.5 bg-zinc-400/70 rounded ml-1"></div><div class="w-6 h-0.5 bg-zinc-400/70 rounded"></div></div>
+      <div class="toc-panel absolute left-0 top-1/2 -translate-y-1/2 w-64 rounded-lg border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 shadow-xl p-4 text-sm">
+        <div class="text-[11px] uppercase tracking-wider text-zinc-400 mb-2">Contents</div>
+        <ul class="space-y-2 text-zinc-500">{headings.map((h) => <li><a href={`#${h.slug}`} class="hover:text-zinc-800 dark:hover:text-zinc-200">{h.text}</a></li>)}</ul>
+      </div>
+    </div>
+  )}
+  <article class="max-w-[680px] mx-auto px-5 pt-12 pb-24">
+    {kicker && <div class="anim text-xs font-semibold uppercase tracking-[.14em] text-zinc-400 mb-4">{kicker}</div>}
+    <h1 class="anim font-read text-[2.6rem] leading-[1.12] font-bold tracking-tight text-zinc-900 dark:text-white">{title}</h1>
+    <slot />
+  </article>
+  <script>
+    import { animate, stagger } from 'motion';
+    function run() {
+      const els = document.querySelectorAll('.anim');
+      if (els.length) animate(els, { opacity: [0, 1], transform: ['translateY(10px)', 'translateY(0)'] }, { delay: stagger(0.05), duration: 0.45 });
+    }
+    run();
+    document.addEventListener('astro:page-load', run);
+  </script>
+</BaseLayout>

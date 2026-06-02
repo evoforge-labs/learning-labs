@@ -1,0 +1,18 @@
+---
+import BaseLayout from '../components/layout/BaseLayout.astro';
+---
+<BaseLayout title="Search">
+  <main class="max-w-3xl mx-auto px-4 py-10">
+    <h1 class="text-2xl font-bold tracking-tight text-zinc-900 dark:text-white mb-6">Search</h1>
+    <div id="search"></div>
+  </main>
+  <link rel="stylesheet" href="/pagefind/pagefind-ui.css" />
+  <script>
+    document.addEventListener('astro:page-load', async () => {
+      // @ts-ignore - served from /pagefind after build
+      await import('/pagefind/pagefind-ui.js');
+      // @ts-ignore
+      new PagefindUI({ element: '#search', showSubResults: true });
+    });
+  </script>
+</BaseLayout>

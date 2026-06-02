@@ -1,0 +1,26 @@
+---
+import Sidebar from './Sidebar.astro';
+---
+<div id="drawer" class="fixed inset-0 z-[60] hidden lg:hidden">
+  <div id="drawer-backdrop" class="absolute inset-0 bg-black/40"></div>
+  <div class="absolute inset-y-0 left-0 w-72 bg-white dark:bg-zinc-900 p-3 shadow-2xl overflow-y-auto">
+    <Sidebar />
+  </div>
+</div>
+<script>
+  // Re-bind on every navigation (View Transitions swaps the DOM).
+  function bindDrawer() {
+    const drawer = document.getElementById('drawer');
+    const openBtn = document.getElementById('drawer-open');
+    const backdrop = document.getElementById('drawer-backdrop');
+    if (!drawer || openBtn?.dataset.bound) return;
+    const close = () => drawer.classList.add('hidden');
+    openBtn?.addEventListener('click', () => drawer.classList.remove('hidden'));
+    if (openBtn) openBtn.dataset.bound = 'true';
+    backdrop?.addEventListener('click', close);
+    // close when a nav link inside the drawer is tapped
+    drawer.querySelectorAll('a').forEach((a) => a.addEventListener('click', close));
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') close(); });
+  }
+  document.addEventListener('astro:page-load', bindDrawer);
+</script>

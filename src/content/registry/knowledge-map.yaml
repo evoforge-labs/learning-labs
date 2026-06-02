@@ -1,0 +1,5 @@
+# Optional manual edges to supplement frontmatter-derived ones.
+edges:
+  - source: concept-product-discovery
+    target: lesson-product-001
+    rel: supports

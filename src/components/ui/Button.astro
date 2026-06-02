@@ -1,0 +1,10 @@
+---
+interface Props { href?: string; variant?: 'primary' | 'outline'; class?: string; }
+const { href, variant = 'primary', class: cls = '' } = Astro.props;
+const styles = {
+  primary: 'bg-brand text-white hover:opacity-90',
+  outline: 'border border-zinc-200 dark:border-zinc-800 hover:bg-zinc-100 dark:hover:bg-zinc-900',
+};
+const Tag = href ? 'a' : 'button';
+---
+<Tag href={href} class={`inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium ${styles[variant]} ${cls}`}><slot /></Tag>

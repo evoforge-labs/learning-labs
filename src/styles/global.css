@@ -1,0 +1,36 @@
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
+
+/* class-based dark mode */
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --color-brand: #6366f1;
+  --font-sans: "Inter Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-read: "Spectral", Georgia, serif;
+}
+
+/* type colors used by badges + graph nodes */
+:root {
+  --type-concept: #3b82f6;
+  --type-lesson: #22c55e;
+  --type-exercise: #f59e0b;
+  --type-session: #8b5cf6;
+  --type-rubric: #f43f5e;
+  --type-template: #64748b;
+  --type-track: #6366f1;
+}
+
+html { scroll-behavior: smooth; }
+body { font-family: var(--font-sans); }
+
+/* Substack-style reading body */
+.read-body { font-family: var(--font-read); font-size: 20px; line-height: 1.75; letter-spacing: .1px; }
+.read-body p { margin: 1.15em 0; }
+.read-body h2 { font-weight: 600; font-size: 1.45rem; margin: 1.6em 0 .2em; }
+.read-body a { text-decoration: underline; text-underline-offset: 3px; }
+
+/* floating TOC */
+.toc-wrap:hover .toc-panel { opacity: 1; visibility: visible; transform: translateX(0); }
+.toc-wrap:hover .toc-handle { opacity: 0; }
+.toc-panel { opacity: 0; visibility: hidden; transform: translateX(-6px); transition: .18s; }

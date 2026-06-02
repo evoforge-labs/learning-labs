@@ -1,0 +1,15 @@
+---
+import { typeColor } from '../../lib/types';
+interface Props { type?: string; status?: string; label?: string; }
+const { type, status, label } = Astro.props;
+const color = type ? typeColor(type) : undefined;
+const text = label ?? type ?? status ?? '';
+---
+{type ? (
+  <span class="text-[11px] font-medium px-2 py-0.5 rounded-full"
+    style={`background:color-mix(in srgb,${color} 14%,transparent);color:${color};border:1px solid color-mix(in srgb,${color} 35%,transparent)`}>{text}</span>
+) : status === 'published' ? (
+  <span class="inline-flex items-center gap-1 text-[11px] px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-600 border border-emerald-500/30">● published</span>
+) : (
+  <span class="text-[11px] px-2 py-0.5 rounded-full border border-zinc-300 dark:border-zinc-700 text-zinc-500">{text}</span>
+)}
