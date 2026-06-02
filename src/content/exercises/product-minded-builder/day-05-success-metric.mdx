@@ -1,0 +1,54 @@
+---
+id: exercise-product-005
+title: "Day 05: Success Metric vs Output Metric"
+type: "exercise"
+track: product-minded-builder
+skill: metrics
+estimatedMinutes: 12
+related: [concept-success-metric, rubric-product-thinking]
+tags: [product, validation]
+status: published
+---
+import Explain from '../../../components/content/Explain.astro';
+import Ask from '../../../components/content/Ask.astro';
+
+# Day 05: Success Metric vs Output Metric
+
+## Scenario
+
+Team muốn thêm onboarding checklist cho user mới.
+
+<Ask>
+Metric nào là success metric tốt nhất?
+
+A. Checklist đã launch đúng deadline.  
+B. Số lượng task trong checklist.  
+C. Tỉ lệ user mới hoàn thành core action đầu tiên trong 24h.  
+D. Số dòng code của checklist.
+</Ask>
+
+<Explain>
+Best: C
+
+C đo outcome: user mới đạt value nhanh hơn. A/B/D là output hoặc implementation detail.
+</Explain>
+
+## Select many
+
+Guardrail metric nào nên theo dõi?
+
+A. User bỏ onboarding giữa chừng.  
+B. Support ticket từ user mới.  
+C. Time to first value.  
+D. Màu sắc checklist.  
+E. Tỉ lệ user skip checklist nhưng vẫn active.
+
+<Explain>
+Correct: A, B, C, E
+
+Guardrail giúp đảm bảo feature không làm trải nghiệm tệ hơn. D không phải metric product chính.
+</Explain>
+
+## Reflection
+
+Với export Excel, success metric tốt hơn “số lần click export” là gì?

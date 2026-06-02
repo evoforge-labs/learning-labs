@@ -3,3 +3,24 @@ edges:
   - source: concept-product-discovery
     target: lesson-product-001
     rel: supports
+  - source: concept-problem-vs-solution
+    target: exercise-product-001
+    rel: trains
+  - source: concept-user-pain
+    target: exercise-product-002
+    rel: trains
+  - source: concept-product-discovery
+    target: exercise-product-003
+    rel: trains
+  - source: concept-success-metric
+    target: exercise-product-005
+    rel: trains
+  - source: concept-mvp
+    target: exercise-product-006
+    rel: trains
+  - source: concept-mvp
+    target: exercise-product-007
+    rel: trains
+  - source: rubric-product-thinking
+    target: exercise-product-010
+    rel: evaluates

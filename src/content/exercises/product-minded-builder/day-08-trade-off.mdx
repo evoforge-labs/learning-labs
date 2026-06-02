@@ -1,0 +1,45 @@
+---
+id: exercise-product-008
+title: "Day 08: Trade-off Under Constraints"
+type: "exercise"
+track: product-minded-builder
+skill: trade-off
+estimatedMinutes: 15
+related: [rubric-product-thinking]
+tags: [product, solo-builder]
+status: published
+---
+import Explain from '../../../components/content/Explain.astro';
+import Ask from '../../../components/content/Ask.astro';
+
+# Day 08: Trade-off Under Constraints
+
+## Scenario
+
+Bạn có 3 ngày trước demo với khách hàng. Feature quan trọng, nhưng code hiện tại hơi xấu.
+
+<Ask>
+Best default approach là gì?
+
+A. Refactor toàn bộ trước.  
+B. Ship bản demo hardcode hết, không cần nghĩ sau này.  
+C. Cắt scope, làm core flow chạy ổn, ghi lại debt rõ ràng.  
+D. Huỷ demo.
+</Ask>
+
+<Explain>
+Best default: C
+
+C cân bằng learning và engineering. A có thể quá tốn thời gian. B nguy hiểm nếu demo biến thành production. D quá cực đoan nếu chưa cần.
+</Explain>
+
+## Short explanation
+
+Viết 2-3 câu giải thích vì sao bạn chọn C hoặc chọn option khác.
+
+## Strong answer should mention
+
+- Demo dùng để học gì.
+- Scope nào là core.
+- Debt nào chấp nhận được.
+- Cách tránh demo hack thành production debt.

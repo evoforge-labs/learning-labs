@@ -1,0 +1,60 @@
+---
+id: exercise-product-006
+title: "Day 06: MVP Scope"
+type: "exercise"
+track: product-minded-builder
+skill: mvp-scoping
+estimatedMinutes: 15
+related: [concept-mvp, rubric-product-thinking]
+tags: [product, validation]
+status: published
+---
+import Explain from '../../../components/content/Explain.astro';
+import Ask from '../../../components/content/Ask.astro';
+
+# Day 06: MVP Scope
+
+## Scenario
+
+Bạn muốn build “AI assistant cho support team” để trả lời câu hỏi từ tài liệu nội bộ.
+
+Constraints:
+
+- Bạn là solo dev.
+- Có 1 tuần để demo.
+- Có khoảng 200 trang docs.
+- Chưa có eval set.
+
+<Ask>
+Rank options từ nhỏ nhất đến lớn nhất:
+
+A. Full chatbot production với auth, analytics, admin panel, multi-tenant.  
+B. Script nhận câu hỏi, search docs, trả lời bằng LLM, log kết quả vào file.  
+C. Manual concierge: support gửi câu hỏi, bạn tự dùng search + LLM trả lời, ghi lại top 30 câu hỏi.  
+D. RAG chatbot internal demo với 50 docs quan trọng nhất và feedback thumbs up/down.
+</Ask>
+
+<Explain>
+Suggested rank: C -> B -> D -> A
+
+C học workflow thật nhanh nhất. B tự động hóa nhẹ. D là MVP demo tốt hơn. A quá lớn cho 1 tuần.
+</Explain>
+
+## Single choice
+
+Best default trong tuần đầu là gì?
+
+A. A  
+B. B hoặc C, tùy access user thật  
+C. D luôn  
+D. Không làm gì
+
+<Explain>
+Best: B
+
+Nếu có user/support thật, manual concierge rất mạnh. Nếu cần demo kỹ thuật, script đơn giản cũng đủ để học.
+</Explain>
+
+## Reflection
+
+Bạn sẽ cố tình không build gì trong tuần đầu?

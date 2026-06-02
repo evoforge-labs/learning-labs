@@ -1,0 +1,57 @@
+---
+id: exercise-product-010
+title: "Day 10: Mini Case — App Chậm"
+type: "exercise"
+track: product-minded-builder
+skill: customer-context-debugging
+estimatedMinutes: 20
+related: [rubric-product-thinking]
+tags: [product, solo-builder]
+status: published
+---
+import Callout from '../../../components/content/Callout.astro';
+
+# Day 10: Mini Case — App Chậm
+
+## Situation
+
+Một khách hàng trả tiền nói:
+
+> “Dạo này app chậm quá.”
+
+## Context
+
+- Không có APM.
+- Có server logs cơ bản.
+- DB dùng Postgres.
+- Frontend deploy Vercel.
+- Backend deploy Render.
+- Bạn chỉ có 2 giờ tối nay.
+- Khách hàng này dùng app mỗi ngày.
+
+## Your task
+
+Trả lời ngắn gọn:
+
+1. Bạn hỏi khách hàng 3 câu gì?
+2. Bạn kiểm tra gì đầu tiên?
+3. Bạn phân biệt perceived latency vs backend latency thế nào?
+4. Quick fix trong 2 giờ có thể là gì?
+5. Follow-up dài hạn là gì?
+6. Bạn đo thế nào để biết đã cải thiện?
+
+<Callout title="Strong answer should include" type="note">
+
+- Không assume ngay là backend chậm.
+- Hỏi flow cụ thể, thời gian, device/network.
+- Check recent deploy.
+- Check endpoint latency nếu có log.
+- Check DB slow query nếu có dấu hiệu.
+- Có workaround/communication cho customer.
+- Có plan thêm instrumentation.
+
+</Callout>
+
+## Rubric
+
+Use: `rubric-product-thinking`
