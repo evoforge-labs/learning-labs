@@ -31,6 +31,13 @@ const kicker = d.type === 'session' ? `Session · ${d.exercise}` :
 const trackLabel = d.track;
 const related = [...(d.prerequisites ?? []), ...(d.related ?? [])];
 const usedInLinks = d.type === 'concept' ? await usedIn(d.id) : [];
+
+// For a track page, gather its lessons + exercises so the page isn't a dead end.
+const byId = (a: any, b: any) => String(a.data.id).localeCompare(String(b.data.id));
+const trackLessons = d.type === 'track'
+  ? (await getAll('lessons') as any[]).filter((x) => x.data.track === entry.id).sort(byId) : [];
+const trackExercises = d.type === 'track'
+  ? (await getAll('exercises') as any[]).filter((x) => x.data.track === entry.id).sort(byId) : [];
 ---
 <ReadingLayout title={d.title} kicker={kicker} trackLabel={trackLabel}
   headings={headings.filter((h: any) => h.depth === 2).map((h: any) => ({ text: h.text, slug: h.slug }))}>
@@ -41,6 +48,34 @@ const usedInLinks = d.type === 'concept' ? await usedIn(d.id) : [];
   <div class="anim read-body text-zinc-700 dark:text-zinc-300 prose dark:prose-invert max-w-none prose-headings:font-read">
     <Content components={components} />
   </div>
+  {d.type === 'track' && (trackLessons.length > 0 || trackExercises.length > 0) && (
+    <div class="anim mt-12 space-y-8">
+      {trackLessons.length > 0 && (
+        <section>
+          <div class="text-[11px] uppercase tracking-wider text-zinc-400 mb-3">Lessons · học theo thứ tự</div>
+          <div class="grid sm:grid-cols-2 gap-2">
+            {trackLessons.map((l: any) => (
+              <a href={`/lessons/${l.id}`} class="flex items-center gap-2.5 rounded-lg border border-zinc-200 dark:border-zinc-800 px-4 py-2.5 hover:border-brand/50 text-sm">
+                <span class="w-2 h-2 rounded-full shrink-0" style={`background:${typeColor('lesson')}`}></span>{l.data.title}
+              </a>
+            ))}
+          </div>
+        </section>
+      )}
+      {trackExercises.length > 0 && (
+        <section>
+          <div class="text-[11px] uppercase tracking-wider text-zinc-400 mb-3">Exercises · luyện tập</div>
+          <div class="grid sm:grid-cols-2 gap-2">
+            {trackExercises.map((ex: any) => (
+              <a href={`/exercises/${ex.id}`} class="flex items-center gap-2.5 rounded-lg border border-zinc-200 dark:border-zinc-800 px-4 py-2.5 hover:border-brand/50 text-sm">
+                <span class="w-2 h-2 rounded-full shrink-0" style={`background:${typeColor('exercise')}`}></span>{ex.data.title}
+              </a>
+            ))}
+          </div>
+        </section>
+      )}
+    </div>
+  )}
   {d.type === 'concept' && d.aliases?.length > 0 && (
     <div class="anim mt-8 flex flex-wrap gap-2 text-xs items-center"><span class="text-zinc-400">aka:</span>
       {d.aliases.map((a: string) => <span class="px-2 py-0.5 rounded-full border border-zinc-200 dark:border-zinc-700 text-zinc-500">{a}</span>)}
