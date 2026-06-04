@@ -1,0 +1,53 @@
+---
+id: concept-hypothesis-validation
+title: "Hypothesis Validation"
+type: "concept"
+aliases: ["kiểm chứng giả thuyết", "hypothesis-driven development", "HDD"]
+tags: [product, validation, experimentation, lean-startup, scientific-method]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Bạn có một ý tưởng hay. Bạn *tin* nó sẽ work. Nhưng "tin" và "biết" là hai thứ rất khác nhau — và ship cả tháng dựa trên "tin" mà không kiểm chứng là cách đốt tiền nhanh nhất trong product.
+
+## Là gì
+
+Kiểm chứng giả thuyết là quá trình **biến niềm tin thành câu hỏi có thể đo được, rồi thiết kế thử nghiệm nhỏ nhất để trả lời câu hỏi đó** — trước khi đầu tư lớn vào build.
+
+Một giả thuyết tốt có cấu trúc rõ: *"Chúng tôi tin rằng [hành động này] sẽ khiến [đối tượng người dùng này] [thực hiện hành vi này], dẫn đến [kết quả đo được này]."*
+
+## Ví dụ thật
+
+Thay vì nói "chúng ta nên thêm onboarding checklist để tăng activation," hãy viết thành giả thuyết:
+
+> *"Chúng tôi tin rằng hiển thị checklist 3 bước trong lần đầu đăng nhập sẽ khiến người dùng mới hoàn thành profile trong 24h đầu, dẫn đến tỷ lệ activation tăng từ 20% lên 35%."*
+
+Bây giờ bạn có thể thiết kế thử nghiệm: A/B test giữa nhóm có checklist và không có, đo trong 2 tuần. Kết quả rõ ràng, không cãi nhau.
+
+## Các cách kiểm chứng phổ biến
+
+- **A/B test**: So sánh hai phiên bản, đo hành vi thật. Cần đủ lượng người dùng để có ý nghĩa thống kê.
+- **Prototype + user test**: Cho người dùng tương tác với bản mô phỏng trước khi code thật.
+- **Smoke test / landing page**: Tạo trang giới thiệu tính năng trước khi build — đo số người đăng ký quan tâm.
+- **Wizard of Oz**: Giả lập tính năng bằng tay (nhân viên xử lý thủ công đằng sau) để kiểm chứng nhu cầu trước khi tự động hóa.
+
+<Callout title="Cẩn thận">
+Confirmation bias là kẻ thù số 1. Khi bạn đã "yêu" ý tưởng của mình, bạn sẽ vô thức tìm bằng chứng ủng hộ và bỏ qua bằng chứng phản bác. Hãy xác định trước kết quả nào sẽ khiến bạn kết luận giả thuyết sai — rồi cam kết với nó.
+</Callout>
+
+<Callout title="Nhớ nhé">
+Mục tiêu của kiểm chứng không phải là "chứng minh mình đúng" — mà là **học nhanh nhất có thể với chi phí rẻ nhất**. Giả thuyết bị bác bỏ cũng là học.
+</Callout>
+
+## Đọc thêm
+
+- [Hypothesis-Driven Product Management — Mind the Product](https://www.mindtheproduct.com/hypothesis-driven-product-management/): Hướng dẫn 6 bước áp dụng tư duy giả thuyết vào product management, từ xác định uncertainty đến kết luận thử nghiệm.
+- [Good Product Hypotheses: How to Write and Test — Railsware](https://railsware.com/blog/product-hypotheses/): Giải thích cấu trúc giả thuyết tốt và 6 phương pháp kiểm chứng phổ biến nhất.
+- [A Comprehensive Guide to Hypothesis Testing — Statsig](https://www.statsig.com/perspectives/hypothesis-testing-guide-product-experimentation): Góc nhìn kỹ thuật về kiểm chứng giả thuyết trong product experimentation, bao gồm statistical significance.
+- [Product Validation: 3 Ways to Test a Hypothesis — Product School](https://productschool.com/blog/product-fundamentals/product-validation-tactics-test-testing): Ba chiến thuật thực tế để validate ý tưởng sản phẩm trước khi đầu tư build.
+
+## Tự kiểm tra
+
+1. Viết lại câu sau thành giả thuyết có thể kiểm chứng: "Chúng ta nên thêm dark mode vì người dùng hay phàn nàn về màn hình quá sáng."
+2. Sự khác biệt giữa "Smoke test" và "A/B test" là gì? Khi nào nên dùng cái nào?
+3. Tại sao phải xác định tiêu chí thất bại *trước* khi chạy thử nghiệm, không phải sau khi xem kết quả?

@@ -1,0 +1,63 @@
+---
+id: concept-problem-vs-feature
+title: "Problem vs Feature"
+type: "concept"
+aliases: ["problem vs solution", "feature thinking", "problem thinking", "tư duy vấn đề"]
+tags: [product, product-thinking, discovery, solo-builder]
+status: published
+prerequisites: [concept-user-pain]
+---
+import Callout from '../../components/content/Callout.astro';
+
+Khách hàng gọi thợ sửa ống nước vì vòi bị chảy — không phải vì muốn "cảm giác được sửa ống nước". Họ muốn nhà khô ráo. Vòi mới chỉ là *phương tiện*.
+
+Đó là điểm mấu chốt của tư duy problem vs feature: **feature là phương tiện, problem là đích đến.** Khi bạn chỉ nhìn vào feature, bạn có thể chọn sai phương tiện.
+
+## Feature là gì, Problem là gì?
+
+**Problem** (vấn đề): tình huống thật mà user đang bị kẹt — có thể đo được, cảm nhận được, có hậu quả rõ ràng nếu không giải quyết.
+
+**Feature** (tính năng): một giải pháp cụ thể được đề xuất để giải quyết problem đó.
+
+Cùng một problem, bạn có thể giải bằng 10 feature khác nhau. Nhưng nếu bạn chỉ nhìn vào feature, bạn sẽ bỏ lỡ 9 cách còn lại — và có thể đang chọn cách tệ nhất.
+
+## Ví dụ thật
+
+> "Cho tôi xem lại lịch sử đơn hàng 6 tháng qua."
+
+Nghe có vẻ rõ ràng. Nhưng hãy hỏi: *tại sao?*
+
+- Nếu user muốn tính chi phí vận hành → một báo cáo tổng hợp tự động còn tốt hơn.
+- Nếu user cần tìm lại một đơn cụ thể → search thông minh hữu ích hơn.
+- Nếu user muốn kiểm tra nhà cung cấp nào tốt nhất → dashboard so sánh sẽ gọn hơn.
+
+"Xem lịch sử" là feature. Mỗi *lý do* phía sau là một problem — và mỗi problem cần giải pháp khác nhau.
+
+<Callout title="Cẩn thận">
+**Feature factory** là khi team chỉ build những gì user yêu cầu, theo nghĩa đen, mà không hỏi lý do. Kết quả: sản phẩm đầy tính năng nhưng không ai thấy giá trị. Triệu chứng điển hình: backlog dài vô tận, retention thấp, user vẫn than phiền dù nhiều feature.
+</Callout>
+
+## Cách chuyển từ feature sang problem
+
+Khi nhận được một yêu cầu feature, hỏi **"Tại sao?"** ít nhất hai lần:
+
+1. *"Tại sao bạn cần tính năng này?"* → tìm được **problem ngay trước mắt**.
+2. *"Tại sao problem đó quan trọng với bạn?"* → tìm được **nhu cầu sâu hơn**.
+
+Nhu cầu sâu hơn đó thường chỉ ra giải pháp tốt hơn — và đơn giản hơn — cái feature bề mặt ban đầu.
+
+<Callout title="Nhớ nhé">
+Trước khi hỏi *làm feature thế nào*, hãy hỏi *feature này giải quyết problem gì*. Câu hỏi đó có thể tiết kiệm cho bạn nhiều tuần build.
+</Callout>
+
+## Đọc thêm
+
+- [Building Features vs. Solving Problems – Aha!](https://www.aha.io/blog/building-features-vs-solving-problems) — Brian de Haaff giải thích tại sao khách hàng quan tâm đến lợi ích, không phải feature.
+- [Product Thinking is Problem Solving – Interaction Design Foundation](https://ixdf.org/literature/article/product-thinking-is-problem-solving) — Hướng dẫn tư duy sản phẩm: mọi quyết định thiết kế phải đặt trong ngữ cảnh của problem người dùng cần giải.
+- [Feature Factories vs Product Thinking – Product Leadership](https://www.productleadership.com/blog/feature-factories-vs-product-thinking/) — So sánh chi tiết hai văn hóa làm sản phẩm và hậu quả lâu dài của mỗi cách.
+
+## Tự kiểm tra
+
+1. Phân biệt "feature" và "problem" bằng một câu mỗi loại. Cho ví dụ cụ thể từ một app bạn hay dùng.
+2. User yêu cầu: "Thêm thông báo push mỗi ngày lúc 8 giờ sáng." Áp dụng kỹ thuật hỏi "Tại sao?" để tìm ra problem thật đằng sau. Có ít nhất 2 problem khác nhau có thể ẩn sau yêu cầu này không?
+3. "Feature factory" là gì và nó gây ra hậu quả gì cho sản phẩm về lâu dài?

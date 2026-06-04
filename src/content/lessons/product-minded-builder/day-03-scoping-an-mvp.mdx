@@ -1,0 +1,49 @@
+---
+id: lesson-product-003
+title: "Scoping an MVP"
+type: "lesson"
+track: product-minded-builder
+module: scoping
+level: beginner
+tags: [product-thinking, scoping, mvp, prioritization, north-star, solo-builder]
+prerequisites: [concept-mvp, concept-prioritization, concept-scope-cutting, concept-north-star-metric, concept-product-discovery]
+related: [exercise-product-012, rubric-product-thinking]
+status: published
+---
+import Callout from '../../../components/content/Callout.astro';
+
+Bạn vừa xong discovery. Bạn biết pain của user, bạn có một đống ý tưởng về giải pháp. Bây giờ là lúc khó nhất: *quyết định build gì và không build gì*.
+
+## Cái bẫy "đầy đủ tính năng"
+
+Người builder hay rơi vào bẫy này: muốn release phải "đủ". Đủ tính năng, đủ bóng bảy, đủ edge case. Nhưng "đủ" không bao giờ đến — backlog luôn dài hơn bandwidth.
+
+Thứ giải cứu bạn là một câu hỏi đơn giản: **"Giả định cốt lõi của mình là gì, và cần build tối thiểu bao nhiêu để kiểm chứng nó?"** Đó là cách tư duy của [MVP](../../concepts/mvp).
+
+## Từ ideas → priorities
+
+Khi có danh sách features, đừng vote bằng cảm xúc. Dùng [framework ưu tiên hóa](../../concepts/prioritization): Impact vs Effort matrix hay RICE đều giúp bạn nhìn rõ thứ gì xứng đáng thời gian hơn.
+
+Quick wins — impact cao, effort thấp — là thứ bạn build trước. Big bets — impact cao, effort cao — lên kế hoạch cho lần sau, sau khi đã có data.
+
+## Cắt scope một cách có chủ đích
+
+Sau khi ưu tiên xong, vẫn còn quá nhiều? Đây là lúc dùng [nghệ thuật cắt scope](../../concepts/scope-cutting). Phân loại mọi thứ vào MoSCoW — Must/Should/Could/Won't — và commit vào việc chỉ làm phần Must cho lần ra đầu tiên.
+
+<Callout title="Mẹo">
+Viết ra câu này trước khi scope: *"User dùng sản phẩm này để [làm gì]. Version 1 thành công khi user làm được điều đó."* Mọi feature nếu không phục vụ câu này đều là ứng viên để cắt.
+</Callout>
+
+## Neo vào North Star
+
+Khi cắt scope, câu hỏi cuối cùng để kiểm tra: *"Phiên bản cắt này còn di chuyển [North Star Metric](../../concepts/north-star-metric) của mình không?"*
+
+NSM là ngôi sao định hướng — khi mọi thứ khác bị cắt bỏ, chỉ số đó nói lên liệu bạn còn đang build đúng thứ hay không.
+
+## Ba bước thực hành
+
+1. **Viết ra giả định cốt lõi**: "Mình tin rằng [user] sẽ [hành vi] vì [lý do]. Nếu sai thì sao?"
+2. **Ưu tiên**: dùng Impact/Effort để tìm quick wins, loại bỏ low-impact/high-effort.
+3. **Cắt**: áp MoSCoW, chỉ giữ Must-have. Phần còn lại vào backlog, không vứt bỏ.
+
+Đây là chu trình bạn lặp lại mỗi lần plan. Nó không phải one-time decision — mỗi sprint, mỗi cycle, mỗi khi backlog phình ra.

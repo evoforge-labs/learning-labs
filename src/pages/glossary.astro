@@ -1,0 +1,86 @@
+---
+import BaseLayout from '../components/layout/BaseLayout.astro';
+import { getAll } from '../lib/content';
+
+// Auto-generated glossary: one entry per concept, no manual upkeep.
+// Definition = the first prose paragraph of the concept body (the intuition hook).
+function shortDef(body: string | undefined): string {
+  if (!body) return '';
+  const prose: string[] = [];
+  let started = false;
+  for (const raw of body.split('\n')) {
+    const l = raw.trim();
+    if (!started) {
+      if (!l || l.startsWith('import ') || l.startsWith('export ') || l.startsWith('#') || l.startsWith('<')) continue;
+      started = true;
+    } else if (!l || l.startsWith('<') || l.startsWith('#')) {
+      break;
+    }
+    prose.push(l.replace(/^>\s?/, ''));
+  }
+  let text = prose.join(' ')
+    .replace(/\*\*(.+?)\*\*/g, '$1').replace(/\*(.+?)\*/g, '$1')
+    .replace(/\[(.+?)\]\([^)]*\)/g, '$1').replace(/`([^`]+?)`/g, '$1');
+  const m = text.match(/^(.*?[.!?])(\s|$)/);
+  let out = m ? m[1] : text;
+  if (out.length > 220) out = out.slice(0, 217) + '…';
+  return out;
+}
+
+const concepts = (await getAll('concepts') as any[])
+  .map((e) => ({
+    slug: e.id,
+    title: e.data.title as string,
+    aliases: (e.data.aliases ?? []) as string[],
+    def: shortDef(e.body),
+  }))
+  .sort((a, b) => a.title.localeCompare(b.title, 'en'));
+
+// Group by first letter for an A→Z layout.
+const groups = new Map<string, typeof concepts>();
+for (const c of concepts) {
+  const key = (c.title[0] ?? '#').toUpperCase();
+  if (!groups.has(key)) groups.set(key, []);
+  groups.get(key)!.push(c);
+}
+const letters = [...groups.keys()].sort();
+---
+<BaseLayout title="Glossary">
+  <main class="max-w-3xl mx-auto px-4 py-10">
+    <h1 class="text-2xl font-bold tracking-tight text-zinc-900 dark:text-white mb-2">Glossary</h1>
+    <p class="text-sm text-zinc-500 mb-6">
+      Tra cứu nhanh mọi thuật ngữ — {concepts.length} khái niệm, kèm tên gọi khác (song ngữ).
+      Click để mở bài đầy đủ.
+    </p>
+
+    {letters.length > 1 && (
+      <div class="flex flex-wrap gap-1.5 mb-8 text-xs">
+        {letters.map((l) => (
+          <a href={`#letter-${l}`} class="w-7 h-7 grid place-items-center rounded-md border border-zinc-200 dark:border-zinc-800 hover:bg-brand/10 hover:text-brand font-medium">{l}</a>
+        ))}
+      </div>
+    )}
+
+    <div class="space-y-8">
+      {letters.map((l) => (
+        <section id={`letter-${l}`}>
+          <h2 class="text-xs uppercase tracking-wider text-zinc-400 border-b border-zinc-200 dark:border-zinc-800 pb-1 mb-3">{l}</h2>
+          <dl class="space-y-4">
+            {groups.get(l)!.map((c) => (
+              <div>
+                <dt>
+                  <a href={`/concepts/${c.slug}`} class="font-semibold text-zinc-900 dark:text-white hover:text-brand">{c.title}</a>
+                  {c.aliases.length > 0 && (
+                    <span class="ml-2 text-xs text-zinc-400">còn gọi là: {c.aliases.join(' · ')}</span>
+                  )}
+                </dt>
+                {c.def && <dd class="mt-0.5 text-sm text-zinc-600 dark:text-zinc-300 leading-relaxed">{c.def}</dd>}
+              </div>
+            ))}
+          </dl>
+        </section>
+      ))}
+      {concepts.length === 0 && <p class="text-zinc-400 text-sm">Chưa có khái niệm nào.</p>}
+    </div>
+  </main>
+</BaseLayout>

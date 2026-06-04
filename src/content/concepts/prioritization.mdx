@@ -1,0 +1,64 @@
+---
+id: concept-prioritization
+title: "Prioritization (Ưu tiên hóa)"
+type: "concept"
+aliases: ["ưu tiên hóa", "impact vs effort", "RICE scoring", "rice framework"]
+tags: [product, prioritization, decision-making, scoping, rice]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Bạn có 10 thứ cần làm nhưng chỉ có thời gian cho 3. Ai cũng biết phải "ưu tiên" — nhưng khi ngồi vào bàn, mọi thứ đều trông quan trọng. Thứ sếp yêu cầu, thứ user kêu nhiều nhất, thứ bạn thích làm nhất — tất cả đều cảm thấy cấp bách.
+
+Đó chính xác là lúc bạn cần một khung tư duy, không phải bản năng.
+
+## Impact vs Effort — khung đơn giản nhất
+
+Vẽ một ô vuông 2x2. Trục ngang là **Effort** (tốn bao nhiêu công sức). Trục dọc là **Impact** (mang lại bao nhiêu giá trị).
+
+Bốn ô:
+- **Impact cao, Effort thấp** → làm ngay ("quick wins")
+- **Impact cao, Effort cao** → lên kế hoạch kỹ ("big bets")
+- **Impact thấp, Effort thấp** → làm khi rảnh hoặc bỏ
+- **Impact thấp, Effort cao** → loại bỏ không thương tiếc
+
+Cái bẫy thường gặp: team dành quá nhiều thời gian ở ô *Impact thấp, Effort thấp* vì nó "dễ xong" — nhưng đó là ảo giác năng suất.
+
+## RICE — khi cần chấm điểm cụ thể hơn
+
+RICE là công thức do Intercom phát triển để so sánh các ý tưởng trên cùng một thang:
+
+**RICE = (Reach × Impact × Confidence) ÷ Effort**
+
+- **Reach**: bao nhiêu người bị ảnh hưởng trong một khoảng thời gian? (số người/tháng)
+- **Impact**: tác động lớn đến mức nào? (thang 0.25 → 3)
+- **Confidence**: bạn chắc ước lượng này đúng bao nhiêu %? (50% / 80% / 100%)
+- **Effort**: mất bao nhiêu người-tuần/người-tháng?
+
+<Callout title="Mẹo">
+Confidence là yếu tố hay bị bỏ qua nhất. Nếu bạn không có data mà cứ tự tin 100%, RICE cho ra điểm cao giả tạo. Hãy thành thật: thiếu data → để 50%.
+</Callout>
+
+## Ví dụ thật
+
+Feature A: Reach=500, Impact=2, Confidence=80%, Effort=2 → RICE = (500×2×0.8)/2 = **400**
+
+Feature B: Reach=1000, Impact=1, Confidence=50%, Effort=5 → RICE = (1000×1×0.5)/5 = **100**
+
+Feature A thắng rõ dù ít người hơn — vì confidence cao và effort thấp hơn nhiều.
+
+<Callout title="Cẩn thận">
+RICE là công cụ hỗ trợ quyết định, không phải máy ra quyết định. Nếu bạn nhồi số vào để biện hộ cho điều mình đã muốn từ trước, framework không giúp gì được. Garbage in, garbage out.
+</Callout>
+
+## Đọc thêm
+
+- [RICE: Simple Prioritization for Product Managers — Intercom](https://www.intercom.com/blog/rice-simple-prioritization-for-product-managers/) — Bài gốc từ đội tạo ra RICE, giải thích từng yếu tố kèm ví dụ thực tế.
+- [RICE Scoring Model — ProductPlan](https://www.productplan.com/glossary/rice-scoring-model) — Tóm tắt ngắn gọn cách dùng RICE trong roadmap planning.
+- [RICE Framework — Product School](https://productschool.com/blog/product-fundamentals/rice-framework) — Hướng dẫn áp dụng RICE kèm template và case study.
+
+## Tự kiểm tra
+
+1. Một feature có Reach thấp nhưng Impact rất cao (ví dụ: tính năng chỉ cho 10 khách hàng enterprise, mỗi người trả $50k/năm). RICE có bắt được giá trị này không? Tại sao?
+2. Bạn đang dùng Impact vs Effort matrix và thấy mọi thứ đều rơi vào ô "Impact cao, Effort cao". Điều này có thể báo hiệu điều gì?
+3. Tại sao Confidence quan trọng trong RICE, và khi nào bạn nên đặt Confidence = 50%?

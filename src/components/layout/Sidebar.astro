@@ -1,5 +1,5 @@
 ---
-import { Compass, BookOpen, GraduationCap, Dumbbell, MessageSquareText, ClipboardCheck, LayoutTemplate, GitFork } from '@lucide/astro';
+import { Compass, BookOpen, GraduationCap, Dumbbell, MessageSquareText, ClipboardCheck, LayoutTemplate, GitFork, BookA } from '@lucide/astro';
 const items = [
   { href: '/tracks', label: 'Tracks', Icon: Compass, dot: 'var(--type-track)' },
   { href: '/concepts', label: 'Concepts', Icon: BookOpen, dot: 'var(--type-concept)' },
@@ -8,6 +8,7 @@ const items = [
   { href: '/sessions', label: 'Sessions', Icon: MessageSquareText, dot: 'var(--type-session)' },
   { href: '/rubrics', label: 'Rubrics', Icon: ClipboardCheck, dot: 'var(--type-rubric)' },
   { href: '/templates', label: 'Templates', Icon: LayoutTemplate, dot: 'var(--type-template)' },
+  { href: '/glossary', label: 'Glossary', Icon: BookA, dot: 'var(--color-brand)' },
   { href: '/knowledge-map', label: 'Knowledge Map', Icon: GitFork, dot: 'var(--color-brand)' },
 ];
 const path = Astro.url.pathname;

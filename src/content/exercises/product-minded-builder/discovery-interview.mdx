@@ -1,0 +1,82 @@
+---
+id: exercise-product-011
+title: "Discovery Interview"
+type: "exercise"
+track: product-minded-builder
+tags: [product-thinking, discovery, interview, research, solo-builder]
+estimatedMinutes: 60
+related:
+  - lesson-product-002
+  - concept-product-discovery
+  - concept-assumption-vs-fact
+  - concept-customer-interview
+  - concept-the-mom-test
+  - rubric-product-thinking
+status: published
+---
+import Callout from '../../../components/content/Callout.astro';
+
+## Bối cảnh
+
+Minh là một solo developer vừa có ý tưởng: một app giúp freelancer Việt Nam theo dõi giờ làm việc và tạo hóa đơn nhanh hơn. Minh đã phác thảo xong màn hình chính, sắp bắt đầu code.
+
+Trước khi code, Minh quyết định nói chuyện với 3 freelancer trong mạng lưới của mình. Dưới đây là trích đoạn từ một trong những cuộc phỏng vấn đó.
+
+---
+
+**Minh:** "Chào Hà, mình đang build một app theo dõi thời gian và xuất hóa đơn cho freelancer. Bạn nghĩ ý tưởng này thế nào?"
+
+**Hà:** "Nghe hay đấy! Mình hay quên ghi giờ làm lắm."
+
+**Minh:** "Bạn có trả tiền cho một app như thế không?"
+
+**Hà:** "Chắc có, nếu dễ dùng thôi."
+
+**Minh:** "Bạn thích hóa đơn xuất ra định dạng PDF hay Excel hơn?"
+
+**Hà:** "PDF chắc chuyên nghiệp hơn."
+
+---
+
+<Callout title="Cẩn thận">
+Đây là một cuộc phỏng vấn thất bại điển hình. Minh nhận được toàn compliment và hypothetical fluff — không có bằng chứng thực tế nào. Nhiệm vụ của bạn là chẩn đoán và sửa.
+</Callout>
+
+## Nhiệm vụ
+
+### Task 1 — Chẩn đoán (15 phút)
+
+Đọc lại cuộc trò chuyện trên và trả lời:
+
+1. Liệt kê ít nhất **3 câu hỏi sai** Minh đã đặt ra. Với mỗi câu, giải thích *tại sao* nó sai theo nguyên tắc Mom Test.
+2. Kết quả Minh nhận được là *compliment*, *hypothetical fluff*, hay *wishlist*? Phân loại từng câu trả lời của Hà.
+3. Sau cuộc phỏng vấn này, Minh biết thêm được gì về *vấn đề thật* của Hà? (Gợi ý: câu trả lời là "gần như không có gì" — hãy giải thích tại sao.)
+
+### Task 2 — Viết lại (20 phút)
+
+Viết lại cuộc phỏng vấn đó theo đúng nguyên tắc Mom Test và Customer Interview. Yêu cầu:
+
+- Câu mở đầu phải về *cuộc sống của Hà*, không nhắc đến sản phẩm của Minh.
+- Ít nhất 4 câu hỏi follow-up đào sâu hành vi quá khứ.
+- Minh nói tối đa 30% thời gian.
+- Cuối cuộc phỏng vấn, Minh phải biết được ít nhất 2 điều cụ thể về cách Hà *hiện tại* xử lý việc theo dõi giờ và hóa đơn.
+
+### Task 3 — Assumption map (25 phút)
+
+Minh đang giữ những giả định nào trước khi build? Liệt kê ít nhất **5 giả định** ẩn trong ý tưởng của anh ấy, ví dụ:
+
+> "Freelancer quên ghi giờ vì không có công cụ nhắc nhở."
+
+Với mỗi giả định:
+- Đánh dấu mức độ nguy hiểm: ⚠️ (nếu sai, ý tưởng chết) hay 🔶 (nếu sai, cần pivot nhỏ).
+- Đề xuất *một câu hỏi phỏng vấn cụ thể* để kiểm chứng giả định đó.
+
+---
+
+## Tiêu chí đánh giá
+
+Bài này được chấm theo [Product Thinking Rubric](../../rubrics/product-thinking-rubric):
+
+- **40%** — Bạn đào được *vấn đề thật* (không phải feature request) từ phân tích cuộc phỏng vấn.
+- **35%** — Chất lượng câu hỏi phỏng vấn viết lại: có đào sâu hành vi quá khứ, không mời compliment, không hỏi về tương lai giả định.
+- **25%** — Assumption map rõ ràng, có ưu tiên, có câu hỏi kiểm chứng thực tế.

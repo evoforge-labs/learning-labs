@@ -1,5 +1,33 @@
-# Optional manual edges to supplement frontmatter-derived ones.
+# Manual edges supplementing frontmatter-derived ones.
+# Two layers: (1) the cross-module *theory* progression (concept -> concept),
+# (2) which concept each *drill* exercise trains.
 edges:
+  # --- Theory progression (basic -> advanced) ---
+  # M1 Foundations -> M2 Discovery
+  - source: concept-user-pain
+    target: concept-product-discovery
+    rel: leads-to
+  - source: concept-jobs-to-be-done
+    target: concept-customer-interview
+    rel: leads-to
+  # M2 Discovery -> M3 Scoping
+  - source: concept-product-discovery
+    target: concept-mvp
+    rel: leads-to
+  - source: concept-the-mom-test
+    target: concept-assumption-vs-fact
+    rel: supports
+  # M3 Scoping -> M4 Measure
+  - source: concept-mvp
+    target: concept-build-measure-learn
+    rel: leads-to
+  - source: concept-north-star-metric
+    target: concept-leading-vs-lagging-metrics
+    rel: leads-to
+  - source: concept-build-measure-learn
+    target: concept-retention
+    rel: leads-to
+  # --- Drills: which concept each exercise trains ---
   - source: concept-product-discovery
     target: lesson-product-001
     rel: supports

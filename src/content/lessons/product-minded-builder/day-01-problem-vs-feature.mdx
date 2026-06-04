@@ -3,22 +3,42 @@ id: lesson-product-001
 title: "Problem vs Feature"
 type: "lesson"
 track: product-minded-builder
-module: discovery
+module: foundations
 level: beginner
-tags: [product-thinking, discovery, solo-builder]
-prerequisites: [concept-user-pain]
-related: [concept-mvp, rubric-product-thinking]
+tags: [product-thinking, discovery, solo-builder, jtbd]
+prerequisites: [concept-user-pain, concept-problem-vs-feature, concept-jobs-to-be-done]
+related: [exercise-product-001, rubric-product-thinking]
 status: published
 ---
 import Callout from '../../../components/content/Callout.astro';
 
-Người mới thường nhảy thẳng vào *feature* mà bỏ qua *problem*.
+Hầu hết builder mới đều mắc cùng một lỗi: nhận yêu cầu → build ngay. Không hỏi tại sao. Không tìm hiểu context. Cứ tưởng "user nói gì, làm đó là đúng."
 
-## Vì sao khác biệt này quan trọng
+Đó không phải là tư duy sản phẩm. Đó là tư duy thầu khoán.
 
-Một feature là **giải pháp đề xuất**. Một problem là **nỗi đau cần giải quyết**.
-Lý thuyết đầy đủ nằm ở khái niệm liên kết — bài này chỉ tham chiếu.
+## Ba lớp cần hiểu trước khi viết dòng code đầu tiên
 
-<Callout title="Tip">
-Trước khi build, hỏi: "User đang cố hoàn thành việc gì khi yêu cầu cái này?"
+**Lớp 1 — User Pain** ([concept-user-pain](/concepts/user-pain)): Pain là ma sát trong cuộc sống thật của người dùng. Không có pain → không có lý do để sản phẩm tồn tại. Tìm pain trước mọi thứ.
+
+**Lớp 2 — Problem vs Feature** ([concept-problem-vs-feature](/concepts/problem-vs-feature)): Mọi feature request đều là *giải pháp đề xuất* — phía sau nó là *problem thật*. Người builder giỏi đào đến problem trước, rồi mới quyết định feature nào (nếu có) là cách giải tốt nhất.
+
+**Lớp 3 — Jobs to Be Done** ([concept-jobs-to-be-done](/concepts/jobs-to-be-done)): Người dùng không mua sản phẩm — họ "thuê" nó để hoàn thành một việc. Việc đó có chiều functional, social, và emotional. Sản phẩm nào giải được cả ba sẽ khó bị thay thế.
+
+## Sợi chỉ kết nối ba lớp đó
+
+Hãy lấy ví dụ kinh điển: *"Cho tôi nút export Excel."*
+
+Người thiếu tư duy sản phẩm: mở IDE, tìm thư viện Excel, bắt đầu code.
+
+Người có tư duy sản phẩm:
+1. **Tìm pain**: *"Bạn đang phải làm gì tốn thời gian hiện tại?"* → "Mỗi cuối tháng mất 2 tiếng copy số vào Excel tay."
+2. **Đào problem**: *"Tại sao cần file đó?"* → "Để gửi báo cáo cho sếp."
+3. **Hiểu job**: Functional = báo cáo kịp deadline. Social = trông chuyên nghiệp. Emotional = không lo bị chê trễ.
+
+Kết quả? Giải pháp tốt nhất có thể là email tự động tổng hợp số liệu cuối tháng — không cần mở app, không cần tải file, không cần làm cái nút Excel nào cả.
+
+<Callout title="Mẹo">
+Trước mỗi feature, hỏi ba câu này theo thứ tự: *"Pain ở đây là gì? Problem thật đằng sau yêu cầu là gì? User đang cố xong việc gì?"* Ba câu đó có thể thay đổi toàn bộ hướng build của bạn.
 </Callout>
+
+Bài tập thực hành cho module này: [exercise-product-001](/exercises/product-minded-builder/export-excel).

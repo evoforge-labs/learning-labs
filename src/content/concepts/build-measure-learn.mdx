@@ -1,0 +1,50 @@
+---
+id: concept-build-measure-learn
+title: "Build-Measure-Learn"
+type: "concept"
+aliases: ["BML loop", "lean feedback loop", "vòng lặp lean"]
+tags: [product, lean-startup, iteration, validation, measurement]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Hãy tưởng tượng bạn nấu một món mới. Bạn không nấu xong cả nồi rồi mới nếm — bạn nêm một ít, nếm, điều chỉnh, nêm tiếp. Đó chính xác là cách Build-Measure-Learn hoạt động.
+
+## Là gì
+
+Build-Measure-Learn (BML) là vòng lặp cốt lõi của Lean Startup: **xây dựng phiên bản nhỏ nhất có thể để kiểm chứng một giả thuyết, đo phản ứng thực tế của người dùng, rồi học từ dữ liệu đó** — thay vì xây cả năm mới biết mình đi sai hướng.
+
+Eric Ries đưa ra khái niệm này trong cuốn *The Lean Startup* (2011). Ý tưởng cốt lõi: đơn vị tiến bộ thật sự không phải là "đã ship bao nhiêu feature" mà là "đã học được bao nhiêu điều đúng về người dùng."
+
+## Ba bước trong vòng lặp
+
+**Build — Xây cái nhỏ nhất để học.** Không phải xây hoàn hảo. Xây đủ để trả lời câu hỏi bạn đang có. Đây thường là một [MVP](/concepts/mvp) hay thậm chí một landing page, một bản giả lập tay.
+
+**Measure — Đo hành vi thật, không phải ý kiến.** Người dùng nói "hay lắm" nhưng không dùng là tín hiệu thật. Bạn cần số liệu: bao nhiêu người click, bao nhiêu người quay lại, bao nhiêu người hoàn thành luồng.
+
+**Learn — Pivot hay persevere?** Dữ liệu trả lời câu hỏi: giả thuyết đúng hay sai? Nếu sai, thay đổi hướng (pivot). Nếu đúng, tiếp tục đào sâu (persevere). Rồi vòng lặp lại bắt đầu.
+
+## Ví dụ thật
+
+Một team muốn biết người dùng có cần tính năng "lưu bài viết để đọc sau" không. Thay vì mất 3 tuần code, họ chỉ cần thêm một nút "Lưu" — khi bấm, hiện thông báo "Tính năng đang phát triển, để lại email nhận thông báo." Sau 2 tuần, 40% người dùng click nút đó. Học xong — tính năng này đáng làm thật.
+
+<Callout title="Cẩn thận">
+Nhiều team "build" xong rồi bỏ qua bước "measure" vì không có sẵn analytics. Không đo được = không học được. Hãy thiết lập tracking *trước* khi ship, không phải sau.
+</Callout>
+
+<Callout title="Nhớ nhé">
+Mục tiêu của BML không phải là ship nhanh — mà là **học nhanh**. Ship nhanh mà không đo = lãng phí.
+</Callout>
+
+## Đọc thêm
+
+- [The Lean Startup — Principles](https://theleanstartup.com/principles): Trang chính thức của Eric Ries, trình bày các nguyên tắc cốt lõi của Lean Startup bao gồm BML loop.
+- [Build-Measure-Learn: How to Do It Right — Shortform](https://www.shortform.com/blog/build-measure-learn-loop-lean-startup/): Tóm tắt chi tiết cách áp dụng vòng lặp BML đúng cách, tập trung vào việc kiểm chứng giả định rủi ro nhất trước.
+- [Rethinking Build-Measure-Learn in 2026 — Userpilot](https://userpilot.com/blog/build-measure-learn/): Góc nhìn hiện đại về BML khi tốc độ ship đã nhanh hơn nhiều — làm thế nào để vòng lặp vẫn còn ý nghĩa.
+- [Don't Build When You Build-Measure-Learn — Strategyzer](https://www.strategyzer.com/library/dont-build-when-you-build-measure-learn): Lý giải vì sao "Build" trong BML thường nên là thử nghiệm rẻ, không phải sản phẩm thật.
+
+## Tự kiểm tra
+
+1. Một startup vừa ship một feature sau 2 tháng phát triển nhưng không đặt tracking analytics trước. Họ đang thiếu bước nào trong vòng lặp BML, và hậu quả là gì?
+2. Sự khác biệt giữa "pivot" và "persevere" trong bước Learn là gì? Cho một ví dụ cụ thể.
+3. Tại sao Eric Ries nói đơn vị tiến bộ của Lean Startup là "validated learning" chứ không phải số feature đã ship?

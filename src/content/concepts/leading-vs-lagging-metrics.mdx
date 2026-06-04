@@ -1,0 +1,51 @@
+---
+id: concept-leading-vs-lagging-metrics
+title: "Leading vs Lagging Metrics"
+type: "concept"
+aliases: ["chỉ số dẫn dắt", "chỉ số trễ", "leading indicators", "lagging indicators"]
+tags: [product, metrics, measurement, analytics, data-driven]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Nhìn vào doanh thu tháng trước và kết luận tháng này sẽ thế nào — đó như lái xe nhìn qua gương chiếu hậu. Bạn thấy những gì đã xảy ra, không phải những gì sắp đến.
+
+## Là gì
+
+**Lagging metrics (chỉ số trễ)** đo kết quả đã xảy ra rồi: doanh thu, churn rate, số người dùng active tháng này. Chúng chính xác nhưng đến trễ — khi bạn thấy chúng đi xuống, thường đã quá muộn để phản ứng.
+
+**Leading metrics (chỉ số dẫn dắt)** đo hành vi hiện tại có thể dự báo kết quả tương lai: số người hoàn thành onboarding hôm nay, tỷ lệ người dùng mời bạn bè trong tuần đầu, thời gian đến "aha moment" đầu tiên. Chúng ít chính xác hơn nhưng cho bạn cơ hội can thiệp sớm.
+
+## Ví dụ thật
+
+Giả sử bạn đang chạy một SaaS tool cho freelancer:
+
+- **Lagging**: Monthly Recurring Revenue (MRR), churn rate tháng này, số subscription active.
+- **Leading**: Số user hoàn thành dự án đầu tiên trong 7 ngày đầu, số lần dùng tính năng "gửi invoice" trong tuần 2, tỷ lệ user quay lại sau ngày 3.
+
+Nếu leading metrics của bạn tốt, MRR tháng sau có khả năng cao sẽ tốt. Nếu bạn thấy leading metrics giảm tuần này, bạn còn kịp điều chỉnh onboarding trước khi tháng sau mất revenue.
+
+<Callout title="Cẩn thận">
+Leading metrics có thể bị "gaming" — tối ưu con số mà không thật sự cải thiện giá trị. Ví dụ: tăng số login bằng cách gửi thông báo spam. Hãy chọn leading metrics thực sự liên quan đến giá trị người dùng nhận được.
+</Callout>
+
+## Cách tìm leading metrics của mình
+
+Hỏi ngược từ kết quả: "Hành vi nào của người dùng hôm nay dự báo họ sẽ còn ở đây 3 tháng nữa?" Với hầu hết sản phẩm, đó là moment họ lần đầu nhận được giá trị cốt lõi — còn gọi là "aha moment."
+
+<Callout title="Nhớ nhé">
+Dùng leading metrics để **hành động**, lagging metrics để **xác nhận**. Không thể bỏ cái nào — chúng bổ sung cho nhau.
+</Callout>
+
+## Đọc thêm
+
+- [A Guide to Leading vs. Lagging Indicators — LogRocket Blog](https://blog.logrocket.com/product-management/leading-lagging-indicators/): Giải thích rõ sự khác biệt kèm case study e-commerce thực tế, chỉ ra cách kết hợp cả hai loại chỉ số.
+- [Leading vs. Lagging Indicators with Real-World Examples — Amplitude](https://amplitude.com/blog/leading-lagging-indicators): Phân tích chi tiết với ví dụ SaaS cụ thể, hướng dẫn cách dùng leading metrics trên dashboard real-time.
+- [Lagging and Leading Indicators 101 — Beyond the Backlog](https://beyondthebacklog.com/2024/05/02/lagging-and-leading-indicators/): Góc nhìn từ product manager thực chiến, tập trung vào cách áp dụng hai loại chỉ số vào OKRs.
+- [Leading vs Lagging Metrics: Differences and Pitfalls — Insights Driven PM](https://www.insightsdrivenpm.com/blogs/leading-vs-lagging-metrics-differences-pitfalls-and-how-to-find-early-signals): Phân tích các bẫy thường gặp khi đo leading metrics và cách tìm early signals thực sự có giá trị.
+
+## Tự kiểm tra
+
+1. Với một app học ngôn ngữ (như Duolingo), hãy liệt kê 2 leading metrics và 2 lagging metrics. Giải thích tại sao mỗi chỉ số thuộc loại đó.
+2. Tại sao lagging metrics lại "đến trễ"? Điều này gây ra vấn đề gì khi bạn cần ra quyết định nhanh?
+3. Một PM nói "chúng ta chỉ cần theo dõi revenue — đó là chỉ số quan trọng nhất." Bạn sẽ phản biện như thế nào?

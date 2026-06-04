@@ -1,0 +1,51 @@
+---
+id: concept-customer-interview
+title: "Customer Interview"
+type: "concept"
+aliases: ["phỏng vấn người dùng", "user interview", "phỏng vấn khách hàng"]
+tags: [product, discovery, research, interview, product-thinking]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Một thám tử giỏi không hỏi: "Bạn có phạm tội không?" Họ hỏi: "Tối hôm đó bạn ở đâu, làm gì?" — rồi lắng nghe cẩn thận. Phỏng vấn người dùng cũng vậy: bạn không hỏi họ *muốn gì*, bạn hỏi họ *đã làm gì*.
+
+## Là gì
+
+Customer interview là cuộc trò chuyện có cấu trúc giữa bạn và người dùng mục tiêu, nhằm **đào sâu hành vi thật và vấn đề thật** — không phải thu thập ý kiến hay xin feedback về giải pháp đã có.
+
+## Tại sao phải phỏng vấn thay vì làm survey
+
+Survey cho bạn số liệu. Phỏng vấn cho bạn **ngữ cảnh** — cái "tại sao" đằng sau con số. Khi 60% user trả lời "tôi muốn tính năng X", survey dừng lại ở đó. Phỏng vấn giúp bạn phát hiện ra 60% đó thực ra đang làm việc Y bằng workaround Z — và workaround đó mới là pain thật sự cần giải.
+
+## Cách phỏng vấn đúng
+
+**Hỏi về quá khứ, không về tương lai.** "Lần cuối bạn gặp vấn đề này là khi nào?" tốt hơn "Bạn có dùng tính năng này không?". Hành vi quá khứ là sự thật; dự đoán tương lai là giả định.
+
+**Đào sâu bằng "tại sao" và "rồi sao".** Khi họ nói "tôi phải export ra Excel", đừng dừng lại. Hỏi tiếp: "rồi bạn làm gì với file đó?" — thường câu trả lời thật mới bắt đầu ở đây.
+
+**Nói ít hơn 30% thời gian.** Bạn ở đó để nghe, không phải để giải thích sản phẩm của mình.
+
+## Ví dụ thật
+
+Một team build app quản lý chi tiêu phỏng vấn 8 người. Câu hỏi mở đầu: "Kể cho tôi nghe lần gần nhất bạn cố theo dõi tiền của mình." Phát hiện: 6/8 người đã thử ít nhất 2 app rồi bỏ — không phải vì app thiếu tính năng, mà vì việc nhập liệu thủ công quá mệt. Pain thật không phải "thiếu chart đẹp" — mà là "nhập liệu quá ma sát".
+
+<Callout title="Cẩn thận">
+Đừng giải thích sản phẩm của bạn trong lúc phỏng vấn. Ngay khi bạn nói "bọn mình đang làm X", người dùng sẽ chuyển sang chế độ "nịnh" — họ bắt đầu nói những gì họ nghĩ bạn muốn nghe.
+</Callout>
+
+<Callout title="Mẹo">
+Bắt đầu mỗi phỏng vấn bằng: "Kể cho tôi nghe lần gần nhất bạn [gặp vấn đề X]." Câu mở đầu này luôn hiệu quả hơn bất kỳ câu hỏi trực tiếp nào.
+</Callout>
+
+## Đọc thêm
+
+- [User Interviews 101 — Nielsen Norman Group](https://www.nngroup.com/articles/user-interviews/) — Bài kinh điển từ NNG giải thích mục đích phỏng vấn người dùng, cách phân biệt với usability test, và quy trình 6 bước thực hiện.
+- [The Ultimate Guide to Customer Interviews — User Interviews](https://www.userinterviews.com/blog/the-ultimate-guide-to-doing-kickass-customer-interviews) — Hướng dẫn toàn diện từ chuẩn bị câu hỏi, tìm người phỏng vấn đến phân tích insights.
+- [Interviewing Customers: The Ultimate Guide — Product Compass](https://www.productcompass.pm/p/interviewing-customers-the-ultimate) — Tổng hợp các loại câu hỏi phỏng vấn, cách tránh sai lầm phổ biến và templates thực tế.
+
+## Tự kiểm tra
+
+1. Tại sao hỏi "Bạn có dùng tính năng này không?" là câu hỏi kém — và bạn sẽ đổi thành câu gì?
+2. Một người dùng nói: "Tôi muốn có nút export PDF." Đây là pain hay feature request? Câu hỏi tiếp theo của bạn là gì?
+3. Bạn nên phỏng vấn bao nhiêu người trước khi có thể rút ra pattern? Tại sao?

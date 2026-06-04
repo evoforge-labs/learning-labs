@@ -1,0 +1,64 @@
+---
+id: concept-scope-cutting
+title: "Scope Cutting (Cắt scope)"
+type: "concept"
+aliases: ["cắt scope", "scope reduction", "feature cutting", "thu hẹp phạm vi"]
+tags: [product, scoping, scope-cutting, prioritization, shipping]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Deadline đến, backlog vẫn còn dài. Ai cũng biết phải "cắt bớt" — nhưng rồi mọi người nhìn nhau vì không ai muốn bỏ thứ mình đã hứa, đã estimate, đã attach cái tên mình vào.
+
+Đây không phải vấn đề kỹ thuật. Đây là vấn đề tâm lý và quyết định.
+
+## Cắt scope không phải thất bại — đó là kỹ năng
+
+Có một câu trong cuốn Shape Up của Basecamp mà mình thấy rất đúng: *"Cutting scope isn't lowering quality — it's making choices."*
+
+Sản phẩm tốt không phải sản phẩm có nhiều tính năng nhất. Là sản phẩm biết mình *không làm gì*.
+
+## Câu hỏi để cắt
+
+Khi đứng trước một feature cần quyết định giữ hay bỏ, hỏi:
+
+1. **Nếu không có cái này, user vẫn hoàn thành được mục tiêu chính không?** Nếu có → ứng viên để cắt.
+2. **Đây là Must-have hay Nice-to-have?** Must-have: sản phẩm vô nghĩa nếu thiếu. Nice-to-have: user thích có nhưng không cần để xong việc.
+3. **Chi phí trễ deadline so với chi phí bỏ feature này?** Đôi khi ra muộn còn tốn kém hơn cắt bớt.
+
+## MoSCoW — công cụ phân loại nhanh
+
+Chia mọi feature vào 4 nhóm trước khi bắt đầu sprint/cycle:
+
+- **M — Must have**: không có = không ship được
+- **S — Should have**: quan trọng nhưng có thể hoãn sang lần sau
+- **C — Could have**: đẹp nếu có, không ai khóc nếu thiếu
+- **W — Won't have (this time)**: đồng thuận rõ ràng là không làm lần này
+
+Bí quyết là làm việc này *trước* khi áp lực deadline ập đến — khi não còn tỉnh táo và không ai bị cảm xúc chi phối.
+
+<Callout title="Cẩn thận">
+Cắt scope chỉ đúng nếu phiên bản còn lại vẫn *deliver được giá trị cốt lõi*. Nếu bạn cắt đến mức user mở app lên rồi không biết làm gì, bạn đã cắt quá tay. Luôn test bằng câu hỏi: "User vẫn hoàn thành được [job chính] không?"
+</Callout>
+
+## Ví dụ thật
+
+Bạn đang build tính năng "Gửi báo cáo tháng cho team". Ban đầu plan: export PDF đẹp, tự động gửi email, chọn màu sắc biểu đồ, thêm logo công ty.
+
+Cắt scope: chỉ export CSV, user tự gửi email. Ra trong 2 ngày thay vì 2 tuần. User dùng thử — thấy 80% trong số họ chỉ cần số liệu thô để paste vào slide, không cần PDF đẹp gì cả. Đã tránh được 2 tuần build sai hướng.
+
+<Callout title="Nhớ nhé">
+Cắt scope sớm + ship nhanh + quan sát thực tế = học được nhiều hơn là build đủ + ship muộn + không biết liệu nó có work không.
+</Callout>
+
+## Đọc thêm
+
+- [Decide When to Stop — Shape Up (Basecamp)](https://basecamp.com/shapeup/3.5-chapter-14) — Chương về "scope hammering": cách Basecamp cố tình cắt scope để ship đúng hạn, không giảm chất lượng.
+- [When to Cut Scope to Get a Product Out the Door — Shortcut](https://www.shortcut.com/blog/when-to-cut-scope) — Hướng dẫn thực tế về khi nào nên cắt và khi nào không nên.
+- [Less Is More: How to Cut Features Without Losing Impact — Enginuity](https://newsletter.enginuity.software/p/less-is-more-how-to-cut-features) — Ba kỹ thuật cụ thể: map user journey, chia nhỏ feature, dùng impact-effort matrix.
+
+## Tự kiểm tra
+
+1. Bạn đang build app đặt lịch và phải cắt 50% scope. Tính năng nào là Must-have để user *đặt được lịch*? Tính năng nào là Nice-to-have?
+2. Tại sao việc phân loại MoSCoW nên làm *trước* khi deadline đến gần, không phải khi đang trong khủng hoảng?
+3. Một PM nói "cắt scope là giảm chất lượng". Bạn sẽ phản biện bằng lập luận gì?

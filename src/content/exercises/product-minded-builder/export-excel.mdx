@@ -3,60 +3,48 @@ id: exercise-product-001
 title: "User muốn Export Excel"
 type: "exercise"
 track: product-minded-builder
-skill: problem-discovery
-estimatedMinutes: 15
-related: [lesson-product-001, concept-user-pain, concept-problem-vs-solution, rubric-product-thinking]
-tags: [product, discovery]
+tags: [product-thinking, discovery, jtbd, solo-builder]
+estimatedMinutes: 20
+related: [lesson-product-001, concept-user-pain, concept-problem-vs-feature, concept-jobs-to-be-done, rubric-product-thinking]
 status: published
 ---
-import Explain from '../../../components/content/Explain.astro';
-import Ask from '../../../components/content/Ask.astro';
+import Callout from '../../../components/content/Callout.astro';
 
-# Day 01: Problem vs Feature
+Một khách hàng nhắn tin cho bạn:
 
-## Goal
+> *"Anh ơi, cho em nút export ra Excel đi. Em cần gấp."*
 
-Luyện phản xạ không nhảy thẳng vào solution.
+Không có thêm context nào khác.
 
-## Scenario
+## Nhiệm vụ
 
-Bạn đang làm một SaaS quản lý đơn hàng cho shop nhỏ. Một khách hàng nhắn:
+**Task 1 — Đào pain và problem (đừng build vội)**
 
-> “Cho tôi nút export ra Excel đi.”
+Trước khi mở IDE, hãy liệt kê **5 câu hỏi** bạn sẽ hỏi để hiểu pain thật và problem thật đằng sau yêu cầu đó. Mỗi câu hỏi cần chỉ rõ bạn đang khám phá *chiều nào* (pain / problem / job).
 
-<Ask>
-Đâu là phản ứng product-minded nhất?
+**Task 2 — Phân tích Jobs to Be Done**
 
-A. “Ok, em sẽ build export Excel với CSV/XLSX.”  
-B. “Tính năng này mất khoảng 2 ngày, để em làm.”  
-C. “Anh/chị thường dùng file Excel đó để làm gì sau khi export?”  
-D. “Excel hơi cũ, mình nên làm dashboard realtime luôn.”
-</Ask>
+Dựa trên câu trả lời giả định sau: *"Em phải gửi báo cáo doanh thu tháng cho sếp. Cứ cuối tháng em lại ngồi copy số từ app vào Excel mất cả buổi sáng."*
 
-<Explain>
-Best: C
+Xác định job của user theo ba chiều:
+- **Functional job**: việc thực tế cần xong là gì?
+- **Social job**: user muốn được nhìn nhận thế nào?
+- **Emotional job**: user muốn *cảm thấy* gì sau khi xong?
 
-C tìm problem thật phía sau request. A và B nhảy thẳng vào implementation. D thay solution của user bằng solution khác nhưng vẫn chưa hiểu problem.
-</Explain>
+**Task 3 — Đề xuất giải pháp tối thiểu**
 
-## Select many
+Đề xuất **một giải pháp** không phải là "build nút export Excel" nhưng vẫn giải được job của user tốt hơn hoặc ngang bằng. Giải thích tại sao giải pháp đó tốt hơn về mặt tư duy sản phẩm.
 
-Những câu hỏi nào nên hỏi thêm?
+<Callout title="Gợi ý">
+Không có đáp án duy nhất đúng ở đây. Điều quan trọng là quá trình suy nghĩ: bạn có đào đủ sâu để hiểu job thật chưa, hay vẫn đang phản ứng theo yêu cầu bề mặt?
+</Callout>
 
-A. “Anh/chị export để gửi cho ai?”  
-B. “Một tuần cần export bao nhiêu lần?”  
-C. “Nếu không export được thì hiện tại xử lý bằng cách nào?”  
-D. “Anh/chị cần những cột dữ liệu nào?”  
-E. “Anh/chị thích màu nút export là gì?”
+## Tiêu chí đánh giá
 
-<Explain>
-Correct: A, B, C, D
+Xem rubric đầy đủ tại [rubric-product-thinking](/rubrics/product-thinking-rubric).
 
-A/B/C giúp hiểu context, frequency, workaround. D hơi gần implementation nhưng vẫn cần nếu đã xác nhận hướng export. E quá sớm.
-</Explain>
-
-## Reflection
-
-Viết 2-3 câu:
-
-Nếu bạn chỉ có 1 ngày, bạn sẽ làm bước tiếp theo là gì trước khi code?
+| Tiêu chí | Trọng số |
+|---|---|
+| Câu hỏi đào đúng pain/problem, không hỏi về feature | 40% |
+| Phân tích job đủ ba chiều và có căn cứ | 35% |
+| Giải pháp tối thiểu hợp lý, giải được job thật | 25% |

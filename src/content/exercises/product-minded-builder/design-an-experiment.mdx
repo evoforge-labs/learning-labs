@@ -1,0 +1,59 @@
+---
+id: exercise-product-013
+title: "Design an Experiment"
+type: "exercise"
+track: product-minded-builder
+tags: [product-thinking, hypothesis-validation, measurement, experimentation, mvp]
+related:
+  - lesson-product-004
+  - concept-build-measure-learn
+  - concept-hypothesis-validation
+  - concept-leading-vs-lagging-metrics
+  - concept-retention
+  - rubric-product-thinking
+status: published
+---
+import Callout from '../../../components/content/Callout.astro';
+
+## Bối cảnh
+
+Bạn vừa ship MVP của một app giúp freelancer quản lý dự án và gửi invoice. Sau 3 tuần, bạn có 200 người dùng đăng ký — nhưng chỉ 40 người (20%) thực sự dùng tính năng gửi invoice ít nhất một lần.
+
+Bạn nghi ngờ: nếu người dùng gửi được invoice đầu tiên trong 7 ngày đầu, họ sẽ có khả năng cao tiếp tục dùng app. Nhưng đó mới chỉ là giả thuyết.
+
+## Nhiệm vụ của bạn
+
+### Task 1 — Viết giả thuyết rõ ràng
+
+Biến nghi ngờ trên thành một giả thuyết có thể kiểm chứng theo cấu trúc:
+
+> *"Chúng tôi tin rằng [hành động cụ thể] sẽ khiến [đối tượng người dùng] [thực hiện hành vi], dẫn đến [kết quả đo được] trong vòng [thời gian]."*
+
+Xác định rõ: tiêu chí nào sẽ chứng minh giả thuyết đúng? Tiêu chí nào sẽ chứng minh nó sai?
+
+### Task 2 — Thiết kế thử nghiệm tối thiểu
+
+Bạn không có engineer sẵn trong 2 tuần tới. Hãy đề xuất một thử nghiệm **không cần code** (hoặc cần rất ít code) để kiểm chứng giả thuyết này.
+
+Trong đề xuất của bạn, hãy nêu rõ:
+- Bạn sẽ làm gì cụ thể (intervention là gì)?
+- Bạn đo chỉ số nào (leading và lagging)?
+- Thử nghiệm kéo dài bao lâu?
+- Bạn cần bao nhiêu người tham gia để kết quả đáng tin?
+
+### Task 3 — Phân tích rủi ro
+
+Liệt kê 2 điều có thể làm kết quả thử nghiệm bị sai lệch (confounding factors). Bạn sẽ kiểm soát chúng như thế nào?
+
+<Callout title="Góc kỹ thuật">
+Nếu bạn muốn chạy A/B test thật, cần tính sample size tối thiểu trước. Với conversion rate hiện tại 20%, để phát hiện cải thiện lên 35% với độ tin cậy 80%, bạn cần khoảng 150-200 người mỗi nhóm. Với 200 user hiện tại, thử nghiệm này cần thêm acquisition hoặc dùng phương pháp khác.
+</Callout>
+
+## Tiêu chí đánh giá
+
+Bài tập này được chấm theo [rubric product thinking](/rubrics/product-thinking-rubric):
+
+- Giả thuyết có cụ thể, đo được, và có tiêu chí thất bại rõ ràng không?
+- Thử nghiệm có thực sự nhỏ nhất có thể để trả lời câu hỏi không?
+- Bạn có phân biệt được leading vs lagging metrics không?
+- Bạn có nhận ra rủi ro sai lệch trong thiết kế không?

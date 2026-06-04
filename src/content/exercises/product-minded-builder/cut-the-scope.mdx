@@ -1,0 +1,68 @@
+---
+id: exercise-product-012
+title: "Cut the Scope"
+type: "exercise"
+track: product-minded-builder
+tags: [product-thinking, scoping, scope-cutting, prioritization, mvp, solo-builder]
+related: [lesson-product-003, concept-mvp, concept-prioritization, concept-scope-cutting, concept-north-star-metric, rubric-product-thinking]
+status: published
+---
+import Callout from '../../../components/content/Callout.astro';
+
+## Tình huống
+
+Bạn đang build một **app quản lý chi tiêu cá nhân** cho freelancer. Sau khi phỏng vấn 5 người dùng mục tiêu, bạn tổng hợp được pain chính: *"Tôi không biết cuối tháng mình còn bao nhiêu tiền — thu nhập không đều, chi tiêu lộn xộn, cứ đến deadline thuế là hoảng loạn."*
+
+Product Manager ở team bạn (chính là bạn) đã phác thảo một feature set ban đầu:
+
+1. Nhập thu nhập và chi tiêu thủ công
+2. Phân loại tự động bằng AI (ăn uống / đi lại / dụng cụ làm việc / v.v.)
+3. Dashboard biểu đồ đẹp theo tuần/tháng/quý
+4. Xuất báo cáo PDF để nộp thuế
+5. Kết nối tự động với tài khoản ngân hàng (open banking)
+6. Nhắc nhở chi tiêu khi gần vượt ngân sách
+7. So sánh chi tiêu với "chuẩn" freelancer cùng ngành
+8. Chia sẻ báo cáo với kế toán
+9. Multi-currency cho freelancer làm việc với client nước ngoài
+10. Tích hợp với Notion/Google Sheets để sync dữ liệu
+
+Deadline: **4 tuần**. Team: **1 người** (bạn).
+
+<Callout title="Nhớ nhé">
+Mục tiêu của bài này không phải là giữ nhiều tính năng nhất — mà là giữ *ít nhất có thể* mà vẫn kiểm chứng được giả định cốt lõi.
+</Callout>
+
+## Nhiệm vụ
+
+### Task 1 — Xác định giả định cốt lõi
+
+Viết một câu theo cấu trúc:
+
+> "Mình tin rằng [user] sẽ [hành vi cụ thể] nếu có [giải pháp tối thiểu]. Nếu giả định này sai, mình sẽ học được rằng ___."
+
+Ví dụ bắt đầu (bạn hoàn thiện phần còn thiếu): *"Mình tin rằng freelancer sẽ nhập chi tiêu đều đặn hàng ngày nếu app đủ nhanh và đơn giản…"*
+
+### Task 2 — Phân loại MoSCoW
+
+Lấy 10 tính năng trên, phân vào bốn nhóm:
+
+| Nhóm | Tính năng |
+|------|-----------|
+| **Must have** | *(không có = không ship được)* |
+| **Should have** | *(quan trọng nhưng có thể hoãn)* |
+| **Could have** | *(đẹp nếu có, không ai khóc nếu thiếu)* |
+| **Won't have** *(v1)* | *(đồng thuận rõ ràng là bỏ lần này)* |
+
+Giải thích tại sao bạn xếp từng tính năng vào nhóm đó — đặc biệt với những tính năng bạn cho vào Must-have.
+
+### Task 3 — Kiểm tra bằng North Star
+
+Xác định một North Star Metric cho app này. Sau đó kiểm tra: *danh sách Must-have của bạn có đủ để di chuyển NSM đó không?* Nếu không, điều gì cần thay đổi?
+
+<Callout title="Mẹo">
+Nếu bạn thấy khó phân loại, hỏi: *"Nếu thiếu cái này, user vẫn giải quyết được pain 'không biết còn bao nhiêu tiền cuối tháng' không?"* Nếu có → probably not Must-have.
+</Callout>
+
+## Tiêu chí đánh giá
+
+Xem [Product Thinking Rubric](../../rubrics/product-thinking-rubric) để biết cách bài này được chấm. Đặc biệt chú ý tiêu chí **"Giải pháp tối thiểu hợp lý"** — grader sẽ kiểm tra xem phiên bản Must-have của bạn còn deliver được core value không.

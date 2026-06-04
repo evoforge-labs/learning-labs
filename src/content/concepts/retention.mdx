@@ -1,0 +1,52 @@
+---
+id: concept-retention
+title: "Retention"
+type: "concept"
+aliases: ["user retention", "giữ chân người dùng", "churn", "cohort retention"]
+tags: [product, metrics, retention, growth, analytics]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Bạn đổ nước vào một cái xô bị thủng. Dù bơm thêm bao nhiêu nước mới (acquisition), xô vẫn cạn. Đó là sản phẩm có retention kém.
+
+## Là gì
+
+Retention đo tỷ lệ người dùng **quay lại dùng sản phẩm** sau một khoảng thời gian nhất định. Nếu 100 người dùng app của bạn hôm nay mà 30 người vẫn còn dùng sau 30 ngày, retention Day-30 của bạn là 30%.
+
+Churn (tỷ lệ rời bỏ) là mặt ngược lại: 70% kia đã "thủng" khỏi xô.
+
+## Tại sao retention quan trọng hơn acquisition
+
+Acquisition (thu hút người dùng mới) tốn tiền — quảng cáo, marketing, sales. Retention gần như miễn phí. Người dùng giữ lại còn tạo ra network effect, referral, và LTV (life-time value) cao hơn.
+
+Quan trọng hơn: **retention là bằng chứng sản phẩm của bạn thực sự có giá trị.** Người dùng không nói dối bằng hành vi quay lại — họ vote bằng chân.
+
+## Cohort analysis — cách đọc retention đúng
+
+Đừng nhìn retention tổng. Hãy phân tích theo cohort — nhóm người dùng đăng ký cùng một tháng. Nếu cohort tháng 1 có retention 40% mà cohort tháng 6 chỉ còn 15%, sản phẩm đang đi xuống dù tổng số user vẫn tăng (vì acquisition đang che giấu vấn đề).
+
+## Ví dụ thật
+
+Một app thiền định thấy retention Day-7 là 45% — nhưng khi chia theo cohort, họ phát hiện user nghe bài thiền đầu tiên trong 24h đầu có retention 65%, còn user chưa nghe thì chỉ 20%. Insight này dẫn đến một thay đổi nhỏ: push notification ngay sau đăng ký mời nghe bài đầu tiên. Retention Day-7 tổng tăng lên 52%.
+
+<Callout title="Mẹo">
+Tìm "activation moment" — hành động nào trong những ngày đầu tương quan cao nhất với retention dài hạn. Đó thường là lần người dùng lần đầu nhận được giá trị cốt lõi của sản phẩm. Tối ưu hóa để nhiều người đạt được moment đó càng sớm càng tốt.
+</Callout>
+
+<Callout title="Nhớ nhé">
+Retention kém không phải vấn đề marketing — đó là **tín hiệu sản phẩm chưa đủ giá trị** với người dùng thật. Fix product trước, rồi mới đổ tiền vào acquisition.
+</Callout>
+
+## Đọc thêm
+
+- [Cohort Retention Analysis: Reduce Churn — Amplitude](https://amplitude.com/blog/cohorts-to-improve-your-retention): Hướng dẫn đầy đủ về cohort analysis để giảm churn, bao gồm 3 loại cohort và case study thực tế từ Calm app.
+- [User Retention Metrics: Top 6 KPIs to Track — UXCam](https://uxcam.com/blog/user-retention-metrics/): Giải thích 6 KPI retention quan trọng nhất (Day 1/7/30, churn rate, CLTV, activation rate) kèm công thức tính.
+- [Cohort Analysis: How to Measure User Retention — Usermaven](https://usermaven.com/blog/cohort-analysis-to-measure-user-retention): Hướng dẫn thực hành cohort analysis, giải thích cách đọc retention curve và xác định điểm drop-off.
+- [Ultimate Guide to Cohort Analysis — Mixpanel](https://mixpanel.com/blog/cohort-analysis/): Phân tích sâu về cohort analysis với nhiều ví dụ từ các sản phẩm B2C và B2B khác nhau.
+
+## Tự kiểm tra
+
+1. App của bạn có 10,000 user tháng này, tăng 20% so với tháng trước. Tại sao con số này có thể che giấu một vấn đề retention nghiêm trọng?
+2. "Activation moment" là gì và tại sao nó lại quan trọng với retention? Cho một ví dụ với sản phẩm bạn đang xây.
+3. Sự khác biệt giữa Day-30 retention và "rolling 30-day retention" là gì? Cái nào cho bức tranh đầy đủ hơn?
