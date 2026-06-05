@@ -1,0 +1,107 @@
+---
+id: exercise-mind-002
+title: "Áp dụng mô hình tư duy vào một quyết định thật"
+type: "exercise"
+track: thinking-and-learning
+tags: [mental-models, thinking, decision-making, first-principles, inversion, second-order, problem-solving]
+estimatedMinutes: 30
+related: [lesson-mind-002, concept-first-principles-thinking, concept-inversion, concept-second-order-thinking, concept-map-vs-territory, concept-occams-razor, rubric-thinking-and-learning]
+status: published
+---
+import Callout from '../../../components/content/Callout.astro';
+
+## Tình huống
+
+Bạn là product builder đang chạy app quản lý công việc nhỏ — khoảng 500 user đang dùng, tăng trưởng chậm nhưng đều. Một user lớn liên hệ và yêu cầu thêm một tính năng phức tạp: **tích hợp AI để tự động gợi ý công việc tiếp theo** dựa trên lịch sử làm việc của user.
+
+Tính năng này sẽ mất ít nhất 6-8 tuần để build. Team chỉ có bạn và một developer part-time. Có user khác cũng đề xuất tính năng tương tự trong feedback, nhưng không rõ bao nhiêu người thực sự sẽ dùng.
+
+Câu hỏi trung tâm: **Có nên build tính năng AI gợi ý này không?**
+
+---
+
+## Nhiệm vụ 1 — First-Principles: Bóc vấn đề về gốc rễ
+
+Trước khi quyết định "build hay không build", hãy bóc vấn đề xuống tận nền tảng.
+
+**Câu hỏi dẫn dắt:**
+- User muốn gì *thực sự*? (Không phải tính năng họ mô tả — mà là kết quả họ muốn đạt được)
+- Giả định nào bạn đang ngầm chấp nhận mà chưa kiểm tra? (Ví dụ: "AI = tốt hơn", "user muốn tính năng = user sẽ dùng")
+- Nếu bỏ hết đi, sự thật nền tảng ở đây là gì? (Họ đang gặp vấn đề gì cụ thể khi quản lý công việc?)
+
+**Viết ra:**
+1. Mô tả vấn đề *thực sự* của user trong 1-2 câu — không dùng từ "AI" hay "gợi ý".
+2. Liệt kê 3 giả định bạn đang giữ về tính năng này. Với mỗi giả định, hỏi: "Mình có bằng chứng cho điều này không?"
+3. Dựa vào nguyên lý cơ bản: có giải pháp nào đơn giản hơn giải quyết vấn đề thực sự đó không?
+
+<Callout title="Mẹo">
+Dùng kỹ thuật "5 Whys": hỏi "Tại sao?" liên tục 5 lần từ yêu cầu ban đầu. Câu trả lời cuối cùng thường là vấn đề thực sự.
+</Callout>
+
+---
+
+## Nhiệm vụ 2 — Inversion: Liệt kê các con đường thất bại
+
+Thay vì chỉ hỏi "tính năng này sẽ thành công thế nào", hãy hỏi ngược lại.
+
+**Câu hỏi dẫn dắt:**
+- Nếu mình build tính năng này và sau 3 tháng nó thất bại hoàn toàn — chuyện gì đã xảy ra?
+- Những điều kiện nào phải đúng để tính năng này *không* tạo ra giá trị?
+- Mình đang liều gì nếu quyết định build? Mình đang liều gì nếu quyết định không build?
+
+**Viết ra:**
+1. Liệt kê ít nhất **5 cách** tính năng AI gợi ý này có thể thất bại hoặc gây hại cho product.
+2. Với mỗi nguyên nhân thất bại, đánh giá: **(a) khả năng xảy ra** (cao/trung bình/thấp) và **(b) tác động** nếu xảy ra (nghiêm trọng/vừa/nhỏ).
+3. Có nguyên nhân thất bại nào bạn *không thể kiểm soát* không? Điều đó thay đổi quyết định của bạn thế nào?
+
+<Callout title="Mẹo">
+Đừng chỉ liệt kê lý do kỹ thuật. Nghĩ rộng hơn: thất bại về adoption, thất bại về kỳ vọng user, thất bại về chi phí cơ hội (6-8 tuần không build thứ gì khác).
+</Callout>
+
+---
+
+## Nhiệm vụ 3 — Second-Order Thinking: Phân tích hậu quả bậc hai
+
+Giả sử bạn quyết định **build** tính năng này. Đừng dừng ở hậu quả bậc một.
+
+**Bậc một — Hậu quả trực tiếp:**
+- User lớn hài lòng, ở lại.
+- Có thêm một tính năng để quảng cáo.
+- Team bận 6-8 tuần.
+
+**Bây giờ, tiếp tục với bậc hai và ba:**
+
+**Viết ra:**
+1. Với **mỗi** hậu quả bậc một trên, hỏi "Rồi sao nữa?" ít nhất **một lần nữa**. Ghi lại câu trả lời.
+2. Có hậu quả bậc hai nào *tích cực* mà bạn chưa tính đến không?
+3. Có hậu quả bậc hai nào *tiêu cực* quan trọng hơn hậu quả bậc một tích cực không? Nếu có, nó thay đổi quyết định của bạn thế nào?
+
+<Callout title="Mẹo">
+Đặc biệt chú ý đến hậu quả *gián tiếp* — những thứ không liên quan đến tính năng nhưng bị ảnh hưởng bởi việc team bận. Ví dụ: bug backlog, velocity của các feature khác, tinh thần team.
+</Callout>
+
+---
+
+## Tổng kết
+
+Sau ba nhiệm vụ, viết **quyết định cuối cùng của bạn** trong 3-5 câu:
+- Build, không build, hay có phương án thứ ba?
+- Lý do chính dựa trên ba mô hình tư duy vừa áp dụng.
+- Điều bạn sẽ làm *ngay tiếp theo* (không phải kế hoạch dài — một bước cụ thể trong tuần này).
+
+<Callout title="Nhớ nhé">
+Bài tập này không có đáp án đúng duy nhất. Điều quan trọng là chất lượng lập luận — bạn có bóc được giả định không, có nhìn từ góc thất bại không, có hỏi "rồi sao nữa?" không. Quyết định có thể thay đổi; kỹ năng tư duy thì không.
+</Callout>
+
+---
+
+## Tiêu chí đánh giá
+
+Tham khảo [Thinking & Learning Rubric](../../rubrics/thinking-and-learning-rubric) để tự chấm. Với bài này, tập trung vào:
+
+| Tiêu chí | Câu hỏi tự kiểm tra |
+|---|---|
+| Bóc giả định (first-principles) | Giả định mình liệt kê có thực sự là giả định, hay chỉ là sự thật hiển nhiên? |
+| Tư duy đảo ngược (inversion) | Danh sách thất bại của mình có cụ thể không, hay chỉ là "mọi thứ có thể sai"? |
+| Tư duy bậc hai (second-order) | Mình có thực sự hỏi "rồi sao nữa?" sau hậu quả bậc một không? |
+| Quyết định có căn cứ | Quyết định cuối cùng của mình xuất phát từ ba mô hình, hay từ cảm tính ban đầu? |

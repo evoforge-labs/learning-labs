@@ -1,0 +1,52 @@
+---
+id: concept-cognitive-biases
+title: "Cognitive Biases"
+type: "concept"
+aliases: ["cognitive biases", "thiên kiến nhận thức", "confirmation bias sunk cost anchoring", "não đi đường tắt sai hệ thống"]
+tags: [decision-making, mental-models, thinking, psychology, uncertainty, biases]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Nhìn vào hình ảo giác này: hai đường thẳng song song trông như một cái cong hơn cái kia. Bạn biết chúng bằng nhau — nhưng mắt vẫn thấy khác. Biết sự thật không xóa được ảo giác.
+
+Thiên kiến nhận thức hoạt động y hệt: não bạn đi đường tắt, ra kết quả sai có hệ thống, và bạn vẫn cảm thấy mình đang suy luận đúng. Biết tên thiên kiến không triệt tiêu nó — nhưng giúp bạn *bắt được mình* trước khi ra quyết định lớn.
+
+## Là gì
+
+**Thiên kiến nhận thức (cognitive biases)** là những lối tắt tư duy mà não dùng để xử lý thông tin nhanh hơn — nhưng gây ra sai lầm có tính hệ thống và có thể dự đoán được.
+
+Ba loại phổ biến nhất trong ra quyết định:
+
+**Confirmation bias (thiên kiến xác nhận):** bạn vô thức tìm kiếm và ghi nhớ thông tin *xác nhận* điều mình đã tin, bỏ qua thông tin phản bác. Bạn pitch ý tưởng startup cho bạn bè, họ gật đầu — bạn nghĩ "idea này ổn". Nhưng bạn có hỏi những người sẽ *không* mua không?
+
+**Sunk cost fallacy (ảo tưởng chi phí chìm):** bạn tiếp tục đầu tư vào thứ đang thất bại chỉ vì đã lỡ bỏ nhiều vào đó. "Mình đã mất 6 tháng cho project này, bỏ giờ thì tiếc quá." Nhưng 6 tháng đó mất rồi, không lấy lại được dù bạn tiếp tục hay dừng. Câu hỏi đúng là: *từ hôm nay*, tiếp tục có kỳ vọng dương không?
+
+**Anchoring bias (thiên kiến neo đậu):** con số đầu tiên bạn nghe sẽ "neo" nhận thức của bạn, dù nó không liên quan. Khách hàng trả giá 200 triệu, bạn counter 150 triệu — dù giá thị trường thực là 80 triệu.
+
+## Ví dụ thật
+
+Một team đã làm feature X được 4 tháng. Kết quả test cho thấy users không dùng. PM hỏi: "Tiếp tục hay dừng?" Team vote tiếp tục — vì "đã đầu tư quá nhiều" (sunk cost) và chỉ trích dẫn feedback tích cực (confirmation bias).
+
+Nếu feature X là một dự án *mới* đề xuất hôm nay, với bằng chứng users không dùng, họ có bao giờ chấp thuận không? Chắc chắn không. Nhưng 4 tháng đã làm méo mó phán đoán.
+
+<Callout title="Cẩn thận">
+Biết tên thiên kiến không miễn dịch với nó — nghiên cứu cho thấy kể cả chuyên gia tâm lý học vẫn bị thiên kiến chi phối. Mục tiêu thực tế hơn là: tạo ra *quy trình* và *checklist* buộc bạn phải đối mặt với thông tin không thoải mái, thay vì chỉ tin vào ý chí tự kiểm soát.
+</Callout>
+
+<Callout title="Nhớ nhé">
+Khi bạn đang rất chắc chắn về một quyết định quan trọng — đó là lúc nên dừng lại và hỏi: "Thiên kiến nào có thể đang ảnh hưởng mình lúc này?" Sự chắc chắn cao bất thường thường là dấu hiệu của confirmation bias.
+</Callout>
+
+## Đọc thêm
+
+- [List of cognitive biases — Wikipedia](https://en.wikipedia.org/wiki/List_of_cognitive_biases) — Danh sách đầy đủ nhất về thiên kiến nhận thức, được phân loại theo từng nhóm; dùng làm tài liệu tra cứu khi nghi ngờ bản thân đang bị ảnh hưởng bởi thiên kiến nào đó.
+- [Cognitive Bias vs. Unconscious Bias — BetterUp](https://www.betterup.com/blog/cognitive-bias) — Giải thích thực hành với 12 loại thiên kiến phổ biến và cách nhận ra chúng trong cuộc sống hàng ngày.
+- [The Sunk Cost Fallacy — Cognitive Train](https://cognitivetrain.com/sunk-cost-fallacy/) — Phân tích chuyên sâu về sunk cost fallacy với ví dụ thực tế và bài kiểm tra tự đánh giá; một trong những thiên kiến tốn kém nhất cho builder.
+- [The Top 5 Cognitive Biases in Evaluation — Eval Academy](https://www.evalacademy.com/articles/the-top-5-cognitive-biases-in-evaluation-and-what-to-do-about-them) — Tập trung vào cách thiên kiến méo mó quá trình đánh giá và ra quyết định; kèm chiến lược thực tế để giảm thiểu ảnh hưởng.
+
+## Tự kiểm tra
+
+1. Bạn đang làm một project side đã 3 tháng, chưa có user nào trả tiền. Bạn vẫn tiếp tục vì "đã lỡ bỏ nhiều công sức". Đây là thiên kiến gì? Câu hỏi đúng bạn nên tự hỏi lúc này là gì?
+2. Một đồng nghiệp đề xuất ngân sách 500 triệu cho một dự án. Bạn counter 350 triệu. Thiên kiến nào có thể đã ảnh hưởng đến con số 350 triệu của bạn?
+3. Bạn muốn tránh confirmation bias khi đánh giá một ý tưởng mới. Bạn sẽ làm gì cụ thể trước khi ra quyết định?

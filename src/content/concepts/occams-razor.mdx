@@ -1,0 +1,47 @@
+---
+id: concept-occams-razor
+title: "Occam's Razor"
+type: "concept"
+aliases: ["occam's razor", "dao cạo Occam", "giải thích đơn giản nhất", "law of parsimony", "nguyên tắc tiết kiệm giải thích"]
+tags: [mental-models, thinking, problem-solving, simplicity, occams-razor]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Bạn đến bác sĩ với triệu chứng ho, sốt nhẹ, mệt mỏi. Bác sĩ có hai lựa chọn: chẩn đoán cảm cúm thông thường, hoặc nghi ngờ một bệnh nhiễm trùng hiếm gặp ở vùng nhiệt đới mà bạn chưa từng đến. Cả hai giải thích đều *có thể* đúng — nhưng cái nào nên thử trước?
+
+Bác sĩ giỏi xử lý bệnh thường gặp trước bệnh hiếm. Đó là dao cạo Occam trong y tế.
+
+## Là gì
+
+**Occam's Razor** (hay *luật tiết kiệm*) là nguyên tắc: khi có nhiều lời giải thích cùng giải thích được một hiện tượng, chọn cái đơn giản nhất — cái có ít giả định nhất. Không phải vì giải thích đơn giản *luôn* đúng, mà vì nó *dễ kiểm tra hơn*, *ít rủi ro hơn*, và thường là điểm xuất phát tốt nhất.
+
+William of Ockham, triết gia thế kỷ 14, đặt nền tảng cho nguyên tắc này: *"Đừng nhân thực thể lên quá mức cần thiết."*
+
+## Ví dụ thật
+
+App của bạn đột nhiên chậm sau khi deploy. Giả thuyết A: server đang bị DDoS và có ai đó tấn công có chủ đích. Giả thuyết B: một query mới trong deploy vừa rồi thiếu index.
+
+Cả hai đều có thể đúng. Nhưng giả thuyết B cần ít giả định hơn (deploy vừa xảy ra, query mới chưa được test kỹ), và dễ kiểm tra trong 2 phút. Kiểm tra B trước — nếu sai, chuyển sang A.
+
+Occam's razor không nói "bỏ qua DDoS". Nó nói "kiểm tra cái đơn giản nhất trước, rồi leo thang nếu cần."
+
+<Callout title="Cẩn thận">
+Occam's razor hay bị hiểu sai thành "câu trả lời đơn giản nhất luôn đúng." Không phải vậy. Thực tế thường phức tạp. Nguyên tắc này chỉ nói: *đừng thêm phức tạp nếu không cần thiết*. Đừng dùng nó để bỏ qua những yếu tố phức tạp quan trọng.
+</Callout>
+
+<Callout title="Nhớ nhé">
+Khi đang điều tra vấn đề hoặc chọn giải pháp: liệt kê các lời giải thích, xếp theo số lượng giả định cần thiết, kiểm tra từ ít giả định nhất trước. Tiết kiệm thời gian và tránh đào quá sâu vào ngõ cụt.
+</Callout>
+
+## Đọc thêm
+
+- [How to Use Occam's Razor Without Getting Cut — Farnam Street (fs.blog)](https://fs.blog/occams-razor/) — Farnam Street giải thích cách dùng đúng và tránh dùng sai Occam's razor; đặc biệt phần về khi nào *không* nên dùng nguyên tắc này.
+- [Occam's Razor — The Decision Lab](https://thedecisionlab.com/reference-guide/philosophy/occams-razor) — Nền tảng lý thuyết và ứng dụng trong khoa học nhận thức, kinh tế học hành vi; nguồn học thuật nhưng dễ đọc.
+- [Occam's Razor Fallacy — Ness Labs](https://nesslabs.com/occams-razor) — Bài phản tư quan trọng: khi nào Occam's razor dẫn bạn sai hướng và những trường hợp cần cẩn thận.
+
+## Tự kiểm tra
+
+1. Occam's razor không nói "giải thích đơn giản nhất luôn đúng." Vậy nó thực sự nói gì? Diễn đạt lại bằng lời của bạn.
+2. Lần cuối bạn gặp bug hoặc vấn đề khó, bạn bắt đầu từ giả thuyết phức tạp hay đơn giản? Kết quả thế nào?
+3. Occam's razor có giới hạn ở đâu? Mô tả một tình huống mà "giải thích đơn giản nhất" lại dẫn đến kết luận sai.

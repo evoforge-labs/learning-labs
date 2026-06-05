@@ -1,0 +1,54 @@
+---
+id: concept-expected-value-thinking
+title: "Expected Value Thinking"
+type: "concept"
+aliases: ["expected value thinking", "tư duy giá trị kỳ vọng", "quyết định theo xác suất kết quả", "EV thinking decision making"]
+tags: [decision-making, mental-models, probability, thinking, uncertainty]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Bạn có 10 lần ném đồng xu. Mỗi lần ra mặt sấp, bạn được 200k. Mỗi lần ra mặt ngửa, bạn mất 100k. Bạn có chơi không?
+
+Cảm giác sẽ bảo: "Mất tiền thì đau lắm, thôi không chơi." Nhưng tính ra: xác suất 50% × 200k − xác suất 50% × 100k = **+50k mỗi lần ném**. Chơi 10 lần, kỳ vọng lãi 500k. Người từ chối mất đi một cơ hội có lợi — chỉ vì nhìn vào cảm giác thay vì tính toán.
+
+Đó là vấn đề mà **expected value thinking** giải quyết.
+
+## Là gì
+
+**Tư duy giá trị kỳ vọng** là cách ra quyết định bằng cách nhìn vào *tổng hợp xác suất × kết quả* — không phải cảm giác về một lần thử cụ thể.
+
+Công thức đơn giản: **EV = Σ (xác suất × kết quả)**
+
+Nhưng quan trọng hơn công thức là *tư duy*: một quyết định tốt là quyết định có kỳ vọng dương, dù lần này kết quả xấu. Và một quyết định tệ vẫn là tệ, dù lần này may mắn ra kết quả tốt.
+
+## Ví dụ thật
+
+Bạn đang cân nhắc viết một bài blog dài giải thích kỹ năng của mình. Mất 3 tiếng. Bạn nghĩ: "Chắc không ai đọc đâu." Nhưng nhìn lại:
+
+- Xác suất 70%: không ai đọc → thiệt 3 tiếng.
+- Xác suất 20%: 100 người đọc, 1 người liên lạc → 1 client hoặc cơ hội mới.
+- Xác suất 10%: bài lan rộng → nhiều cơ hội hơn.
+
+Nếu 1 client đáng 50 triệu và bạn ước tính xác suất 20% × 50tr = 10tr kỳ vọng, cộng thêm mọi kịch bản nhỏ hơn — 3 tiếng đầu tư ấy có kỳ vọng rất dương. Bạn nên viết, dù "cảm giác như vô nghĩa".
+
+<Callout title="Cẩn thận">
+EV thinking dễ bị lạm dụng: tính con số giả để hợp lý hóa điều mình muốn làm. Kỷ luật nằm ở việc ước tính xác suất *trước khi* biết bạn muốn kết quả nào — không phải sau. Nếu bạn toàn thấy EV của thứ mình thích đều dương, đó là dấu hiệu cần cảnh giác.
+</Callout>
+
+<Callout title="Nhớ nhé">
+Quyết định đúng theo kỳ vọng + kết quả xấu = vẫn là quyết định đúng. Đừng để một lần thất bại thuyết phục bạn rằng mình đã sai. Nhìn vào quy trình, không nhìn vào kết quả đơn lẻ.
+</Callout>
+
+## Đọc thêm
+
+- [Expected value: how can we make a difference when we're uncertain what's true? — 80,000 Hours](https://80000hours.org/articles/expected-value/) — Giải thích tư duy kỳ vọng trong bối cảnh ra quyết định quan trọng; ví dụ cụ thể, dễ hiểu, không cần nền toán.
+- [Expected Value: Why Probabilities Can Help Us Make Better Career Decisions — Probably Good](https://probablygood.org/core-concepts/expected-value/) — Áp dụng EV thinking vào quyết định sự nghiệp; hữu ích khi bạn phân vân giữa các lựa chọn lớn.
+- [Make your decisions as expected value calculations — Principles.com](https://www.principles.com/principles/92ee4a9c-0f85-4f38-b6ed-69c676ada385/) — Ray Dalio giải thích ngắn gọn tại sao mọi quyết định đều có thể (và nên) được nhìn qua lăng kính kỳ vọng.
+- [How Expected Value Can Help You Make Good Decisions — Quick and Dirty Tips](https://www.quickanddirtytips.com/qdtarchive/how-expected-value-can-help-you-make-good-decisions-part-1/) — Hướng dẫn thực hành tính EV trong cuộc sống hàng ngày, không cần toán học phức tạp.
+
+## Tự kiểm tra
+
+1. Bạn tung đồng xu, mặt sấp được 300k, mặt ngửa mất 100k. EV mỗi lần tung là bao nhiêu? Bạn có nên chơi không?
+2. Sự khác biệt giữa "quyết định tốt" và "kết quả tốt" là gì? Tại sao phân biệt điều này lại quan trọng?
+3. Khi nào EV thinking có thể dẫn bạn đến quyết định sai? Nêu một ví dụ về trường hợp không nên chỉ dựa vào kỳ vọng đơn thuần.
