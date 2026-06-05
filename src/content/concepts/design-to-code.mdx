@@ -1,0 +1,64 @@
+---
+id: concept-design-to-code
+title: "Design to Code"
+type: "concept"
+aliases: ["design to code là gì", "biến thiết kế thành code", "figma to code workflow", "implement ui từ figma", "shadcn tailwind implement design"]
+tags: [design, ux, ui, design-to-code, shadcn, tailwind, figma, workflow, solo-builder]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Bạn có bản thiết kế đẹp trên Figma. Rồi bạn ngồi code lại — từng pixel, từng màu, từng khoảng cách — nhìn đi nhìn lại so sánh. Một giờ sau, nó ra được 70%. Hai giờ nữa để "kéo" nốt 30% còn lại. Và hôm sau designer nói cần sửa nút ở 3 chỗ.
+
+Cái vòng lặp đau đớn đó gọi là "pixel pushing". Và nó không cần thiết.
+
+## Là gì
+
+**Design to code** là quá trình biến thiết kế trực quan thành giao diện chạy được trong code. Làm đúng, bước này không phải "copy từng pixel" — mà là áp dụng **design token + component có sẵn** để implement nhanh và giữ nhất quán.
+
+Ba cách tiếp cận thực tế:
+
+1. **Dùng component library (shadcn/ui, Radix, Chakra):** Bạn không vẽ lại nút, card, input — bạn lấy component có sẵn và chỉnh token/props. Nhanh hơn gấp 3-5 lần so với làm từ đầu.
+2. **Tailwind CSS với token:** Thay vì viết CSS tùy ý, bạn map design token sang Tailwind utilities. `bg-primary`, `p-4`, `rounded-lg` — nhất quán với config, không hardcode.
+3. **AI-assisted:** Dùng AI (Cursor, Claude Code, v0.dev) để generate component từ mô tả hoặc screenshot. Vẫn cần bạn review và điều chỉnh token, nhưng boilerplate xong trong giây.
+
+## Ví dụ thật
+
+Bạn cần implement một card sản phẩm: ảnh, tên, giá, nút "Thêm vào giỏ". Thay vì tự CSS từ đầu:
+
+```jsx
+import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+
+<Card>
+  <CardContent className="p-4 gap-3 flex flex-col">
+    <img src={product.image} className="rounded-md" />
+    <p className="font-medium text-foreground">{product.name}</p>
+    <p className="text-muted-foreground">{product.price}</p>
+    <Button>Thêm vào giỏ</Button>
+  </CardContent>
+</Card>
+```
+
+Xong trong 5 phút, nhất quán với toàn bộ app vì dùng chung token (`text-foreground`, `text-muted-foreground`, `rounded-md`).
+
+<Callout title="Cẩn thận">
+Bẫy phổ biến nhất: bạn "implement xong" nhưng lại tạo ra một mớ class ngẫu nhiên và hardcode màu riêng, thay vì dùng token và component của design system. Ba tháng sau, app của bạn có 4 kiểu card khác nhau mà không ai nhận ra. Mỗi khi implement, hỏi: "Có component/token nào đã có chưa trước khi tôi viết cái mới?"
+</Callout>
+
+<Callout title="Nhớ nhé">
+Design to code tốt = dùng component + token sẵn có, không phải copy pixel. Mục tiêu là speed + consistency, không phải sao chép chính xác từng pixel từ Figma.
+</Callout>
+
+## Đọc thêm
+
+- [shadcn/ui — Getting Started](https://ui.shadcn.com/docs/components) — Tài liệu chính thức của shadcn/ui; danh sách đầy đủ component sẵn dùng, cách install và customize từng cái — điểm bắt đầu thực tế nhất cho React builder.
+- [From Figma to Code with shadcn/ui and Tailwind — Medium](https://medium.com/@great_it/from-figma-to-code-5c2af3ea7a05) — Bài viết thực hành về quy trình Figma → shadcn/ui → Tailwind; minh họa cách map Figma variants sang Tailwind pseudo-classes.
+- [Figma Code Connect with shadcn — Shadcraft](https://shadcraft.com/blog/how-to-use-figma-code-connect-with-the-shadcraft-shadcn-ui-kit) — Hướng dẫn liên kết Figma component với code component thật qua Code Connect; giúp designer và developer luôn nói chung một ngôn ngữ.
+- [Transform Figma to shadcn with Anima — Anima Blog](https://www.animaapp.com/blog/product-updates/transform-figma-designs-into-shadcn-components-with-anima/) — Giới thiệu cách dùng AI để tạo code shadcn trực tiếp từ Figma; minh họa workflow AI-assisted design-to-code thực tế.
+
+## Tự kiểm tra
+
+1. Tại sao "copy từng pixel từ Figma vào code" lại là anti-pattern? Cách tiếp cận tốt hơn là gì?
+2. Bạn cần implement một màn hình có 5 component mới chưa từng làm. Bạn sẽ quyết định cái nào dùng từ shadcn/ui có sẵn, cái nào tự build — dựa trên tiêu chí gì?
+3. Design token đóng vai trò gì trong bước design-to-code? Nếu không có token, điều gì sẽ xảy ra khi bạn cần đổi màu brand?

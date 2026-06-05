@@ -1,0 +1,49 @@
+---
+id: concept-alignment-and-proximity
+title: "Alignment & Proximity"
+type: "concept"
+aliases: ["alignment proximity", "căn chỉnh gần kề", "gestalt proximity design", "căn thẳng hàng UI", "nhóm phần tử liên quan", "gestalt gần kề thiết kế"]
+tags: [design, ux, layout, gestalt, alignment, visual-design, design-for-builders]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Khi bạn dọn tủ quần áo, bạn không xếp ngẫu nhiên — áo cùng loại đặt cạnh nhau, quần riêng một ngăn, phụ kiện ở hộc dưới. Ai mở tủ nhìn vào cũng hiểu ngay cái gì ở đâu, dù chẳng có nhãn dán nào.
+
+Đó là hai nguyên tắc cốt lõi của bố cục: **căn chỉnh** (alignment) tạo trật tự thị giác, và **gần kề** (proximity) nói với mắt người xem "những thứ này thuộc về nhau."
+
+## Là gì
+
+**Alignment (Căn chỉnh):** Đặt các phần tử theo một đường kẻ chung — trái, phải, giữa, hoặc theo đường baseline. Khi mọi thứ căn chỉnh nhất quán, màn hình trông gọn gàng và có tổ chức, dù bạn không thêm đường viền hay màu sắc gì thêm.
+
+**Proximity (Gần kề):** Các phần tử đặt gần nhau được não người tự động coi là một nhóm. Đây là nguyên tắc Gestalt — não người không xử lý từng điểm ảnh riêng lẻ, mà gom chúng thành "khối ý nghĩa" dựa trên vị trí tương đối.
+
+## Ví dụ thật
+
+Bạn có form đăng ký với label "Email" và ô nhập email. Nếu khoảng cách từ label đến ô nhập là 24px, nhưng khoảng cách từ ô nhập đến label tiếp theo ("Mật khẩu") cũng là 24px — người dùng không biết label nào đi với ô nào.
+
+Sửa đơn giản: giảm khoảng cách label-input xuống 6px, tăng khoảng cách giữa các field lên 24px. Không thêm gì cả — chỉ thay đổi khoảng trắng. Kết quả: não người tự động nhóm label với input của nó.
+
+Tương tự với alignment: nếu tên người dùng căn trái, nhưng nút "Sửa" lại căn phải không theo hệ thống nào, giao diện trông "lung lay" dù từng phần tử trông ổn khi nhìn riêng.
+
+<Callout title="Cẩn thận">
+"Căn giữa tất cả" không phải alignment tốt — đó là alignment lười. Căn giữa phù hợp cho headline ngắn hoặc CTA đơn lẻ. Với khối text dài hoặc danh sách, căn trái nhất quán dễ đọc hơn và tạo cảm giác trật tự hơn nhiều.
+</Callout>
+
+**Khoảng trắng là công cụ chủ động.** Đừng nghĩ "khoảng trắng là chỗ trống chưa điền" — mà là "khoảng trắng là thứ bạn dùng để nhóm và tách biệt." Thêm khoảng trắng giữa hai nhóm = nói với mắt người xem "hai phần này khác nhau." Giảm khoảng trắng trong một nhóm = "những thứ này liên quan nhau."
+
+<Callout title="Nhớ nhé">
+Gần nhau = liên quan nhau. Căn thẳng hàng = có trật tự. Hai nguyên tắc này miễn phí, không cần thêm màu sắc hay đường viền — nhưng thiếu chúng thì giao diện nào cũng trông rối.
+</Callout>
+
+## Đọc thêm
+
+- [Gestalt Principles — Figma Resource Library](https://www.figma.com/resource-library/gestalt-principles/) — Figma giải thích tất cả các nguyên tắc Gestalt (proximity, alignment, similarity, v.v.) với hình minh họa rõ ràng; điểm khởi đầu tốt nhất cho người mới.
+- [Gestalt Theory for UX Design: Principle of Proximity — Tubik Blog](https://blog.tubikstudio.com/gestalt-theory-for-ux-design-principle-of-proximity/) — Bài viết chuyên sâu về nguyên tắc proximity với nhiều ví dụ UI thực tế; giải thích tại sao khoảng trắng là công cụ thiết kế, không phải chỗ trống.
+- [Gestalt Principles: Strategic Framework for UI/UX — Toptal](https://www.toptal.com/designers/ui/gestalt-principles-of-design) — Tổng quan toàn bộ các nguyên tắc Gestalt theo góc nhìn UI/UX chiến lược; có thêm phân tích về cách áp dụng trong hệ thống thiết kế lớn.
+
+## Tự kiểm tra
+
+1. Bạn có một card với tiêu đề, mô tả ngắn, và nút "Xem thêm". Để áp dụng proximity đúng, bạn nên điều chỉnh khoảng cách giữa các phần tử này như thế nào?
+2. Tại sao "căn giữa tất cả" thường là lựa chọn tệ hơn "căn trái nhất quán" cho giao diện có nhiều text?
+3. Trong form đăng nhập (email + password + nút Login), hãy chỉ ra ít nhất 2 quyết định về proximity và alignment mà bạn cần đưa ra.

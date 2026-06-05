@@ -1,0 +1,49 @@
+---
+id: concept-design-systems
+title: "Design Systems"
+type: "concept"
+aliases: ["design system là gì", "hệ thống thiết kế", "component library ui", "bộ lego giao diện", "thư viện component dùng lại"]
+tags: [design, ux, ui, design-systems, components, consistency, solo-builder]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Hãy tưởng tượng bạn đang lắp ghép mô hình Lego. Tất cả khối 2x4 màu đỏ đều giống nhau — bạn không phải tự đúc từng khối mỗi lần dùng. Khi cần thêm cột, bạn lấy khối sẵn có ra ghép. Khi muốn đổi màu toàn bộ tòa nhà, bạn chỉ cần đổi khối đỏ thành xanh — mọi chỗ dùng nó đều thay đổi theo.
+
+Design system hoạt động y như vậy — nhưng cho giao diện phần mềm.
+
+## Là gì
+
+**Design system** là một bộ quy tắc + thành phần UI dùng chung, được tài liệu hóa rõ ràng, để mọi màn hình trong sản phẩm trông nhất quán và làm nhanh hơn. Nó gồm hai phần chính:
+
+- **Component library:** các "khối Lego" như Button, Card, Input, Badge, Modal — đã làm sẵn, dùng lại được.
+- **Quy tắc & guidelines:** màu nào dùng ở đâu, khoảng cách ra sao, font size nào là heading, khi nào dùng Toast thay Modal.
+
+## Ví dụ thật
+
+Bạn đang build một app SaaS. Tuần 1 bạn làm trang login — có một nút xanh "Đăng nhập". Tuần 3 bạn làm trang settings — thêm một nút "Lưu thay đổi", nhưng lần này hơi khác: bo góc ít hơn, padding rộng hơn, font đậm hơn. Tuần 5 bạn thêm trang billing — nút "Nâng cấp" trông lại khác nữa.
+
+Sau 3 tháng, app của bạn có 5 kiểu nút khác nhau. User không nhận ra, nhưng cảm giác "lộn xộn" thì có. Và mỗi lần design lại, bạn phải sửa từng chỗ một.
+
+Với design system: bạn định nghĩa `Button` một lần. Mọi màn hình dùng cùng component đó. Đổi màu primary? Một chỗ, toàn bộ app cập nhật.
+
+<Callout title="Cẩn thận">
+Design system không phải thứ bạn cần build từ đầu. Với solo builder, dùng một design system có sẵn (shadcn/ui, Radix, Chakra) và **thêm lớp customize của mình lên trên** là đủ. Xây từ đầu tốn cả tháng mà chưa ra một tính năng nào.
+</Callout>
+
+<Callout title="Nhớ nhé">
+Design system = bộ Lego của giao diện: component dùng lại + quy tắc dùng chúng. Mục tiêu là nhất quán và nhanh — không phải hoàn hảo ngay từ đầu. Bắt đầu nhỏ: 3-5 component cốt lõi là đủ để cảm nhận lợi ích.
+</Callout>
+
+## Đọc thêm
+
+- [Atomic Design — Brad Frost](https://atomicdesign.bradfrost.com/chapter-1/) — Cuốn sách mở ra cách tư duy về UI theo các tầng từ nguyên tử đến trang hoàn chỉnh; chương 1 giải thích tại sao design system là tất yếu khi sản phẩm lớn dần.
+- [shadcn/ui — Components](https://ui.shadcn.com/docs/components) — Thư viện component mã nguồn mở phổ biến nhất cho React/Tailwind; bạn copy code về sở hữu hoàn toàn, không bị lock-in vào dependency.
+- [Design Systems — design.dev](https://design.dev/guides/design-systems/) — Giải thích tổng quan design system và design token trong cùng một bài; phù hợp cho builder muốn hiểu toàn cảnh trước khi triển khai.
+- [Design Systems 101 — NamasteDev](https://namastedev.com/blog/design-systems-101-tokens-components-and-documentation/) — Bài viết ngắn gọn liên kết token, component và tài liệu hóa lại với nhau; tốt cho người mới bắt đầu.
+
+## Tự kiểm tra
+
+1. Sự khác biệt giữa một "component library" và một "design system" đầy đủ là gì? Cái nào là tập con của cái nào?
+2. Bạn đang build một app và chưa có design system. Hãy chọn 3 component quan trọng nhất cần chuẩn hóa đầu tiên và giải thích lý do.
+3. Tại sao một solo builder nên dùng design system có sẵn thay vì tự xây từ đầu? Trường hợp nào thì tự xây mới đáng?

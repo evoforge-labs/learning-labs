@@ -1,0 +1,52 @@
+---
+id: concept-microcopy
+title: "Microcopy"
+type: "concept"
+aliases: ["microcopy ux writing", "chữ nhỏ giao diện", "ux writing copy nút lỗi", "microcopy placeholder button label"]
+tags: [design, ux, ui, microcopy, ux-writing, copy, content-design]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Hai cái nút xóa tài khoản. Nút A: "OK". Nút B: "Xóa vĩnh viễn". Một nút khiến người dùng click nhầm. Một nút khiến họ dừng lại và nghĩ.
+
+Sự khác biệt đó chỉ là vài chữ — đó là microcopy.
+
+## Là gì
+
+**Microcopy** là những đoạn văn bản nhỏ trong giao diện: label nút, thông báo lỗi, placeholder trong form, tooltip, text xác nhận hành động, empty state message. Không phải marketing copy, không phải bài viết dài — chỉ là vài từ xuất hiện đúng lúc người dùng cần.
+
+Microcopy tốt làm ba việc: **giảm ma sát** (người dùng không cần đoán), **giảm lo lắng** (họ biết chuyện gì sẽ xảy ra), và **phản ánh giọng văn** của sản phẩm (con người hay robot).
+
+## Ví dụ thật
+
+Form yêu cầu số điện thoại. Placeholder ghi "Số điện thoại". Người dùng không biết có cần mã vùng không, gõ kiểu gì, và tại sao cần số này.
+
+Thay bằng: placeholder "0912 345 678" + helper text nhỏ "Dùng để nhận OTP xác nhận" — đột ngột mọi thứ rõ ràng hơn mà không cần thêm một field nào.
+
+Tương tự với thông báo lỗi:
+- Trước: "Lỗi: Dữ liệu không hợp lệ"
+- Sau: "Email này chưa được đăng ký. Bạn muốn tạo tài khoản mới không?"
+
+Cùng một lỗi, nhưng cái sau dẫn người dùng đến bước tiếp theo thay vì để họ bị kẹt.
+
+<Callout title="Mẹo">
+Khi viết microcopy cho hành động không thể hoàn tác (xóa, hủy, gửi), hãy mô tả *kết quả cụ thể* thay vì chỉ lặp lại tên hành động. "Xóa vĩnh viễn 3 file này" rõ hơn "Xác nhận xóa". "Gửi đến team (5 người)" rõ hơn "Gửi".
+</Callout>
+
+<Callout title="Nhớ nhé">
+Microcopy là giọng nói của sản phẩm lúc người dùng đang làm việc. Viết như con người, không như hệ thống. Dùng ngôn ngữ người dùng dùng, không phải ngôn ngữ kỹ thuật. "Đã lưu" tốt hơn "Thao tác hoàn thành thành công".
+</Callout>
+
+## Đọc thêm
+
+- [Microcopy: Examples and Best Practices for Great UX — Justinmind](https://www.justinmind.com/ux-design/microcopy) — 15 ví dụ microcopy thực tế từ Slack, Airbnb, Netflix; phân tích tại sao từng ví dụ hiệu quả. Cập nhật 2025.
+- [Microcopy in a Nutshell: Past, Present and Future — UX Writing Hub](https://uxwritinghub.com/what-is-microcopy/) — Lịch sử và định nghĩa microcopy từ góc nhìn UX writer chuyên nghiệp; có ví dụ tốt/xấu kèm giải thích.
+- [How to Optimize Button Microcopy — UX Psychology](https://uxpsychology.substack.com/p/how-to-optimize-button-microcopy) — Tập trung riêng vào label nút: cách viết CTA rõ ràng, action-oriented, và giảm cognitive load.
+- [Microcopy UX: Tips and Examples — Userpilot](https://userpilot.com/blog/microcopy-ux/) — Hướng dẫn thực tế cho builder: cách kiểm tra microcopy hiện tại, pattern thường gặp, và checklist cải thiện.
+
+## Tự kiểm tra
+
+1. Nút "Submit" so với nút "Gửi đánh giá của bạn" — cái nào tốt hơn và tại sao? Nguyên tắc nào đang được áp dụng?
+2. Thông báo lỗi "Đã xảy ra lỗi, thử lại sau" — viết lại thông báo này tốt hơn cho tình huống người dùng tải ảnh quá lớn (giới hạn 5MB).
+3. Bạn có một màn hình empty state cho tính năng "Lịch sử giao dịch" của người dùng mới. Viết microcopy gồm: tiêu đề + 1 câu mô tả + text cho nút CTA.

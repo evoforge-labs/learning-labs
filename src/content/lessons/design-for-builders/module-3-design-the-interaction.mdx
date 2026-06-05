@@ -1,0 +1,63 @@
+---
+id: lesson-ux-003
+title: "Design for the Tap, the Wait, and the Mistake"
+type: "lesson"
+track: design-for-builders
+module: interaction
+level: intermediate
+tags: [design, ux, ui, interaction-design, affordance, feedback, ui-states, form-design, microcopy, usability]
+prerequisites: [concept-affordance-and-signifiers, concept-ui-feedback, concept-ui-states, concept-form-ux, concept-microcopy]
+related: [exercise-ux-003, rubric-design-for-builders]
+status: published
+---
+import Callout from '../../../components/content/Callout.astro';
+
+Hầu hết builder thiết kế cho *kịch bản lý tưởng*: người dùng biết muốn gì, bấm đúng chỗ, mọi thứ tải nhanh, không có lỗi. Rồi app ra đời và thực tế khác hoàn toàn.
+
+Module này về một câu hỏi thực tế hơn: **giao diện của bạn trông như thế nào khi người dùng bấm, chờ, và sai?**
+
+## Người dùng cần biết họ có thể làm gì
+
+Bước đầu tiên trong mọi tương tác là người dùng phải *nhận ra* họ có thể làm gì và làm như thế nào.
+
+Đây là lúc [affordance và signifier](/concepts/affordance-and-signifiers) phát huy tác dụng. Affordance là khả năng tương tác thực sự; signifier là gợi ý trực quan để người dùng nhận ra affordance đó. Nút trông bấm được vì có shadow và border-radius. Thanh kéo trông kéo được vì có grip icon. Nếu signifier không rõ, người dùng sẽ không thử — dù affordance có tồn tại.
+
+Câu hỏi để tự kiểm tra: *Nếu bỏ hết label, người dùng còn biết cái này làm được gì không?*
+
+## Mỗi hành động cần một phản hồi
+
+Sau khi người dùng tương tác, họ cần biết hệ thống đã nhận được tín hiệu đó.
+
+[UI feedback](/concepts/ui-feedback) là lớp giao tiếp quan trọng nhất giữa app và người dùng. Không có feedback, người dùng đoán mò — và thường đoán sai (bấm thêm lần nữa, thoát ra, nghĩ app bị lỗi). Feedback tốt thì ngay lập tức, rõ ràng, và đúng ngữ cảnh: hover state cho biết "có thể bấm", spinner cho biết "đang xử lý", toast cho biết "đã xong".
+
+## Thiết kế cho cả lúc mọi thứ chưa sẵn sàng
+
+Happy path chỉ là một phần nhỏ. Phần lớn thời gian, màn hình đang *tải*, *rỗng*, hoặc *bị lỗi*.
+
+[UI states](/concepts/ui-states) nhắc nhở bạn thiết kế đủ bốn trạng thái: content (happy path), loading, empty, và error. Mỗi trạng thái cần nói với người dùng: chuyện gì đang xảy ra, và bước tiếp theo là gì. Empty state đặc biệt quan trọng với người dùng mới — đó là cơ hội onboarding, không phải khoảng trắng bị quên.
+
+<Callout title="Nhớ nhé">
+Thiết kế không phải chỉ là màn hình đẹp khi có đủ dữ liệu. Nó là toàn bộ hành trình — từ lúc chưa có gì đến lúc có lỗi đến lúc hoàn thành.
+</Callout>
+
+## Form là điểm rớt conversion nguy hiểm nhất
+
+Mọi lúc bạn yêu cầu người dùng nhập liệu, bạn đang tạo ra rào cản. [Form UX](/concepts/form-ux) là nghệ thuật tối thiểu hoá rào cản đó: ít field, label rõ, lỗi inline, và không bao giờ bắt người dùng nhập lại từ đầu. Mỗi field dư thừa là một lý do để bỏ cuộc.
+
+## Chữ nhỏ quyết định trải nghiệm lớn
+
+Tất cả những thứ trên — affordance, feedback, states, form — đều cần [microcopy](/concepts/microcopy) để hoàn thiện. Label nút, thông báo lỗi, helper text, empty state message: đây là giọng nói của sản phẩm lúc người dùng đang làm việc thật sự. Viết như con người, dùng ngôn ngữ của người dùng, mô tả kết quả cụ thể thay vì tên hành động chung chung.
+
+## Kết nối lại
+
+Năm concept trong module này không độc lập — chúng là một chuỗi:
+
+1. Signifier giúp người dùng *nhận ra* có thể tương tác.
+2. Feedback xác nhận *hành động đã được ghi nhận*.
+3. UI states quản lý *mọi tình huống* ngoài happy path.
+4. Form UX giảm ma sát *khi người dùng nhập liệu*.
+5. Microcopy buộc tất cả lại bằng *ngôn ngữ rõ ràng, con người*.
+
+Thiếu một mắt xích, trải nghiệm bị đứt đoạn.
+
+Thực hành ngay với [bài tập thiết kế tương tác →](/exercises/design-for-builders/m3-design-the-states)

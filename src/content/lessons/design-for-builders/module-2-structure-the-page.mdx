@@ -1,0 +1,69 @@
+---
+id: lesson-ux-002
+title: "Sắp xếp màn hình để mắt người đi đúng đường"
+type: "lesson"
+track: design-for-builders
+module: layout
+level: beginner
+tags: [design, ux, layout, grid, alignment, responsive, eye-tracking, visual-hierarchy, design-for-builders]
+prerequisites: [concept-layout-and-grid, concept-alignment-and-proximity, concept-responsive-design, concept-visual-scanning-patterns]
+related: [exercise-ux-002, rubric-design-for-builders]
+status: published
+---
+import Callout from '../../../components/content/Callout.astro';
+
+Bạn có thể có nội dung tốt, màu sắc đẹp, typography ổn — nhưng nếu người dùng không biết nhìn vào đâu trước, tất cả những thứ đó trở nên vô nghĩa. Module 2 này là về một kỹ năng cụ thể: **đặt đúng thứ vào đúng chỗ để mắt người đi đúng đường**.
+
+Bốn công cụ từ module này không hoạt động độc lập — chúng phối hợp với nhau trong mỗi màn hình bạn thiết kế.
+
+## Lưới giữ mọi thứ đứng thẳng
+
+[Layout & Grid](/concepts/layout-and-grid) là nền tảng bạn xây lên đó. Trước khi đặt bất kỳ phần tử nào, hãy xác định lưới: bao nhiêu cột, gutter bao nhiêu, margin bao nhiêu.
+
+Lưới không giới hạn sáng tạo — nó giải phóng bạn khỏi việc phải đoán mò mỗi lần đặt phần tử mới. Khi lưới đã xác định, câu hỏi không còn là "đặt chỗ nào trông ổn" mà là "phần tử này chiếm bao nhiêu cột."
+
+Quy tắc thực hành: với lưới 12 cột, sidebar thường chiếm 3-4 cột, main content 6-8 cột. Nội dung quan trọng nhất nên nằm ở vùng trung tâm — không quá rộng (khó đọc), không quá hẹp (thiếu không gian).
+
+## Căn chỉnh và gần kề tạo trật tự
+
+Sau khi có lưới, [alignment & proximity](/concepts/alignment-and-proximity) là thứ nói với mắt người "những thứ này thuộc về nhau, những thứ kia là một nhóm khác."
+
+Quy tắc đơn giản nhất: **khoảng cách trong một nhóm phải nhỏ hơn khoảng cách giữa các nhóm**. Label và input field của nó nên gần nhau hơn là khoảng cách từ field này đến field tiếp theo.
+
+Và nhất quán alignment trong cùng một loại phần tử. Nếu card đầu tiên căn trái, tất cả card còn lại cũng phải căn trái. Bất nhất alignment là thứ làm giao diện trông "nghiệp dư" ngay cả khi từng phần tử trông ổn.
+
+## Responsive: cùng nội dung, mọi màn hình
+
+[Responsive design](/concepts/responsive-design) không phải làm "phiên bản mobile" riêng — mà là xây layout co giãn được từ đầu.
+
+Tư duy mobile-first có một hệ quả quan trọng cho bố cục: **buộc bạn quyết định thứ tự ưu tiên**. Trên màn hình nhỏ, mọi thứ xếp dọc — thứ nào ở trên cùng là thứ quan trọng nhất. Thứ tự đó phải đúng trước khi bạn lo đến layout desktop.
+
+<Callout title="Mẹo">
+Khi thiết kế desktop layout trước rồi mới compress xuống mobile, bạn thường phát hiện mình đã đặt quá nhiều thứ "quan trọng như nhau" — và không biết cái nào hiện trước trên mobile. Làm mobile-first tránh vấn đề này ngay từ đầu.
+</Callout>
+
+## Đặt thứ quan trọng vào đường quét
+
+[Visual scanning patterns](/concepts/visual-scanning-patterns) là lớp cuối cùng: biết mắt người đi đâu, đặt thứ quan trọng vào đó.
+
+Hai câu hỏi cần trả lời trước khi thiết kế bất kỳ màn hình nào:
+
+1. **Trang này muốn người dùng làm gì?** (CTA, hành động chính)
+2. **Trang này là loại gì?** — nhiều text hay ít text? → F hay Z?
+
+Landing page: dùng Z-pattern. Đặt headline ở trên trái, CTA ở dưới phải, thông tin hỗ trợ theo đường chéo giữa. Dashboard hoặc trang danh sách: dùng F-pattern. Làm cột trái và dòng đầu mỗi hàng đặc biệt rõ ràng — đó là phần người dùng thực sự đọc.
+
+## Kết nối lại: quy trình bốn bước
+
+Khi bắt đầu một màn hình mới:
+
+1. **Xác định lưới** — bao nhiêu cột, gutter, margin.
+2. **Quyết định nhóm nội dung** — dùng proximity để gom và tách, alignment để đồng bộ trong mỗi nhóm.
+3. **Đặt breakpoint** — màn hình nhỏ trông như thế nào? Thứ tự ưu tiên có đúng không?
+4. **Kiểm tra đường quét** — mắt người đi đúng đến hành động quan trọng nhất chưa?
+
+<Callout title="Nhớ nhé">
+Bố cục tốt không phải thứ người dùng chú ý — đó là thứ họ không nhận ra vì nó quá tự nhiên. Khi phải giải thích tại sao mọi thứ ở chỗ đó, bố cục chưa đủ tốt. Khi người dùng tự nhiên nhìn đúng chỗ và làm đúng việc, bố cục đang làm việc của nó.
+</Callout>
+
+Thực hành ngay với [bài tập bố cục trang →](/exercises/design-for-builders/m2-lay-out-a-page)

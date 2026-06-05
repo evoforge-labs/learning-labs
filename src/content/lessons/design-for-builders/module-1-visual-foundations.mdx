@@ -1,0 +1,58 @@
+---
+id: lesson-ux-001
+title: "Làm một màn hình trông gọn chỉ với 4 nguyên tắc"
+type: "lesson"
+track: design-for-builders
+module: visual-foundations
+level: beginner
+tags: [design, ux, ui, visual-hierarchy, typography, whitespace, color, contrast]
+prerequisites: [concept-visual-hierarchy, concept-typography-basics, concept-whitespace-and-spacing, concept-color-and-contrast]
+related: [exercise-ux-001, rubric-design-for-builders]
+status: published
+---
+import Callout from '../../../components/content/Callout.astro';
+
+Khi builder tự làm giao diện, kết quả thường "trông như dev làm" — không phải vì xấu, mà vì **thiếu hệ thống**. Mỗi màn hình là một quyết định riêng lẻ, không có gì kết dính lại.
+
+Bốn nguyên tắc trong module này không phải thẩm mỹ — đó là **cơ sở hạ tầng thị giác**. Nắm đủ bốn thứ, bạn có thể nhìn vào bất kỳ màn hình nào và biết ngay nó vấn đề ở đâu.
+
+## Nguyên tắc 1 — Quyết định mắt nhìn đâu trước
+
+Mỗi màn hình cần một điểm quan trọng nhất. Nếu bạn chưa quyết định điều đó, người dùng cũng không biết.
+
+[Visual hierarchy](/concepts/visual-hierarchy) là công cụ: kích thước, contrast, và vị trí tạo ra thứ tự nhìn. Khi thiết kế một màn hình mới, hãy tự hỏi: *"Thứ quan trọng nhất ở đây là gì?"* — rồi làm nó to hơn, đậm hơn, hoặc đặt ở trung tâm hơn so với mọi thứ xung quanh.
+
+## Nguyên tắc 2 — Chữ phải tự đọc được, không cần cố
+
+Người dùng không đọc, họ **quét**. Nếu chữ bé, dòng quá dài, hoặc khoảng cách dòng ngột ngạt — họ bỏ qua mà không nhận ra tại sao.
+
+[Typography basics](/concepts/typography-basics) giải quyết điều này bằng vài con số cụ thể: body text tối thiểu 16px, line-height 1.5–1.6x, dòng tối đa 65–75 ký tự. Không cần font đắt tiền — font hệ thống với thông số đúng là đủ.
+
+## Nguyên tắc 3 — Khoảng trắng không phải chỗ trống
+
+Builder mới thường lấp đầy màn hình. Builder có kinh nghiệm biết rằng **bớt đi** thường làm giao diện trông tốt hơn.
+
+[Whitespace and spacing](/concepts/whitespace-and-spacing) dạy bạn dùng thang 4/8px nhất quán và quy tắc "khoảng trong nhỏ hơn khoảng ngoài". Hai thứ đó — chọn đúng và dùng nhất quán — tạo ra sự khác biệt lớn nhất so với công sức bỏ ra.
+
+## Nguyên tắc 4 — Ít màu hơn, nổi bật hơn
+
+Màu nhấn chỉ có tác dụng khi nó hiếm. Dùng nhiều màu = không màu nào nổi.
+
+[Color and contrast](/concepts/color-and-contrast) cho bạn công thức đơn giản: 60% nền trung tính, 30% màu phụ, 10% màu nhấn. Kèm một nguyên tắc không thể bỏ qua: kiểm tra contrast ratio trước khi ship, đặc biệt là chữ xám.
+
+## Bốn nguyên tắc hoạt động cùng nhau
+
+Không nguyên tắc nào đứng một mình. Hierarchy cần contrast để hoạt động. Whitespace nhấn mạnh hierarchy. Typography ảnh hưởng đến cảm giác spacing. Màu sắc tạo hoặc phá vỡ cấp bậc.
+
+Khi nhìn một màn hình và thấy "trông không ổn", hãy chạy qua bốn câu hỏi:
+
+1. *Mắt tôi không biết nhìn đâu trước?* → hierarchy bị phẳng
+2. *Chữ khó đọc?* → typography sai thông số
+3. *Mọi thứ chật chội hoặc rời rạc?* → spacing thiếu nhất quán
+4. *Màu nào cũng "la hét"?* → quá nhiều màu nhấn
+
+<Callout title="Nhớ nhé">
+Bốn nguyên tắc này không đảm bảo giao diện "đẹp" theo nghĩa thẩm mỹ — nhưng chúng đảm bảo giao diện **dùng được** và trông **có hệ thống**. Với builder, đó là đủ để bắt đầu.
+</Callout>
+
+Thực hành ngay với [bài tập sửa màn hình thực tế →](/exercises/design-for-builders/m1-fix-the-ugly-screen)

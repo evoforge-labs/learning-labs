@@ -1,0 +1,57 @@
+---
+id: concept-visual-scanning-patterns
+title: "Visual Scanning Patterns (F & Z)"
+type: "concept"
+aliases: ["visual scanning patterns", "F-pattern Z-pattern", "mẫu quét thị giác", "eye tracking web", "mắt người quét màn hình", "above the fold design", "F-pattern mắt người"]
+tags: [design, ux, layout, eye-tracking, visual-hierarchy, above-the-fold, design-for-builders]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Bạn mở trang tin tức, chưa đọc chữ nào mà mắt đã "chạy" qua màn hình theo một đường nhất định — tiêu đề to ở trên, một ít text bên trái, rồi xuống. Không phải ngẫu nhiên. Mắt người đã được huấn luyện bởi nhiều năm đọc sách, duyệt web — nó quét theo mẫu có thể đoán trước.
+
+Nielsen Norman Group đã theo dõi chuyển động mắt của hàng nghìn người dùng và phát hiện hai mẫu lặp đi lặp lại.
+
+## Là gì
+
+**F-pattern:** Xuất hiện trên trang có nhiều text (blog, kết quả tìm kiếm, danh sách). Mắt quét:
+1. Ngang toàn bộ dòng đầu tiên (trên cùng)
+2. Ngang một đoạn ngắn hơn ở khoảng giữa
+3. Dọc xuống theo cột trái
+
+Kết quả: chữ F. Nội dung ở cột phải và phần cuối trang bị bỏ qua nhiều hơn nhiều.
+
+**Z-pattern:** Xuất hiện trên trang ít text, nhiều hình ảnh (landing page, homepage, trang giới thiệu sản phẩm). Mắt quét:
+1. Ngang hàng trên (logo, nav)
+2. Chéo xuống góc trái dưới
+3. Ngang hàng dưới (CTA, thông tin liên hệ)
+
+**Above the fold:** Phần màn hình nhìn thấy ngay mà không cần cuộn. Đây là vùng được chú ý nhiều nhất — người dùng quyết định "ở lại hay thoát" trong 3-5 giây đầu tiên, phần lớn dựa trên những gì they thấy ở đây.
+
+## Ví dụ thật
+
+Landing page bán khóa học. Bạn đặt headline "Học thiết kế trong 30 ngày" ở trên cùng — đúng điểm đầu của Z-pattern. Nút CTA "Đăng ký ngay" đặt ở góc phải dưới — đúng điểm cuối của Z-pattern. Logo ở trên trái. Câu lợi ích ngắn ở giữa đường chéo.
+
+Người dùng mắt đi từ headline → qua lợi ích → đến CTA mà không cần hướng dẫn. Không phải may mắn — đó là thiết kế theo đường quét mắt tự nhiên.
+
+<Callout title="Cẩn thận">
+F-pattern và Z-pattern là xu hướng thống kê, không phải định luật cứng. Nếu bạn tạo ra đủ visual hierarchy rõ ràng (heading to, hình ảnh nổi bật, màu tương phản), mắt người sẽ đi theo hierarchy của bạn, không chỉ theo mẫu mặc định. F-pattern thường xuất hiện khi trang *thiếu* cấu trúc, không phải khi trang *có* cấu trúc tốt.
+</Callout>
+
+Biết hai mẫu này, bạn có thể đặt câu hỏi thực tế: "Thứ quan trọng nhất của trang này là gì? Đặt nó vào đường quét." Không cần học eye-tracking — chỉ cần biết mắt người hay nhìn vào đâu.
+
+<Callout title="Nhớ nhé">
+F-pattern cho trang text-heavy (blog, danh sách); Z-pattern cho landing page ít text. "Above the fold" là vùng quyết định người ta ở lại hay thoát. Đặt thứ quan trọng nhất vào đường quét — đừng chôn vùi nó ở cuối trang.
+</Callout>
+
+## Đọc thêm
+
+- [F-Shaped Pattern of Reading on the Web — Nielsen Norman Group](https://www.nngroup.com/articles/f-shaped-pattern-reading-web-content/) — Nghiên cứu gốc của NNG về F-pattern dựa trên eye-tracking; giải thích khi nào F-pattern xuất hiện và khi nào không, kèm hàm ý thiết kế thực tế.
+- [How to Use F & Z Patterns in Your Landing Page Design — WordStream](https://www.wordstream.com/blog/ws/2018/07/31/f-z-patterns-landing-page-design) — Hướng dẫn thực hành cách áp dụng F và Z pattern vào landing page với ví dụ trực quan; phù hợp cho builder muốn áp dụng ngay.
+- [Using F and Z Patterns to Create Visual Hierarchy — 99designs](https://99designs.com/blog/tips/visual-hierarchy-landing-page-designs/) — Bài viết kết hợp cả hai pattern với visual hierarchy; nhiều ví dụ thiết kế thật, giải thích tại sao đặt CTA ở đâu trong layout.
+
+## Tự kiểm tra
+
+1. Bạn đang thiết kế trang blog liệt kê các bài viết. Theo F-pattern, phần nào của mỗi bài viết trong danh sách cần được làm nổi bật nhất? Tại sao?
+2. Landing page bán SaaS của bạn có: headline, screenshot sản phẩm, 3 tính năng nổi bật, giá, và nút "Dùng thử miễn phí". Bạn sẽ sắp xếp thứ tự các phần này như thế nào theo Z-pattern?
+3. "Above the fold" có nghĩa là gì khi người dùng xem trên điện thoại so với desktop? Điều đó ảnh hưởng đến quyết định thiết kế của bạn ra sao?

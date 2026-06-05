@@ -1,0 +1,51 @@
+---
+id: concept-typography-basics
+title: "Typography Basics"
+type: "concept"
+aliases: ["typography basics", "cơ bản về chữ trong UI", "font chữ giao diện", "typography UI design", "chọn phông chữ web"]
+tags: [design, ux, ui, typography, readability, font]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Giọng nói của bạn thay đổi tùy hoàn cảnh — nhẹ nhàng khi nói chuyện bạn bè, rõ ràng khi thuyết trình. Chữ trên màn hình cũng vậy. Cách bạn chọn font, cỡ chữ, khoảng cách dòng — đó là **giọng nói** của giao diện.
+
+90% những gì người dùng nhìn thấy trên màn hình là chữ. Vậy mà hầu hết builder bỏ qua typography hoàn toàn.
+
+## Là gì
+
+**Typography** là tập hợp các quyết định về chữ: chọn phông nào, cỡ bao nhiêu, dòng cách nhau thế nào, một dòng dài bao nhiêu ký tự. Mục tiêu: người đọc không phải *cố* đọc — chữ tự dẫn mắt họ đi.
+
+## Ví dụ thật
+
+Hai màn hình cùng nội dung: một dùng font hệ thống cỡ 14px, line-height 1.2, cột văn bản rộng 900px. Một dùng cùng font đó nhưng 16px, line-height 1.6, cột tối đa 65 ký tự. Màn hình thứ hai đọc thoải mái hơn hẳn — không phải vì font đẹp hơn, mà vì các thông số đúng.
+
+Bốn thứ bạn cần kiểm soát:
+
+**Phông chữ** — dùng tối đa 2 phông: một cho tiêu đề, một cho body. Font hệ thống (Inter, -apple-system, Segoe UI) đủ tốt cho 90% trường hợp và load nhanh hơn Google Fonts.
+
+**Cỡ chữ** — body text tối thiểu 16px. Tiêu đề tạo cấp bậc: h1 lớn hơn h2 lớn hơn body, nhưng không cần quá nhiều bậc. 3-4 cỡ là đủ cho toàn bộ app.
+
+**Line-height (khoảng cách dòng)** — body text nên ở 1.5–1.6x cỡ chữ. Nhỏ hơn: chữ chồng chéo khó đọc. Lớn hơn: mắt mất dấu khi xuống dòng.
+
+**Độ dài dòng** — lý tưởng 50–75 ký tự mỗi dòng. Quá dài: mắt mỏi khi tìm đầu dòng tiếp. Quá ngắn: đọc giật cục.
+
+<Callout title="Cẩn thận">
+Dùng nhiều phông, nhiều cỡ, nhiều màu chữ khác nhau để "phân cấp" — kết quả trông như tờ rơi chợ. Ít hơn là tốt hơn: 2 phông, 3-4 cỡ, 2 màu chữ (đậm và nhạt). Phần còn lại dùng khoảng trắng và bold/italic để tạo nhấn mạnh.
+</Callout>
+
+<Callout title="Nhớ nhé">
+Typography tốt là typography **vô hình** — người đọc không nhận ra chữ đẹp, họ chỉ thấy nội dung dễ đọc. Khi ai đó nói "giao diện trông gọn", phần lớn là nhờ typography ổn.
+</Callout>
+
+## Đọc thêm
+
+- [Ultimate Guide to Typography in Design — Figma](https://www.figma.com/resource-library/typography-in-design/) — Hướng dẫn toàn diện từ Figma: từ cách chọn typeface đến tạo hệ thống type scale nhất quán cho sản phẩm.
+- [Font Size Guidelines for Responsive Websites (2024 Update) — Learn UI Design](https://www.learnui.design/blog/mobile-desktop-website-font-size-guidelines.html) — Hướng dẫn thực hành với con số cụ thể cho từng loại màn hình; cập nhật 2024.
+- [The ideal line length and line height in web design — Pimp my Type](https://pimpmytype.com/line-length-line-height/) — Giải thích tại sao độ dài dòng và line-height ảnh hưởng đến trải nghiệm đọc, kèm công thức tính nhanh.
+
+## Tự kiểm tra
+
+1. App của bạn đang dùng font 13px cho body text. Điều đó ảnh hưởng đến trải nghiệm người dùng như thế nào, và bạn sẽ điều chỉnh gì?
+2. Khi nào bạn nên dùng 2 phông chữ khác nhau thay vì 1? Cho ví dụ cụ thể.
+3. Tại sao line-height 1.0 (không khoảng cách thêm giữa dòng) lại khó đọc, dù font size đủ lớn?

@@ -1,0 +1,77 @@
+---
+id: lesson-ux-004
+title: "Make It Usable: Ít Ma Sát, Nhiều Người Dùng Được"
+type: "lesson"
+track: design-for-builders
+module: usability
+level: intermediate
+tags: [ux, usability, accessibility, friction, user-flows, heuristics, design-for-builders]
+prerequisites: [concept-usability-heuristics, concept-user-flows, concept-friction-in-ux, concept-accessibility-basics]
+related: [exercise-ux-004, rubric-design-for-builders]
+status: published
+---
+import Callout from '../../../components/content/Callout.astro';
+
+Bạn có thể build sản phẩm trông đẹp — nhưng nếu người dùng không biết phải nhấn vào đâu, phải nhập gì, hoặc phải chờ bao lâu — họ sẽ bỏ đi. Đẹp mà không dùng được là thất bại.
+
+Module này xâu chuỗi bốn công cụ lại thành một quy trình đơn giản: thiết kế sản phẩm dễ dùng cho nhiều người, với ít ma sát nhất có thể.
+
+## Bước 1 — Vẽ luồng trước khi thiết kế màn hình
+
+Trước khi mở Figma hay viết code, hãy vẽ [user flow](/concepts/user-flows) cho tính năng bạn đang làm.
+
+Một tờ giấy, một bộ ký hiệu đơn giản (hình chữ nhật = màn hình, hình thoi = điểm quyết định, mũi tên = hành động), 15 phút. Đặt câu hỏi ở mỗi bước: *Bước này có cần thiết không?* Một luồng đăng ký 6 bước có thể rút về 3 bước — và tỷ lệ hoàn thành sẽ tăng theo.
+
+Luồng rõ ràng trên giấy giúp bạn tìm vấn đề trước khi đầu tư thời gian vào giao diện.
+
+## Bước 2 — Xác định và loại bỏ ma sát không cần thiết
+
+Sau khi có luồng, nhìn lại từng bước qua lăng kính [friction](/concepts/friction-in-ux): cái nào là ma sát xấu (cản trở không có lý do), cái nào là ma sát tốt (bảo vệ user)?
+
+Một số điểm kiểm tra nhanh:
+
+- Form có trường nào bỏ được mà tính năng vẫn chạy không?
+- Có thông tin nào có thể điền sẵn (smart default) thay vì để trống không?
+- Có bước nào yêu cầu user nhớ thông tin từ trang trước không?
+
+Giữ ma sát ở chỗ user cần dừng lại suy nghĩ (xóa dữ liệu, chuyển tiền lớn). Loại ma sát ở chỗ user chỉ đang cố hoàn thành việc của họ.
+
+## Bước 3 — Quét nhanh bằng heuristics Nielsen
+
+Khi đã có thiết kế, dùng [10 heuristics của Nielsen](/concepts/usability-heuristics) như một checklist nhanh. Không cần kiểm tra cả 10 lúc đầu — tập trung vào 4 cái hay bị vi phạm nhất:
+
+- **Visibility of system status** — sau mỗi hành động, user có biết gì đã xảy ra chưa?
+- **Error prevention** — những lỗi phổ biến nhất có được thiết kế để tránh không?
+- **Consistency** — cùng một việc, có làm cùng một cách ở mọi nơi trong app không?
+- **Recognition over recall** — user có phải nhớ thông tin từ màn hình trước không?
+
+Mỗi vấn đề tìm được ở giai đoạn này tốn vài phút để sửa. Sau khi launch, cùng vấn đề đó tốn hàng giờ debug UX và mất user.
+
+<Callout title="Mẹo">
+Nhờ một người chưa biết sản phẩm của bạn tự thực hiện một task cụ thể (ví dụ: "Thêm một sản phẩm vào giỏ hàng và checkout"). Đừng giải thích, chỉ quan sát. Chỗ nào họ do dự là chỗ có vấn đề usability — dù bạn tự mình không thấy.
+</Callout>
+
+## Bước 4 — Kiểm tra accessibility cơ bản
+
+Cuối cùng, 15 phút kiểm tra [accessibility](/concepts/accessibility-basics) cơ bản trước khi ship:
+
+1. **Tab qua toàn bộ trang bằng bàn phím** — mọi tương tác có đến được không? Thứ tự có hợp lý không?
+2. **Chụp màn hình, chuyển sang grayscale** — thông tin quan trọng còn rõ không?
+3. **Chạy aXe hoặc Lighthouse Accessibility** trong Chrome DevTools — bắt lỗi rõ ràng tự động.
+4. **Xem lại `alt` text** — ảnh mang thông tin có mô tả đủ không?
+
+Accessibility không phải "làm sau khi xong". Semantic HTML đúng từ đầu tốn không thêm thời gian — và tiết kiệm rất nhiều refactor về sau.
+
+## Kết nối lại
+
+Bốn bước này không cần chạy tuần tự nghiêm ngặt. Trong thực tế:
+
+- **Trước khi thiết kế:** vẽ user flow.
+- **Khi thiết kế:** giảm friction, giữ semantic HTML đúng.
+- **Trước khi ship:** chạy heuristic check + accessibility check nhanh.
+
+<Callout title="Nhớ nhé">
+Usability tốt không phải là thêm tính năng — mà là bỏ đi rào cản. Mỗi bước thừa bạn cắt được, mỗi heuristic vi phạm bạn sửa được, mỗi người dùng thêm mà sản phẩm của bạn phục vụ được — đó là công việc của module này.
+</Callout>
+
+Thực hành ngay với [bài tập audit usability →](/exercises/design-for-builders/m4-audit-usability)

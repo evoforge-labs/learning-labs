@@ -1,0 +1,57 @@
+---
+id: concept-user-flows
+title: "User Flows"
+type: "concept"
+aliases: ["user flows", "luồng người dùng", "vẽ bước user", "user flow mapping UX", "bản đồ hành trình thao tác"]
+tags: [ux, user-flows, design, wireframe, task-analysis, design-for-builders]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Bạn muốn đến một chỗ mới trong thành phố. Bạn mở Google Maps, gõ địa chỉ, chọn đường, đi. Bản đồ không chỉ cho bạn biết đích đến — nó cho bạn thấy *từng bước* để đến đó, chỗ nào rẽ, chỗ nào có thể tắc.
+
+User flow là bản đồ kiểu đó — nhưng cho sản phẩm của bạn. Thay vì đường phố, đó là màn hình và thao tác. Thay vì ngã tư, đó là điểm quyết định: user nhấn nút này hay nút kia?
+
+## Là gì
+
+**User flow** là sơ đồ vẽ lại chuỗi bước một người dùng thực hiện để hoàn thành một việc cụ thể — từ lúc bắt đầu đến lúc xong. Mỗi bước là một màn hình, một hành động, hoặc một điểm quyết định (có/không, chọn A/B).
+
+Mục đích chính: tìm bước thừa, bước lạc, và chỗ user có thể bị lạc — trước khi bạn code.
+
+## Ví dụ thật
+
+Luồng đặt hàng của một app food delivery có thể trông thế này:
+
+```
+Mở app → Chọn nhà hàng → Chọn món → Giỏ hàng → Nhập địa chỉ → Chọn thanh toán → Xác nhận → Màn hình "Đơn đang được xử lý"
+```
+
+Khi vẽ ra, bạn phát hiện: người dùng phải nhập địa chỉ lại mỗi lần — dù đã nhập lần trước. Đó là bước thừa. Xóa đi (dùng địa chỉ đã lưu làm mặc định), luồng ngắn hơn một bước, tỷ lệ hoàn thành đơn tăng.
+
+Không vẽ user flow, bạn sẽ không thấy bước đó thừa cho đến khi có người phàn nàn.
+
+<Callout title="Cẩn thận">
+Đừng nhầm user flow với *customer journey map*. Journey map ghi lại cảm xúc và kỳ vọng của người dùng xuyên suốt một hành trình dài (ví dụ: từ lúc biết đến sản phẩm cho đến lúc thành khách hàng trung thành). User flow chỉ tập trung vào *thao tác cụ thể* trong giao diện — không có phần cảm xúc hay kênh marketing. Hai công cụ khác nhau, dùng cho mục đích khác nhau.
+</Callout>
+
+Khi vẽ user flow, hãy đặt câu hỏi ở mỗi bước:
+
+- Bước này có **cần thiết** không? Bỏ được không?
+- User có đủ **thông tin** để quyết định ở đây không?
+- Nếu user **nhầm** ở bước này, có quay lại được không?
+
+<Callout title="Nhớ nhé">
+User flow không cần phần mềm xịn — bút và giấy, FigJam, hay Miro đều được. Quan trọng là vẽ *trước* khi thiết kế màn hình cụ thể. Một luồng rõ ràng trên giấy giúp bạn phát hiện vấn đề nhanh hơn nhiều so với phát hiện lúc đang build.
+</Callout>
+
+## Đọc thêm
+
+- [What Is a User Flow? — Figma Resource Library](https://www.figma.com/resource-library/user-flow/) — Giải thích khái niệm, hướng dẫn tạo từng bước, kèm ví dụ thực tế; ngắn gọn và dễ bắt đầu.
+- [What Are User Flows in UX Design? — CareerFoundry](https://careerfoundry.com/en/blog/ux-design/what-are-user-flows/) — Phân biệt các loại flow (task flow, wireflow, user flow), giải thích khi nào dùng loại nào.
+- [The Ultimate Guide to User Flow Diagram — Medium/Bootcamp](https://medium.com/design-bootcamp/the-ultimate-guide-to-user-flow-diagram-b108d7de10d) — Hướng dẫn chi tiết về ký hiệu sơ đồ và cách đọc một user flow diagram phức tạp.
+
+## Tự kiểm tra
+
+1. Vẽ user flow cho luồng "đổi mật khẩu" của một app — từ màn hình cài đặt đến lúc đổi xong. Bạn tìm thấy bước nào có thể rút ngắn không?
+2. Sự khác biệt giữa user flow và customer journey map là gì? Khi nào nên dùng cái nào?
+3. Ở một điểm quyết định trong user flow (ví dụ: "Bạn có muốn lưu thay đổi không?"), nếu user chọn "Không" — luồng nên đi về đâu?

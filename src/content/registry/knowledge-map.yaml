@@ -1661,3 +1661,99 @@ edges:
   - source: rubric-security-for-builders
     target: exercise-sec-006
     rel: evaluates
+
+  # ============================================================
+  # Design & UX for Builders (ux) — progression + drills
+  # ============================================================
+  - source: concept-visual-hierarchy
+    target: concept-whitespace-and-spacing
+    rel: supports
+  - source: concept-typography-basics
+    target: concept-visual-hierarchy
+    rel: supports
+  - source: concept-color-and-contrast
+    target: concept-accessibility-basics
+    rel: leads-to
+  - source: concept-visual-hierarchy
+    target: concept-layout-and-grid
+    rel: leads-to
+  - source: concept-layout-and-grid
+    target: concept-alignment-and-proximity
+    rel: supports
+  - source: concept-layout-and-grid
+    target: concept-responsive-design
+    rel: leads-to
+  - source: concept-visual-scanning-patterns
+    target: concept-layout-and-grid
+    rel: supports
+  - source: concept-layout-and-grid
+    target: concept-affordance-and-signifiers
+    rel: leads-to
+  - source: concept-affordance-and-signifiers
+    target: concept-ui-feedback
+    rel: supports
+  - source: concept-ui-feedback
+    target: concept-ui-states
+    rel: supports
+  - source: concept-form-ux
+    target: concept-microcopy
+    rel: supports
+  - source: concept-ui-states
+    target: concept-usability-heuristics
+    rel: leads-to
+  - source: concept-usability-heuristics
+    target: concept-user-flows
+    rel: supports
+  - source: concept-user-flows
+    target: concept-friction-in-ux
+    rel: leads-to
+  - source: concept-color-and-contrast
+    target: concept-design-tokens
+    rel: leads-to
+  - source: concept-design-systems
+    target: concept-design-tokens
+    rel: supports
+  - source: concept-design-tokens
+    target: concept-design-to-code
+    rel: leads-to
+  - source: concept-design-to-code
+    target: concept-design-taste-and-critique
+    rel: leads-to
+  # cross-track bridge: design-to-code <-> building with AI agents / frontend
+  - source: concept-design-systems
+    target: concept-design-to-code
+    rel: leads-to
+  # Drills: which concept each ux exercise trains
+  - source: concept-visual-hierarchy
+    target: exercise-ux-001
+    rel: trains
+  - source: concept-whitespace-and-spacing
+    target: exercise-ux-001
+    rel: trains
+  - source: concept-layout-and-grid
+    target: exercise-ux-002
+    rel: trains
+  - source: concept-visual-scanning-patterns
+    target: exercise-ux-002
+    rel: trains
+  - source: concept-ui-states
+    target: exercise-ux-003
+    rel: trains
+  - source: concept-form-ux
+    target: exercise-ux-003
+    rel: trains
+  - source: concept-usability-heuristics
+    target: exercise-ux-004
+    rel: trains
+  - source: concept-friction-in-ux
+    target: exercise-ux-004
+    rel: trains
+  - source: concept-design-tokens
+    target: exercise-ux-005
+    rel: trains
+  - source: concept-design-systems
+    target: exercise-ux-005
+    rel: trains
+  - source: rubric-design-for-builders
+    target: exercise-ux-006
+    rel: evaluates

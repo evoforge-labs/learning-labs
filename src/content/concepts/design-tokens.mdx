@@ -1,0 +1,62 @@
+---
+id: concept-design-tokens
+title: "Design Tokens"
+type: "concept"
+aliases: ["design tokens là gì", "token thiết kế", "biến thiết kế màu spacing font", "một nguồn sự thật thiết kế", "css variables design system"]
+tags: [design, ux, ui, design-tokens, design-systems, css-variables, consistency, solo-builder]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Bạn đang sơn nhà. Màu tường chính là "xanh đậm #1A3C5E". Bạn dùng màu đó ở 12 chỗ: header, sidebar, nút primary, viền card, icon active... Rồi khách hàng bảo: "Đổi sang xanh nhạt hơn đi."
+
+Nếu bạn lưu `#1A3C5E` trực tiếp ở từng chỗ — bạn phải tìm và sửa 12 chỗ, dễ sót. Nhưng nếu bạn đặt một cái tên: `color-primary = #1A3C5E`, rồi dùng cái tên đó ở khắp nơi — chỉ cần đổi một chỗ, 12 chỗ kia tự cập nhật.
+
+Đó chính là design token.
+
+## Là gì
+
+**Design token** là các giá trị thiết kế (màu, khoảng cách, cỡ chữ, border radius...) được đặt tên thành biến có nghĩa, thay vì hardcode con số cụ thể. Token trở thành "một nguồn sự thật" cho cả designer lẫn developer.
+
+Thay vì viết `color: #1A3C5E` hay `padding: 16px` rải rác trong code, bạn viết `color: var(--color-primary)` và `padding: var(--spacing-4)`. Giá trị thật chỉ định nghĩa một lần.
+
+Token thường chia làm ba tầng:
+- **Primitive tokens:** giá trị thô — `blue-600: #2563EB`, `space-4: 16px`
+- **Semantic tokens:** ý nghĩa — `color-primary: blue-600`, `spacing-component-padding: space-4`
+- **Component tokens:** theo component — `button-bg: color-primary`
+
+## Ví dụ thật
+
+App của bạn dùng Tailwind CSS. Bạn định nghĩa trong `tailwind.config.js`:
+
+```js
+colors: {
+  primary: '#2563EB',
+  'primary-hover': '#1D4ED8',
+}
+```
+
+Tất cả component dùng `bg-primary`, `text-primary`, `border-primary`. Khi khách hàng muốn đổi màu brand từ xanh sang tím — bạn chỉ đổi một dòng trong config. Toàn bộ app cập nhật ngay.
+
+Nếu không có token, bạn sẽ chạy `Ctrl+F` tìm từng mã hex, sót vài chỗ, và UI bị inconsistent.
+
+<Callout title="Cẩn thận">
+Đừng đặt tên token theo giá trị (`blue-500`, `16px`) — đó là primitive, không phải semantic token. Tên tốt mô tả **mục đích**, không phải giá trị: `color-text-muted`, `spacing-section-gap`, `radius-card`. Khi bạn đổi `color-text-muted` từ xám sang xanh nhạt, cái tên vẫn có nghĩa. Nếu đặt tên là `gray-400`, bạn sẽ bối rối.
+</Callout>
+
+<Callout title="Nhớ nhé">
+Token = biến có tên, không phải con số. "Một nguồn sự thật": thay đổi ở token, thay đổi mọi nơi. Đặt tên theo mục đích, không theo giá trị.
+</Callout>
+
+## Đọc thêm
+
+- [Design Tokens — Material Design 3](https://m3.material.io/foundations/design-tokens) — Google giải thích hệ thống token 3 tầng (reference → system → component) trong Material Design; ví dụ cụ thể và rõ ràng nhất để hiểu cách tầng token hoạt động.
+- [Design Tokens — Adobe Spectrum](https://spectrum.adobe.com/page/design-tokens/) — Adobe trình bày cách họ dùng token trong design system Spectrum; tốt để thấy một hệ thống token production-grade trông như thế nào.
+- [Style Dictionary — AWS Open Source](https://aws.amazon.com/blogs/opensource/style-dictionary-trust-design-consistency/) — Amazon giải thích Style Dictionary, công cụ mã nguồn mở biến token thành CSS variables, Swift, Android XML, v.v.; đọc để hiểu tại sao token quan trọng với multi-platform.
+- [The Developer's Guide to Design Tokens — Penpot](https://penpot.app/blog/the-developers-guide-to-design-tokens-and-css-variables/) — Hướng dẫn thực hành từ góc nhìn developer: cách liên kết design token với CSS custom properties; phù hợp nhất cho solo builder.
+
+## Tự kiểm tra
+
+1. Sự khác biệt giữa **primitive token** và **semantic token** là gì? Đặt tên `color-danger` hay `red-500` thì tốt hơn — tại sao?
+2. Ứng dụng của bạn đang hardcode màu `#6366F1` ở 20 component khác nhau. Bạn cần refactor sang dùng token. Mô tả 3 bước cụ thể bạn sẽ làm.
+3. Token giải quyết vấn đề gì khi một sản phẩm muốn hỗ trợ cả dark mode và light mode?
