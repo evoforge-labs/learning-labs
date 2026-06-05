@@ -9,7 +9,7 @@ import Mermaid from '../../components/content/Mermaid.astro';
 import Ask from '../../components/content/Ask.astro';
 import Answer from '../../components/content/Answer.astro';
 import Explain from '../../components/content/Explain.astro';
-import { COLLECTION_TYPES, typeColor } from '../../lib/types';
+import { COLLECTION_TYPES, typeColor, trackColor } from '../../lib/types';
 import { getAll, usedIn } from '../../lib/content';
 
 export const getStaticPaths = (async () => {
@@ -50,6 +50,12 @@ if (d.type === 'lesson') {
 ---
 <ReadingLayout title={d.title} kicker={kicker} trackLabel={trackLabel}
   headings={headings.filter((h: any) => h.depth === 2).map((h: any) => ({ text: h.text, slug: h.slug }))}>
+  {d.type === 'track' && (
+    <div class="anim mt-4 flex items-center gap-2.5">
+      <span class="inline-block h-5 w-1.5 rounded-full" style={`background:${trackColor(entry.id)}`}></span>
+      <span class="text-[11px] font-medium uppercase tracking-wider" style={`color:${trackColor(entry.id)}`}>Track</span>
+    </div>
+  )}
   <div class="anim mt-6">
     <MetaBadges type={d.type} status={d.status} level={d.level} minutes={d.estimatedMinutes} reviewedBy={d.reviewedBy} score={d.score} />
   </div>

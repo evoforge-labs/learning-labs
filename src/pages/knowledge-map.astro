@@ -11,7 +11,7 @@ const docs: any[] = [];
 for (const type of COLLECTION_TYPES) {
   for (const e of await getAll(type as any) as any[]) {
     docs.push({ id: e.data.id, title: e.data.title, type: e.data.type, collection: type, slug: e.id,
-      track: e.data.track, exercise: e.data.exercise, rubric: e.data.rubric,
+      track: e.data.track, summary: e.data.summary, exercise: e.data.exercise, rubric: e.data.rubric,
       prerequisites: e.data.prerequisites, related: e.data.related });
   }
 }
@@ -22,7 +22,7 @@ const { nodes, edges } = buildGraph(docs, extra);
 <BaseLayout title="Knowledge Map">
   <main class="max-w-6xl mx-auto px-4 py-8">
     <h1 class="text-2xl font-bold tracking-tight text-zinc-900 dark:text-white mb-4">Knowledge Map</h1>
-    <p class="text-sm text-zinc-500 mb-4">Node tô màu theo type · kéo-thả & zoom · click để mở trang.</p>
+    <p class="text-sm text-zinc-500 mb-4">Click legend để lọc theo loại · rê chuột để làm nổi node liên quan · click một node để xem nhanh · kéo-thả & zoom.</p>
     <KnowledgeGraph nodes={nodes} edges={edges} />
   </main>
 </BaseLayout>

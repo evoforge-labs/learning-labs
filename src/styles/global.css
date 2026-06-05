@@ -19,6 +19,14 @@
   --type-rubric: #f43f5e;
   --type-template: #64748b;
   --type-track: #6366f1;
+
+  /* per-track accent colors — used only on track-level surfaces
+     (home track cards, track detail header). Independent of --type-*. */
+  --track-ai-engineering: #6366f1;
+  --track-building-with-ai-agents: #8b5cf6;
+  --track-product-minded-builder: #14b8a6;
+  --track-solo-founder: #f97316;
+  --track-system-design-for-builders: #0ea5e9;
 }
 
 html { scroll-behavior: smooth; }

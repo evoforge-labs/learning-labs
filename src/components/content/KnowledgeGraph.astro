@@ -2,54 +2,198 @@
 import type { GraphNode, GraphEdge } from '../../lib/types';
 interface Props { nodes: GraphNode[]; edges: GraphEdge[]; }
 const { nodes, edges } = Astro.props;
+
+// Canvas-rendered nodes need real hex values (CSS vars don't resolve in the
+// cytoscape canvas), so we mirror the tokens from global.css here.
 const TYPE_HEX: Record<string, string> = { concept: '#3b82f6', lesson: '#22c55e', exercise: '#f59e0b', session: '#8b5cf6', rubric: '#f43f5e', template: '#64748b', track: '#6366f1' };
-// Pass data to the client via a JSON island. A `define:vars` script is rendered
-// INLINE (not bundled) and cannot use ESM `import`, so we use a bundled module
-// script below and read the payload from this tag instead.
-const payload = JSON.stringify({ nodes, edges, colors: TYPE_HEX });
+const TRACK_HEX: Record<string, string> = {
+  'ai-engineering': '#6366f1', 'building-with-ai-agents': '#8b5cf6',
+  'product-minded-builder': '#14b8a6', 'solo-founder': '#f97316',
+  'system-design-for-builders': '#0ea5e9',
+};
+const TYPE_LABEL: Record<string, string> = { concept: 'Concept', lesson: 'Lesson', exercise: 'Exercise', session: 'Session', rubric: 'Rubric', template: 'Template', track: 'Track' };
+
+// Per-type counts for the legend (server-side, from the nodes we already have).
+const typeOrder = ['concept', 'lesson', 'exercise', 'track', 'rubric', 'session', 'template'];
+const counts: Record<string, number> = {};
+for (const n of nodes) counts[n.type] = (counts[n.type] ?? 0) + 1;
+const legend = typeOrder.filter((t) => counts[t]).map((t) => ({ type: t, label: TYPE_LABEL[t] ?? t, hex: TYPE_HEX[t] ?? '#888', count: counts[t] }));
+
+const payload = JSON.stringify({ nodes, edges, typeColors: TYPE_HEX, trackColors: TRACK_HEX });
 ---
-<div id="cy" class="w-full h-[70vh] rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900"></div>
+<div class="km-root flex flex-col gap-3">
+  <!-- top controls -->
+  <div class="flex flex-wrap items-center gap-2">
+    <div class="relative flex-1 min-w-[180px] max-w-xs">
+      <input id="km-search" type="search" placeholder="Tìm node…" autocomplete="off"
+        class="w-full rounded-lg border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 px-3 py-1.5 text-sm focus:outline-none focus:border-brand/60" />
+    </div>
+    <label class="flex items-center gap-1.5 text-xs text-zinc-500">
+      Tô màu:
+      <select id="km-colorby" class="rounded-lg border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 px-2 py-1.5 text-sm">
+        <option value="type">Type</option>
+        <option value="track">Track</option>
+      </select>
+    </label>
+    <button id="km-reset" class="rounded-lg border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 px-3 py-1.5 text-sm hover:border-brand/60">⟳ Reset view</button>
+  </div>
+
+  <!-- legend (left) + graph -->
+  <div class="flex flex-col md:flex-row gap-3">
+    <div id="km-legend" class="flex md:flex-col gap-1.5 overflow-x-auto md:overflow-visible md:w-44 shrink-0 pb-1 md:pb-0">
+      <div class="hidden md:block text-[11px] uppercase tracking-wider text-zinc-400 mb-1">Legend · click để lọc</div>
+      {legend.map((l) => (
+        <button class="km-legend-item flex items-center gap-2 rounded-lg border border-zinc-200 dark:border-zinc-800 px-2.5 py-1.5 text-sm whitespace-nowrap transition" data-type={l.type}>
+          <span class="km-swatch w-2.5 h-2.5 rounded-full shrink-0" style={`background:${l.hex}`}></span>
+          <span class="flex-1 text-left">{l.label}</span>
+          <span class="text-xs text-zinc-400 tabular-nums">{l.count}</span>
+        </button>
+      ))}
+    </div>
+
+    <div class="relative flex-1">
+      <div id="cy" class="w-full h-[70vh] rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900"></div>
+      <!-- peek panel -->
+      <div id="km-peek" class="hidden absolute right-3 top-3 w-64 max-w-[80%] rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 shadow-lg p-4">
+        <button id="km-peek-close" class="absolute right-2 top-2 text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200 text-sm leading-none">✕</button>
+        <div class="flex items-center gap-2 mb-1.5">
+          <span id="km-peek-dot" class="w-2 h-2 rounded-full shrink-0"></span>
+          <span id="km-peek-type" class="text-[11px] uppercase tracking-wider text-zinc-400"></span>
+        </div>
+        <h3 id="km-peek-title" class="font-semibold text-sm text-zinc-900 dark:text-white"></h3>
+        <p id="km-peek-summary" class="mt-1.5 text-xs text-zinc-500 dark:text-zinc-400 line-clamp-4"></p>
+        <a id="km-peek-link" href="#" class="mt-3 inline-block rounded-lg bg-brand px-3 py-1.5 text-xs font-medium text-white hover:opacity-90">Mở trang →</a>
+      </div>
+    </div>
+  </div>
+</div>
+
 <script type="application/json" id="cy-data" set:html={payload}></script>
 <script>
   import cytoscape from 'cytoscape';
   import cola from 'cytoscape-cola';
   cytoscape.use(cola);
 
-  let running: any = null; // stop the simulation when leaving the page
+  let running: any = null;       // stop the physics sim when leaving the page
+  let cy: any = null;
+  const hiddenTypes = new Set<string>();
 
   function renderGraph() {
     const el = document.getElementById('cy');
     const dataEl = document.getElementById('cy-data');
-    if (!el || !dataEl) return; // not on this page
-    const { nodes, edges, colors } = JSON.parse(dataEl.textContent || '{}');
-    const cy = cytoscape({
+    if (!el || !dataEl) return;  // not on this page
+    const { nodes, edges, typeColors, trackColors } = JSON.parse(dataEl.textContent || '{}');
+
+    cy = cytoscape({
       container: el,
       elements: [
-        ...nodes.map((n: any) => ({ data: { id: n.id, label: n.label, url: n.url, color: colors[n.type] || '#888' } })),
+        ...nodes.map((n: any) => ({ data: {
+          id: n.id, label: n.label, url: n.url, type: n.type,
+          summary: n.summary || '', title: n.label,
+          colorType: typeColors[n.type] || '#888',
+          colorTrack: (n.track && trackColors[n.track]) || '#a1a1aa',
+        } })),
         ...edges.map((e: any, i: number) => ({ data: { id: `e${i}`, source: e.source, target: e.target } })),
       ],
       style: [
-        { selector: 'node', style: { 'background-color': 'data(color)', label: 'data(label)', color: '#a1a1aa', 'font-size': 10, 'text-valign': 'bottom', 'text-margin-y': 4 } },
-        { selector: 'edge', style: { width: 1.5, 'line-color': '#a1a1aa66', 'curve-style': 'bezier' } },
+        { selector: 'node', style: { 'background-color': 'data(colorType)', label: 'data(label)', color: '#a1a1aa', 'font-size': 10, 'text-valign': 'bottom', 'text-margin-y': 4, 'transition-property': 'opacity', 'transition-duration': '0.15s' } },
+        { selector: 'edge', style: { width: 1.5, 'line-color': '#a1a1aa66', 'curve-style': 'bezier', 'transition-property': 'opacity', 'transition-duration': '0.15s' } },
+        { selector: '.faded', style: { opacity: 0.12 } },
+        { selector: 'edge.faded', style: { opacity: 0.05 } },
+        { selector: '.km-hidden', style: { display: 'none' } },
+        { selector: 'node.match', style: { 'border-width': 3, 'border-color': '#6366f1' } },
       ],
     });
-    // Continuous physics layout: dragging a node pushes/pulls its neighbours live.
-    const layout = cy.layout({
-      name: 'cola',
-      infinite: true,          // keep simulating so drags perturb the whole graph
-      fit: false,
-      avoidOverlap: true,
-      handleDisconnected: true, // spread disconnected nodes (templates) apart
-      nodeSpacing: 16,
-      edgeLength: 130,
-    } as any);
+
+    const layout = cy.layout({ name: 'cola', infinite: true, fit: false, avoidOverlap: true, handleDisconnected: true, nodeSpacing: 16, edgeLength: 130 } as any);
     layout.run();
     running = layout;
-    setTimeout(() => cy.animate({ fit: { eles: cy.elements(), padding: 40 }, duration: 400 }), 600);
-    cy.on('tap', 'node', (evt) => { const url = evt.target.data('url'); if (url) location.href = url; });
+    // Settle the physics, fit once, then STOP so we don't burn CPU forever and
+    // so later show/hide of nodes doesn't make the graph jump around.
+    setTimeout(() => {
+      cy.animate({ fit: { eles: cy.elements(), padding: 40 }, duration: 400 });
+      setTimeout(() => running?.stop?.(), 500);
+    }, 1400);
+
+    wireControls();
   }
 
-  // Stop the running simulation before navigating away (avoid wasted CPU).
-  document.addEventListener('astro:before-swap', () => { running?.stop?.(); running = null; });
+  function wireControls() {
+    // hover highlight
+    cy.on('mouseover', 'node', (evt: any) => {
+      const nb = evt.target.closedNeighborhood();
+      cy.elements().addClass('faded');
+      nb.removeClass('faded');
+    });
+    cy.on('mouseout', 'node', () => cy.elements().removeClass('faded'));
+
+    // click node -> peek panel (no immediate navigation)
+    cy.on('tap', 'node', (evt: any) => showPeek(evt.target.data()));
+    cy.on('tap', (evt: any) => { if (evt.target === cy) hidePeek(); });
+
+    // legend = filter
+    document.querySelectorAll('.km-legend-item').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const t = (btn as HTMLElement).dataset.type!;
+        if (hiddenTypes.has(t)) { hiddenTypes.delete(t); btn.classList.remove('opacity-40'); }
+        else { hiddenTypes.add(t); btn.classList.add('opacity-40'); }
+        applyFilter();
+      });
+    });
+
+    // color-by toggle
+    const colorby = document.getElementById('km-colorby') as HTMLSelectElement;
+    colorby?.addEventListener('change', () => {
+      const key = colorby.value === 'track' ? 'data(colorTrack)' : 'data(colorType)';
+      cy.style().selector('node').style('background-color', key).update();
+    });
+
+    // search: highlight matches; Enter centers on first match
+    const search = document.getElementById('km-search') as HTMLInputElement;
+    search?.addEventListener('input', () => {
+      const q = search.value.trim().toLowerCase();
+      cy.nodes().removeClass('match');
+      if (!q) { cy.elements().removeClass('faded'); return; }
+      const matches = cy.nodes().filter((n: any) => n.data('label')?.toLowerCase().includes(q));
+      cy.elements().addClass('faded');
+      matches.removeClass('faded').addClass('match');
+      matches.connectedEdges().removeClass('faded');
+    });
+    search?.addEventListener('keydown', (e: any) => {
+      if (e.key !== 'Enter') return;
+      const q = search.value.trim().toLowerCase();
+      const first = cy.nodes().filter((n: any) => n.data('label')?.toLowerCase().includes(q))[0];
+      if (first) cy.animate({ center: { eles: first }, zoom: 1.6, duration: 350 });
+    });
+
+    document.getElementById('km-reset')?.addEventListener('click', () => {
+      cy.animate({ fit: { eles: cy.elements(':visible'), padding: 40 }, duration: 350 });
+    });
+
+    document.getElementById('km-peek-close')?.addEventListener('click', hidePeek);
+  }
+
+  function applyFilter() {
+    cy.batch(() => {
+      cy.nodes().forEach((n: any) => {
+        if (hiddenTypes.has(n.data('type'))) n.addClass('km-hidden');
+        else n.removeClass('km-hidden');
+      });
+    });
+  }
+
+  function showPeek(d: any) {
+    const peek = document.getElementById('km-peek'); if (!peek) return;
+    const colorby = (document.getElementById('km-colorby') as HTMLSelectElement)?.value;
+    (document.getElementById('km-peek-dot') as HTMLElement).style.background = colorby === 'track' ? d.colorTrack : d.colorType;
+    (document.getElementById('km-peek-type') as HTMLElement).textContent = d.type || '';
+    (document.getElementById('km-peek-title') as HTMLElement).textContent = d.title || d.label || '';
+    (document.getElementById('km-peek-summary') as HTMLElement).textContent = d.summary || '';
+    (document.getElementById('km-peek-link') as HTMLAnchorElement).href = d.url || '#';
+    peek.classList.remove('hidden');
+  }
+  function hidePeek() { document.getElementById('km-peek')?.classList.add('hidden'); }
+
+  document.addEventListener('astro:before-swap', () => { running?.stop?.(); running = null; cy = null; });
   document.addEventListener('astro:page-load', renderGraph);
 </script>
