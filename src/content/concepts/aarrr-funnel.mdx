@@ -1,0 +1,64 @@
+---
+id: concept-aarrr-funnel
+title: "Phễu AARRR (Pirate Metrics)"
+type: "concept"
+aliases: ["AARRR", "pirate metrics", "phễu cướp biển", "Dave McClure metrics", "acquisition activation retention referral revenue"]
+tags: [indie, founder, business, metrics, aarrr, growth, retention]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Bạn đang rò chỗ nào? Khi doanh thu không tăng dù bạn đã chạy quảng cáo, đã viết content, đã có người vào xem — vấn đề có thể không phải ở bước bạn đang tối ưu. Nó có thể đang rò ở một tầng hoàn toàn khác mà bạn chưa đo.
+
+## Là gì
+
+**AARRR** là framework 5 tầng do Dave McClure (500 Startups) đề xuất để đo và tìm điểm nghẽn trong hành trình khách hàng:
+
+| Tầng | Câu hỏi |
+|------|---------|
+| **A**cquisition | Người dùng đến từ đâu? Kênh nào hiệu quả? |
+| **A**ctivation | Người dùng có trải nghiệm "aha moment" không? |
+| **R**etention | Người dùng có quay lại không? |
+| **R**eferral | Người dùng có giới thiệu người khác không? |
+| **R**evenue | Người dùng có trả tiền không? |
+
+Mỗi tầng rò → tiền và công sức đổ vào tầng trên đều vô nghĩa.
+
+## Vì sao AARRR hữu ích
+
+Không phải để tối ưu đồng thời cả 5 tầng — không solo founder nào đủ năng lực làm vậy. AARRR là **bản đồ tìm rò**: đo cả 5 tầng, xem tầng nào đang mất nhiều nhất, tập trung vào đó trước.
+
+Ví dụ: nếu Acquisition tốt (1.000 người/tháng) nhưng Activation kém (chỉ 5% người dùng thật sự setup xong và dùng tính năng chính) — bạn đang lãng phí 95% acquisition. Fix activation trước, rồi mới đổ thêm vào acquisition.
+
+## Ví dụ thật
+
+Một indie SaaS làm tool quản lý invoice dùng AARRR để phân tích:
+
+- Acquisition: 800 lượt signup/tháng từ SEO.
+- Activation: chỉ 120 người (15%) tạo invoice đầu tiên trong 48h.
+- Retention: 70 người (58% của activated) vẫn dùng sau 30 ngày.
+- Referral: 8 người giới thiệu thêm user mới.
+- Revenue: 45 người nâng cấp lên paid.
+
+Chỗ rò lớn nhất? Activation — 85% người dùng rời bỏ trước khi trải nghiệm giá trị cốt lõi. Fix activation (onboarding tốt hơn, guide bước đầu) sẽ có impact lớn hơn bất kỳ thay đổi nào khác.
+
+<Callout title="Mẹo">
+Không phải tầng nào cũng quan trọng như nhau với mọi sản phẩm. SaaS B2B thường có Activation và Retention là tầng quyết định. Sản phẩm consumer thường có Referral quan trọng hơn. Biết loại sản phẩm của mình để biết tầng nào cần ưu tiên.
+</Callout>
+
+<Callout title="Nhớ nhé">
+AARRR không phải để chạy song song — là để **tìm một điểm nghẽn** và tập trung. Solo founder mà cố tối ưu cả 5 tầng cùng lúc sẽ không cải thiện được tầng nào cả.
+</Callout>
+
+## Đọc thêm
+
+- [Startup Metrics for Pirates: AARRR — 500.co](https://500.co/thinkingoutloud/startup-metrics-for-pirates-aarrr): Slide gốc của Dave McClure tại 500 Startups; nguồn cơ bản nhất về framework AARRR với giải thích từng tầng.
+- [AARRR Pirate Metrics for Startups: A Complete Guide — Indie Hackers](https://www.indiehackers.com/post/aarrr-pirate-metrics-for-startups-a-complete-guide-d4e5a5a4f0): Indie founder giải thích AARRR với ví dụ thực tế cho sản phẩm nhỏ, có công thức và cách đặt benchmark.
+- [AARRR Framework — ProductPlan](https://www.productplan.com/glossary/aarrr-framework/): Tóm tắt nhanh 5 tầng với câu hỏi cụ thể cần đặt ra ở mỗi tầng; tốt để tra cứu nhanh.
+- [Loops & Funnels — Reforge](https://www.reforge.com/blog/loops-funnels): Giúp hiểu giới hạn của funnel (bao gồm AARRR) và khi nào nên chuyển sang tư duy loop; bổ sung trực tiếp cho AARRR.
+
+## Tự kiểm tra
+
+1. Một app có 2.000 signup/tháng, 400 người activate, 120 người còn dùng sau 30 ngày, và 30 người trả tiền. Tầng nào đang rò nhiều nhất? Bạn sẽ ưu tiên fix tầng nào trước?
+2. Tại sao "tăng Acquisition" không phải lúc nào cũng là giải pháp khi doanh thu stagnant? Phân tích qua AARRR.
+3. Referral khác gì với marketing thông thường trong framework AARRR? Tại sao nó được xếp vào đây thay vì gộp chung với Acquisition?

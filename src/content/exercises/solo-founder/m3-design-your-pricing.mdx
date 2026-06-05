@@ -1,0 +1,101 @@
+---
+id: exercise-solo-003
+title: "Thiết kế bảng giá cho sản phẩm của bạn"
+type: "exercise"
+track: solo-founder
+tags: [pricing, monetization, indie, founder, saas, mrr, revenue, value-pricing, subscription, solo-builder, pricing-tiers]
+estimatedMinutes: 30
+related: [lesson-solo-003, concept-value-based-pricing, concept-pricing-tiers, concept-subscription-vs-one-time, concept-mrr-arr, rubric-solo-founder]
+status: published
+---
+import Callout from '../../../components/content/Callout.astro';
+
+## Tình huống
+
+Bạn là **Alex**, một solo developer vừa build xong **InvoiceZen** — một SaaS niche giúp freelancer và agency nhỏ (1–10 người) tự động tạo và gửi invoice theo template, track trạng thái thanh toán, và nhắc khách hàng khi quá hạn.
+
+Sau 3 tháng build, Alex chuẩn bị launch và cần thiết kế bảng giá. Bản năng đầu tiên của Alex là: *"$9/tháng flat, đơn giản, ai cũng vào được."*
+
+Bài này giúp bạn phân tích lại quyết định đó — và thiết kế một bảng giá tốt hơn nhiều.
+
+<Callout title="Nhớ nhé">
+Không có đáp án duy nhất "đúng" ở đây. Nhưng có những quyết định được *lý giải tốt* và những quyết định được *lý giải kém*. Grader sẽ chú trọng lập luận, không chỉ số.
+</Callout>
+
+## Task 1 — Reframe giá theo giá trị
+
+Trước khi chọn số, hãy tìm hiểu **InvoiceZen tạo ra bao nhiêu giá trị** cho khách hàng.
+
+Giả định bối cảnh:
+- Freelancer trung bình mất **2–3 tiếng/tháng** để tạo invoice thủ công, gửi email nhắc, và theo dõi trạng thái
+- Giờ làm việc của freelancer trị giá trung bình **$30–$50/giờ**
+- Trung bình invoice bị trả trễ **12 ngày** — ảnh hưởng cash flow
+
+**Làm những việc sau:**
+
+1. Tính **giá trị tối thiểu** InvoiceZen tạo ra cho một freelancer mỗi tháng (chỉ tính thời gian tiết kiệm, dùng con số thấp nhất)
+
+2. Viết một câu định vị giá trị theo cấu trúc:
+   > *"InvoiceZen giúp [khách hàng] [kết quả cụ thể], tương đương [giá trị bằng tiền] mỗi tháng."*
+
+3. Dựa vào giá trị vừa tính, đề xuất **khoảng giá hợp lý** cho gói chính (không phải tier đắt nhất, không phải rẻ nhất). Giải thích tại sao $9/tháng là underpricing.
+
+## Task 2 — Thiết kế 3 tier với value metric và anchor
+
+Bây giờ thiết kế bảng giá 3 tier cho InvoiceZen.
+
+**Bước 1:** Chọn **value metric** — thứ gì tăng theo mức dùng thật của khách hàng? Gợi ý: số invoice/tháng, số client, số thành viên team. Giải thích tại sao bạn chọn metric đó thay vì các lựa chọn khác.
+
+**Bước 2:** Thiết kế 3 tier theo cấu trúc Good / Better / Best:
+
+| Tier | Tên | Giá/tháng | Giới hạn (value metric) | Tính năng thêm |
+|------|-----|-----------|------------------------|----------------|
+| Good | ... | $... | ... | ... |
+| Better | ... | $... | ... | ... |
+| Best | ... | $... | ... | ... |
+
+**Bước 3:** Trả lời các câu hỏi sau về thiết kế của bạn:
+- Tier nào bạn muốn **phần lớn khách chọn**? Tại sao tier đó trông hấp dẫn nhất?
+- Tier Best đóng vai trò gì (anchor, hay bạn thật sự muốn bán nó)?
+- Freelancer cá nhân sẽ chọn tier nào? Agency 5 người sẽ chọn tier nào?
+
+<Callout title="Mẹo">
+Kiểm tra tier của bạn bằng câu hỏi: *"Nếu tôi ở tier Starter và cần làm thêm việc X, tôi có muốn upgrade không?"* Nếu câu trả lời là không, trigger upgrade của bạn chưa đủ mạnh.
+</Callout>
+
+## Task 3 — Quyết định mô hình: subscription, one-time, hay freemium?
+
+**Câu 1 — Subscription hay one-time?**
+
+InvoiceZen có nên dùng subscription monthly, subscription annual, hay mua đứt một lần? Trả lời bằng cách điền vào bảng này:
+
+| Tiêu chí | Subscription | One-time |
+|----------|-------------|---------|
+| Giá trị liên tục cho user | ... | ... |
+| Dự đoán doanh thu | ... | ... |
+| Phù hợp với InvoiceZen? | ... | ... |
+
+Kết luận của bạn và lý do.
+
+**Câu 2 — Có nên thêm freemium không?**
+
+Alex đang cân nhắc free plan: tạo tối đa 3 invoice/tháng, không có tính năng nhắc tự động.
+
+Phân tích: plan này có thỏa mãn hai điều kiện của freemium không (chi phí biên thấp + trigger upgrade rõ)?
+
+Kết luận: bạn recommend có hay không, và tại sao?
+
+**Câu 3 — Ước tính MRR khiêm tốn**
+
+Giả định InvoiceZen có 3 tháng sau launch: 40 khách tier Good, 15 khách tier Better, 3 khách tier Best. Dùng giá từ Task 2 của bạn:
+
+- Tính **MRR** hiện tại
+- Nếu tháng sau thêm 5 khách Good mới, 2 khách upgrade Good→Better, và 1 khách hủy Good: tính **Net New MRR**
+- MRR tháng sau là bao nhiêu?
+
+## Tiêu chí đánh giá
+
+Xem [Solo Founder Rubric](../../rubrics/solo-founder-rubric) để biết cách bài này được chấm. Đặc biệt chú ý hai tiêu chí:
+
+- **"Lập luận giá trị"**: giá được lý giải bằng giá trị thật cho khách, không phải cảm tính hay đối thủ
+- **"Thiết kế tier hợp lý"**: tier có value metric rõ ràng, trigger upgrade thực tế, và anchor tier đúng vai trò

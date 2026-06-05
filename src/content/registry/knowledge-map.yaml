@@ -264,3 +264,217 @@ edges:
   - source: rubric-system-design
     target: exercise-sysd-006
     rel: evaluates
+
+  # === Solo Founder / Indie Builder ===
+  # --- M1 Mindset & Idea ---
+  - source: concept-indie-hacker
+    target: concept-bootstrapping-vs-vc
+    rel: leads-to
+  - source: concept-finding-startup-ideas
+    target: concept-unfair-advantage
+    rel: leads-to
+  - source: concept-unfair-advantage
+    target: concept-niche-market
+    rel: leads-to
+  # M1 -> M2
+  - source: concept-niche-market
+    target: concept-market-size
+    rel: leads-to
+  - source: concept-finding-startup-ideas
+    target: lesson-solo-001
+    rel: supports
+  - source: concept-niche-market
+    target: lesson-solo-001
+    rel: supports
+  - source: concept-finding-startup-ideas
+    target: exercise-solo-001
+    rel: trains
+  - source: concept-unfair-advantage
+    target: exercise-solo-001
+    rel: trains
+  - source: concept-niche-market
+    target: exercise-solo-001
+    rel: trains
+  - source: rubric-solo-founder
+    target: exercise-solo-001
+    rel: evaluates
+
+  # --- M2 Market Validation & Positioning ---
+  - source: concept-market-size
+    target: concept-willingness-to-pay
+    rel: leads-to
+  - source: concept-willingness-to-pay
+    target: concept-pre-selling
+    rel: leads-to
+  - source: concept-competitor-analysis
+    target: concept-positioning
+    rel: leads-to
+  # reuse existing product-track concepts for validation
+  - source: concept-the-mom-test
+    target: concept-willingness-to-pay
+    rel: supports
+  - source: concept-customer-interview
+    target: concept-pre-selling
+    rel: supports
+  # M2 -> M3
+  - source: concept-willingness-to-pay
+    target: concept-pricing-strategy
+    rel: leads-to
+  - source: concept-positioning
+    target: lesson-solo-002
+    rel: supports
+  - source: concept-pre-selling
+    target: lesson-solo-002
+    rel: supports
+  - source: concept-willingness-to-pay
+    target: exercise-solo-002
+    rel: trains
+  - source: concept-pre-selling
+    target: exercise-solo-002
+    rel: trains
+  - source: concept-positioning
+    target: exercise-solo-002
+    rel: trains
+  - source: rubric-solo-founder
+    target: exercise-solo-002
+    rel: evaluates
+
+  # --- M3 Pricing & Monetization ---
+  - source: concept-pricing-strategy
+    target: concept-value-based-pricing
+    rel: leads-to
+  - source: concept-value-based-pricing
+    target: concept-pricing-tiers
+    rel: leads-to
+  - source: concept-pricing-tiers
+    target: concept-subscription-vs-one-time
+    rel: leads-to
+  - source: concept-subscription-vs-one-time
+    target: concept-freemium
+    rel: leads-to
+  - source: concept-freemium
+    target: concept-mrr-arr
+    rel: leads-to
+  # M3 -> M4
+  - source: concept-mrr-arr
+    target: concept-distribution
+    rel: leads-to
+  - source: concept-value-based-pricing
+    target: lesson-solo-003
+    rel: supports
+  - source: concept-pricing-tiers
+    target: lesson-solo-003
+    rel: supports
+  - source: concept-value-based-pricing
+    target: exercise-solo-003
+    rel: trains
+  - source: concept-pricing-tiers
+    target: exercise-solo-003
+    rel: trains
+  - source: concept-mrr-arr
+    target: exercise-solo-003
+    rel: trains
+  - source: rubric-solo-founder
+    target: exercise-solo-003
+    rel: evaluates
+
+  # --- M4 Distribution & GTM ---
+  - source: concept-distribution
+    target: concept-go-to-market
+    rel: leads-to
+  - source: concept-go-to-market
+    target: concept-build-in-public
+    rel: leads-to
+  - source: concept-build-in-public
+    target: concept-content-marketing
+    rel: leads-to
+  - source: concept-content-marketing
+    target: concept-email-list
+    rel: leads-to
+  - source: concept-email-list
+    target: concept-launch-strategy
+    rel: leads-to
+  - source: concept-launch-strategy
+    target: concept-cold-outreach
+    rel: leads-to
+  # M4 -> M5
+  - source: concept-cold-outreach
+    target: concept-growth-loops
+    rel: leads-to
+  - source: concept-distribution
+    target: lesson-solo-004
+    rel: supports
+  - source: concept-go-to-market
+    target: lesson-solo-004
+    rel: supports
+  - source: concept-distribution
+    target: exercise-solo-004
+    rel: trains
+  - source: concept-content-marketing
+    target: exercise-solo-004
+    rel: trains
+  - source: concept-launch-strategy
+    target: exercise-solo-004
+    rel: trains
+  - source: rubric-solo-founder
+    target: exercise-solo-004
+    rel: evaluates
+
+  # --- M5 Growth & Sustainability ---
+  - source: concept-aarrr-funnel
+    target: concept-churn
+    rel: leads-to
+  - source: concept-churn
+    target: concept-cac-ltv
+    rel: leads-to
+  - source: concept-cac-ltv
+    target: concept-growth-loops
+    rel: supports
+  - source: concept-growth-loops
+    target: concept-community-building
+    rel: leads-to
+  - source: concept-community-building
+    target: concept-ramen-profitability
+    rel: leads-to
+  - source: concept-ramen-profitability
+    target: concept-solo-founder-burnout
+    rel: leads-to
+  # churn is the flip side of existing retention
+  - source: concept-retention
+    target: concept-churn
+    rel: supports
+  - source: concept-aarrr-funnel
+    target: lesson-solo-005
+    rel: supports
+  - source: concept-churn
+    target: lesson-solo-005
+    rel: supports
+  - source: concept-aarrr-funnel
+    target: exercise-solo-005
+    rel: trains
+  - source: concept-churn
+    target: exercise-solo-005
+    rel: trains
+  - source: concept-cac-ltv
+    target: exercise-solo-005
+    rel: trains
+  - source: rubric-solo-founder
+    target: exercise-solo-005
+    rel: evaluates
+
+  # --- Capstone draws on the whole track ---
+  - source: concept-positioning
+    target: exercise-solo-006
+    rel: trains
+  - source: concept-pricing-tiers
+    target: exercise-solo-006
+    rel: trains
+  - source: concept-distribution
+    target: exercise-solo-006
+    rel: trains
+  - source: concept-go-to-market
+    target: exercise-solo-006
+    rel: trains
+  - source: rubric-solo-founder
+    target: exercise-solo-006
+    rel: evaluates
