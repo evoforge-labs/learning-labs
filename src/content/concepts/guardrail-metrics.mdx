@@ -1,0 +1,55 @@
+---
+id: concept-guardrail-metrics
+title: "Guardrail Metrics"
+type: "concept"
+aliases: ["guardrail metrics thí nghiệm", "metric canh gác A/B test", "counter metrics experiment", "tránh tối ưu mù sản phẩm", "bảo vệ chỉ số phụ khi thử nghiệm"]
+tags: [product-analytics, experimentation, ab-testing, metrics, guardrails, product-health]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Một cửa hàng tăng doanh thu bằng cách bán hàng sắp hết hạn với giá chiết khấu. Số đơn hàng tăng — nhưng đơn trả hàng và đánh giá 1 sao cũng tăng theo. Nếu họ chỉ nhìn vào doanh thu, quyết định trông rất ổn. **Guardrail metrics là những chỉ số bạn canh để variant không "thắng" bằng cách phá thứ khác.**
+
+## Là gì
+
+Trong mỗi A/B test, bạn có **primary metric** — thứ bạn muốn cải thiện. Nhưng sản phẩm không chỉ có một con số. Tối ưu một metric mà không quan sát những metric liên quan có thể gây hại ngoài dự tính.
+
+**Guardrail metrics** là tập hợp các chỉ số không được phép xấu đi đáng kể dù primary metric có tốt hay không. Nếu variant làm primary metric tăng nhưng kéo một guardrail metric xuống, bạn **không triển khai** — hoặc phải điều tra thêm.
+
+Ví dụ phổ biến:
+
+| Primary metric muốn tăng | Guardrail metrics cần canh |
+|---|---|
+| Click-through rate (CTR) | Tỉ lệ hoàn thành mua hàng, refund rate |
+| Tốc độ onboarding (bước ít hơn) | Activation rate 7 ngày, tỉ lệ dùng tính năng chính |
+| Email open rate (subject line mạnh hơn) | Unsubscribe rate, spam report |
+| Thời gian dùng app (engagement) | Customer support tickets, lỗi báo cáo |
+
+## Ví dụ thật
+
+Đội product thêm notification "Bạn có 3 items trong giỏ hàng" mỗi 4 giờ. A/B test cho thấy conversion rate tăng 8% — primary metric thắng rõ ràng.
+
+Nhưng guardrail metric "unsubscribe từ notification" tăng 40%, và "app uninstall trong 7 ngày" tăng 12%. Variant thắng ngắn hạn nhưng đang phá long-term retention.
+
+Không có guardrail metrics, team sẽ rollout và tự chúc mừng nhau. Với guardrail metrics, họ nhận ra mình đang đánh đổi retention lấy conversion — một quyết định xứng đáng được tranh luận kỹ hơn trước khi hành động.
+
+<Callout title="Cẩn thận">
+Đừng thêm quá nhiều guardrail metrics đến mức không test nào "vượt qua" được. Chọn 2-4 guardrail metrics thực sự đại diện cho sức khoẻ của sản phẩm. Guardrail không phải để chặn mọi thay đổi — mà để bắt những trade-off không lường trước.
+</Callout>
+
+<Callout title="Nhớ nhé">
+Mỗi A/B test nên có: một primary metric (muốn tối ưu), 2-4 guardrail metrics (không được phá), và thời gian quan sát đủ dài để thấy hiệu ứng trễ. Khi primary metric thắng nhưng guardrail bị phá, đó không phải thắng — đó là tín hiệu để tìm hiểu thêm.
+</Callout>
+
+## Đọc thêm
+
+- [Guardrail Metrics in Experimentation — Airbnb Engineering](https://medium.com/airbnb-engineering/https-medium-com-jonathan-parks-measuring-transient-symptoms-aa6b00b44a30) — Airbnb giải thích cách họ dùng guardrail metrics trong hệ thống experimentation; thực tế từ công ty chạy hàng nghìn test mỗi năm.
+- [North Star Metric vs Guardrail — Amplitude Blog](https://amplitude.com/blog/north-star-metric) — Giải thích sự khác biệt giữa North Star Metric và guardrail metrics, kèm framework để chọn cả hai cho sản phẩm của bạn.
+- [The Role of Guardrail Metrics — Microsoft ExP](https://exp-platform.com/Documents/2019-10-ExP-Guardrail-Metrics-KDD.pdf) — Paper từ đội experimentation của Microsoft về lý thuyết và thực hành guardrail metrics; dành cho bạn muốn đào sâu hơn.
+- [Metric Selection for A/B Tests — Booking.com](https://booking.ai/how-booking-com-increases-the-power-of-online-experiments-with-cuped-995d186fff1d) — Booking.com chia sẻ cách họ chọn và bảo vệ các chỉ số trong hàng nghìn thí nghiệm song song.
+
+## Tự kiểm tra
+
+1. Tại sao chỉ nhìn primary metric là chưa đủ khi đánh giá kết quả A/B test? Cho một ví dụ cụ thể.
+2. Bạn đang tối ưu "số trang xem mỗi phiên." Hãy đề xuất 2-3 guardrail metrics phù hợp và giải thích lý do.
+3. Primary metric tăng 15% nhưng guardrail metric "customer support tickets" tăng 25%. Bạn sẽ quyết định như thế nào?

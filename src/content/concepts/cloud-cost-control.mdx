@@ -1,0 +1,53 @@
+---
+id: concept-cloud-cost-control
+title: "Cloud Cost Control (FinOps cho solo)"
+type: "concept"
+aliases: ["cloud cost control", "finops solo builder", "kiểm soát chi phí cloud", "cloud bill", "egress cost", "idle resource", "budget alert cloud", "cloud spending visibility"]
+tags: [ship-and-operate, cost, cloud, finops, devops, infra, solo-builder]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Bạn deploy app lên cloud, quên mất rồi tập trung code. Cuối tháng mở hóa đơn — con số cao hơn bạn nghĩ gấp đôi. Nhưng bạn không biết *tại sao*.
+
+Đó là vấn đề không phải về tiết kiệm — mà về **nhìn thấy**.
+
+## Là gì
+
+**Cloud Cost Control** (hay FinOps khi áp dụng cho solo builder) là tập hợp thói quen giúp bạn biết tiền cloud đang chảy đi đâu, phát hiện sớm bất thường, và ra quyết định có căn cứ thay vì cắt giảm mù quáng.
+
+Ba tầng cần hiểu:
+
+**Visibility trước — tối ưu sau.** Trước khi giảm bất cứ thứ gì, bạn cần nhìn thấy breakdown: dịch vụ nào tốn nhiều nhất, resource nào đang chạy nhưng không có traffic, hóa đơn tháng này khác tháng trước ở đâu. AWS Cost Explorer, GCP Billing, Vercel/Render dashboard — tất cả đều có sẵn miễn phí.
+
+**Hai thủ phạm phổ biến nhất:**
+
+- **Egress cost** — tiền bạn trả khi dữ liệu *rời khỏi* cloud. Download từ S3 về browser tốn tiền. Gọi giữa hai region tốn tiền. Một app nhỏ với nhiều file media lớn có thể bị egress ăn hết margin.
+- **Idle resource** — máy chạy 24/7 nhưng chỉ có traffic 2 giờ/ngày. Database dev/staging không ai dùng. Preview environment để quên. Mỗi thứ một mình nhỏ, cộng lại thành khoản lớn.
+
+**Budget alert** — đặt ngưỡng cảnh báo trước khi bạn bị bất ngờ. AWS, GCP, và hầu hết cloud provider đều cho phép tạo alert khi chi phí vượt một mức nhất định. Với solo builder, đặt alert ở 80% ngân sách kỳ vọng — bạn còn thời gian điều tra trước khi hết tháng.
+
+## Ví dụ thật
+
+Một app ảnh solo builder trên AWS: hóa đơn tháng 3 là 40 USD, tháng 4 nhảy lên 120 USD. Không có gì thay đổi lớn trong code. Mở Cost Explorer ra: S3 data transfer tăng gấp 3. Lý do: thêm tính năng export ảnh full-resolution — mỗi lần user export là 15 MB rời khỏi S3. Sửa bằng cách nén ảnh trước khi export và dùng CloudFront làm CDN: egress cost giảm xuống còn 38 USD tháng sau.
+
+<Callout title="Cẩn thận">
+Đừng tối ưu chi phí trước khi có visibility đầy đủ. Cắt random một service nhỏ trong khi thủ phạm thật là egress từ service khác — bạn tốn công mà không giải quyết được vấn đề. **Đo trước, cắt sau.**
+</Callout>
+
+<Callout title="Nhớ nhé">
+Bốn bước cơ bản: (1) bật cost visibility dashboard, (2) tag resource theo môi trường (prod/dev/staging), (3) tìm egress và idle resource, (4) đặt budget alert. Làm một lần, tiết kiệm nhiều lần.
+</Callout>
+
+## Đọc thêm
+
+- [AWS Cost Explorer — AWS](https://aws.amazon.com/aws-cost-management/aws-cost-explorer/) — Công cụ miễn phí của AWS để xem breakdown chi phí theo service, tag, và thời gian; điểm khởi đầu để có visibility trước khi tối ưu.
+- [FinOps Foundation — What is FinOps?](https://www.finops.org/introduction/what-is-finops/) — Tổ chức FinOps Foundation giải thích FinOps là văn hóa kết hợp tài chính + kỹ thuật + kinh doanh; phù hợp để hiểu mindset dù bạn là solo hay team nhỏ.
+- [Cloud Egress Costs Explained — Cloudflare Blog](https://blog.cloudflare.com/aws-egress-costs/) — Cloudflare giải thích tại sao egress cost là "thuế ẩn" lớn nhất của cloud, và so sánh giá egress giữa các provider; đọc để không bị bất ngờ.
+- [Google Cloud Budget Alerts — GCP Docs](https://cloud.google.com/billing/docs/how-to/budgets) — Hướng dẫn chính thức cách tạo budget alert trên GCP; pattern tương tự áp dụng được cho AWS và Azure.
+
+## Tự kiểm tra
+
+1. Hóa đơn cloud tháng này tăng 50% so với tháng trước mà bạn không deploy tính năng mới lớn nào. Bạn bắt đầu điều tra từ đâu và bằng công cụ gì?
+2. Tại sao egress cost lại dễ bị bỏ qua hơn compute cost khi ước lượng chi phí ban đầu?
+3. Bạn có 3 môi trường: production, staging, dev. Môi trường nào dễ tạo ra idle resource nhất và tại sao?

@@ -1,0 +1,51 @@
+---
+id: concept-continuous-integration
+title: "Continuous Integration (CI)"
+type: "concept"
+aliases: ["continuous integration", "CI pipeline", "tích hợp liên tục", "tự động chạy test khi commit", "merge nhánh thường xuyên"]
+tags: [ci-cd, devops, testing, automation, ship-and-operate, reliability]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Hãy tưởng tượng bạn và ba đồng đội cùng viết một cuốn sách. Mỗi người viết riêng một chương, ba tuần sau mới nộp bản. Lúc ghép lại: chương 2 mâu thuẫn chương 4, nhân vật ở chương 1 chết nhưng chương 3 vẫn đang nói chuyện với họ. Sửa ba tuần.
+
+Nếu mỗi ngày các bạn ghép lại và đọc soát — vấn đề chỉ mất mười lăm phút.
+
+## Là gì
+
+**Continuous Integration (CI)** là thực hành mỗi developer merge code vào nhánh chung *thường xuyên* — ít nhất mỗi ngày một lần. Mỗi lần merge, một máy tự động chạy toàn bộ test suite và báo kết quả trong vài phút.
+
+Mục tiêu không phải là "đừng có bug". Mục tiêu là **phát hiện xung đột và lỗi sớm nhất có thể** — khi chúng còn nhỏ, còn rẻ, còn nhớ context.
+
+Ba thành phần cốt lõi của một pipeline CI:
+
+**Source control trigger** — mỗi khi bạn push code lên, pipeline tự khởi chạy. Không cần nhớ, không cần làm thủ công.
+
+**Automated tests** — unit test, integration test, lint, type check. Chạy hết, song song nếu có thể. Nếu test fail thì merge bị block.
+
+**Fast feedback** — kết quả về trong vòng 5-10 phút. Pipeline chạy 45 phút là không ai chờ, không ai sửa ngay.
+
+## Ví dụ thật
+
+Bạn là solo builder thêm một feature mới vào API. Push lên GitHub, GitHub Actions tự chạy: lint → unit test → integration test → build Docker image. Ba phút sau thấy đèn đỏ: một hàm bạn refactor đã làm vỡ endpoint `/users/profile`. Bạn sửa ngay lúc đó — còn nhớ đã thay đổi gì, chưa bị context switch. Nếu không có CI, bạn chỉ biết khi deploy lên production hoặc khi user báo lỗi.
+
+<Callout title="Cẩn thận">
+CI chỉ hữu ích nếu test suite của bạn *thực sự* bắt lỗi. Không có test, hoặc test toàn pass cả khi code sai, thì pipeline xanh chỉ là cảm giác an toàn giả tạo. Ưu tiên viết ít test nhưng test đúng chỗ quan trọng hơn là có nhiều test rỗng tuếch.
+</Callout>
+
+<Callout title="Nhớ nhé">
+CI = merge nhỏ + thường xuyên + máy tự kiểm tra. Quy tắc vàng: không để nhánh sống lâu hơn một ngày. Lỗi hợp nhất tìm thấy sau 1 giờ dễ sửa hơn lỗi tìm thấy sau 1 tuần gấp mười lần.
+</Callout>
+
+## Đọc thêm
+
+- [About continuous integration — GitHub Docs](https://docs.github.com/en/actions/about-github-actions/about-continuous-integration) — GitHub giải thích CI từ góc nhìn thực hành, kèm ví dụ workflow cụ thể với GitHub Actions; điểm khởi đầu tốt nhất nếu bạn đang dùng GitHub.
+- [Continuous Integration — Martin Fowler](https://martinfowler.com/articles/continuousIntegration.html) — Bài viết gốc của Martin Fowler định nghĩa CI; giải thích tại sao merge thường xuyên là trái tim của CI, không phải tool.
+- [CI/CD concepts — GitLab Docs](https://docs.gitlab.com/ci/introduction/) — GitLab giải thích rõ sự khác nhau giữa CI, CD delivery và CD deployment; ngắn gọn, có sơ đồ minh họa pipeline.
+
+## Tự kiểm tra
+
+1. Tại sao merge branch sống lâu (ví dụ một tuần) lại gây ra vấn đề, dù code của bạn không hề có bug?
+2. Pipeline CI chạy 40 phút mỗi lần push — điều đó ảnh hưởng đến hành vi của team như thế nào, và bạn sẽ cải thiện ra sao?
+3. Bạn đang làm solo, không có đồng đội. CI có còn cần thiết không? Lập luận cả hai phía.

@@ -1,0 +1,56 @@
+---
+id: concept-user-segmentation
+title: "User Segmentation"
+type: "concept"
+aliases: ["user segmentation", "phân khúc người dùng theo hành vi", "chia nhóm user có ý nghĩa", "behavioral segmentation", "segmentation phân tích sản phẩm"]
+tags: [product-analytics, segmentation, behavior, metrics, user-research]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Bệnh viện không kê cùng một đơn thuốc cho mọi bệnh nhân — dù tất cả đều đang sốt. Họ khám từng người, phân nhóm theo triệu chứng, rồi điều trị đúng loại. Sản phẩm của bạn cũng vậy: cùng là "user" nhưng người dùng casual một tuần một lần và power user mỗi ngày cần hai chiến lược hoàn toàn khác nhau.
+
+## Là gì
+
+**User segmentation** là kỹ thuật chia toàn bộ người dùng thành các nhóm nhỏ hơn có đặc điểm hoặc hành vi tương đồng, để phân tích và hành động chính xác hơn thay vì xử lý tất cả như một khối đồng nhất.
+
+Ba chiều segmentation phổ biến nhất:
+
+**Theo nguồn acquisition:** Paid search vs organic vs referral vs direct. Nhóm nào có retention cao hơn? Nhóm nào có LTV tốt hơn?
+
+**Theo hành vi:** Tần suất dùng (daily/weekly/monthly active), tính năng nào dùng, mức độ sâu trong product. Power user vs casual user vs lurker.
+
+**Theo giá trị:** Free user vs trial vs paid; tier thấp vs tier cao. Nhóm nào đang nâng cấp? Nhóm nào sắp churn?
+
+## Ví dụ thật
+
+Một SaaS quản lý dự án thấy retention trung bình D-30 là 35% — không tệ, không tuyệt vời. Khi segment theo hành vi tuần đầu:
+
+| Nhóm | Hành vi D1-D7 | D-30 retention |
+|---|---|---|
+| Power users | Tạo ít nhất 3 project, mời đồng đội | 72% |
+| Casual users | Tạo 1 project, không mời ai | 28% |
+| Ghost users | Đăng ký xong không làm gì | 4% |
+
+Con số 35% trung bình đã che giấu một sự thật: power users có retention gần gấp đôi casual users. Insight hành động: tập trung onboarding vào việc đưa người dùng đạt "tạo 3 project + mời đồng đội" trong tuần đầu.
+
+<Callout title="Cẩn thận">
+Segmentation có thể tạo ra vô số nhóm nếu bạn không cẩn thận. Quy tắc thực tế: chỉ tạo segment khi nó dẫn đến *hành động khác nhau*. Nếu hai segment dẫn đến cùng một quyết định, gộp họ lại.
+</Callout>
+
+<Callout title="Nhớ nhé">
+Segmentation không phải mục đích — là công cụ để phân tích sâu hơn. Mỗi segment bạn tạo ra nên đi kèm với một câu hỏi cụ thể: "Nhóm này cần gì khác?" hoặc "Tại sao nhóm này có retention cao hơn?" Segment xong rồi để đó không có giá trị gì.
+</Callout>
+
+## Đọc thêm
+
+- [User Segmentation: The Complete Guide — Amplitude](https://amplitude.com/blog/user-segmentation) — Amplitude hướng dẫn toàn diện về user segmentation trong product analytics, bao gồm cách xây segment và kết hợp với funnel/retention analysis.
+- [Behavioral Segmentation: Definition and Examples — Mixpanel](https://mixpanel.com/blog/behavioral-segmentation/) — Mixpanel giải thích behavioral segmentation với nhiều ví dụ thực tế; đặc biệt hữu ích phần "how to build your first segments".
+- [How to Do Customer Segmentation — Intercom](https://www.intercom.com/blog/customer-segmentation/) — Intercom hướng dẫn segmentation từ góc độ sản phẩm lẫn marketing; có framework thực tế để quyết định segment nào cần ưu tiên.
+- [Segmentation and Targeting in Product Analytics — Heap](https://www.heap.io/topics/what-is-user-segmentation) — Heap giải thích segmentation theo góc nhìn tự động (auto-capture), bổ sung cho cách tiếp cận event-based thông thường.
+
+## Tự kiểm tra
+
+1. Sản phẩm của bạn có 10.000 user. Tại sao phân tích toàn bộ như một nhóm lại cho bạn insight sai về retention?
+2. Bạn muốn tìm nhóm user có khả năng nâng cấp lên paid cao nhất. Bạn sẽ dùng chiều segmentation nào và tại sao?
+3. "Segment theo tính năng đầu tiên dùng" và "segment theo nguồn acquisition" có thể cho bạn insight gì khác nhau về sản phẩm?

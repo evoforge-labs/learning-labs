@@ -1,0 +1,57 @@
+---
+id: concept-rollback-and-recovery
+title: "Rollback & Recovery"
+type: "concept"
+aliases: ["rollback deployment", "quay về version cũ", "khôi phục sau lỗi deploy", "forward-fix vs rollback", "deploy recovery"]
+tags: [ci-cd, devops, reliability, ship-and-operate, incident-response, rollback]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Bạn lái xe, lỡ vào con đường sai. Cách nhanh nhất để về đúng đường không phải là tìm cách sửa con đường sai đó — mà là quay đầu xe.
+
+Deploy cũng vậy. Khi version mới có vấn đề, đôi khi quay về version cũ nhanh hơn nhiều so với debug và sửa tại chỗ.
+
+## Là gì
+
+**Rollback** là hành động quay lại version code đã biết là ổn, thường ngay sau khi phát hiện lỗi từ version mới vừa deploy.
+
+**Recovery** là khái niệm rộng hơn: phục hồi hệ thống về trạng thái hoạt động bình thường, dù bằng rollback hay bằng cách sửa tiếp (gọi là *forward-fix*).
+
+**Rollback vs Forward-fix:**
+
+- **Rollback** — quay về version cũ. Nhanh. Phù hợp khi lỗi nghiêm trọng, không hiểu nguyên nhân ngay, hoặc user đang bị ảnh hưởng.
+- **Forward-fix** — vá lỗi và deploy version mới. Phù hợp khi lỗi nhỏ, biết nguyên nhân rõ ràng, và rollback phức tạp hơn (ví dụ: có migration database đã chạy không thể hoàn tác).
+
+Quyết định giữa hai cách dựa vào: *mức độ ảnh hưởng đến user* × *thời gian để sửa và deploy lại*.
+
+## Ví dụ thật
+
+Bạn deploy lúc 10 giờ sáng. Mười lăm phút sau, error rate tăng từ 0.1% lên 8%. Bạn có hai lựa chọn: (1) rollback về version cũ trong 2 phút, error rate về 0.1% ngay, rồi debug bình tĩnh; (2) debug trực tiếp trên production trong khi 8% request đang thất bại.
+
+Câu trả lời hầu như luôn là (1). Rollback trước, debug sau.
+
+Rollback dễ khi:
+- Artifact cũ (Docker image, binary) vẫn còn lưu trữ.
+- Không có migration database không tương thích.
+- Deployment platform hỗ trợ "redeploy previous version" một click (Fly.io, Railway, Render đều có).
+
+<Callout title="Cẩn thận">
+Database migration là điểm yếu nhất của rollback. Nếu version mới đã chạy `ALTER TABLE` xóa cột hoặc đổi kiểu dữ liệu, rollback về version cũ sẽ làm ứng dụng crash vì code cũ kỳ vọng schema cũ. Chiến lược an toàn: chỉ deploy migration *thêm* (expand), không bao giờ xóa hoặc đổi tên trong cùng một lần deploy — để lại việc dọn dẹp cho lần deploy sau khi rollback không còn cần thiết.
+</Callout>
+
+<Callout title="Nhớ nhé">
+Rollback phải dễ — nếu rollback là một quy trình phức tạp, bạn sẽ do dự khi cần. Mục tiêu: quay về version cũ trong vòng 2 phút, không cần bàn thêm. Thiết kế hệ thống để rollback là lựa chọn mặc định khi có lỗi, không phải phương án cuối cùng.
+</Callout>
+
+## Đọc thêm
+
+- [Deployment reliability & rollbacks — Google Cloud Blog](https://cloud.google.com/blog/products/devops-sre/the-hidden-cost-of-rollbacks-in-modern-ci-cd) — Google SRE giải thích chi phí thực sự của rollback và khi nào forward-fix là lựa chọn tốt hơn.
+- [Database migrations done right — Depesz](https://www.depesz.com/2010/08/22/versioning-database/) — Cách viết migration database theo hướng có thể rollback an toàn; kỹ thuật expand-contract giải thích chi tiết.
+- [How to rollback a deployment — Fly.io Docs](https://fly.io/docs/launch/autostop-autostart/) — Hướng dẫn thực hành rollback trên Fly.io; hữu ích cho solo builder đang dùng nền tảng phổ biến này.
+
+## Tự kiểm tra
+
+1. Bạn deploy lúc 2 giờ chiều và phát hiện lỗi lúc 2 giờ 20. Deployment này bao gồm một migration xóa cột `legacy_token`. Bạn có rollback được không? Tại sao?
+2. Tại sao "rollback phải dễ" là yêu cầu thiết kế hệ thống, không phải chỉ là quy trình vận hành?
+3. Forward-fix phù hợp hơn rollback trong tình huống nào? Cho ví dụ cụ thể.

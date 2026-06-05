@@ -1,0 +1,99 @@
+---
+id: lesson-ops-003
+title: "Làm sao nhìn thấy và được cảnh báo về hệ thống của bạn"
+type: "lesson"
+track: ship-and-operate
+module: observability
+level: intermediate
+tags: [observability, monitoring, alerting, sre, reliability, ship-and-operate, structured-logging, golden-signals, sli-slo]
+prerequisites: [concept-observability, concept-structured-logging, concept-golden-signals, concept-sli-slo-error-budget, concept-alerting]
+related: [exercise-ops-003, rubric-ship-and-operate]
+status: published
+---
+import Callout from '../../../components/content/Callout.astro';
+
+Hệ thống của bạn đang chạy. Nhưng bạn có thực sự *nhìn thấy* nó không?
+
+Không có observability, bạn điều hành một chiếc máy bay trong bóng tối. Không đồng hồ, không đèn cảnh báo, không radio. Mọi thứ đều ổn — cho đến khi không ổn nữa, và lúc đó đã quá muộn.
+
+Module này xâu chuỗi năm khái niệm thành một hệ thống quan sát thực tế cho app của bạn.
+
+## Tầng 1 — Nhìn thấy những gì đang xảy ra
+
+Trước khi đo bất cứ thứ gì, bạn cần dữ liệu có thể đọc được.
+
+[Observability](/concepts/observability) đặt nền tảng: logs cho bạn biết chuyện gì đã xảy ra, metrics cho thấy xu hướng theo thời gian, traces theo dõi request xuyên suốt qua nhiều service. Ba trụ cột này không thay thế nhau — chúng bổ sung cho nhau.
+
+Nhưng logs chỉ có giá trị nếu bạn có thể tìm kiếm được. Đó là lý do tại sao [structured logging](/concepts/structured-logging) quan trọng ngay từ ngày đầu. Thay vì ghi `"User 1234 checkout failed"`, hãy ghi:
+
+```json
+{
+  "event": "checkout_failed",
+  "user_id": "1234",
+  "error": "payment_timeout",
+  "trace_id": "abc-789",
+  "duration_ms": 5032
+}
+```
+
+`trace_id` là chìa khóa: nó cho phép bạn lọc toàn bộ hành trình của một request qua tất cả các service, ngay cả khi log nằm ở nhiều nơi khác nhau.
+
+<Callout title="Nhớ nhé">
+Thêm structured logging và correlation ID ngay khi bắt đầu dự án, không phải sau khi có sự cố. Refactor từ `console.log` tốn nhiều hơn bạn nghĩ.
+</Callout>
+
+## Tầng 2 — Đo đúng thứ
+
+Khi đã có dữ liệu, câu hỏi tiếp theo là: đo cái gì?
+
+[Bốn tín hiệu vàng](/concepts/golden-signals) của Google SRE là điểm khởi đầu tốt nhất:
+
+- **Latency** — Request mất bao lâu? Đo p95 và p99, không phải trung bình.
+- **Traffic** — Bao nhiêu request/giây đang đến?
+- **Errors** — Bao nhiêu phần trăm request thất bại?
+- **Saturation** — Hệ thống đang dùng bao nhiêu phần trăm tối đa tài nguyên?
+
+Bốn con số này, nhìn cùng nhau, kể câu chuyện đầy đủ về sức khỏe hệ thống. Latency tăng + Saturation cao = có bottleneck tài nguyên. Errors tăng + Traffic bình thường = có bug mới được deploy. Traffic tăng đột biến + Latency tăng = hệ thống đang bị quá tải.
+
+## Tầng 3 — Đặt mục tiêu rõ ràng
+
+Đo được rồi, nhưng "đủ tốt" là bao nhiêu?
+
+[SLI, SLO và Error Budget](/concepts/sli-slo-error-budget) cho bạn ngôn ngữ để trả lời câu hỏi đó.
+
+Chọn 1-2 endpoint quan trọng nhất của app. Đặt SLO cụ thể:
+
+- *"99,5% request /checkout phải thành công trong 30 ngày"*
+- *"P95 latency của /api/search phải dưới 800ms"*
+
+Từ SLO, bạn tính được error budget — khoảng cho phép bạn deploy và thử nghiệm mà không vi phạm cam kết với người dùng. Khi budget gần cạn, đó là tín hiệu để dừng lại và cải thiện độ tin cậy trước khi tiếp tục ship tính năng mới.
+
+<Callout title="Cẩn thận">
+Đừng đặt SLO quá chặt ngay từ đầu. Nếu bạn đặt 99,99% nhưng thực tế đang ở 98%, bạn sẽ luôn trong trạng thái "vượt ngưỡng" và không có thông tin gì hữu ích. Bắt đầu bằng cách đo thực tế trong 2-4 tuần, rồi đặt SLO ở mức bạn đã đạt được, sau đó cải thiện dần.
+</Callout>
+
+## Tầng 4 — Được cảnh báo đúng lúc
+
+Cuối cùng: ai đó cần biết khi có vấn đề. Nhưng không phải biết về tất cả mọi thứ — chỉ những gì cần hành động ngay.
+
+[Alerting](/concepts/alerting) tốt là alerting ít nhưng chất. Ba nguyên tắc:
+
+**Symptom-based, không phải cause-based.** Alert khi *user đang bị ảnh hưởng*, không phải khi một metric nội bộ vượt ngưỡng. `Error rate > 2%` là alert tốt. `CPU > 75%` là alert đáng ngờ — CPU 75% có thể hoàn toàn bình thường.
+
+**Mỗi alert phải có runbook.** Người trực phải biết làm gì ngay khi thấy alert. Không có runbook = không alert.
+
+**Ít hơn, đúng hơn.** Nếu đội bạn nhận hơn 5 alert/ngày mà phần lớn không cần hành động, bạn đang xây dựng alert fatigue. Cắt bớt, không phải thêm.
+
+## Kết nối lại
+
+Năm tầng quan sát, từ dữ liệu thô đến cảnh báo thông minh:
+
+1. Cấu trúc dữ liệu — [Structured logging](/concepts/structured-logging) + correlation ID
+2. Ba trụ cột — [Observability](/concepts/observability): logs, metrics, traces
+3. Đo đúng thứ — [Bốn tín hiệu vàng](/concepts/golden-signals)
+4. Đặt mục tiêu — [SLI, SLO, Error Budget](/concepts/sli-slo-error-budget)
+5. Cảnh báo đúng lúc — [Alerting](/concepts/alerting) symptom-based
+
+Không cần triển khai tất cả cùng một lúc. Bắt đầu từ structured logging và một vài metric cơ bản. Thêm dần khi hệ thống lớn hơn.
+
+Thực hành ngay với [bài tập instrument và thiết kế alert →](/exercises/ship-and-operate/m3-instrument-and-alert)

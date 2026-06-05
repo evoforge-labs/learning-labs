@@ -1,0 +1,74 @@
+---
+id: lesson-pana-004
+title: "Đọc hành vi user để biết phải sửa gì"
+type: "lesson"
+track: product-analytics
+module: behavior
+level: intermediate
+tags: [product-analytics, funnel, cohort, retention, segmentation, behavior, churn]
+prerequisites: [concept-funnel-analysis, concept-cohort-analysis, concept-retention-curve, concept-user-segmentation]
+related: [exercise-pana-004, rubric-product-analytics]
+status: published
+---
+import Callout from '../../../components/content/Callout.astro';
+
+Bạn đã gắn tracking, đã có data. Giờ đây dashboard đầy số liệu — nhưng bạn vẫn không biết nên sửa gì trước. Lesson này xâu chuỗi bốn công cụ phân tích hành vi thành một quy trình đọc sản phẩm có hệ thống: từ điểm rò lớn nhất, đến xu hướng dài hạn, đến nhóm đáng đào sâu.
+
+## Bước 1 — Tìm điểm rò bằng funnel
+
+Trước tiên, hỏi: "Người dùng đang mất ở đâu trên luồng quan trọng nhất?"
+
+[Funnel analysis](/concepts/funnel-analysis) cho bạn nhìn thấy tỉ lệ drop-off tại mỗi bước. Đây là điểm xuất phát vì nó trả lời câu hỏi cụ thể nhất: bước nào đang rò nhiều nhất — và nếu bạn fix bước đó, bao nhiêu người dùng bạn giữ lại được?
+
+Quy trình: chọn một luồng (onboarding, checkout, activation của tính năng chính), đo conversion rate từng bước, xếp hạng bước theo lượng người thật sự mất đi. Ưu tiên bước có lượng mất nhiều nhất — không nhất thiết là bước có tỉ lệ % drop-off cao nhất.
+
+## Bước 2 — Kiểm tra xu hướng theo thời gian bằng cohort
+
+Sau khi biết điểm rò hiện tại, hỏi tiếp: "Sản phẩm đang tốt lên hay xấu đi theo thời gian?"
+
+[Cohort analysis](/concepts/cohort-analysis) trả lời câu hỏi này. Chia user theo tháng đăng ký, so sánh retention D-30 giữa các cohort. Nếu cohort gần đây có retention thấp hơn cohort cũ — đó là tín hiệu sản phẩm đang đi xuống dù tổng user vẫn tăng.
+
+Ngược lại, nếu bạn vừa thay đổi onboarding và cohort sau thay đổi có retention tốt hơn — đó là bằng chứng thay đổi có tác động thật, không phải cảm tính.
+
+<Callout title="Nhớ nhé">
+Cohort cũng là cách kiểm tra tác động của thay đổi sản phẩm mà không cần A/B test phức tạp. So sánh cohort trước và sau một thay đổi lớn — nếu retention tốt hơn, bạn đang đi đúng hướng.
+</Callout>
+
+## Bước 3 — Xem hình dạng retention để đánh giá product-market fit
+
+Cohort cho bạn so sánh giữa các nhóm. [Retention curve](/concepts/retention-curve) cho bạn thấy *hình dạng* của quá trình mất người dùng — và đây là nơi bạn biết sản phẩm có đang tiến đến product-market fit không.
+
+Câu hỏi cần trả lời: đường cong của bạn có *phẳng ra* ở một mức nào đó không, hay tiếp tục giảm về 0?
+
+Nếu đường cong vẫn giảm về 0 sau tháng 3, bạn chưa có lõi người dùng gắn bó. Đổ tiền vào acquisition lúc này là lãng phí — vì xô vẫn thủng. Đây là lúc cần quay về và hỏi: activation moment của sản phẩm là gì, và bao nhiêu % user đang đạt được nó?
+
+Hai concept liên quan: [Churn](/concepts/churn) là con số đo lường tốc độ mất user, còn retention curve cho bạn thấy *hình ảnh trực quan* của hiện tượng đó theo thời gian. [Retention](/concepts/retention) tổng quát đặt nền móng tư duy — retention curve là cách bạn thực sự đo nó trong thực tế.
+
+## Bước 4 — Đào sâu bằng segmentation
+
+Funnel, cohort, và retention curve tất cả đều có thể cho bạn trung bình — và trung bình che giấu sự thật.
+
+[User segmentation](/concepts/user-segmentation) là bước tiếp theo: chia user thành nhóm có ý nghĩa rồi chạy lại ba phân tích trên. Thường bạn sẽ phát hiện:
+
+- Segment từ organic search có retention gấp đôi segment từ paid ads
+- Power user (dùng tính năng chính trong 3 ngày đầu) có D-30 retention 70%, còn casual user chỉ 15%
+- User từ mobile có drop-off ở bước 3 funnel gấp đôi user từ desktop
+
+Mỗi segment là một câu hỏi tiếp theo — và một quyết định sản phẩm cụ thể hơn.
+
+<Callout title="Cẩn thận">
+Đừng segment quá sâu quá sớm. Bắt đầu với 2-3 segment rõ ràng nhất (power vs casual, paid vs free, mobile vs desktop), xem insight nào thay đổi quyết định của bạn, rồi mới đào sâu hơn nếu cần.
+</Callout>
+
+## Kết nối lại
+
+Quy trình đọc hành vi user:
+
+1. **Funnel** — tìm bước rò lớn nhất trong luồng chính
+2. **Cohort** — kiểm tra xu hướng theo thời gian; đánh giá tác động thay đổi
+3. **Retention curve** — đường cong có phẳng không? Lõi gắn bó có tồn tại không?
+4. **Segmentation** — phá vỡ trung bình, tìm nhóm đáng ưu tiên
+
+Ba bước đầu cho bạn chẩn đoán. Bước thứ tư cho bạn biết điều trị ai trước.
+
+Thực hành ngay với [bài tập phân tích funnel + cohort →](/exercises/product-analytics/m4-analyze-the-funnel)

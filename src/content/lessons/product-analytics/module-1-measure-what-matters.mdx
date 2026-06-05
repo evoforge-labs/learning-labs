@@ -1,0 +1,78 @@
+---
+id: lesson-pana-001
+title: "Quyết định đo gì trước khi gắn code"
+type: "lesson"
+track: product-analytics
+module: foundations
+level: beginner
+tags: [product-analytics, metrics, tracking, events, data-informed, tracking-plan, north-star]
+prerequisites: [concept-data-informed-decisions, concept-vanity-vs-actionable-metrics, concept-events-vs-pageviews, concept-tracking-plan]
+related: [exercise-pana-001, rubric-product-analytics]
+status: published
+---
+import Callout from '../../../components/content/Callout.astro';
+
+Hầu hết team gắn analytics theo kiểu: "Thêm Mixpanel vào đi, rồi tính sau." Kết quả 3 tháng sau: dashboard có 200 event, không ai biết cái nào đáng tin, data team mất cả tuần để reconcile. Lesson này là về cách tránh bẫy đó.
+
+Trước khi gắn một dòng tracking code, bạn cần trả lời hai câu hỏi: **Đo gì?** và **Gọi tên thế nào?**
+
+## Bước 1 — Xác định bạn đang đo để làm gì
+
+Analytics không có mục đích là tiếng ồn có cấu trúc.
+
+[Data-informed decisions](/concepts/data-informed-decisions) không phải là "thu thập càng nhiều data càng tốt." Nó là: thu thập đúng data để có thể ra quyết định tốt hơn. Câu hỏi nền tảng: **"Nếu số này thay đổi, tôi sẽ làm gì khác?"** Nếu không có câu trả lời — đừng đo.
+
+Bước đầu tiên: viết ra 3-5 quyết định bạn cần đưa ra trong tháng tới. Sau đó, với mỗi quyết định, hỏi: "Tôi cần biết gì để quyết định đúng?" Đó là metric cần đo.
+
+## Bước 2 — Chọn North Star và phân biệt vanity vs actionable
+
+Mọi sản phẩm cần một [North Star Metric](/concepts/north-star-metric) — con số phản ánh giá trị thực bạn tạo ra cho user. Không phải revenue (đó là kết quả), không phải signups (đó là đầu vào). Mà là: điều gì chứng minh user đang nhận được giá trị từ sản phẩm?
+
+Sau khi có North Star, xây hệ thống metric hỗ trợ — và tỉnh táo lọc [vanity vs actionable metrics](/concepts/vanity-vs-actionable-metrics).
+
+Ví dụ cho app học ngôn ngữ:
+
+| Metric | Loại | Vì sao |
+|---|---|---|
+| Tổng số download | Vanity | Không nói lên user có học không |
+| Số bài học hoàn thành/tuần (North Star) | Actionable | Phản ánh learning habit thực sự |
+| DAU/MAU ratio | Actionable | Cho thấy tần suất quay lại |
+| Số review 5 sao trên App Store | Vanity | Lagging indicator, không dẫn hành động |
+
+Bạn cũng có thể dùng framework [AARRR funnel](/concepts/aarrr-funnel) để đảm bảo metric phủ đủ các giai đoạn: Acquisition → Activation → Retention → Referral → Revenue. Mỗi giai đoạn cần ít nhất một actionable metric.
+
+<Callout title="Nhớ nhé">
+Chọn ít metric hơn. Một dashboard với 5 metric bạn thực sự hành động theo tốt hơn 50 metric bạn chỉ nhìn cho vui. Khi team không đồng ý về hướng đi, thường là vì chưa thống nhất North Star Metric.
+</Callout>
+
+## Bước 3 — Hiểu bạn đang đo hành động hay chỉ lượt xem
+
+Pageview nói "ai đến đây." [Events](/concepts/events-vs-pageviews) nói "họ làm gì."
+
+Với mọi app hiện đại — đặc biệt SPA và mobile — bạn cần event-based tracking. Pageview đơn thuần không nói được gì về activation, engagement, hay drop-off.
+
+Trước khi viết tracking code, hãy vẽ ra user journey chính của sản phẩm. Với mỗi bước quan trọng, đặt câu hỏi: "Đây là nơi user thành công hay thất bại. Tôi cần event gì để biết điều đó?"
+
+## Bước 4 — Viết tracking plan trước khi gắn code
+
+Khi đã biết đo gì và hiểu sự khác biệt giữa event và pageview, bước cuối là chuẩn hóa ngôn ngữ trong team.
+
+[Tracking plan](/concepts/tracking-plan) là tài liệu định nghĩa: event nào, property nào, tên gọi nhất quán theo convention nào. Nó là hợp đồng giữa PM, engineer, và data analyst.
+
+Không cần tool phức tạp — một Google Sheet với 4 cột (event name, trigger, properties, owner) là đủ để bắt đầu. Quan trọng là nó tồn tại **trước khi** engineer viết dòng code đầu tiên.
+
+<Callout title="Cẩn thận">
+Refactor analytics sau khi đã deploy là đau đớn — data lịch sử không còn nhất quán, chart bị gãy, user behavior không thể so sánh theo thời gian. Dành 2 giờ viết tracking plan trước tiết kiệm 2 tuần cleanup sau.
+</Callout>
+
+## Kết nối lại
+
+Quy trình trước khi gắn code analytics:
+
+1. **Quyết định mục tiêu** — đo để ra quyết định gì?
+2. **Chọn North Star** — điều gì chứng minh user nhận được giá trị?
+3. **Lọc vanity vs actionable** — mỗi metric phải gắn với hành động cụ thể
+4. **Chọn event thay vì chỉ pageview** — đặc biệt với SPA và mobile
+5. **Viết tracking plan** — tên nhất quán, property rõ ràng, owner cụ thể
+
+Thực hành ngay với [bài tập thiết kế tracking plan →](/exercises/product-analytics/m1-design-a-tracking-plan)

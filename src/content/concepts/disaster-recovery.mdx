@@ -1,0 +1,69 @@
+---
+id: concept-disaster-recovery
+title: "Disaster Recovery (RTO / RPO)"
+type: "concept"
+aliases: ["disaster recovery", "RTO RPO", "recovery time objective", "recovery point objective", "kế hoạch khôi phục thảm họa", "phục hồi sau thảm họa hệ thống"]
+tags: [reliability, disaster-recovery, rto, rpo, devops, ship-and-operate, backup, business-continuity]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Giả sử server của bạn bị xóa hoàn toàn tối nay. Không phải sự cố nhỏ — mà là không còn gì cả. Câu hỏi không phải "có thể phục hồi không?" mà là "mất bao lâu?" và "mất bao nhiêu dữ liệu?"
+
+Đó chính xác là hai câu hỏi mà RTO và RPO trả lời.
+
+## Là gì
+
+**Disaster Recovery (DR)** là kế hoạch và quy trình phục hồi hệ thống sau thảm họa lớn — server cháy, provider sập, bị ransomware, xóa nhầm toàn bộ database production.
+
+Hai chỉ số cốt lõi:
+
+**RTO — Recovery Time Objective:** *Bao lâu để hệ thống hoạt động trở lại?* Đây là khoảng thời gian tối đa bạn chấp nhận được từ lúc sự cố xảy ra đến lúc service phục hồi. Ví dụ: "Tối đa 4 giờ downtime."
+
+**RPO — Recovery Point Objective:** *Mất tối đa bao nhiêu dữ liệu?* Đây là khoảng thời gian dữ liệu tối đa bạn chấp nhận mất. Ví dụ: "Chấp nhận mất tối đa 1 giờ dữ liệu." Điều này quyết định tần suất backup — nếu RPO là 1 giờ, bạn phải backup ít nhất mỗi giờ.
+
+Quan hệ giữa hai chỉ số: RTO càng ngắn và RPO càng nhỏ thì chi phí càng cao. Một startup cần xác định mức chấp nhận được trước khi đầu tư vào infrastructure.
+
+## Ví dụ thật
+
+App booking freelancer nhỏ — bạn là người duy nhất vận hành.
+
+**Phân tích tác động:**
+- 2 giờ downtime → user không thể đặt lịch → mất vài đơn hàng → chấp nhận được
+- 24 giờ downtime → mất uy tín nghiêm trọng → không chấp nhận được
+- Mất 1 ngày dữ liệu → mất booking records → không chấp nhận được
+- Mất 1 giờ dữ liệu → có thể xử lý với user → chấp nhận được
+
+**Kết luận:** RTO = 4 giờ, RPO = 1 giờ.
+
+**Hàm ý thiết kế:** Backup mỗi giờ (đáp ứng RPO). Runbook restore phải hoàn thành trong 4 giờ — và bạn cần đã test để biết điều đó khả thi.
+
+<Callout title="Cẩn thận">
+RTO và RPO là *mục tiêu*, không phải *thực tế tự động*. Rất nhiều người đặt RTO = 4 giờ nhưng chưa bao giờ thử restore từ đầu — và khi cần thật sự, mất 12 giờ vì thiếu runbook, thiếu access, thiếu kinh nghiệm. Chỉ có test drill mới cho bạn biết RTO thực tế của mình là bao nhiêu.
+</Callout>
+
+**DR Plan không cần phức tạp.** Với solo builder, một DR plan đủ dùng chỉ cần:
+
+1. Danh sách tất cả service và credential cần để rebuild (lưu ở chỗ an toàn, không phải chỉ trong đầu)
+2. Runbook restore từ backup, đã được test
+3. RTO/RPO đã được tính toán và backup frequency phù hợp với RPO
+4. Liên hệ với provider khi có sự cố lớn
+
+Đừng nhầm DR với [backup](/concepts/backup-and-restore): backup là *công cụ*, DR plan là *kế hoạch dùng công cụ đó như thế nào khi mọi thứ sụp đổ*.
+
+<Callout title="Nhớ nhé">
+**RTO** = bao lâu để hệ thống sống lại; **RPO** = chấp nhận mất dữ liệu đến bao nhiêu. Hai con số này quyết định toàn bộ chiến lược backup và infrastructure dự phòng của bạn. Xác định chúng dựa trên tác động kinh doanh thực tế — không phải trực giác hay "càng thấp càng tốt".
+</Callout>
+
+## Đọc thêm
+
+- [RTO vs RPO Explained — AWS](https://aws.amazon.com/blogs/architecture/calculating-your-rto-rpo-requirements/) — AWS giải thích RTO và RPO với ví dụ tính toán cụ thể; hữu ích để hiểu trade-off giữa chi phí và mục tiêu phục hồi.
+- [Disaster Recovery Planning Guide — Red Hat](https://www.redhat.com/en/topics/security/what-is-disaster-recovery) — Tổng quan về DR planning từ góc độ thực tế; giải thích các tầng DR từ đơn giản đến phức tạp phù hợp nhiều quy mô.
+- [Testing Your Disaster Recovery Plan — Google Cloud](https://cloud.google.com/architecture/dr-scenarios-planning-guide) — Google Cloud hướng dẫn cách lên kế hoạch và test DR; đặc biệt hữu ích phần về DR drill và cách đo RTO thực tế.
+- [Business Continuity vs Disaster Recovery — IBM](https://www.ibm.com/think/topics/business-continuity-vs-disaster-recovery) — IBM phân biệt DR và business continuity planning; giúp bạn hiểu DR nằm ở đâu trong bức tranh lớn hơn.
+
+## Tự kiểm tra
+
+1. Phân biệt RTO và RPO bằng một ví dụ cụ thể. Nếu RPO của bạn là 2 giờ, điều đó có nghĩa gì với lịch backup?
+2. Tại sao "RTO = 4 giờ" là mục tiêu chưa đủ nếu bạn chưa bao giờ test restore? Phải làm gì để biến mục tiêu thành thực tế?
+3. Một app personal blog và một app e-commerce nên có RTO/RPO khác nhau không? Lý do là gì?

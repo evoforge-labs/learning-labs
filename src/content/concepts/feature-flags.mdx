@@ -1,0 +1,57 @@
+---
+id: concept-feature-flags
+title: "Feature Flags"
+type: "concept"
+aliases: ["feature flags", "feature toggles", "bật tắt tính năng không deploy", "tách deploy khỏi release", "kill switch tính năng"]
+tags: [ci-cd, devops, ship-and-operate, feature-management, canary, reliability]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Đèn trong nhà bạn được điều khiển bởi công tắc. Bạn lắp bóng đèn mới vào ổ — đèn chưa bật. Bạn chờ đến đêm mới bật. Bóng đèn đã ở đó, trong code, trong production — nhưng user chưa thấy.
+
+**Feature flag** là cái công tắc đó: cho phép bạn đưa code lên production mà chưa kích hoạt tính năng cho user.
+
+## Là gì
+
+**Feature flag** (còn gọi là feature toggle) là một điều kiện trong code cho phép bật hoặc tắt một tính năng *mà không cần deploy lại*. Giá trị của flag được đọc từ config, database, hoặc dịch vụ bên ngoài — không hardcode trong code.
+
+```
+if (featureFlags.isEnabled("new-checkout-flow")) {
+  // Show new checkout
+} else {
+  // Show old checkout
+}
+```
+
+Ba tác dụng chính:
+
+**Tách deploy khỏi release** — code mới lên production nhưng chưa active. Bạn deploy vào thứ Ba, release cho user vào thứ Sáu khi sẵn sàng. Không cần rush deploy vào giờ cao điểm.
+
+**Canary release mềm** — bật tính năng cho 5% user trước, quan sát metric, rồi tăng dần. Nếu có vấn đề, tắt flag ngay — không cần rollback code.
+
+**Kill switch** — khi tính năng có lỗi nghiêm trọng trên production, tắt flag trong vài giây mà không cần deploy. Đây là công cụ incident response nhanh nhất.
+
+## Ví dụ thật
+
+Bạn viết lại toàn bộ flow thanh toán. Code mới xong, đặt sau flag `new-payment-flow`. Deploy lên production. Flag đang tắt — mọi user vẫn thấy flow cũ. Bạn mở flag cho nhóm beta tester (5 người). Họ test một ngày, phát hiện bug nhỏ. Bạn sửa, deploy lại. Bật flag cho 10% user — theo dõi conversion rate. Sau 48 giờ không có vấn đề gì, bật 100%. Toàn bộ quá trình không cần rollback, không có downtime, không có áp lực "phải sửa ngay vì đang ảnh hưởng mọi người".
+
+<Callout title="Cẩn thận">
+Feature flag sinh ra technical debt nếu không dọn dẹp. Flag cho tính năng đã release toàn bộ cần được xóa khỏi code sau 2-4 tuần. Để lại quá nhiều flag cũ làm code khó đọc và khó test. Đặt lịch nhắc xóa flag ngay khi tạo.
+</Callout>
+
+<Callout title="Nhớ nhé">
+Feature flag giải quyết ba vấn đề cùng lúc: ship code sớm hơn, test trên user thật an toàn hơn, và tắt tính năng lỗi trong vài giây. Với solo builder, một hệ thống flag đơn giản trong database hay environment variable đã đủ dùng — không cần tool phức tạp để bắt đầu.
+</Callout>
+
+## Đọc thêm
+
+- [Feature Toggles (aka Feature Flags) — Martin Fowler](https://martinfowler.com/articles/feature-toggles.html) — Bài viết toàn diện nhất về feature flags: các loại toggle, vòng đời, và cách tránh technical debt; đây là tài liệu tham khảo gốc.
+- [Feature flags guide — LaunchDarkly](https://launchdarkly.com/feature-flags/) — LaunchDarkly giải thích use cases thực tế của feature flags với ví dụ cụ thể từ các công ty; phù hợp để hiểu cách dùng nâng cao.
+- [How we use feature flags at Basecamp — HEY Blog](https://dev.37signals.com/how-we-use-feature-flags/) — Basecamp chia sẻ cách dùng feature flags trong thực tế tại một công ty nhỏ; gần với thực tế của solo builder hơn so với hướng dẫn enterprise.
+
+## Tự kiểm tra
+
+1. Sự khác biệt giữa "deploy" và "release" là gì? Feature flag tách hai khái niệm này như thế nào?
+2. Bạn bật một feature mới cho 100% user lúc 9 giờ sáng. Lúc 9 giờ 15, bạn phát hiện nó làm chậm trang chủ. Bạn làm gì — dùng feature flag hay rollback? Lập luận lựa chọn của bạn.
+3. Feature flag để lâu không xóa gây ra vấn đề gì cụ thể cho codebase và cho quá trình testing?

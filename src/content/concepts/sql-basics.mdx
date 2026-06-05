@@ -1,0 +1,90 @@
+---
+id: concept-sql-basics
+title: "SQL Basics (SELECT, WHERE, GROUP BY)"
+type: "concept"
+aliases: ["SQL cơ bản", "SQL SELECT WHERE GROUP BY", "truy vấn SQL cơ bản", "lọc và nhóm dữ liệu SQL", "SQL basics cho founder"]
+tags: [sql, product-analytics, data, query, select, where, group-by]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Bạn có một bảng tính Excel với 50.000 dòng dữ liệu user. Bạn muốn biết: *hôm nay có bao nhiêu user mới đăng ký?* Bạn sẽ làm gì? Kéo filter, chọn cột ngày, đếm. SQL làm đúng điều đó — nhưng nhanh hơn, lặp lại được, và chạy được trên hàng triệu dòng.
+
+## Là gì
+
+SQL (Structured Query Language) là ngôn ngữ để nói chuyện với database. Ba lệnh cơ bản nhất:
+
+- **SELECT** — chọn cột nào muốn xem
+- **WHERE** — lọc hàng theo điều kiện
+- **GROUP BY** — gộp các hàng có cùng giá trị lại, rồi tính tổng hợp
+
+Bạn không cần học hết SQL. Chỉ cần ba lệnh này là đủ trả lời 80% câu hỏi sản phẩm hàng ngày.
+
+## Ví dụ thật
+
+Giả sử bảng `users` có dạng:
+
+| id | email | created_at | country |
+|----|-------|------------|---------|
+| 1  | a@... | 2024-01-15 | VN      |
+| 2  | b@... | 2024-01-15 | US      |
+| 3  | c@... | 2024-01-16 | VN      |
+
+**Đếm user mới theo ngày:**
+
+```sql
+SELECT
+  DATE(created_at) AS ngay,
+  COUNT(*) AS so_user_moi
+FROM users
+WHERE created_at >= '2024-01-01'
+GROUP BY DATE(created_at)
+ORDER BY ngay DESC;
+```
+
+Query này nói: *"Lấy cột ngày và đếm số dòng, từ bảng users, chỉ lấy từ đầu năm 2024, gộp theo ngày, sắp xếp mới nhất lên trước."*
+
+Kết quả sẽ là:
+
+| ngay       | so_user_moi |
+|------------|-------------|
+| 2024-01-16 | 1           |
+| 2024-01-15 | 2           |
+
+**Lọc chỉ user Việt Nam:**
+
+```sql
+SELECT COUNT(*) AS user_vn
+FROM users
+WHERE country = 'VN';
+```
+
+Đơn giản. Đọc như câu tiếng Anh: *"Đếm tất cả từ bảng users, nơi country là VN."*
+
+<Callout title="Cẩn thận">
+`WHERE` lọc *trước* khi GROUP BY gộp. Nếu bạn muốn lọc *sau* khi đã gộp (ví dụ: chỉ lấy ngày có hơn 10 user), dùng `HAVING` thay vì `WHERE`. Nhầm hai cái này là lỗi cực kỳ phổ biến — xem chi tiết ở concept [SQL Aggregations](/concepts/sql-aggregations).
+</Callout>
+
+**Thứ tự thực thi SQL** (không phải thứ tự bạn viết):
+1. `FROM` — lấy bảng
+2. `WHERE` — lọc hàng
+3. `GROUP BY` — gộp nhóm
+4. `SELECT` — chọn cột hiển thị
+5. `ORDER BY` — sắp xếp
+
+<Callout title="Nhớ nhé">
+Ba lệnh SELECT + WHERE + GROUP BY giải quyết được hầu hết câu hỏi "bao nhiêu, ai, khi nào" trong product analytics. Học thuộc thứ tự thực thi — nó giải thích tại sao `WHERE` không dùng được với aggregate function.
+</Callout>
+
+## Đọc thêm
+
+- [SQL GROUP BY — Mode Analytics Tutorial](https://mode.com/resources/sql-tutorial/sql-group-by/) — Hướng dẫn thực tế từ Mode, giải thích GROUP BY bằng ví dụ rõ ràng; phù hợp cho người mới bắt đầu với data analytics.
+- [SQL SELECT, WHERE, GROUP BY — W3Schools](https://www.w3schools.com/sql/sql_groupby.asp) — Tài liệu tham khảo nhanh với ví dụ chạy được ngay trong trình duyệt; dùng tra cứu cú pháp khi quên.
+- [Aggregate Functions — PostgreSQL Docs](https://www.postgresql.org/docs/current/tutorial-agg.html) — Tài liệu chính thức PostgreSQL giải thích cách WHERE và GROUP BY tương tác với aggregate functions; ngắn gọn và chính xác.
+- [SQL COUNT(), AVG() and SUM() — W3Schools](https://www.w3schools.com/sql/sql_count_avg_sum.asp) — Giải thích từng hàm tổng hợp với ví dụ cụ thể; bước tự nhiên tiếp theo sau khi nắm GROUP BY.
+
+## Tự kiểm tra
+
+1. Bạn muốn đếm số user đăng ký mỗi tháng trong năm 2024. Bạn cần dùng những lệnh nào và theo thứ tự nào?
+2. Tại sao không thể viết `WHERE COUNT(*) > 10` trong một query có GROUP BY? Phải sửa thế nào?
+3. Sự khác biệt giữa `SELECT COUNT(*)` và `SELECT COUNT(email)` là gì khi cột `email` có giá trị NULL?

@@ -1,0 +1,95 @@
+---
+id: exercise-ops-002
+title: "Thiết kế CI/CD pipeline cho web app solo"
+type: "exercise"
+track: ship-and-operate
+tags: [ci-cd, devops, deployment, pipeline, feature-flags, rollback, ship-and-operate, solo-builder]
+estimatedMinutes: 30
+related: [lesson-ops-002, concept-continuous-integration, concept-continuous-delivery-deployment, concept-deploy-strategies, concept-rollback-and-recovery, concept-feature-flags, rubric-ship-and-operate]
+status: published
+---
+import Callout from '../../../components/content/Callout.astro';
+
+## Tình huống
+
+Bạn là solo builder vừa hoàn thành **v1 của một web app SaaS** — quản lý hóa đơn cho freelancer. App có:
+
+- Backend: Node.js + Postgres (deploy trên Fly.io)
+- Frontend: Next.js (deploy trên Vercel)
+- 50 beta user đang dùng thật, dữ liệu thật
+- Repo trên GitHub, hiện chưa có CI/CD gì cả — bạn đang deploy thủ công bằng lệnh `fly deploy`
+
+Bạn vừa trải qua một lần deploy "nhớ đời": push nhầm code có bug lên production lúc 10 giờ tối, user mất 40 phút không tạo được hóa đơn, bạn phải rollback thủ công và mất 25 phút vì không nhớ lệnh.
+
+Đã đến lúc dựng pipeline đúng cách.
+
+---
+
+## Nhiệm vụ 1 — Thiết kế các bước trong pipeline CI/CD
+
+Vẽ ra (bằng văn bản hoặc ASCII diagram) pipeline đầy đủ từ lúc bạn `git push` đến khi code lên production.
+
+**Pipeline của bạn phải trả lời được:**
+
+1. **Trigger:** Pipeline khởi động khi nào? Push lên nhánh nào? PR vào nhánh nào?
+2. **CI stage:** Bước này chạy gì? Ít nhất liệt kê 4 loại kiểm tra cụ thể (không chỉ "chạy test").
+3. **Staging:** Có staging environment không? Code tự lên staging sau CI xanh, hay cần tay?
+4. **Prod gate:** Bạn chọn Continuous Delivery (manual approval) hay Continuous Deployment (tự động)? Tại sao — với 50 user có dữ liệu thật, lựa chọn nào an toàn hơn ở giai đoạn này?
+5. **Fail-fast:** Nếu bước nào fail, pipeline dừng ở đâu và thông báo cho bạn thế nào?
+
+<Callout title="Mẹo">
+Đừng cố thiết kế pipeline hoàn hảo. Thiết kế pipeline *đủ* — pass test, build ra artifact, deploy staging, chờ approval, lên prod. Có thể cải thiện sau. Mục tiêu là không bao giờ deploy thủ công bằng tay nữa.
+</Callout>
+
+---
+
+## Nhiệm vụ 2 — Chọn deploy strategy và giải thích lý do
+
+App của bạn đang có migration database định kỳ (thêm cột, tạo index mới). Backend chạy trên Fly.io với một máy duy nhất.
+
+**Câu hỏi cần trả lời:**
+
+1. Bạn chọn deploy strategy nào cho backend: Rolling, Blue-Green, hay Canary? Lập luận rõ ràng với context của app này — đừng chỉ liệt kê ưu/nhược chung chung.
+
+2. Bạn đang thêm tính năng mới "xuất hóa đơn ra PDF". Tính năng này chưa đủ ổn định để mở cho tất cả 50 user. Bạn sẽ dùng cơ chế gì để kiểm soát ai thấy tính năng này? Mô tả cách triển khai cụ thể (ví dụ: lưu flag ở đâu, kiểm tra ở đâu trong code).
+
+3. Migration xóa cột `legacy_invoice_format` đã không còn dùng. Bạn có thể bao gồm migration này trong cùng một deploy với code mới không? Giải thích tại sao có hoặc không.
+
+<Callout title="Mẹo">
+Câu 3 không có đáp án "đúng hoàn toàn" — có cả lý do để làm và không làm. Quan trọng là bạn giải thích được rủi ro cụ thể với context 50 user dữ liệu thật.
+</Callout>
+
+---
+
+## Nhiệm vụ 3 — Kế hoạch rollback và dùng feature flag
+
+Bạn vừa deploy version mới lúc 2 giờ chiều. Mười phút sau, một user báo "không tạo được hóa đơn mới". Bạn kiểm tra log và thấy lỗi `TypeError: Cannot read property 'tax_rate' of undefined` — xuất hiện sau deploy.
+
+**Viết ra kế hoạch hành động cụ thể:**
+
+1. **Quyết định đầu tiên:** Bạn rollback hay forward-fix? Với thông tin hiện có, lập luận lựa chọn.
+
+2. **Các bước rollback** (nếu chọn rollback): Bạn làm gì, theo thứ tự nào? Với Fly.io, lệnh hoặc thao tác cụ thể là gì?
+
+3. **Phòng ngừa cho lần sau:** Nếu tính năng "tạo hóa đơn" được bảo vệ bằng feature flag, incident này sẽ diễn ra khác như thế nào? Mô tả cụ thể: bạn làm gì trong 5 phút đầu thay vì rollback.
+
+4. **Điều kiện để rollback dễ dàng:** Liệt kê ba điều bạn cần đảm bảo *trước khi deploy* để rollback trong 2 phút thay vì 25 phút.
+
+<Callout title="Nhớ nhé">
+Kế hoạch rollback không phải viết ra để đó. Nó là thứ bạn đọc được trong 30 giây lúc 2 giờ sáng khi đang hoảng loạn. Ngắn, rõ, có thứ tự.
+</Callout>
+
+---
+
+## Tiêu chí đánh giá
+
+Tham khảo [Ship & Operate Rubric](/rubrics/ship-and-operate-rubric) để tự chấm.
+
+Với bài này, tập trung vào:
+
+| Tiêu chí | Câu hỏi để tự kiểm tra |
+|---|---|
+| Pipeline có đủ cổng chặn quan trọng không? | Nếu bạn push code có bug rõ ràng, pipeline có bắt được không? |
+| Deploy strategy có phù hợp với context không? | Lựa chọn của bạn có giải thích được với data cụ thể (50 user, 1 server, migration) không? |
+| Kế hoạch rollback có thực thi được không? | Bạn có thể làm theo kế hoạch đó lúc 2 giờ sáng mà không cần tra thêm gì không? |
+| Feature flag được dùng đúng mục đích không? | Flag có thực sự giúp giảm rủi ro, hay chỉ thêm phức tạp? |

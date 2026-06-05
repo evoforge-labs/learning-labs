@@ -1311,3 +1311,168 @@ edges:
   - source: rubric-building-with-ai-agents
     target: exercise-bswa-007
     rel: evaluates
+
+  # ============================================================
+  # Ship & Operate (ops) — theory progression + drills
+  # ============================================================
+  # M1 Nền tảng -> M2 CI/CD
+  - source: concept-config-and-secrets
+    target: concept-continuous-integration
+    rel: leads-to
+  - source: concept-twelve-factor-app
+    target: concept-deploy-strategies
+    rel: leads-to
+  # M2 CI/CD -> M3 Observability
+  - source: concept-continuous-delivery-deployment
+    target: concept-golden-signals
+    rel: leads-to
+  - source: concept-deploy-strategies
+    target: concept-rollback-and-recovery
+    rel: supports
+  # M3 Observability -> M4 Reliability
+  - source: concept-observability
+    target: concept-incident-response
+    rel: leads-to
+  - source: concept-alerting
+    target: concept-incident-response
+    rel: supports
+  - source: concept-sli-slo-error-budget
+    target: concept-golden-signals
+    rel: supports
+  - source: concept-incident-response
+    target: concept-blameless-postmortem
+    rel: leads-to
+  - source: concept-runbook
+    target: concept-incident-response
+    rel: supports
+  - source: concept-backup-and-restore
+    target: concept-disaster-recovery
+    rel: leads-to
+  # M4 Reliability -> M5 Cost & Scale
+  - source: concept-single-point-of-failure
+    target: concept-disaster-recovery
+    rel: supports
+  - source: concept-cloud-cost-control
+    target: concept-right-sizing
+    rel: leads-to
+  - source: concept-autoscaling
+    target: concept-right-sizing
+    rel: supports
+  - source: concept-latency-cost-optimization
+    target: concept-when-not-to-optimize
+    rel: supports
+  # Drills: which concept each ops exercise trains
+  - source: concept-dev-staging-prod
+    target: exercise-ops-001
+    rel: trains
+  - source: concept-config-and-secrets
+    target: exercise-ops-001
+    rel: trains
+  - source: concept-deploy-strategies
+    target: exercise-ops-002
+    rel: trains
+  - source: concept-feature-flags
+    target: exercise-ops-002
+    rel: trains
+  - source: concept-sli-slo-error-budget
+    target: exercise-ops-003
+    rel: trains
+  - source: concept-alerting
+    target: exercise-ops-003
+    rel: trains
+  - source: concept-runbook
+    target: exercise-ops-004
+    rel: trains
+  - source: concept-disaster-recovery
+    target: exercise-ops-004
+    rel: trains
+  - source: concept-cloud-cost-control
+    target: exercise-ops-005
+    rel: trains
+  - source: rubric-ship-and-operate
+    target: exercise-ops-006
+    rel: evaluates
+
+  # ============================================================
+  # Product Analytics (pana) — theory progression + drills
+  # ============================================================
+  # M1 Foundations -> M2 Instrumentation
+  - source: concept-tracking-plan
+    target: concept-event-tracking
+    rel: leads-to
+  - source: concept-events-vs-pageviews
+    target: concept-event-tracking
+    rel: supports
+  - source: concept-vanity-vs-actionable-metrics
+    target: concept-data-informed-decisions
+    rel: supports
+  # M2 Instrumentation -> M3 SQL
+  - source: concept-event-tracking
+    target: concept-sql-basics
+    rel: leads-to
+  - source: concept-identity-resolution
+    target: concept-sql-joins
+    rel: supports
+  # M3 SQL -> M4 Behavior
+  - source: concept-sql-aggregations
+    target: concept-funnel-analysis
+    rel: leads-to
+  - source: concept-window-functions
+    target: concept-cohort-analysis
+    rel: supports
+  - source: concept-funnel-analysis
+    target: concept-cohort-analysis
+    rel: leads-to
+  - source: concept-retention-curve
+    target: concept-retention
+    rel: supports
+  - source: concept-cohort-analysis
+    target: concept-retention-curve
+    rel: supports
+  # M4 Behavior -> M5 Experimentation
+  - source: concept-funnel-analysis
+    target: concept-ab-testing
+    rel: leads-to
+  - source: concept-ab-testing
+    target: concept-statistical-significance
+    rel: leads-to
+  - source: concept-statistical-significance
+    target: concept-sample-size-and-power
+    rel: supports
+  - source: concept-guardrail-metrics
+    target: concept-ab-testing
+    rel: supports
+  # Drills: which concept each pana exercise trains
+  - source: concept-tracking-plan
+    target: exercise-pana-001
+    rel: trains
+  - source: concept-vanity-vs-actionable-metrics
+    target: exercise-pana-001
+    rel: trains
+  - source: concept-event-tracking
+    target: exercise-pana-002
+    rel: trains
+  - source: concept-client-vs-server-side-tracking
+    target: exercise-pana-002
+    rel: trains
+  - source: concept-sql-basics
+    target: exercise-pana-003
+    rel: trains
+  - source: concept-sql-joins
+    target: exercise-pana-003
+    rel: trains
+  - source: concept-funnel-analysis
+    target: exercise-pana-004
+    rel: trains
+  - source: concept-cohort-analysis
+    target: exercise-pana-004
+    rel: trains
+  - source: concept-ab-testing
+    target: exercise-pana-005
+    rel: trains
+  - source: concept-sample-size-and-power
+    target: exercise-pana-005
+    rel: trains
+  - source: rubric-product-analytics
+    target: exercise-pana-006
+    rel: evaluates

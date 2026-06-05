@@ -1,0 +1,57 @@
+---
+id: concept-continuous-delivery-deployment
+title: "Continuous Delivery & Deployment (CD)"
+type: "concept"
+aliases: ["continuous delivery", "continuous deployment", "phân phối liên tục", "triển khai liên tục", "CD pipeline", "tự động lên production"]
+tags: [ci-cd, devops, deployment, automation, ship-and-operate, pipeline]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Sau khi bếp trưởng nấu xong một món ăn, có hai nhà hàng hoạt động khác nhau. Nhà hàng A: phục vụ nhận món, kiểm tra lần nữa, rồi mang ra. Nhà hàng B: robot tự đưa thẳng tới bàn khách ngay khi bếp xong.
+
+Cả hai đều nhanh hơn kiểu cũ — bếp nấu xong để nguội, cuối tuần mới mang ra. Sự khác biệt nằm ở ai quyết định lúc nào thức ăn đến tay khách.
+
+## Là gì
+
+**Continuous Delivery (CD)** và **Continuous Deployment (CD)** thường bị nhầm lẫn vì cùng viết tắt. Chúng khác nhau ở một điểm quyết định:
+
+**Continuous Delivery** — mọi thay đổi đã qua CI đều *sẵn sàng* deploy lên production bất cứ lúc nào. Nhưng việc thực sự deploy là *con người quyết định* — bằng cách nhấn một nút. Pipeline đảm bảo artifact luôn ở trạng thái deployable.
+
+**Continuous Deployment** — thay đổi đã qua hết các bước kiểm tra thì *tự động lên production*, không cần ai nhấn nút. Mọi commit đã merge đều đến tay user trong vài phút.
+
+Một pipeline CD điển hình trông như thế này:
+
+```
+commit → CI (test + build) → staging deploy → smoke test → [approval?] → prod deploy
+```
+
+Với Continuous Delivery: có bước approval. Với Continuous Deployment: không có, hoặc approval tự động.
+
+## Ví dụ thật
+
+Bạn fix một bug nhỏ trong app. Với Continuous Delivery: push code, pipeline chạy test, build xong → bạn nhìn thấy nút "Deploy to production" trên dashboard. Nhấn khi bạn sẵn sàng — có thể ngay lúc đó, có thể sau khi ăn trưa. Với Continuous Deployment: mười lăm phút sau khi push, user đã dùng bản mới — bạn không cần làm gì thêm.
+
+<Callout title="Mẹo">
+Solo builder thường bắt đầu với Continuous Delivery — deploy thủ công nhưng *luôn sẵn sàng* deploy. Sau khi có test coverage tốt và đã deploy nhiều lần thành công, mới nâng lên Continuous Deployment. Đừng bỏ qua Delivery để nhảy thẳng vào Deployment khi test còn yếu.
+</Callout>
+
+<Callout title="Cẩn thận">
+Continuous Deployment không có nghĩa là "không cần kiểm soát". Mỗi commit lên production cần đi kèm với [feature flags](/concepts/feature-flags) để tắt tính năng khi cần, và khả năng [rollback](/concepts/rollback-and-recovery) nhanh khi có lỗi. Tự động hóa không thay thế tư duy quản lý rủi ro.
+</Callout>
+
+<Callout title="Nhớ nhé">
+Delivery = luôn sẵn sàng, người quyết định khi nào ship. Deployment = tự động ship khi test pass. Cả hai đều tốt hơn "deploy thủ công mỗi hai tuần một lần lúc 11 giờ đêm".
+</Callout>
+
+## Đọc thêm
+
+- [Continuous delivery — Martin Fowler](https://martinfowler.com/bliki/ContinuousDelivery.html) — Martin Fowler giải thích sự khác biệt giữa Delivery và Deployment bằng ngôn ngữ rõ ràng nhất; đây là nguồn định nghĩa gốc.
+- [CI/CD: The what, why, and how — GitHub Blog](https://github.blog/enterprise-software/devops/ci-cd-the-what-why-and-how/) — GitHub trình bày pipeline CI/CD end-to-end với ví dụ thực tế; phù hợp cho builder mới bắt đầu.
+- [Continuous delivery vs. continuous deployment — Atlassian](https://www.atlassian.com/continuous-delivery/principles/continuous-integration-vs-delivery-vs-deployment) — Atlassian so sánh ba khái niệm CI/CD với sơ đồ trực quan, dễ nhớ sự khác biệt.
+
+## Tự kiểm tra
+
+1. Giải thích sự khác biệt giữa Continuous Delivery và Continuous Deployment bằng một câu, không dùng thuật ngữ kỹ thuật.
+2. Trong trường hợp nào bạn nên dùng Delivery thay vì Deployment, dù team đã có test coverage tốt?
+3. Nếu pipeline CD của bạn deploy thẳng lên production nhưng không có cơ chế rollback, điều gì có thể xảy ra khi có lỗi nghiêm trọng?

@@ -1,0 +1,66 @@
+---
+id: exercise-ops-006
+title: "Capstone: Vận hành một app từ A đến Z"
+type: "exercise"
+track: ship-and-operate
+skill: operations
+tags: [devops, observability, reliability, incident-response, runbook, cost, capstone, solo-builder]
+estimatedMinutes: 90
+related: [rubric-ship-and-operate, concept-observability, concept-sli-slo-error-budget, concept-alerting, concept-deploy-strategies, concept-rollback-and-recovery, concept-incident-response, concept-runbook, concept-backup-and-restore, concept-disaster-recovery, concept-cloud-cost-control]
+status: published
+---
+import Callout from '../../../components/content/Callout.astro';
+
+## Tình huống
+
+Bạn vừa launch **"Inbox Zero"** — một SaaS giúp freelancer tự động phân loại email và nhắc việc. Stack: một web app (Next.js trên Vercel), một API + worker (Fly.io), Postgres (managed), Redis cho queue. Hiện có **300 user trả tiền**, doanh thu 2.400 USD/tháng. Chỉ có **mình bạn** vận hành.
+
+Tuần trước có một đêm app sập 40 phút mà bạn ngủ quên không biết. Sáng ra 12 user phàn nàn. Bạn quyết định: không để xảy ra lần nữa.
+
+Capstone này yêu cầu bạn viết một **vận hành plan hoàn chỉnh** cho Inbox Zero — gom mọi thứ đã học trong track.
+
+---
+
+## Nhiệm vụ 1 — Observability plan
+
+Thiết kế lớp quan sát tối thiểu-mà-đủ:
+
+1. **SLI/SLO:** Chọn 2 SLI quan trọng nhất cho Inbox Zero (gợi ý: availability của API, latency của luồng phân loại email). Đặt SLO cụ thể cho mỗi cái và tính **error budget** tháng tương ứng.
+2. **Structured logging:** Liệt kê 5-6 field bạn sẽ log có cấu trúc cho mỗi request (gồm correlation id). Giải thích vì sao mỗi field hữu ích lúc debug.
+3. **Alerting:** Thiết kế đúng **3 alert** mà bạn sẵn sàng bị đánh thức lúc 3h sáng. Mỗi alert: điều kiện, vì sao nó *actionable*, và việc đầu tiên bạn làm khi nhận nó.
+
+<Callout title="Cẩn thận">
+Nếu bạn liệt kê 10 alert, bạn sẽ tắt hết chúng sau một tuần vì spam. Alert tốt = mỗi cái tương ứng một hành động rõ ràng. Cái gì không đáng dậy lúc 3h sáng thì để vào dashboard, đừng để vào alert.
+</Callout>
+
+---
+
+## Nhiệm vụ 2 — Ship & rollback
+
+1. Chọn **deploy strategy** cho API (blue-green / canary / rolling) và giải thích vì sao nó hợp với quy mô + ràng buộc một-người của bạn.
+2. Mô tả **kế hoạch rollback**: làm sao quay về version cũ trong dưới 2 phút? Có migration database thì xử lý ra sao (expand-then-contract)?
+3. Nêu **một feature flag** bạn sẽ dùng và mục đích (kill-switch? canary mềm?).
+
+---
+
+## Nhiệm vụ 3 — Runbook + Disaster recovery
+
+1. Viết **một runbook hoàn chỉnh** cho sự cố đêm vừa rồi ("API không phản hồi"): các bước chẩn đoán → giảm thiểu → khắc phục, viết để bạn-lúc-hoảng-loạn vẫn theo được.
+2. Định **RTO và RPO** cho dữ liệu của Inbox Zero và suy ra **tần suất backup** + cách bạn sẽ *test restore*.
+3. Phác **outline postmortem không đổ lỗi** cho sự cố 40 phút: timeline, root cause (dùng 5 Whys), 2-3 action item.
+
+---
+
+## Nhiệm vụ 4 (mở rộng) — Chi phí
+
+Hóa đơn cloud tháng này là 290 USD và đang tăng. Nêu **một cách bạn sẽ tìm thủ phạm chi phí** và **một thứ bạn cố ý KHÔNG tối ưu vội** — kèm lý do.
+
+---
+
+## Tiêu chí đánh giá
+
+Tự chấm theo [Ship & Operate Rubric](../../rubrics/ship-and-operate-rubric). Capstone này chạm cả 5 tiêu chí — đây là bài tổng hợp của cả track.
+
+<Callout title="Nhớ nhé">
+Mục tiêu không phải một tài liệu hoàn hảo. Mục tiêu là: nếu app sập lúc bạn đang ngủ, hệ thống *đánh thức bạn đúng lúc*, và bạn có *runbook* để không phải nghĩ từ đầu. Vận hành tốt = ngủ ngon hơn, không phải nhiều dashboard hơn.
+</Callout>

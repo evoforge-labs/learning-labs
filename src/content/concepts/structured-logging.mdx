@@ -1,0 +1,79 @@
+---
+id: concept-structured-logging
+title: "Structured Logging"
+type: "concept"
+aliases: ["structured-logging", "log có cấu trúc", "json log", "log key-value", "correlation id logging", "log có thể query"]
+tags: [observability, logging, devops, reliability, ship-and-operate, debugging]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Hãy tưởng tượng bạn nhận được tờ giấy ghi: *"Có người gọi điện lúc chiều, giọng lạ, hỏi về đơn hàng"*. Và một tờ khác ghi: `caller_id=+84901234567 time=14:32 topic=order order_id=7891 result=resolved`. Cái nào dễ tìm lại sau một tuần hơn?
+
+Đó là lý do tại sao structured logging ra đời.
+
+## Là gì
+
+**Structured logging** là cách ghi log dưới dạng dữ liệu có cấu trúc — thường là JSON hoặc key-value — thay vì chuỗi văn bản tự do.
+
+Log truyền thống trông như thế này:
+
+```
+[2024-01-15 14:32:01] ERROR checkout failed for user 1234: timeout after 5000ms
+```
+
+Log có cấu trúc trông như thế này:
+
+```json
+{
+  "timestamp": "2024-01-15T14:32:01Z",
+  "level": "error",
+  "event": "checkout_failed",
+  "user_id": "1234",
+  "error": "timeout",
+  "duration_ms": 5000,
+  "trace_id": "abc-def-789"
+}
+```
+
+Cả hai đều ghi cùng sự kiện. Nhưng cái thứ hai bạn có thể **filter**, **group**, và **query** được — ví dụ: tìm tất cả checkout fail của user 1234 trong 24 giờ qua, hoặc đếm số timeout theo endpoint.
+
+**Correlation ID** là một trường đặc biệt trong structured log: một mã định danh duy nhất gắn với mỗi request và được truyền qua toàn bộ chuỗi xử lý. Khi một request đi qua 3 service, mỗi service đều log `trace_id=abc-def-789` — bạn có thể lọc theo ID đó và xem toàn bộ hành trình của request đó, dù log nằm ở nhiều nơi khác nhau.
+
+## Ví dụ thật
+
+App của bạn nhận được report: "Thanh toán thất bại lúc khoảng 3 giờ chiều hôm qua."
+
+Nếu log là chuỗi text: bạn phải đọc hàng nghìn dòng log, dùng grep với regex phức tạp, và hy vọng format nhất quán.
+
+Nếu log có cấu trúc: bạn chạy một query trong Logtail, Datadog, hoặc CloudWatch Logs Insights:
+
+```sql
+filter level = "error"
+  AND event = "checkout_failed"
+  AND timestamp between "2024-01-15T14:00" and "2024-01-15T16:00"
+| stats count by user_id
+```
+
+Hai phút sau bạn biết có 47 user bị ảnh hưởng và tất cả đều có `payment_provider=stripe`. Bug được khoanh vùng.
+
+<Callout title="Cẩn thận">
+Đừng log thông tin nhạy cảm vào structured log — số thẻ tín dụng, mật khẩu, token xác thực, địa chỉ đầy đủ. Vì log có cấu trúc dễ query, nó cũng dễ bị khai thác hơn nếu lộ ra ngoài. Luôn **redact** hoặc **mask** các field nhạy cảm trước khi log.
+</Callout>
+
+<Callout title="Nhớ nhé">
+Chuyển từ `console.log("User " + id + " failed")` sang `logger.error({ event: "auth_failed", user_id: id, reason: "invalid_token" })` không tốn nhiều công nhưng tiết kiệm hàng giờ debug sau này. Thêm `trace_id` vào mọi request ngay từ đầu — bạn sẽ cảm ơn bản thân khi cần điều tra sự cố.
+</Callout>
+
+## Đọc thêm
+
+- [Structured Logging — Better Stack](https://betterstack.com/community/guides/logging/structured-logging/) — Hướng dẫn thực hành về structured logging, so sánh các format và thư viện phổ biến; bao gồm ví dụ code cụ thể cho Node.js, Python, Go.
+- [Logging Best Practices — AWS](https://docs.aws.amazon.com/prescriptive-guidance/latest/logging-monitoring-for-application-owners/logging-best-practices.html) — Nguyên tắc logging từ AWS prescriptive guidance; tập trung vào những gì nên log, không nên log, và cách tổ chức log hiệu quả.
+- [The Twelve-Factor App: Logs](https://12factor.net/logs) — Nguyên tắc số 11 trong 12-factor app: log nên là event stream, không phải file; giải thích triết lý đằng sau việc tập trung log.
+- [Correlation IDs for Microservices Architectures](https://hilton.org.uk/blog/microservices-correlation-id) — Bài viết giải thích tại sao correlation ID không thể thiếu trong hệ thống nhiều service và cách implement đúng.
+
+## Tự kiểm tra
+
+1. Sự khác biệt giữa log dạng text tự do và structured log là gì? Trong tình huống nào thì structured log tỏ ra vượt trội hơn hẳn?
+2. Correlation ID giải quyết vấn đề gì? Nếu không có nó, điều tra một request lỗi trong hệ thống nhiều service sẽ khó khăn như thế nào?
+3. Bạn đang log một request thanh toán. Liệt kê ít nhất 5 field hữu ích nên có trong structured log đó — và 2 field bạn tuyệt đối KHÔNG nên log.

@@ -1,0 +1,49 @@
+---
+id: concept-sample-size-and-power
+title: "Sample Size & Power"
+type: "concept"
+aliases: ["sample size thống kê", "statistical power", "kích thước mẫu thử nghiệm", "minimum detectable effect", "MDE thí nghiệm", "cần bao nhiêu user để test"]
+tags: [product-analytics, experimentation, statistics, ab-testing, sample-size, power]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Bạn muốn kiểm tra xem loại phân bón mới có giúp cây phát triển nhanh hơn không. Nếu bạn chỉ trồng 2 cây — một cây với phân cũ, một cây với phân mới — kết quả không nói lên được gì: một cây có thể lớn hơn do đất tốt hơn, do ánh sáng khác, hay đơn giản là hạt giống tốt hơn. **Cần đủ số lượng mẫu thì mới tách được tín hiệu thật ra khỏi nhiễu.**
+
+## Là gì
+
+**Sample size** là số lượng người dùng tối thiểu cần có trong mỗi nhóm A/B test để kết quả đáng tin cậy. Chạy test với quá ít user dẫn đến hai vấn đề:
+
+- **False negative:** Biến thể mới thực ra tốt hơn, nhưng test của bạn không đủ nhạy để phát hiện — bạn bỏ qua cải tiến thật.
+- **Kết quả không ổn định:** Con số nhảy loạn từ ngày này sang ngày khác, không có xu hướng rõ.
+
+**Statistical power** là xác suất test của bạn **phát hiện được** hiệu ứng thật nếu hiệu ứng đó tồn tại. Power 80% là chuẩn thực hành: nếu B thực sự tốt hơn A, bạn có 80% cơ hội phát hiện ra — chấp nhận 20% bỏ sót.
+
+**MDE (Minimum Detectable Effect)** là hiệu ứng nhỏ nhất bạn *quan tâm* đến. Nếu conversion rate tăng 0.1% bạn không đổi quyết định gì, nhưng tăng 2% thì đáng triển khai — vậy MDE của bạn là 2%. MDE càng nhỏ, cần sample size càng lớn.
+
+## Ví dụ thật
+
+Conversion rate hiện tại là 5%. Bạn muốn phát hiện sự tăng trưởng từ 5% lên 6.5% (MDE = 1.5 điểm phần trăm, tức 30% tương đối). Với power 80% và significance 95%, bạn cần khoảng **3.200 user mỗi nhóm** — tổng 6.400 user.
+
+Nếu app của bạn có 300 user mới mỗi tuần, test này cần chạy hơn **4 tháng**. Bạn cần quyết định: MDE có thực sự là 1.5% không, hay bạn chỉ cần phát hiện tăng trưởng từ 5% lên 8% là đủ (MDE 3%)? Với MDE lớn hơn, sample size giảm xuống còn khoảng 800 mỗi nhóm — 2-3 tuần là đủ.
+
+<Callout title="Cẩn thận">
+Đừng tính sample size **sau khi** đã chạy test và thấy kết quả. Đây là "p-hacking": bạn chọn con số để kết quả trở nên có ý nghĩa thống kê. Sample size phải được xác định trước khi bắt đầu, dựa trên MDE bạn quan tâm.
+</Callout>
+
+<Callout title="Nhớ nhé">
+Ba đầu vào để tính sample size: baseline rate (metric hiện tại là bao nhiêu?), MDE (cần cải thiện bao nhiêu mới đáng?), và power mục tiêu (thường là 80%). Dùng calculator có sẵn — đừng tính tay. Quan trọng hơn là **đặt câu hỏi đúng về MDE**: thay đổi nhỏ đến mức nào thì bạn vẫn sẽ triển khai?
+</Callout>
+
+## Đọc thêm
+
+- [Evan Miller's A/B Test Sample Size Calculator](https://www.evanmiller.org/ab-testing/sample-size.html) — Calculator chuẩn, miễn phí, giải thích từng tham số ngay trên trang; đây là công cụ thực tế bạn sẽ dùng.
+- [Power Analysis Explained — Statistics How To](https://www.statisticshowto.com/probability-and-statistics/hypothesis-testing/statistical-power/) — Giải thích statistical power từ khái niệm đến cách dùng, không cần nền toán nâng cao.
+- [Sample Size in A/B Testing — Optimizely](https://www.optimizely.com/optimization-glossary/sample-size/) — Hướng dẫn thực hành về cách tính sample size cho A/B test; phù hợp cho người mới làm experimentation.
+- [Minimum Detectable Effect — Booking.com Blog](https://booking.ai/the-what-and-why-of-minimum-detectable-effects-13e3de1c0d2b) — Booking.com (công ty chạy hàng nghìn A/B test) giải thích MDE thực tiễn ra sao; bài đọc từ người có kinh nghiệm thực chiến.
+
+## Tự kiểm tra
+
+1. MDE là gì và tại sao bạn cần quyết định MDE **trước** khi chạy test?
+2. Bạn có 200 user mới mỗi ngày và muốn phát hiện sự thay đổi tương đối 10% trên conversion rate 4%. Điều này ảnh hưởng đến quyết định chạy test như thế nào?
+3. Statistical power 80% nghĩa là gì? Điều gì xảy ra nếu bạn giảm xuống 60% để chạy test nhanh hơn?

@@ -1,0 +1,80 @@
+---
+id: lesson-ops-004
+title: "Một mình xử lý sự cố mà không sụp đổ"
+type: "lesson"
+track: ship-and-operate
+module: reliability
+level: intermediate
+tags: [reliability, incident-response, runbook, postmortem, backup, disaster-recovery, on-call, devops, ship-and-operate]
+prerequisites: [concept-incident-response, concept-blameless-postmortem, concept-runbook, concept-backup-and-restore, concept-disaster-recovery]
+related: [exercise-ops-004, rubric-ship-and-operate]
+status: published
+---
+import Callout from '../../../components/content/Callout.astro';
+
+Là solo builder, bạn không có đồng nghiệp gõ vào slack "mình xử lý phần này nhé". Không có manager leo thang lên. Không có on-call rotation để nghỉ tay. Chỉ có bạn, một màn hình, và một hệ thống đang gặp vấn đề.
+
+Tin tốt: bạn có thể chuẩn bị cho điều này. Và chuẩn bị tốt nghĩa là sự cố ít đáng sợ hơn nhiều.
+
+## Khi sự cố xảy ra — quy trình ba bước
+
+[Incident response](/concepts/incident-response) không phải năng lực bẩm sinh — đó là quy trình bạn chạy khi não đang không hoạt động tốt nhất.
+
+Ba bước không được đảo ngược thứ tự:
+
+**1. Phát hiện** — Biết sự cố đang xảy ra *trước* khi user báo. Nếu bạn học về điều này từ tweet của user, đó là dấu hiệu monitoring chưa đủ. Uptime check, error rate alert, error tracking (Sentry) — những thứ này chạy ngay cả khi bạn đang ngủ.
+
+**2. Giảm thiểu** — Làm cho tình trạng bớt tệ đi nhanh nhất có thể. Rollback deploy, restart service, bật maintenance mode. Không cần hiểu tại sao lúc này — chỉ cần dừng bleeding. Mỗi phút chần chừ là thêm user bị ảnh hưởng.
+
+**3. Khắc phục** — Sau khi đã ổn định, mới bắt đầu điều tra thật sự. Đọc log, xem diff, trace lại nguyên nhân. Đây là phần cần đầu óc tỉnh táo.
+
+<Callout title="Nhớ nhé">
+Khi P1 đang xảy ra, câu hỏi đúng không phải là "tại sao nó xảy ra?" mà là "mình có thể làm gì để dừng nó lại ngay bây giờ?" Hiểu nguyên nhân là việc của sau.
+</Callout>
+
+## Chuẩn bị trước khi sự cố xảy ra
+
+Vấn đề lớn nhất với solo on-call không phải là thiếu kỹ năng — mà là *thiếu chuẩn bị*. Bạn không thể giải quyết tốt thứ bạn chưa từng nghĩ đến trước.
+
+**Viết runbook cho sự cố hay gặp nhất.** [Runbook](/concepts/runbook) là tài liệu từng bước, viết khi tỉnh táo để dùng khi hoảng loạn. Bắt đầu với 2-3 sự cố bạn lo ngại nhất: database down, deploy gặp lỗi, memory leak. Mỗi runbook chỉ cần 10-15 phút viết — nhưng tiết kiệm hàng giờ lúc 3 giờ sáng.
+
+**Xác định severity levels.** Không phải sự cố nào cũng cần phản ứng tức thì. P1 (toàn app sập) khác hoàn toàn P3 (một tính năng nhỏ bị lỗi). Có framework phân loại giúp bạn quyết định nhanh mà không cần suy nghĩ quá nhiều.
+
+**Đừng quên điểm chết đơn.** Nếu hệ thống có [single point of failure](/concepts/single-point-of-failure), một sự cố nhỏ có thể kéo sập toàn bộ. Xác định các SPOF và có kế hoạch dự phòng — dù chỉ là "biết phải làm gì khi nó sập".
+
+## Sau sự cố — học để không lặp lại
+
+Sự cố xử lý xong, bạn thở phào và muốn đóng laptop lại. Đừng.
+
+Dành 30 phút viết [blameless postmortem](/concepts/blameless-postmortem). Không cần dài — chỉ cần trả lời ba câu:
+
+- **Chuyện gì đã xảy ra?** (timeline ngắn gọn)
+- **Tại sao nó xảy ra?** (root cause thật sự, không phải triệu chứng)
+- **Mình làm gì tiếp theo?** (action items cụ thể, có deadline)
+
+Solo builder hay bỏ qua bước này vì "đổ lỗi ai được?" — nhưng postmortem không phải để đổ lỗi. Nó là để học. Viết cho *bạn trong tương lai*, người sẽ cảm ơn bạn khi sự cố tương tự không xảy ra lần nữa.
+
+## Backup, Restore, và kế hoạch cho thảm họa
+
+Sự cố thông thường — app chậm, bug lạ, service restart — là chuyện bình thường. Nhưng còn thảm họa thật sự? Server bị xóa. Database bị corrupt. Provider sập.
+
+[Backup & restore](/concepts/backup-and-restore) là lớp bảo vệ đầu tiên: có bản sao dữ liệu ở chỗ khác, và đã test restore từ nó thành công. Nhớ: **backup chưa được test restore = chưa có backup**.
+
+[Disaster recovery plan](/concepts/disaster-recovery) là bước tiếp theo: biết RTO (bao lâu để phục hồi) và RPO (chấp nhận mất dữ liệu đến đâu) của mình. Hai con số này quyết định bạn cần backup tần suất nào và infrastructure dự phòng đến mức nào.
+
+<Callout title="Cẩn thận">
+Đừng build disaster recovery plan sau khi thảm họa xảy ra. Lúc đó bạn không còn dữ liệu để recover từ đó mà plan. Build plan *trước*, test *trước*, và biết RTO thực tế của mình là bao nhiêu bằng cách thật sự chạy drill.
+</Callout>
+
+## Xâu chuỗi lại
+
+Bốn lớp phòng thủ của solo builder:
+
+1. **Monitoring + alert** — biết sự cố sớm nhất có thể (xem [observability](/concepts/observability))
+2. **Runbook** — xử lý nhanh và đúng ngay cả khi hoảng loạn
+3. **Postmortem** — học từ mỗi sự cố để không lặp lại
+4. **Backup + DR plan** — sẵn sàng cho tình huống tệ nhất
+
+Không cần hoàn hảo ngay từ đầu. Bắt đầu với runbook cho một sự cố hay gặp nhất, và backup database tối thiểu mỗi ngày. Từ đó xây thêm.
+
+Thực hành ngay với [bài tập chuẩn bị cho sự cố →](/exercises/ship-and-operate/m4-write-a-runbook)

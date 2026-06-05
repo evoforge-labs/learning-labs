@@ -201,3 +201,46 @@ tags:
   - human-in-the-loop
   - red-teaming
   - safety
+  # --- Ship & Operate ---
+  - operations
+  - ci-cd
+  - continuous-integration
+  - continuous-delivery
+  - deployment
+  - rollback
+  - feature-flags
+  - reliability
+  - incident-response
+  - postmortem
+  - runbook
+  - backup
+  - disaster-recovery
+  - structured-logging
+  - golden-signals
+  - slo
+  - sli
+  - error-budget
+  - alerting
+  - autoscaling
+  - right-sizing
+  - finops
+  # --- Product Analytics ---
+  - instrumentation
+  - event-tracking
+  - tracking-plan
+  - vanity-metrics
+  - sql
+  - data-warehouse
+  - window-functions
+  - funnel
+  - cohort
+  - retention-curve
+  - segmentation
+  - ab-testing
+  - experimentation
+  - statistical-significance
+  - sample-size
+  - guardrail-metrics
+  - dashboards
+  - privacy
+  - consent

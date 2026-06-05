@@ -1,0 +1,56 @@
+---
+id: concept-cohort-analysis
+title: "Cohort Analysis"
+type: "concept"
+aliases: ["cohort analysis", "phân tích theo nhóm thời điểm", "cohort người dùng", "so sánh hành vi theo cohort", "nhóm user cùng thời điểm bắt đầu"]
+tags: [product-analytics, cohort, retention, behavior, metrics]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Hãy tưởng tượng bạn đang đánh giá chất lượng học sinh của một trường. Nếu bạn cộng điểm trung bình toàn trường rồi nói "điểm đang tốt", bạn có thể đang che giấu sự thật: lớp tuyển năm nay đang tệ hơn nhiều so với lớp hai năm trước. Để thấy thật, bạn cần so sánh từng lứa với nhau — không gộp chung.
+
+Đó là cohort analysis.
+
+## Là gì
+
+**Cohort analysis** là kỹ thuật nhóm người dùng theo một điểm chung — thường là *thời điểm họ bắt đầu* (tuần đăng ký, tháng cài app) — rồi theo dõi hành vi của từng nhóm theo thời gian.
+
+Thay vì hỏi "retention trung bình của chúng ta là bao nhiêu?", cohort analysis hỏi: "Người đăng ký tháng 1 có giữ được tốt hơn người đăng ký tháng 6 không? Tại sao?"
+
+Câu trả lời quan trọng vì:
+- Trung bình gộp luôn che giấu xu hướng tăng hoặc giảm theo thời gian.
+- Nếu sản phẩm đang xấu dần, acquisition mới có thể bù đắp số liệu tổng — bạn không biết mình đang chìm.
+
+## Ví dụ thật
+
+Một app học ngôn ngữ nhìn vào tổng số user active: tháng 1 có 5.000, tháng 6 có 8.000 — tưởng tăng trưởng ổn. Nhưng khi chia cohort:
+
+| Cohort (tháng đăng ký) | Day-30 retention |
+|---|---|
+| Tháng 1 | 42% |
+| Tháng 3 | 31% |
+| Tháng 5 | 18% |
+
+Retention đang giảm đều qua từng cohort. Tổng user tăng chỉ vì acquisition tăng mạnh — nhưng sản phẩm đang tệ dần. Nếu không dùng cohort, họ không bao giờ thấy tín hiệu này.
+
+<Callout title="Cẩn thận">
+Cohort không nhất thiết phải theo thời gian đăng ký. Bạn có thể cohort theo: nguồn acquisition (paid vs organic), feature đầu tiên dùng, plan (free vs trial), quốc gia. Nhưng cohort theo thời gian là điểm bắt đầu tốt nhất vì nó phát hiện xu hướng sản phẩm theo thời gian.
+</Callout>
+
+<Callout title="Nhớ nhé">
+Mỗi khi bạn ra một thay đổi lớn với sản phẩm, hãy so sánh cohort trước và sau thay đổi đó. Đó là cách nhanh nhất để biết thay đổi có tác động thật không — không cần A/B test phức tạp.
+</Callout>
+
+## Đọc thêm
+
+- [Cohort Analysis: The Complete Guide — Amplitude](https://amplitude.com/blog/cohort-analysis) — Hướng dẫn toàn diện từ Amplitude về cohort analysis: định nghĩa, cách xây cohort table, cách đọc kết quả và hành động theo insight.
+- [Ultimate Guide to Cohort Analysis — Mixpanel](https://mixpanel.com/blog/cohort-analysis/) — Mixpanel giải thích cohort analysis với nhiều ví dụ B2C và B2B; đặc biệt hữu ích phần "what makes a good cohort question".
+- [Cohort Analysis to Improve Retention — Amplitude Blog](https://amplitude.com/blog/cohorts-to-improve-your-retention) — Hướng dẫn cụ thể cách dùng cohort analysis để tìm và giảm churn, có case study thực tế.
+- [How to Do a Cohort Analysis in SQL — Chartio](https://chartio.com/learn/charts/cohort-analysis/) — Hướng dẫn viết SQL để tự build cohort table mà không cần tool phân tích đắt tiền; phù hợp cho builder tự chạy analytics.
+
+## Tự kiểm tra
+
+1. Tại sao "retention trung bình" có thể che giấu vấn đề mà cohort analysis sẽ lộ ra? Cho một ví dụ cụ thể.
+2. Bạn muốn đánh giá tác động của một cải tiến onboarding triển khai vào tháng 4. Bạn sẽ so sánh những cohort nào với nhau?
+3. Cohort theo "nguồn acquisition" (paid vs organic) khác gì với cohort theo "tháng đăng ký"? Mỗi loại trả lời câu hỏi gì?

@@ -1,0 +1,93 @@
+---
+id: exercise-ops-003
+title: "Thiết kế observability tối thiểu cho app SaaS"
+type: "exercise"
+track: ship-and-operate
+tags: [observability, alerting, sli-slo, structured-logging, golden-signals, ship-and-operate, reliability]
+estimatedMinutes: 30
+related: [lesson-ops-003, concept-observability, concept-structured-logging, concept-golden-signals, concept-sli-slo-error-budget, concept-alerting, rubric-ship-and-operate]
+status: published
+---
+import Callout from '../../../components/content/Callout.astro';
+
+## Tình huống
+
+Bạn là solo builder vừa launch **NoteFlow** — một app SaaS giúp người dùng ghi chú và chia sẻ với đồng nghiệp. App có một API chính với ba endpoint quan trọng:
+
+- `POST /api/notes` — tạo ghi chú mới (write-heavy)
+- `GET /api/notes/:id` — đọc ghi chú (read-heavy, chiếm 70% traffic)
+- `POST /api/notes/:id/share` — chia sẻ ghi chú qua email
+
+Hiện tại bạn có 200 user trả phí. Mỗi sự cố kéo dài trên 10 phút đều dẫn đến email phàn nàn từ khách hàng. Bạn cần thiết lập observability tối thiểu để phát hiện sự cố nhanh — nhưng không muốn dành hơn một buổi chiều để làm điều này.
+
+---
+
+## Nhiệm vụ 1 — Chọn SLI và đặt SLO cho một endpoint
+
+Chọn **một endpoint quan trọng nhất** trong ba endpoint trên. Sau đó:
+
+**1a. Giải thích tại sao bạn chọn endpoint đó** — endpoint nào ảnh hưởng trực tiếp nhất đến trải nghiệm người dùng nếu bị lỗi?
+
+**1b. Định nghĩa hai SLI cụ thể cho endpoint đó:**
+- SLI về availability (tỷ lệ request thành công)
+- SLI về latency (ngưỡng thời gian phản hồi)
+
+Mỗi SLI phải là một con số đo được, không phải mô tả chung chung. Ví dụ: *"tỷ lệ request trả về HTTP 200"* là SLI; *"API phải nhanh"* không phải SLI.
+
+**1c. Đặt SLO cho mỗi SLI** — dùng cửa sổ 30 ngày. Giải thích lý do bạn chọn con số đó. Ví dụ: tại sao 99% chứ không phải 99,9%?
+
+**1d. Tính error budget** — với SLO bạn đặt, bạn được phép down/lỗi bao nhiêu phút trong 30 ngày?
+
+<Callout title="Mẹo">
+Nếu chưa có dữ liệu lịch sử, hãy đặt SLO dựa trên kỳ vọng thực tế của người dùng: "Nếu endpoint này lỗi bao lâu thì user sẽ churn?" Câu trả lời đó gợi ý ngưỡng SLO phù hợp.
+</Callout>
+
+---
+
+## Nhiệm vụ 2 — Thiết kế 3 alert actionable
+
+Thiết kế đúng **3 alert** cho NoteFlow. Mỗi alert phải theo template sau:
+
+| Trường | Nội dung |
+|---|---|
+| Tên alert | Ngắn gọn, mô tả triệu chứng |
+| Điều kiện kích hoạt | Metric + ngưỡng + thời gian duy trì |
+| Loại | Symptom-based hay cause-based? |
+| Mức độ | P1 (gọi điện lúc 3 giờ sáng) / P2 (Slack trong giờ làm) |
+| Hành động đầu tiên | Người trực phải làm gì đầu tiên khi thấy alert này? |
+
+Sau khi điền xong ba alert, trả lời: có alert nào trong số đó là cause-based không? Nếu có, hãy viết lại thành symptom-based.
+
+<Callout title="Mẹo">
+Bắt đầu từ câu hỏi: "Điều gì tệ nhất có thể xảy ra với user?" rồi làm ngược lại — metric nào sẽ phản ánh điều đó? Đừng bắt đầu từ "CPU/memory/disk vượt ngưỡng."
+</Callout>
+
+---
+
+## Nhiệm vụ 3 — Định nghĩa structured log fields cho một sự kiện
+
+Chọn sự kiện `POST /api/notes/:id/share` — chia sẻ ghi chú qua email. Đây là sự kiện quan trọng vì: nếu email không được gửi, user không biết, và NoteFlow mất trust.
+
+**3a. Liệt kê ít nhất 8 field bạn sẽ đưa vào structured log** cho sự kiện này. Với mỗi field, giải thích ngắn tại sao field đó hữu ích khi debug.
+
+**3b. Chỉ ra 2 field bạn KHÔNG nên log** — giải thích lý do (gợi ý: nghĩ về data privacy và security).
+
+**3c. Correlation ID trong tình huống này:** Nếu việc chia sẻ ghi chú gọi thêm một email service bên ngoài (ví dụ: Resend hoặc SendGrid), `trace_id` nên được truyền đi như thế nào để bạn có thể debug khi email bị mất?
+
+<Callout title="Nhớ nhé">
+Structured log tốt nhất là log bạn tự hỏi "mình cần biết gì khi điều tra sự cố lúc 2 giờ sáng?" rồi đưa tất cả vào. Đừng để đến lúc debug mới nhận ra thiếu field quan trọng.
+</Callout>
+
+---
+
+## Tiêu chí đánh giá
+
+Tham khảo [Ship & Operate Rubric](/rubrics/rubric-ship-and-operate) để tự chấm.
+
+Với bài này, tập trung vào ba tiêu chí:
+
+| Tiêu chí | Câu hỏi tự kiểm tra |
+|---|---|
+| SLI/SLO có số cụ thể | SLO của bạn có con số thực tế và lý do rõ ràng không? |
+| Alert actionable | Người trực có biết làm gì ngay khi nhận alert không? |
+| Log có thể query được | Nếu có bug lúc 3 giờ sáng, log bạn thiết kế có đủ để tìm nguyên nhân không? |

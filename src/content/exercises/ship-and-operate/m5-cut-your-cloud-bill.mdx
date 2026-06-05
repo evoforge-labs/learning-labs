@@ -1,0 +1,104 @@
+---
+id: exercise-ops-005
+title: "Tìm thủ phạm chi phí và ra quyết định đúng"
+type: "exercise"
+track: ship-and-operate
+tags: [ship-and-operate, cost, cloud, right-sizing, autoscaling, finops, solo-builder]
+estimatedMinutes: 25
+related: [lesson-ops-005, concept-cloud-cost-control, concept-autoscaling, concept-right-sizing, concept-when-not-to-optimize, rubric-ship-and-operate]
+status: published
+---
+import Callout from '../../../components/content/Callout.astro';
+
+## Tình huống
+
+Bạn là solo builder vận hành **NoteFlow** — một app ghi chú markdown có trả phí, đang có 800 user trả tiền và khoảng 3.000 user miễn phí.
+
+Stack hiện tại:
+- **API server**: 1 instance cố định, 4 vCPU / 8 GB RAM, chạy 24/7 trên DigitalOcean (48 USD/tháng)
+- **Postgres**: managed database, 2 vCPU / 4 GB RAM (25 USD/tháng)
+- **S3-compatible storage**: lưu file đính kèm của user (biến động)
+- **Staging environment**: bản sao production, chạy 24/7 (thêm 48 USD/tháng)
+- **CDN**: phân phối static assets
+
+Hóa đơn tháng 3: **168 USD**. Hóa đơn tháng 4: **247 USD**. Bạn không deploy tính năng lớn nào trong tháng 4.
+
+Monitoring cho thấy:
+- CPU average của API server: **6%** (peak: 38%, kéo dài khoảng 20 phút mỗi tối)
+- Memory average: **18%**
+- Outbound data transfer tháng 4: tăng 3.2 GB so với tháng 3
+- Staging environment: không ai dùng ngoài bạn, trung bình 2-3 lần/tuần để test
+
+---
+
+## Nhiệm vụ 1 — Tìm thủ phạm chi phí
+
+Dựa vào dữ liệu ở trên, hãy điều tra và trả lời:
+
+**1a. Thứ gì có thể gây ra mức tăng từ 168 USD lên 247 USD trong một tháng?**
+
+Liệt kê ít nhất 2 giả thuyết cụ thể. Với mỗi giả thuyết, nêu rõ:
+- Dữ liệu nào trong tình huống hỗ trợ giả thuyết này?
+- Bạn cần thêm thông tin gì để xác nhận?
+
+**1b. Đâu là chi phí cố định đang lãng phí nhất ngay lúc này — không cần điều tra thêm?**
+
+Chỉ ra ít nhất 1 khoản chi phí bạn có thể giảm ngay hôm nay dựa trên thông tin đã có, và ước tính tiết kiệm được bao nhiêu USD/tháng.
+
+<Callout title="Mẹo">
+Nhìn vào cả hai loại: chi phí tăng đột ngột (nguyên nhân mới) và chi phí cố định không cần thiết (lãng phí thường xuyên). Đừng chỉ focus vào cái nào to hơn — focus vào cái nào bạn có thể làm gì ngay.
+</Callout>
+
+---
+
+## Nhiệm vụ 2 — Quyết định right-size và autoscale
+
+Dựa vào số liệu CPU và memory của API server:
+
+**2a. Right-sizing:** Bạn có nên downsize API server không? Nếu có, xuống kích thước nào — và tại sao con số peak 38% trong 20 phút ảnh hưởng đến quyết định này?
+
+**2b. Autoscaling:** Với pattern traffic hiện tại (peak 20 phút mỗi tối), autoscaling horizontal có phù hợp hơn instance cố định không? Mô tả cấu hình bạn sẽ chọn: min instances, max instances, và có enable scale-to-zero không.
+
+**2c. Staging environment:** Bạn sẽ xử lý staging như thế nào để giảm chi phí mà vẫn đáp ứng nhu cầu test 2-3 lần/tuần?
+
+Với mỗi quyết định, ước tính tiết kiệm được bao nhiêu USD/tháng nếu bạn thực hiện.
+
+<Callout title="Mẹo">
+Không có đáp án duy nhất đúng — điều quan trọng là quyết định của bạn có căn cứ từ số liệu, và bạn đã cân nhắc trade-off (ví dụ: cold start vs tiết kiệm, peak handling vs lãng phí).
+</Callout>
+
+---
+
+## Nhiệm vụ 3 — Xác định 1 thứ KHÔNG nên tối ưu vội
+
+Sau khi xử lý các vấn đề ở Nhiệm vụ 1 và 2, bạn còn một danh sách "cải tiến tiềm năng" khác:
+
+- Triển khai Redis cache để giảm database query (ước tính 3-4 ngày công)
+- Migrate sang kiến trúc microservices để "scale tốt hơn sau này" (ước tính 2-3 tuần)
+- Tối ưu query Postgres — một số query đang chạy 80ms (ước tính 1 ngày)
+- Thêm CDN layer cho API responses (ước tính 2 ngày)
+
+**3a.** Chọn ít nhất 1 thứ trong danh sách trên mà bạn *không nên* làm ngay lúc này. Giải thích:
+- Tại sao đây là premature optimization trong bối cảnh hiện tại?
+- Chi phí kỹ sư (thời gian) so với lợi ích thực tế là bao nhiêu?
+- Bằng chứng thật (có hoặc thiếu) là gì?
+
+**3b.** Ngược lại, chọn 1 thứ trong danh sách mà bạn *nên* ưu tiên làm — và giải thích tại sao nó có ROI tốt hơn.
+
+<Callout title="Nhớ nhé">
+Bài tập này không phải về việc tìm đáp án "đúng" — mà về thói quen đặt câu hỏi đúng trước khi tối ưu. Một kỹ sư giỏi biết khi nào *không* nên làm gì cũng quan trọng không kém biết khi nào nên làm.
+</Callout>
+
+---
+
+## Tiêu chí đánh giá
+
+Tham khảo [Ship & Operate Rubric](../../rubrics/rubric-ship-and-operate) để tự chấm.
+
+Với bài này, tập trung vào ba điểm:
+
+| Tiêu chí | Câu hỏi để tự kiểm tra |
+|---|---|
+| Điều tra có căn cứ | Giả thuyết của bạn có dựa trên số liệu cụ thể trong tình huống không, hay chỉ là đoán mò? |
+| Quyết định right-size/autoscale có ROI | Bạn có ước tính tiết kiệm thực tế không? Có cân nhắc trade-off (peak vs average, cold start vs cost) không? |
+| Nhận biết premature optimization | Lý do không tối ưu của bạn có dựa trên so sánh chi phí kỹ sư vs lợi ích thực tế không? |

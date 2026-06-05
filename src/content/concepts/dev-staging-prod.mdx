@@ -1,0 +1,53 @@
+---
+id: concept-dev-staging-prod
+title: "Dev, Staging, Production Environments"
+type: "concept"
+aliases: ["dev staging production", "ba môi trường phần mềm", "development staging production environments", "môi trường dev staging prod", "environment parity triển khai", "test trên staging không phải prod"]
+tags: [devops, ship-and-operate, environments, deployment, reliability, solo-builder]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Bạn không thử nghiệm công thức nấu ăn mới trực tiếp trong bữa tiệc cưới 200 người — bạn thử ở nhà trước, rồi thử lại ở bếp nhà hàng, rồi mới đưa ra tiệc. Software cũng vậy. Ba môi trường là ba giai đoạn thử nghiệm đó.
+
+## Là gì
+
+**Dev (Development):** Môi trường trên máy bạn, hoặc một server riêng cho từng developer. Nơi bạn viết code, thử nghiệm tính năng mới, phá vỡ mọi thứ thoải mái. Không ai bị ảnh hưởng ngoài bạn.
+
+**Staging:** Bản sao của production, dùng để kiểm tra lần cuối trước khi ship. Staging phải *giống production nhất có thể* — cùng loại database, cùng cấu hình server, cùng biến môi trường (trừ credentials thật). Đây là nơi bạn phát hiện lỗi "chạy trên máy mình mà không chạy trên server".
+
+**Production (Prod):** Môi trường thật, user thật đang dùng. Mọi thay đổi trên đây có hậu quả ngay lập tức. Đây là nơi duy nhất kiếm tiền — cũng là nơi duy nhất mà lỗi gây thiệt hại thật.
+
+## Ví dụ thật
+
+Bạn thêm tính năng upload ảnh. Trên dev, mọi thứ chạy tốt — bạn dùng thư mục local để lưu file. Lên staging mới phát hiện: server production dùng S3, không có thư mục local. Lỗi này staging bắt được. Nếu không có staging và deploy thẳng lên prod, user sẽ thấy tính năng upload bị hỏng.
+
+**Environment parity** là mức độ giống nhau giữa các môi trường. Parity thấp = staging không phản ánh prod = staging vô dụng. Nguyên nhân phổ biến nhất của parity thấp: dev dùng SQLite, prod dùng Postgres. Hay dev dùng mock API, prod dùng API thật.
+
+<Callout title="Cẩn thận">
+**Đừng test trên prod.** Nghe hiển nhiên, nhưng nhiều builder solo làm vậy vì "chỉ thay đổi nhỏ thôi". Một thay đổi nhỏ trên prod mà không test có thể xóa dữ liệu user, làm sập service, hoặc gây lỗi bảo mật. Chi phí dựng staging nhỏ hơn rất nhiều so với chi phí khắc phục sự cố prod.
+</Callout>
+
+**Với solo builder**, ba môi trường không cần phức tạp:
+- **Dev:** Máy local của bạn, chạy `docker compose up` là xong.
+- **Staging:** Một instance riêng trên Railway, Fly.io, hoặc Render — cùng config với prod nhưng dùng dữ liệu giả. Thường rẻ hoặc miễn phí.
+- **Prod:** Instance chính, có domain thật, kết nối database thật.
+
+Ba môi trường không phải xa xỉ — chúng là lưới an toàn tối thiểu trước khi bạn có user thật.
+
+<Callout title="Nhớ nhé">
+Staging có giá trị khi nó *giống prod*. Nếu staging khác prod quá nhiều, bạn không phát hiện được lỗi — và cảm giác an toàn đó còn nguy hiểm hơn không có staging.
+</Callout>
+
+## Đọc thêm
+
+- [Dev vs. staging vs. production: Key differences — Statsig](https://www.statsig.com/perspectives/dev-vs-staging-vs-prod) — Giải thích rõ mục đích và sự khác biệt của từng môi trường, kèm ví dụ tình huống thực tế; phù hợp cho người mới bắt đầu.
+- [Staging environment best practices — Statsig](https://www.statsig.com/perspectives/staging-environment-best-practices) — Hướng dẫn thực hành cụ thể để staging phản ánh đúng production: data, config, infrastructure parity.
+- [Environment Management: Dev, Staging, Prod Without Hell — Two Cents Software](https://www.twocents.software/blog/environment-management-dev-staging-prod/) — Bài viết thực tế về cách quản lý ba môi trường mà không biến nó thành cơn ác mộng; rất phù hợp cho solo builder và team nhỏ.
+- [Dev, Staging, and Production Environments — DEV Community](https://dev.to/chrismbah/dev-staging-and-production-environments-what-they-mean-in-software-development-90a) — Giải thích cặn kẽ từng môi trường, lý do tách biệt, và cách thiết lập CI/CD để tự động hóa flow dev → staging → prod.
+
+## Tự kiểm tra
+
+1. **Environment parity** là gì? Cho một ví dụ cụ thể về parity thấp gây ra lỗi chỉ xuất hiện trên production.
+2. Tại sao "test nhanh trên prod cho tiết kiệm thời gian" lại thường tốn thời gian hơn về lâu dài?
+3. Một solo builder có thực sự cần staging không — hay chỉ dev và prod là đủ? Hãy lập luận cho cả hai phía.

@@ -1,0 +1,62 @@
+---
+id: concept-vanity-vs-actionable-metrics
+title: "Vanity vs Actionable Metrics"
+type: "concept"
+aliases: ["vanity metrics", "actionable metrics", "chỉ số phù phiếm", "chỉ số hành động được", "metric gắn hành động", "metric có ý nghĩa", "phân biệt vanity actionable"]
+tags: [product-analytics, metrics, kpi, decision-making, product-management]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Nhà hàng của bạn có 50.000 lượt follow trên Instagram. Khách vào cửa mỗi tối: 20 bàn. Bạn đang tập trung vào con số nào?
+
+Follow là con số đẹp để khoe. Bàn khách là con số để sống còn.
+
+## Là gì
+
+**Vanity metrics** là những con số trông ấn tượng nhưng không giúp bạn ra quyết định gì. Chúng có xu hướng chỉ đi lên — không phản ánh sức khỏe thực của sản phẩm.
+
+**Actionable metrics** là những con số gắn trực tiếp với hành động cụ thể: nếu nó thay đổi, bạn biết mình cần làm gì khác.
+
+Cách test đơn giản nhất: **"Nếu số này đổi, tôi sẽ làm gì khác?"**
+
+- "Tổng số đăng ký tăng từ 10.000 lên 11.000" → Bạn làm gì khác? Thường là không có gì cụ thể. → Vanity.
+- "Tỷ lệ người dùng hoàn thành bước onboarding giảm từ 60% xuống 45%" → Bạn biết cần điều tra bước onboarding, A/B test flow mới. → Actionable.
+
+## Ví dụ thật
+
+Một app mới ra mắt nhìn vào dashboard và thấy:
+
+| Metric | Loại | Vì sao |
+|---|---|---|
+| Tổng số download | Vanity | Không nói lên user có dùng không |
+| Daily Active Users (DAU) | Actionable | Nếu DAU giảm → điều tra retention |
+| Tổng lượt xem trang | Vanity | Có thể tăng do bot hoặc bounce cao |
+| Tỷ lệ hoàn thành task chính | Actionable | Nếu giảm → có vấn đề với UX/flow |
+| Tổng revenue all-time | Vanity | Không nói lên tháng này tốt hay không |
+| MRR growth rate | Actionable | Nếu âm → cần hành động ngay |
+
+Lưu ý: cùng một số liệu có thể là vanity hoặc actionable tùy **cách bạn dùng nó**. Tổng download là vanity nếu bạn dùng để cảm thấy tốt. Nhưng nếu bạn đang theo dõi tỷ lệ conversion từ download → active user — thì download là đầu vào của một actionable metric.
+
+<Callout title="Cẩn thận">
+Vanity metrics đặc biệt nguy hiểm trong giai đoạn early-stage khi bạn cần biết sản phẩm có thực sự đang hoạt động không. Nhìn vào "10.000 user đã đăng ký" và tự chúc mừng, trong khi chỉ 200 người dùng lại tuần thứ hai — đó là cách startup thất bại trong im lặng.
+</Callout>
+
+Câu hỏi để lọc metric khi xây dashboard: "Nếu chúng ta tối ưu hóa số này, sản phẩm có tốt hơn thực sự không?" Nếu câu trả lời là "chưa chắc" — đó là vanity metric.
+
+<Callout title="Nhớ nhé">
+Bài test một câu: "Nếu số này đổi, tôi làm gì khác?" Nếu không có câu trả lời cụ thể → vanity. Giữ dashboard tập trung vào 3-5 metric bạn thực sự hành động theo, không phải 20 con số trông có vẻ thú vị.
+</Callout>
+
+## Đọc thêm
+
+- [Vanity Metrics vs Actionable Metrics — Eric Ries, Lean Startup](https://leanstartup.co/resources/articles/are-you-building-the-right-it/) — Nguồn gốc của khái niệm vanity metrics từ Eric Ries; giải thích tại sao tổng số user là vanity và cohort retention là actionable.
+- [The Only Metric That Matters — Medium/Andreessen Horowitz](https://a16z.com/what-is-product-market-fit/) — Thảo luận về việc chọn một metric phản ánh product-market fit thực sự thay vì theo đuổi nhiều số đẹp.
+- [North Star Metric Framework — Amplitude](https://amplitude.com/blog/north-star-metric) — Hướng dẫn thực tế từ Amplitude về cách xác định metric cốt lõi và phân biệt nó với supporting metrics vs vanity metrics.
+- [Pirate Metrics (AARRR) — 500 Startups](https://www.startuplessonslearned.com/2009/12/why-vanity-metrics-are-dangerous.html) — Dave McClure giải thích tại sao vanity metrics nguy hiểm và AARRR framework giúp tập trung vào đúng giai đoạn.
+
+## Tự kiểm tra
+
+1. Tại sao "tổng số user đăng ký" thường là vanity metric? Bạn sẽ biến nó thành actionable bằng cách nào?
+2. Áp dụng bài test "nếu số này đổi, tôi làm gì?" cho 3 metric phổ biến: pageviews, bounce rate, và revenue per user. Kết quả?
+3. Một startup tự hào "chúng tôi được báo chí đề cập 50 lần tháng này." Đây là vanity hay actionable? Trong trường hợp nào nó có thể trở thành actionable?

@@ -1,0 +1,59 @@
+---
+id: exercise-pana-006
+title: "Capstone: Từ tracking plan đến quyết định bằng thí nghiệm"
+type: "exercise"
+track: product-analytics
+skill: analytics
+tags: [analytics, instrumentation, tracking-plan, sql, funnel, experimentation, ab-testing, capstone, solo-builder]
+estimatedMinutes: 90
+related: [rubric-product-analytics, concept-north-star-metric, concept-vanity-vs-actionable-metrics, concept-tracking-plan, concept-event-tracking, concept-client-vs-server-side-tracking, concept-funnel-analysis, concept-cohort-analysis, concept-ab-testing, concept-statistical-significance, concept-sample-size-and-power, concept-guardrail-metrics]
+status: published
+---
+import Callout from '../../../components/content/Callout.astro';
+
+## Tình huống
+
+Bạn build **"Sprout"** — app học ngôn ngữ qua flashcard, freemium. Có **8.000 user free**, **5% trả tiền**, doanh thu 1.900 USD/tháng. Bạn *cảm thấy* nhiều người đăng ký rồi biến mất sau ngày đầu, nhưng chưa đo được gì cụ thể — app gần như chưa gắn analytics tử tế.
+
+Capstone này yêu cầu bạn đi trọn vòng: **quyết định đo gì → gắn tracking → đọc hành vi → chạy một thí nghiệm** để cải thiện một con số thật.
+
+---
+
+## Nhiệm vụ 1 — North Star + tracking plan
+
+1. Chọn **một North Star Metric** cho Sprout và bảo vệ lựa chọn (vì sao nó phản ánh giá trị thật, không phải [vanity metric](/concepts/vanity-vs-actionable-metrics)).
+2. Viết **tracking plan** cho 6-8 event cốt lõi của hành trình user (đăng ký → học bài đầu → quay lại → trả tiền). Mỗi event: tên (đặt theo convention nhất quán), 2-3 property, và đo **client-side hay server-side** — kèm lý do.
+
+<Callout title="Cẩn thận">
+Đừng cố đo *mọi thứ*. Tracking plan 8 event đặt tên tốt còn giá trị hơn 50 event hỗn loạn không ai đọc nổi sau 3 tháng.
+</Callout>
+
+---
+
+## Nhiệm vụ 2 — Đọc hành vi
+
+Dùng giả định hợp lý (hoặc số bạn tự đặt), trả lời:
+
+1. Vẽ **funnel** 4 bước từ đăng ký đến trả tiền. Bước nào rớt nhiều nhất *theo số tuyệt đối*? Đó là nơi đáng sửa nhất.
+2. Mô tả bạn sẽ đọc **cohort retention** thế nào để xác nhận cảm giác "user biến mất sau ngày đầu" — và đường cong thế nào thì gọi là có dấu hiệu product-market fit.
+3. (Tuỳ chọn) Viết một câu **SQL** trả lời: "tỉ lệ user hoàn thành bài học đầu tiên trong 24h sau khi đăng ký?" (giả định bảng `users`, `events`).
+
+---
+
+## Nhiệm vụ 3 — Thiết kế một thí nghiệm
+
+Dựa vào bước rớt lớn nhất ở Nhiệm vụ 2, thiết kế một [A/B test](/concepts/ab-testing):
+
+1. **Hypothesis** rõ ràng: "Nếu [thay đổi], thì [metric] sẽ [tăng/giảm] vì [lý do]."
+2. **Metric chính** + ít nhất **một guardrail metric** (để variant không thắng kiểu phá thứ khác).
+3. Ước lượng **sample size** cần và **tiêu chí dừng** — vì sao không được nhìn kết quả đẹp rồi dừng sớm (significance).
+
+---
+
+## Tiêu chí đánh giá
+
+Tự chấm theo [Product Analytics Rubric](../../rubrics/product-analytics-rubric). Capstone chạm cả 5 tiêu chí — bài tổng hợp của cả track.
+
+<Callout title="Nhớ nhé">
+Vòng lặp đầy đủ: đo cái đáng đo → gắn đúng → đọc hành vi → thí nghiệm để quyết định. Một con số chỉ có giá trị nếu nó *đổi được* hành động tiếp theo của bạn. Hết capstone, bạn không còn nói "tôi nghĩ" — bạn nói "dữ liệu cho thấy".
+</Callout>

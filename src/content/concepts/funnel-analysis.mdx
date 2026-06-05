@@ -1,0 +1,53 @@
+---
+id: concept-funnel-analysis
+title: "Funnel Analysis"
+type: "concept"
+aliases: ["funnel analysis", "phân tích phễu chuyển đổi", "conversion funnel", "phễu chuyển đổi người dùng", "đo tỉ lệ rớt từng bước"]
+tags: [product-analytics, funnel, conversion, behavior, metrics]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Hình dung bạn bán hàng ở cửa tiệm. Mỗi ngày 100 người bước vào. 60 người lướt xem. 20 người hỏi giá. 8 người cầm lên rồi đặt xuống. 3 người mua. Bước nào rò nhiều nhất? Từ 20 người hỏi còn 8 người cầm — tức 60% bị mất ở đó. Đó chính xác là câu hỏi funnel analysis trả lời.
+
+## Là gì
+
+**Funnel analysis** là kỹ thuật đo tỉ lệ người dùng đi qua từng bước liên tiếp trong một luồng quan trọng — ví dụ: vào trang landing → tạo tài khoản → xác nhận email → dùng tính năng chính → nâng cấp trả tiền.
+
+Ở mỗi bước, một phần người dùng "rớt" ra (drop-off). Funnel cho bạn thấy *bước nào* đang rò nhiều nhất để bạn ưu tiên sửa đúng chỗ — không phải đoán mò.
+
+Ba con số cần đo ở mỗi bước:
+- **Conversion rate:** % người đi tiếp sang bước kế
+- **Drop-off rate:** % người dừng lại
+- **Volume:** số người thật sự ở mỗi bước (tránh bị lừa bởi tỉ lệ %)
+
+## Ví dụ thật
+
+Một SaaS onboarding có funnel: Signup → Tạo workspace → Mời đồng đội → Gửi file đầu tiên → Nâng cấp Pro.
+
+Số liệu: 1.000 → 750 → 400 → 180 → 45
+
+Nhìn tỉ lệ từng bước: 75% → 53% → 45% → 25%.
+
+Bước "Mời đồng đội → Gửi file đầu tiên" chỉ đạt 45% — tệ nhất. Đây là điểm nghẽn: người dùng mời xong đồng đội nhưng không biết phải làm gì tiếp theo. Fix onboarding tooltip tại bước này — không cần đổ tiền vào quảng cáo.
+
+<Callout title="Cẩn thận">
+Đừng chỉ nhìn conversion rate tổng từ đầu đến cuối. 4.5% (45/1000) nghe nhỏ, nhưng nếu mỗi bước đều ổn trừ một bước tệ, bạn chỉ cần fix một chỗ để nhân đôi con số. Nhìn từng bước — không nhìn kết quả cuối cùng.
+</Callout>
+
+<Callout title="Nhớ nhé">
+Funnel không chỉ dùng cho signup hay payment. Bất kỳ luồng nào có nhiều bước và người dùng có thể rời đi đều là funnel: onboarding, feature adoption, support resolution, checkout. Xác định luồng quan trọng nhất với sản phẩm của bạn rồi đo nó trước.
+</Callout>
+
+## Đọc thêm
+
+- [What Is Funnel Analysis? — Amplitude](https://amplitude.com/blog/funnel-analysis) — Hướng dẫn đầy đủ về funnel analysis từ Amplitude: cách xây dựng funnel, đọc kết quả, và kết nối với cohort analysis.
+- [Funnel Analysis: How to Identify and Fix Drop-Offs — Mixpanel](https://mixpanel.com/blog/funnel-analysis/) — Mixpanel giải thích funnel analysis với ví dụ thực tế và cách chọn đúng bước để đưa vào funnel.
+- [Conversion Funnel Analysis: The Definitive Guide — CXL](https://cxl.com/blog/conversion-funnel/) — Hướng dẫn chuyên sâu từ CXL về phân tích funnel chuyển đổi, bao gồm phân tích định tính bổ sung sau khi tìm ra điểm rò.
+- [Funnel Reports — PostHog Docs](https://posthog.com/docs/product-analytics/funnels) — Tài liệu chính thức PostHog về cách tạo funnel report, áp dụng cho self-hosted analytics tool phổ biến trong indie dev community.
+
+## Tự kiểm tra
+
+1. Funnel của một luồng signup có tỉ lệ: 100% → 80% → 30% → 25% → 20%. Bước nào rớt nhiều nhất tính theo số người thật sự mất đi (giả sử bắt đầu với 1.000 người)?
+2. Tại sao conversion rate tổng (từ bước đầu đến bước cuối) không đủ để biết cần sửa gì?
+3. Bạn cần quyết định giữa việc cải thiện bước có drop-off rate 60% nhưng ít người đi qua, và bước có drop-off rate 20% nhưng rất nhiều người đi qua. Bạn ưu tiên bước nào? Lý do?

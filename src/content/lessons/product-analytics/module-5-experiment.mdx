@@ -1,0 +1,78 @@
+---
+id: lesson-pana-005
+title: "Chạy thí nghiệm để quyết định — thay vì cãi nhau bằng ý kiến"
+type: "lesson"
+track: product-analytics
+module: experimentation
+level: intermediate
+tags: [product-analytics, experimentation, ab-testing, statistics, decision-making, metrics, dashboards]
+prerequisites: [concept-ab-testing, concept-statistical-significance, concept-sample-size-and-power, concept-guardrail-metrics, concept-dashboards-and-reporting]
+related: [exercise-pana-005, rubric-product-analytics]
+status: published
+---
+import Callout from '../../../components/content/Callout.astro';
+
+Mọi cuộc họp product đều có người nói "tôi nghĩ nếu đổi màu nút này thì conversion sẽ tăng" và người khác nói "tôi nghĩ không." Cả hai đều đúng theo nghĩa nào đó — vì cả hai đều đang đoán. Thí nghiệm là cách dừng đoán và bắt đầu **biết**.
+
+Module này xâu chuỗi năm công cụ thành một quy trình khép kín: từ khi nảy ra ý tưởng thay đổi đến khi có đủ căn cứ để triển khai hoặc bỏ.
+
+## Bước 1 — Đặt câu hỏi có thể kiểm tra được
+
+Trước khi thiết kế bất cứ thứ gì, bạn cần một hypothesis rõ ràng:
+
+> *"Nếu [thay đổi X], thì [metric Y] sẽ [tăng/giảm] vì [lý do Z]."*
+
+Ví dụ: "Nếu rút form đăng ký từ 6 trường xuống 3 trường, tỉ lệ hoàn thành đăng ký sẽ tăng vì friction giảm."
+
+Hypothesis tốt có ba phần: thay đổi cụ thể, metric đo được, và lý do có thể sai (tức là có thể bác bỏ). Nếu hypothesis của bạn không thể sai, nó không đáng test.
+
+[A/B testing](/concepts/ab-testing) là công cụ để kiểm tra hypothesis đó: nhóm control thấy form 6 trường, nhóm variant thấy form 3 trường. Ngẫu nhiên hoá đảm bảo hai nhóm công bằng — sự khác biệt quan sát được đến từ thay đổi, không phải từ đặc điểm người dùng.
+
+## Bước 2 — Xác định metric chính và guardrail metrics
+
+Không phải mọi thứ đều đáng đo — nhưng có những thứ nhất định phải đo.
+
+**Primary metric** là thứ bạn muốn di chuyển. Chỉ một. Nhiều hơn một primary metric thì bạn sẽ luôn tìm được lý do để nói "test này thắng."
+
+**Guardrail metrics** là những chỉ số không được phép xấu đi — xem chi tiết tại [concept-guardrail-metrics](/concepts/guardrail-metrics). Với ví dụ form đăng ký: primary metric là completion rate, guardrail metrics có thể là activation rate 7 ngày (user đăng ký nhanh nhưng có thực sự dùng app không?) và data quality (form ngắn có làm user nhập sai hay bỏ trống quan trọng không?).
+
+<Callout title="Cẩn thận">
+Đừng thêm primary metrics sau khi xem kết quả. Nếu completion rate không tốt nhưng time-on-page tốt, bạn không thể hồi tố đổi primary metric sang time-on-page và nói "test này thắng." Đây là lỗi phổ biến làm mất uy tín của toàn bộ quy trình thử nghiệm.
+</Callout>
+
+## Bước 3 — Tính sample size và đặt tiêu chí dừng
+
+Trước khi bắt đầu test, hãy tính xem cần bao nhiêu user.
+
+[Sample size & power](/concepts/sample-size-and-power) phụ thuộc vào ba đầu vào: baseline rate hiện tại của primary metric, MDE bạn quan tâm, và power mục tiêu (thường là 80%). Nếu app của bạn chỉ có vài trăm user mới mỗi tuần nhưng bạn muốn phát hiện thay đổi 2%, test đó có thể cần chạy vài tháng — đáng cân nhắc có nên chạy không.
+
+Tiêu chí dừng cần định trước:
+- Chạy đủ bao nhiêu user (không ít hơn)?
+- Chạy tối thiểu bao nhiêu ngày (để bắt được cả chu kỳ tuần)?
+- Điều kiện dừng sớm: chỉ khi guardrail metrics bị vi phạm nghiêm trọng (harm stopping), không phải khi thấy kết quả đẹp.
+
+## Bước 4 — Đọc kết quả đúng cách
+
+Sau khi đủ sample, mới nhìn vào kết quả.
+
+[Statistical significance](/concepts/statistical-significance) là điều kiện cần nhưng không đủ. Cần hỏi thêm:
+
+- p-value dưới 0.05 — nhưng confidence interval trải rộng từ −0.5% đến +3%? Kết quả không ổn định.
+- Primary metric tăng đáng kể — nhưng guardrail metric nào bị vi phạm?
+- Effect size có đủ lớn để xứng đáng với chi phí triển khai không?
+
+Một variant "thắng" về mặt thống kê nhưng chỉ tốt hơn 0.2% trên một metric không ảnh hưởng đến doanh thu — có thể không đáng rollout.
+
+## Bước 5 — Hiển thị và truyền đạt kết quả
+
+Kết quả test không tự nói lên điều gì nếu không được đọc và quyết định đúng cách.
+
+[Dashboards & reporting](/concepts/dashboards-and-reporting) ở đây không phải về dashboard hoành tráng — mà là về việc trình bày kết quả test đủ rõ để người ra quyết định hiểu: hypothesis là gì, kết quả là gì, guardrail metrics có bị vi phạm không, và khuyến nghị là gì.
+
+Một bản tóm tắt kết quả test tốt fit trong một trang: hypothesis, primary metric (kết quả + CI), guardrail metrics (xanh/đỏ), kết luận và action.
+
+<Callout title="Nhớ nhé">
+Quy trình thí nghiệm không phải để "chứng minh mình đúng" — mà để nhanh chóng loại bỏ ý tưởng sai với chi phí thấp và tự tin triển khai ý tưởng đúng. Một test cho kết quả "không có sự khác biệt" cũng là thông tin có giá trị: bạn vừa tiết kiệm chi phí triển khai một thay đổi không cần thiết.
+</Callout>
+
+Sẵn sàng thực hành? Thử thiết kế một thí nghiệm hoàn chỉnh với [bài tập thiết kế A/B test →](/exercises/product-analytics/m5-design-an-ab-test)

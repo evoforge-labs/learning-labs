@@ -1,0 +1,52 @@
+---
+id: concept-privacy-and-consent
+title: "Privacy & Consent (Analytics)"
+type: "concept"
+aliases: ["privacy consent analytics", "GDPR cookie consent analytics", "thu thập dữ liệu tối thiểu", "PII analytics tracking", "quyền riêng tư analytics sản phẩm"]
+tags: [analytics, instrumentation, product-analytics, privacy, gdpr, consent, pii, compliance]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Bạn xây nhà và gắn camera trong phòng khách, phòng ngủ, phòng tắm để "hiểu cách khách dùng nhà". Có thể khách chấp nhận camera phòng khách — nhưng phòng tắm thì không bao giờ. Và nếu bạn không xin phép, bạn vi phạm luật.
+
+Analytics trong sản phẩm cũng vậy: bạn được phép đo, nhưng có quy tắc về *đo gì*, *xin phép ai*, và *lưu thế nào*.
+
+## Là gì
+
+**Privacy trong analytics** là tập hợp nguyên tắc và luật quy định cách bạn thu thập, xử lý, và lưu trữ dữ liệu hành vi user.
+
+**GDPR** (General Data Protection Regulation) — luật bảo vệ dữ liệu của EU, áp dụng cho bất kỳ app nào có user ở EU. Yêu cầu cốt lõi: bạn cần **consent** (sự đồng ý rõ ràng) trước khi chạy analytics cookie hay script tracking. Phạt tối đa 20 triệu EUR hoặc 4% doanh thu toàn cầu.
+
+**PII** (Personally Identifiable Information) — thông tin có thể định danh cá nhân: tên, email, số điện thoại, địa chỉ IP. PII không được gửi vào analytics tool như thuộc tính event thông thường — vừa là rủi ro bảo mật, vừa vi phạm GDPR.
+
+**Data minimization** — nguyên tắc: chỉ thu thập dữ liệu thực sự cần thiết cho mục đích cụ thể. Không track thứ "phòng khi sau này có thể cần".
+
+## Ví dụ thật
+
+Bạn gắn event `checkout_started` với property `email: user.email`. Nghe có vẻ tiện — nhưng giờ email user đang nằm trong PostHog, Segment, và có thể ở bên thứ ba khác. Nếu có data breach, bạn chịu trách nhiệm.
+
+Thay vào đó: dùng `user_id` (database ID) làm property, email chỉ lưu trong database của bạn.
+
+**Consent banner** — theo GDPR 2026, bạn phải chặn toàn bộ analytics script cho đến khi user đồng ý. Cookie banner không được pre-tick, không được thiết kế dark pattern (ví dụ: nút "Accept all" to đùng, nút "Reject" bé tí). Regulators châu Âu đang enforce mạnh hơn — Google bị phạt 325 triệu EUR năm 2025 vì dark pattern.
+
+<Callout title="Cẩn thận">
+Consent ảnh hưởng trực tiếp tới độ chính xác dữ liệu: nếu 30% user từ chối cookie, analytics của bạn mất 30% data từ nhóm đó. Điều này tạo ra **selection bias** — user từ chối tracking thường có hành vi khác với user đồng ý. Khi phân tích, luôn nhớ data bạn có là data của người đã đồng ý cho bạn thu thập.
+</Callout>
+
+<Callout title="Nhớ nhé">
+Bốn nguyên tắc thực hành: (1) Xin consent trước khi track ở EU. (2) Không gửi PII vào analytics tool. (3) Dùng database ID thay email/tên. (4) Chỉ track những gì thực sự giúp bạn ra quyết định — không track "phòng khi cần".
+</Callout>
+
+## Đọc thêm
+
+- [GDPR Cookie Consent 2026 — Usercentrics](https://usercentrics.com/knowledge-hub/gdpr-cookies/) — Tổng quan đầy đủ về yêu cầu GDPR với cookie và consent, cập nhật đến 2026 với hướng dẫn triển khai thực tế.
+- [GDPR Cookie Consent Checklist 2026 — Clym](https://www.clym.io/blog/gdpr-cookie-consent-checklist-with-new-eu-guidance-updated) — Checklist chi tiết các yêu cầu consent theo guidance mới nhất của EU; hữu ích khi bạn cần tự kiểm tra compliance.
+- [2025 Cookie Consent Laws — Transcend](https://transcend.io/blog/2025-cookie-consent-laws) — Tổng hợp thay đổi luật cookie consent trên nhiều khu vực (EU, California, Brazil) — quan trọng nếu app của bạn có user quốc tế.
+- [EU Cookie Compliance Guide 2026 — CookieYes](https://www.cookieyes.com/blog/eu-cookie-compliance/) — Hướng dẫn kỹ thuật triển khai consent management đúng cách, bao gồm cả script blocking trước khi có consent.
+
+## Tự kiểm tra
+
+1. Tại sao việc user từ chối tracking banner lại tạo ra selection bias trong data analytics của bạn? Ảnh hưởng thế nào đến kết luận bạn rút ra?
+2. Trong event `user_signed_up`, bạn muốn lưu `email` để sau này retarget. GDPR nói gì về điều này, và cách làm đúng là gì?
+3. App của bạn chỉ có user ở Việt Nam. Bạn có cần lo về GDPR không? Khi nào thì phải lo?

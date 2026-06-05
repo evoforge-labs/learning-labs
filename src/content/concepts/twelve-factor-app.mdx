@@ -1,0 +1,66 @@
+---
+id: concept-twelve-factor-app
+title: "12-Factor App"
+type: "concept"
+aliases: ["12-factor app", "twelve factor app", "twelve-factor methodology", "12 yếu tố xây app dễ deploy", "nguyên tắc xây dựng app cloud-native", "12factor Heroku methodology"]
+tags: [devops, ship-and-operate, architecture, deployment, cloud, solo-builder, twelve-factor]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Tại sao app chạy tốt trên máy dev nhưng lại hỏng khi lên server? Tại sao scale từ 1 server lên 3 server lại phức tạp hơn bạn nghĩ? Thường là vì app được xây theo kiểu "chạy được trên máy này" — không phải "chạy được ở bất kỳ đâu".
+
+12-Factor App là bộ nguyên tắc để xây app *có thể chạy được ở bất kỳ đâu* — dễ deploy, dễ scale, dễ bảo trì.
+
+## Là gì
+
+**12-Factor App** là phương pháp luận do Heroku phát triển năm 2011, gồm 12 nguyên tắc xây dựng software-as-a-service. Không phải framework hay thư viện — là tập tư duy thiết kế.
+
+Không cần thuộc cả 12. Với solo builder, 5 factor quan trọng nhất:
+
+**Factor III — Config trong môi trường, không trong code.** Mọi thứ thay đổi giữa các môi trường (database URL, API key, port) phải đặt trong biến môi trường, không hardcode trong code. Nếu bạn có thể đọc database URL trực tiếp từ source code, đây là dấu hiệu vi phạm factor này.
+
+**Factor VI — Stateless processes.** App không lưu trạng thái trong bộ nhớ giữa các request. Mỗi request được xử lý độc lập. Hậu quả: bạn có thể chạy 1 instance hay 10 instance mà không cần lo về shared state. Session phải lưu ở nơi dùng chung — database hoặc Redis — không phải RAM của process.
+
+**Factor XI — Logs as streams.** App không tự quản lý file log. App chỉ ghi ra stdout. Infrastructure (Docker, Railway, Fly.io) sẽ thu thập, lưu trữ, và định tuyến log. Bạn không cần lo log rotation hay log rotation crash disk.
+
+**Factor X — Dev/prod parity.** Giữ khoảng cách giữa dev và prod nhỏ nhất có thể — cùng loại database, cùng OS, cùng phiên bản dependency. Dev dùng SQLite, prod dùng Postgres là ví dụ vi phạm factor này.
+
+**Factor I — Codebase.** Một codebase, nhiều deploy. Không có "bản code riêng cho staging" hay "branch đặc biệt cho prod". Cùng một commit, cùng một code — chỉ khác config qua biến môi trường.
+
+## Ví dụ thật
+
+App của bạn có dòng:
+```python
+DATABASE_URL = "postgresql://user:pass@localhost/mydb"
+```
+
+Đây là vi phạm Factor III. Khi deploy lên production, URL này sai. Bạn phải sửa code trước mỗi deploy — và rất dễ commit nhầm credentials thật lên Git.
+
+Phiên bản đúng:
+```python
+DATABASE_URL = os.environ["DATABASE_URL"]
+```
+
+Mỗi môi trường tự cung cấp giá trị của nó. Code không thay đổi. Credentials không lộ.
+
+<Callout title="Góc kỹ thuật">
+Logs as streams (Factor XI) nghe đơn giản nhưng thay đổi hoàn toàn cách bạn debug. Thay vì SSH vào server tìm file log, mọi logs từ tất cả instances chảy về một chỗ — Cloudwatch, Logtail, hay bất kỳ log aggregator nào. Khi app crash, bạn không cần biết instance nào crash; bạn chỉ cần tìm trong log stream.
+</Callout>
+
+<Callout title="Nhớ nhé">
+Không cần implement cả 12 factor ngay ngày đầu. Bắt đầu với config trong env vars và stateless processes — hai factor này cho lợi ích cao nhất khi deploy lần đầu và scale về sau.
+</Callout>
+
+## Đọc thêm
+
+- [The Twelve-Factor App — 12factor.net](https://12factor.net/) — Tài liệu gốc, viết bởi Adam Wiggins (Heroku). Mỗi factor có trang riêng với giải thích và ví dụ; nên đọc ít nhất Factor III, VI, XI.
+- [Store config in the environment — 12factor.net](https://12factor.net/config) — Trang riêng giải thích Factor III (Config); giải thích rõ tại sao env vars là chuẩn và tại sao config files không đủ tốt.
+- [The 12-Factor App — 15 Years Later. Does it Still Hold Up in 2026? — ITNEXT](https://itnext.io/the-12-factor-app-15-years-later-does-it-still-hold-up-in-2026-c8af494e8465) — Đánh giá lại 12-factor sau 15 năm: factor nào vẫn còn giá trị, factor nào cần cập nhật trong bối cảnh container và cloud-native hiện đại.
+- [The 12-Factor App Methodology Explained — Net Solutions](https://www.netsolutions.com/insights/12-factor-app-methodology/) — Giải thích tất cả 12 factor bằng ngôn ngữ dễ hiểu kèm ví dụ code thực tế; tốt để đọc tổng quan trước khi đi sâu vào từng factor.
+
+## Tự kiểm tra
+
+1. Tại sao "stateless processes" (Factor VI) lại là điều kiện cần để scale ngang (horizontal scaling)?
+2. Bạn có một app Node.js dùng `console.log()` để ghi log ra stdout. Đây có tuân theo Factor XI không — hay cần dùng thư viện log riêng?
+3. Kể ra hai dấu hiệu cụ thể trong code hoặc cấu hình cho thấy app đang *vi phạm* nguyên tắc 12-factor.

@@ -1,0 +1,54 @@
+---
+id: concept-data-informed-decisions
+title: "Data-Informed Decisions"
+type: "concept"
+aliases: ["data-informed decision making", "quyết định dựa trên dữ liệu", "data-informed vs data-driven", "dữ liệu để soi sáng quyết định", "số liệu soi sáng phán đoán"]
+tags: [product-analytics, decision-making, metrics, data-culture, product-management]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Bạn có bao giờ để GPS dẫn đường rồi đâm vào đường cụt vì nó không biết con đường mới vừa thi công? GPS có dữ liệu — bản đồ, tốc độ xe, lịch sử lưu thông. Nhưng quyết định cuối cùng vẫn cần người ngồi sau vô lăng nhìn thực tế và phán đoán.
+
+Làm sản phẩm cũng vậy.
+
+## Là gì
+
+**Data-informed decisions** là cách dùng số liệu như một chiếc đèn pin — soi sáng góc tối, giúp bạn thấy rõ hơn — chứ không phải như một robot tự lái thay thế phán đoán.
+
+Đối lập với nó là **data-driven mù quáng**: để con số quyết định tất cả, bất kể bối cảnh. "Retention giảm → cắt feature X" mà không hỏi tại sao, không nghe user.
+
+Nguyên tắc cốt lõi: **số chỉ đáng đo nếu bạn biết mình sẽ làm gì khác khi nó thay đổi.** Nếu retention tăng 5% mà bạn vẫn làm y hệt những gì đang làm, thì đo retention để làm gì?
+
+## Ví dụ thật
+
+Team đang cân nhắc có nên thêm một màn hình onboarding mới không. Ai đó pull data: "Chỉ 30% user hoàn thành onboarding hiện tại." Kết luận vội: cắt bớt bước onboarding.
+
+Nhưng rồi họ phỏng vấn user — và phát hiện ra 70% người dùng bỏ qua onboarding vì nó **quá dễ**, họ muốn vào thẳng tính năng chính. Không phải vì nó quá phức tạp.
+
+Dữ liệu đúng, nhưng suy luận sai. Một team data-informed sẽ dùng số liệu 30% như tín hiệu cần điều tra — không phải lệnh hành động.
+
+<Callout title="Cẩn thận">
+"Data-driven" nghe có vẻ khoa học, nhưng dễ biến thành cái cớ né trách nhiệm: "Số nói vậy thì tôi làm vậy." Dữ liệu không có ngữ cảnh, không hiểu động lực người dùng, không biết tương lai thị trường. Người ra quyết định vẫn cần chịu trách nhiệm — dữ liệu chỉ là công cụ.
+</Callout>
+
+**Khi nào nên tin số, khi nào nên tin phán đoán?**
+
+Tin số khi bạn có đủ mẫu, sự kiện rõ ràng, và câu hỏi được định nghĩa trước. Tin phán đoán khi thị trường mới, sample nhỏ, hoặc bạn đang khám phá vùng chưa biết. Tốt nhất là kết hợp cả hai.
+
+<Callout title="Nhớ nhé">
+Trước khi đo bất cứ thứ gì, hỏi: "Nếu số này tăng, tôi làm gì? Nếu giảm, tôi làm gì?" Nếu câu trả lời là "chưa biết" — hãy quyết định trước, rồi mới bắt đầu đo. Đó là sự khác biệt giữa data-informed và đo cho có.
+</Callout>
+
+## Đọc thêm
+
+- [Data Informed vs Data Driven — Itamar Gilad](https://itamargilad.com/data-informed/) — Tác giả cuốn "Evidence-Guided" giải thích tại sao data-driven thuần túy có thể dẫn đến tối ưu hóa nhầm mục tiêu; kèm framework thực tế để cân bằng định tính và định lượng.
+- [Moving from Data-Driven to Data-Informed — Amplitude Blog](https://amplitude.com/blog/data-informed-product-decisions) — Amplitude giải thích sự khác biệt với ví dụ cụ thể từ sản phẩm thực; đặc biệt hữu ích phần "questions to ask before collecting data".
+- [Becoming a Data-Informed Organization — Harvard Business Review](https://hbr.org/2022/02/why-becoming-a-data-driven-organization-is-so-hard) — Phân tích lý do tổ chức thất bại khi áp dụng data culture, và cách xây dựng văn hóa dùng dữ liệu đúng hướng.
+- [The Danger of Vanity Metrics — Harvard Business Review](https://hbr.org/2010/02/entrepreneurs-beware-of-vanity-metrics) — Eric Ries (tác giả Lean Startup) cảnh báo về bẫy số đẹp nhưng không hành động được; bài đọc nền tảng cho product analytics.
+
+## Tự kiểm tra
+
+1. Sự khác biệt giữa "data-informed" và "data-driven" là gì? Cho một ví dụ tình huống mà data-driven mù quáng dẫn đến quyết định sai.
+2. Trước khi thêm một metric mới vào dashboard, bạn nên hỏi câu hỏi gì để biết metric đó có đáng theo dõi không?
+3. Một PM nói: "Retention tuần của chúng ta là 40%, thấp hơn benchmark ngành 60%." Điều đó có nghĩa là team nên tập trung cải thiện retention ngay không? Phân tích.

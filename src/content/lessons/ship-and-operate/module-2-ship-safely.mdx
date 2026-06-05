@@ -1,0 +1,106 @@
+---
+id: lesson-ops-002
+title: "Dựng đường ống ship code an toàn mỗi ngày"
+type: "lesson"
+track: ship-and-operate
+module: ci-cd
+level: beginner
+tags: [ci-cd, devops, deployment, automation, ship-and-operate, pipeline, reliability]
+prerequisites: [concept-continuous-integration, concept-continuous-delivery-deployment, concept-deploy-strategies, concept-rollback-and-recovery, concept-feature-flags]
+related: [exercise-ops-002, rubric-ship-and-operate]
+status: published
+---
+import Callout from '../../../components/content/Callout.astro';
+
+Hầu hết solo builder deploy theo kiểu "sẵn rồi thì push lên". Không có test tự động, không có staging, không có kế hoạch khi có lỗi. Cách đó hoạt động — cho đến lúc không hoạt động nữa.
+
+Module này xâu chuỗi năm công cụ thành một đường ống mà bạn build một lần, rồi dùng mãi.
+
+## Vì sao cần đường ống
+
+Không phải vì bạn sợ ship. Mà vì ship *thường xuyên* — mỗi ngày, thậm chí nhiều lần mỗi ngày — an toàn hơn ship *hiếm khi* với nhiều thay đổi chồng chất.
+
+Mỗi lần deploy ít thay đổi hơn → ít rủi ro hơn → dễ tìm nguyên nhân lỗi hơn → dễ rollback hơn.
+
+Đường ống là hạ tầng giúp bạn duy trì nhịp ship đó mà không tốn công sức mỗi lần.
+
+## Bước 1 — CI làm cổng chặn đầu tiên
+
+[Continuous Integration](/concepts/continuous-integration) là nơi mọi thứ bắt đầu. Mỗi khi bạn push code, máy tự chạy test và báo kết quả.
+
+Nguyên tắc: **không có gì qua được CI nếu test fail**. Đây không phải luật, mà là thỏa thuận bạn ký với bản thân: "Code tôi push lên luôn ở trạng thái có thể deploy được."
+
+Với GitHub Actions hoặc GitLab CI, pipeline CI tối thiểu chỉ cần một file YAML:
+
+```
+on: push
+jobs:
+  test: run tests
+  build: build artifact
+```
+
+Đơn giản vậy thôi để bắt đầu.
+
+## Bước 2 — Quyết định delivery hay deployment
+
+Sau khi CI xanh, code đến staging. Tại đây bạn cần quyết định: [Continuous Delivery hay Continuous Deployment](/concepts/continuous-delivery-deployment)?
+
+Nếu app còn nhỏ, test coverage chưa đủ, hoặc thay đổi ảnh hưởng đến luồng thanh toán — **Delivery**: bạn nhấn nút deploy khi sẵn sàng. Staging đảm bảo artifact luôn sẵn sàng, quyết định *khi nào* là của bạn.
+
+Khi đã quen nhịp và test đủ tin cậy — nâng lên **Deployment**: mọi commit qua CI tự lên production. Không cần nhớ, không cần làm thủ công.
+
+## Bước 3 — Chọn cách deploy lên production
+
+Code đã sẵn sàng. Đưa lên production bằng cách nào?
+
+[Deploy strategies](/concepts/deploy-strategies) cho bạn ba lựa chọn chính:
+
+- **Rolling update** — cách mặc định của hầu hết platform (Fly.io, Railway). Phù hợp khi thay đổi tương thích ngược. Không tốn thêm tài nguyên.
+- **Blue-Green** — khi muốn rollback tức thì, hoặc thay đổi lớn. Tốn thêm một môi trường trong thời gian deploy.
+- **Canary** — khi muốn thử nghiệm trên một phần nhỏ user trước. Cần metric để đo — nếu không có monitoring, Canary không phát huy tác dụng.
+
+Solo builder: bắt đầu với Rolling hoặc Blue-Green. Canary khi app đủ lớn.
+
+## Bước 4 — Có kế hoạch khi mọi thứ hỏng
+
+Deploy nào cũng có nguy cơ. Câu hỏi không phải "liệu có lỗi không" mà là "khi có lỗi, bạn mất bao lâu để phục hồi?"
+
+[Rollback & recovery](/concepts/rollback-and-recovery) cần được thiết kế *trước* khi bạn cần đến nó:
+
+- Artifact cũ có được lưu lại không?
+- Platform của bạn có nút "redeploy previous version" không?
+- Migration database có tương thích ngược không?
+
+Nếu rollback cần 30 phút, bạn sẽ do dự. Nếu rollback cần 2 phút, bạn sẽ làm ngay khi cần.
+
+<Callout title="Nhớ nhé">
+Thiết kế cho khả năng rollback trước khi deploy, không phải sau khi có lỗi.
+</Callout>
+
+## Bước 5 — Feature flag là lớp bảo vệ cuối cùng
+
+Ngay cả khi CI xanh, staging ngon, deploy thành công — tính năng mới vẫn có thể gây vấn đề cho user thật.
+
+[Feature flags](/concepts/feature-flags) là lớp bảo vệ tách deploy khỏi release:
+
+- Deploy code lên production nhưng flag tắt.
+- Bật flag cho một nhóm nhỏ trước.
+- Nếu có vấn đề, tắt flag trong vài giây — không cần rollback code.
+
+Kết hợp feature flag với Canary: bật flag cho 5% user, quan sát error rate và latency trong 30 phút, mới bật toàn bộ.
+
+## Đường ống hoàn chỉnh
+
+```
+commit → CI (test + lint + build) → staging deploy
+       → [approval nếu Delivery] → prod deploy (Rolling/Blue-Green)
+       → feature flag tắt → bật dần cho user → bật 100%
+```
+
+Nếu có vấn đề ở bất kỳ bước nào: tắt flag → rollback nếu cần → debug bình tĩnh.
+
+<Callout title="Nhớ nhé">
+Đường ống không phải là mục tiêu. Mục tiêu là bạn ship code mỗi ngày mà không sợ, và khi có lỗi thì phục hồi trong vài phút, không phải vài giờ. Pipeline là công cụ đạt mục tiêu đó.
+</Callout>
+
+Thực hành ngay với [bài tập thiết kế CI/CD pipeline →](/exercises/ship-and-operate/m2-build-a-pipeline)

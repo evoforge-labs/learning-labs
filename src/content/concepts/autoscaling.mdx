@@ -1,0 +1,54 @@
+---
+id: concept-autoscaling
+title: "Autoscaling"
+type: "concept"
+aliases: ["autoscaling", "tự động mở rộng", "horizontal scaling auto", "vertical scaling auto", "scale-to-zero", "cold start autoscale", "auto scale tài nguyên"]
+tags: [ship-and-operate, scalability, cloud, infra, devops, performance, cost]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Quán cà phê ngày thường có 2 nhân viên. Cuối tuần đông khách, họ gọi thêm người vào. Lúc vắng khách buổi chiều, một người về sớm. Không ai thuê cố định 10 nhân viên cho một quán nhỏ — vừa tốn tiền, vừa không cần thiết.
+
+Autoscaling là quán cà phê biết tự gọi thêm — và cho về — nhân viên theo thực tế.
+
+## Là gì
+
+**Autoscaling** là cơ chế tự động tăng hoặc giảm tài nguyên (server, container, process) dựa trên tải thực tế, thay vì bạn phải làm thủ công.
+
+Hai chiều mở rộng:
+
+**Horizontal scaling (scale out/in)** — thêm hoặc bớt *số lượng* instance. Từ 2 container lên 8 khi traffic tăng, rồi giảm về 2 khi traffic xuống. Đây là cách cloud-native app thường làm vì dễ cân bằng tải và không có downtime.
+
+**Vertical scaling (scale up/down)** — thay đổi *kích thước* của instance hiện có: nâng từ 2 CPU lên 8 CPU. Nhanh hơn để setup nhưng có giới hạn trần, thường cần restart, và không linh hoạt bằng horizontal.
+
+Với solo builder trên các platform hiện đại (Railway, Fly.io, Render, Cloud Run), autoscaling horizontal là mặc định và gần như không cần cấu hình phức tạp.
+
+**Scale-to-zero** — một trường hợp đặc biệt của autoscaling: khi không có traffic, hệ thống giảm về 0 instance. Chi phí về 0 luôn hấp dẫn — nhưng đi kèm **cold start**: request đầu tiên sau khi scale-to-zero phải chờ container khởi động lại, có thể mất 1-10 giây tùy runtime.
+
+Bẫy của scale-to-zero: app bị người dùng đầu tiên mỗi ngày "chịu" thời gian chờ lâu. Với app production có user thật, điều này tạo ấn tượng xấu. Với staging hoặc hobby project, scale-to-zero là lựa chọn hợp lý để tiết kiệm.
+
+## Ví dụ thật
+
+Một API solo builder dùng Cloud Run (Google): bình thường 2-5 request/phút, nhưng mỗi tối có 15 phút spike lên 200 request/phút do batch job của khách hàng chạy. Không autoscale: hoặc app bị timeout trong spike, hoặc bạn phải để cố định 5 instance chạy 24/7 — lãng phí 23 tiếng 45 phút còn lại. Với autoscaling: Cloud Run tự scale lên 8 instance trong 15 phút đó, rồi giảm về 1. Bạn chỉ trả tiền cho thời gian thực sự dùng.
+
+<Callout title="Cẩn thận">
+Autoscaling không giải quyết được app chậm vì code kém. Nếu mỗi request xử lý 2 giây vì query không có index, scale lên 10 instance chỉ nghĩa là bạn trả tiền gấp 10 lần cho cùng mức độ chậm. Tối ưu code trước, scale sau.
+</Callout>
+
+<Callout title="Nhớ nhé">
+Autoscaling phù hợp khi traffic không đều. Scale-to-zero tốt cho môi trường không production. Với app production, giữ ít nhất 1 instance warm để tránh cold start. Và luôn đặt **max instances** để không bị hóa đơn bất ngờ khi có spike bất thường.
+</Callout>
+
+## Đọc thêm
+
+- [Autoscaling — Google Cloud Run Docs](https://cloud.google.com/run/docs/about-instance-autoscaling) — Tài liệu chính thức Cloud Run về cách autoscaling hoạt động, cách cấu hình min/max instances, và xử lý cold start; thực tế và có ví dụ cụ thể.
+- [Horizontal vs Vertical Scaling — AWS Blog](https://aws.amazon.com/blogs/database/scaling-your-amazon-rds-instance-vertically-and-horizontally/) — So sánh hai hướng scale với ví dụ từ RDS; giải thích rõ trade-off và khi nào dùng cái nào.
+- [Understanding Cold Starts — Fly.io Docs](https://fly.io/docs/machines/guides-examples/machine-sizing/) — Fly.io giải thích cold start ảnh hưởng thế nào đến UX và cách cấu hình để giảm thiểu; thiết thực cho solo builder dùng Fly.
+- [Scale to Zero — Cloudflare Workers](https://developers.cloudflare.com/workers/learning/how-workers-works/) — Cloudflare giải thích mô hình serverless edge không có cold start truyền thống; so sánh tốt với container-based scale-to-zero.
+
+## Tự kiểm tra
+
+1. Tại sao scale-to-zero tiết kiệm chi phí nhưng lại không phải lúc nào cũng phù hợp cho app production? Bạn sẽ dùng nó cho loại môi trường nào?
+2. App của bạn đang chạy cố định 3 instance. Traffic peak là 5 phút/ngày, còn lại gần như không có gì. Autoscaling horizontal sẽ giúp ích gì trong trường hợp này?
+3. Sự khác biệt thực tế giữa horizontal và vertical scaling là gì — khi nào bạn buộc phải chọn vertical thay vì horizontal?

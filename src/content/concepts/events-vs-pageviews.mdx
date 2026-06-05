@@ -1,0 +1,55 @@
+---
+id: concept-events-vs-pageviews
+title: "Events vs Pageviews"
+type: "concept"
+aliases: ["events vs pageviews", "event-based tracking", "đo hành động thay vì trang", "analytics event", "pageview tracking", "event tracking product analytics", "anatomy of an event"]
+tags: [product-analytics, tracking, events, instrumentation, spa, mobile-analytics]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Camera an ninh đặt trước cửa hàng đếm bao nhiêu người đi qua — đó là pageview. Camera bên trong theo dõi ai đi vào khu nào, ai cầm sản phẩm, ai vào phòng thử đồ — đó là events. Cùng một cửa hàng, nhưng thông tin hoàn toàn khác nhau.
+
+## Là gì
+
+**Pageview** là lượt tải trang: browser gọi URL, server trả HTML. Đơn giản, tự động, nhưng chỉ nói được "ai đã đến trang này" — không nói được họ *làm gì* trên đó.
+
+**Event** là một hành động cụ thể mà user thực hiện: bấm nút, scroll đến phần nào, submit form, play video, hoàn thành bước X. Event được kích hoạt bởi code, không phải bởi navigation.
+
+Anatomy của một event có 3 phần:
+- **Name (tên):** Động từ + danh từ, ví dụ `button_clicked`, `video_started`, `checkout_completed`
+- **Properties (thuộc tính):** Context của hành động — `{ button_id: "upgrade-cta", plan: "pro", page: "pricing" }`
+- **Timestamp + User ID:** Khi nào, ai làm
+
+## Ví dụ thật
+
+App SaaS có trang pricing. Pageview analytics cho thấy: 5.000 lượt xem tháng này. Đó là tất cả bạn biết.
+
+Event analytics cho thấy: 5.000 lượt xem → 2.000 bấm "See plans" → 800 bấm "Start trial" → 150 hoàn thành signup. Conversion từng bước rõ ràng. Bạn thấy ngay bottle-neck nằm ở đâu để cải thiện.
+
+**Tại sao SPA và mobile app cần event-based?**
+
+Trong ứng dụng trang đơn (React, Vue, Next.js) hoặc mobile app, user không reload trang. Toàn bộ session có thể chỉ có một pageview nhưng hàng chục hành động. Nếu chỉ đo pageview, bạn gần như mù.
+
+Ví dụ: user mở app mobile, browse 15 sản phẩm, add 3 vào cart, rồi thoát không mua. Pageview: 1. Events: `product_viewed` x15, `add_to_cart` x3, `cart_abandoned` x1.
+
+<Callout title="Cẩn thận">
+Đừng track mọi thứ. Event quá nhiều cũng tệ như quá ít — dashboard rối, data noisy, khó tìm signal. Nguyên tắc: chỉ tạo event khi bạn đã biết trước câu hỏi nó sẽ trả lời. "Chúng ta có thể cần cái này sau" là lý do không đủ để tạo event.
+</Callout>
+
+<Callout title="Nhớ nhé">
+Event = hành động + context + thời gian. Pageview vẫn hữu ích cho content sites; nhưng app và SPA cần event-based để hiểu behavior thực. Đặt tên event theo quy ước nhất quán ngay từ đầu — refactor tên event sau là đau đớn.
+</Callout>
+
+## Đọc thêm
+
+- [Introduction to Event Tracking — Segment](https://segment.com/academy/collecting-data/event-tracking-best-practices/) — Segment giải thích anatomy của event, naming conventions tốt/xấu, và cách thiết kế event schema trước khi implement.
+- [Pageviews are Obsolete — Amplitude Blog](https://amplitude.com/blog/pageviews-are-obsolete) — Amplitude lập luận tại sao pageview không đủ cho modern product analytics; giải thích khi nào cần chuyển sang event-based model.
+- [Analytics for Startups — Y Combinator](https://www.ycombinator.com/library/Lp-analytics-for-startups) — YC's guide cho startup về cách chọn event cần track và cách tránh over-tracking từ ngày đầu.
+- [Event Tracking Guide — Mixpanel](https://docs.mixpanel.com/docs/tracking-methods/sdks/javascript) — Tài liệu kỹ thuật của Mixpanel về cách implement event tracking; hữu ích khi bạn bắt đầu gắn code thực tế.
+
+## Tự kiểm tra
+
+1. Tại sao đo pageview không đủ cho một ứng dụng React SPA? Cho ví dụ cụ thể về thông tin bị bỏ sót.
+2. Một event tốt có anatomy như thế nào? Viết ví dụ event cho hành động "user hoàn thành thanh toán" với ít nhất 4 properties có ý nghĩa.
+3. Khi nào pageview vẫn là metric hữu ích? Loại website/app nào vẫn nên dùng pageview là metric chính?

@@ -1,0 +1,58 @@
+---
+id: concept-blameless-postmortem
+title: "Blameless Postmortem"
+type: "concept"
+aliases: ["blameless postmortem", "post-incident review không đổ lỗi", "viết lại sự cố hệ thống", "phân tích sau sự cố", "root cause analysis postmortem", "postmortem timeline"]
+tags: [reliability, incident-response, postmortem, devops, ship-and-operate, learning-from-failures]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Sau khi hệ thống sập, câu hỏi nguy hiểm nhất là: "Ai đã làm điều này?"
+
+Vì người làm cũng chính là người bạn cần để sửa — và đổ lỗi không ngăn được sự cố tái diễn.
+
+## Là gì
+
+**Blameless postmortem** là tài liệu phân tích sau sự cố, tập trung vào *hệ thống và quy trình* thay vì cá nhân. Mục tiêu không phải là tìm ai sai — mà là hiểu *tại sao hệ thống cho phép sự cố xảy ra*, và làm gì để ngăn nó tái diễn.
+
+Triết lý nền tảng: người ra quyết định lúc sự cố xảy ra đã làm điều hợp lý nhất với thông tin họ có lúc đó. Nếu cùng hoàn cảnh, người khác cũng có thể làm y vậy. Vậy thứ cần thay đổi là hoàn cảnh — không phải con người.
+
+Một postmortem chuẩn gồm:
+
+**Timeline** — Tái dựng lại những gì xảy ra theo thứ tự thời gian. "14:32 — deploy thành công. 14:45 — error rate tăng. 14:48 — alert kích hoạt. 14:51 — bắt đầu điều tra..." Không phán xét, chỉ ghi sự thật.
+
+**Root cause** — Không dừng ở triệu chứng. Dùng kỹ thuật "5 Whys": hỏi "tại sao" năm lần liên tiếp cho đến khi tìm được nguyên nhân gốc rễ. Lỗi thường là database query — tại sao query chậm? Không có index — tại sao không có index? Không ai test với dữ liệu lớn — tại sao không ai test? Không có quy trình review performance...
+
+**Action items** — Danh sách việc cụ thể cần làm để ngăn sự cố tái diễn. Mỗi item cần có người chịu trách nhiệm và deadline. Không có action item thì postmortem chỉ là bài tập viết lách.
+
+## Ví dụ thật
+
+App đặt lịch bị sập 45 phút do migration database lỗi. Postmortem blameless trông như thế nào:
+
+**Timeline tóm tắt:** 09:00 chạy migration → 09:03 app bắt đầu crash → 09:05 nhận alert → 09:12 rollback migration → 09:15 app phục hồi → 09:45 tìm ra root cause.
+
+**Root cause (5 Whys):** App crash vì migration thêm cột NOT NULL không có default value vào bảng lớn → production không thể đọc row cũ → vì sao? Migration chạy trên staging nhỏ ổn, production có 2 triệu row → vì sao staging không giống production? Không có quy trình seed dữ liệu staging tương đương production.
+
+**Action items:** (1) Thêm bước test migration với data dump từ production — do bạn, tuần tới. (2) Viết checklist migration gồm bước "check table size trước khi chạy" — do bạn, 3 ngày tới.
+
+<Callout title="Cẩn thận">
+Solo builder hay bỏ qua postmortem vì "chỉ có mình mình, đổ lỗi ai?" — nhưng đây là suy nghĩ sai. Postmortem không phải để đổ lỗi, mà để học. Viết postmortem kể cả khi chỉ có mình bạn: nó buộc bạn suy nghĩ có hệ thống về nguyên nhân, không phải chỉ fix vội rồi quên.
+</Callout>
+
+<Callout title="Nhớ nhé">
+Postmortem tốt trả lời ba câu hỏi: **Chuyện gì đã xảy ra** (timeline), **tại sao nó xảy ra** (root cause đến tận gốc), **mình làm gì tiếp theo** (action items có deadline). Blameless không có nghĩa là không có trách nhiệm — mà là đặt trách nhiệm vào *quy trình*, không phải *con người*.
+</Callout>
+
+## Đọc thêm
+
+- [Blameless PostMortems and a Just Culture — Etsy Engineering](https://www.etsy.com/codeascraft/blameless-postmortems/) — Bài gốc của John Allspaw từ Etsy Engineering đặt nền móng cho văn hóa blameless postmortem trong ngành; đọc để hiểu triết lý nền tảng.
+- [Postmortem Culture — Google SRE Book](https://sre.google/sre-book/postmortem-culture/) — Google giải thích cách viết postmortem hiệu quả và xây dựng văn hóa học hỏi từ sự cố; kèm template thực tế.
+- [Postmortem Template — PagerDuty](https://response.pagerduty.com/after/post_mortem_template/) — Template postmortem của PagerDuty để bắt đầu ngay; đơn giản, thực tế, dùng được cho solo builder.
+- [The 5 Whys Technique — MindTools](https://www.mindtools.com/a3mi00v/5-whys) — Giải thích kỹ thuật 5 Whys với ví dụ cụ thể; đây là công cụ cốt lõi để tìm root cause thật sự thay vì dừng ở triệu chứng.
+
+## Tự kiểm tra
+
+1. Sự khác biệt giữa "blameless" và "không ai chịu trách nhiệm" là gì? Trách nhiệm được đặt vào đâu trong một postmortem tốt?
+2. Áp dụng kỹ thuật 5 Whys cho tình huống sau: "Người dùng không nhận được email xác nhận đăng ký." Đi được mấy tầng "tại sao"?
+3. Một postmortem không có action items thì giá trị của nó là gì? Khi nào action item có thể không cần thiết?

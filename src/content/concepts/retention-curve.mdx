@@ -1,0 +1,53 @@
+---
+id: concept-retention-curve
+title: "Retention Curve"
+type: "concept"
+aliases: ["retention curve", "đường cong giữ chân người dùng", "retention theo ngày", "đường cong retention phẳng", "D1 D7 D30 retention chart"]
+tags: [product-analytics, retention, behavior, metrics, product-market-fit]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Bạn mở vòi nước rồi nhìn xem còn bao nhiêu phần trăm nước vẫn ở trong xô sau mỗi giờ. Nếu đường mực nước cứ giảm về 0, xô có lỗ. Nhưng nếu đường mực nước đi xuống rồi *dừng lại ở một mức nào đó và nằm ngang* — nghĩa là một nhóm người dùng đã "mắc kẹt" vào sản phẩm của bạn theo nghĩa tốt nhất. Đó là đường cong retention phẳng.
+
+## Là gì
+
+**Retention curve** là biểu đồ thể hiện tỉ lệ người dùng còn dùng sản phẩm theo thời gian — thường theo ngày (D1, D7, D30) hoặc tuần (W1, W4, W8) tính từ ngày đăng ký.
+
+Trục X: số ngày/tuần kể từ khi đăng ký. Trục Y: % người dùng còn active.
+
+Hầu hết sản phẩm có đường cong đi xuống liên tục về gần 0 — đó là dấu hiệu xấu. Sản phẩm có **product-market fit** thật sự có đường cong *phẳng ra* ở một ngưỡng nào đó, ví dụ: giảm rồi ổn định ở 20-30% sau tuần 4. Nghĩa là có một lõi người dùng trung thành.
+
+Khái niệm này liên quan chặt với [Retention](/concepts/retention) tổng quát — nhưng retention curve đi sâu hơn vào *hình dạng* theo thời gian, không chỉ một con số tại một thời điểm.
+
+## Ví dụ thật
+
+Hai sản phẩm cùng có Day-30 retention là 15%. Nhưng:
+
+- Sản phẩm A: đường cong giảm đều từ 100% về 15% rồi tiếp tục giảm về 5% sau tháng 3.
+- Sản phẩm B: đường cong giảm nhanh xuống 30% trong tuần đầu, rồi *ổn định* ở 15-18% từ tháng 2 trở đi.
+
+Sản phẩm B có product-market fit tốt hơn nhiều. Đường cong phẳng cho thấy có lõi người dùng thật sự gắn bó — ngay cả khi số tuyệt đối nghe nhỏ. Sản phẩm A thì đang rò dần về 0.
+
+Ngoài ra, *điểm gãy* của đường cong rất có giá trị: nếu đường cong gãy mạnh sau D7, có thể vấn đề nằm ở tuần đầu trải nghiệm — bạn cần cải thiện onboarding hoặc activation (xem thêm [Retention](/concepts/retention) và vòng lặp engagement sớm).
+
+<Callout title="Cẩn thận">
+Đừng so sánh retention curve của mình với benchmark ngành một cách mù quáng. Retention 20% là tuyệt vời cho một công cụ B2B chuyên biệt — nhưng tệ cho một mạng xã hội tiêu dùng. Điều quan trọng hơn benchmark là: đường cong của bạn *có phẳng ra không*?
+</Callout>
+
+<Callout title="Nhớ nhé">
+Đường cong retention phẳng là tín hiệu mạnh nhất của product-market fit mà bạn có thể đo được bằng dữ liệu hành vi — không cần survey, không cần NPS. Nếu đường cong của bạn vẫn đang giảm về 0, acquisition thêm chỉ đang đổ nước vào xô thủng.
+</Callout>
+
+## Đọc thêm
+
+- [Retention Curves: What They Are and How to Read Them — Amplitude](https://amplitude.com/blog/retention-curve) — Amplitude giải thích chi tiết cách đọc và interpret retention curve, bao gồm các pattern phổ biến và ý nghĩa của từng hình dạng.
+- [The Startup Metric You Should Be Tracking — Andrew Chen](https://andrewchen.com/retention-is-king/) — Andrew Chen (a16z) giải thích tại sao retention curve là metric quan trọng nhất để đánh giá product-market fit, với nhiều ví dụ từ consumer apps.
+- [How to Measure Product-Market Fit — First Round Review](https://review.firstround.com/how-to-measure-product-market-fit/) — First Round Capital hướng dẫn dùng retention curve và các signal khác để đánh giá PMF; góc nhìn thực tế từ investor và founder.
+- [Retention Analysis — PostHog Docs](https://posthog.com/docs/product-analytics/retention) — Hướng dẫn thực hành tạo retention chart trong PostHog; hữu ích nếu bạn đang dùng PostHog cho analytics.
+
+## Tự kiểm tra
+
+1. Tại sao "đường cong phẳng" lại là dấu hiệu của product-market fit, còn đường cong giảm về 0 thì không?
+2. Retention curve của sản phẩm bạn gãy mạnh sau D3. Điều đó gợi ý vấn đề nằm ở đâu trong hành trình người dùng?
+3. Sự khác biệt giữa "retention curve" và "cohort retention table" là gì? Cái nào cho bạn thông tin gì mà cái kia không có?

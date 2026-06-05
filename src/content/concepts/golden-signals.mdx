@@ -1,0 +1,56 @@
+---
+id: concept-golden-signals
+title: "Golden Signals (Latency, Traffic, Errors, Saturation)"
+type: "concept"
+aliases: ["golden-signals", "bốn tín hiệu vàng", "latency traffic errors saturation", "google sre four golden signals", "tín hiệu sức khỏe hệ thống", "đo lường hệ thống sre"]
+tags: [observability, monitoring, sre, reliability, metrics, ship-and-operate]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Nếu bác sĩ chỉ có 4 chỉ số để đánh giá sức khỏe bệnh nhân trong phòng cấp cứu, họ sẽ chọn: nhịp tim, huyết áp, nhiệt độ, và độ bão hòa oxy. Bốn con số đó đủ để biết ngay bệnh nhân có đang nguy hiểm không.
+
+Google SRE đặt ra câu hỏi tương tự cho hệ thống phần mềm — và câu trả lời là bốn tín hiệu vàng.
+
+## Là gì
+
+**Golden Signals** là 4 chỉ số mà Google SRE Book xác định là đủ để biết một hệ thống có đang hoạt động tốt hay không. Bốn tín hiệu:
+
+**1. Latency (Độ trễ)** — Request mất bao lâu để được xử lý? Đo cả request thành công lẫn thất bại — và đừng chỉ nhìn vào trung bình, hãy nhìn **p95 và p99** (phần trăm thứ 95 và 99 của các request). Một API trả về trung bình 100ms nhưng p99 là 5 giây nghĩa là 1 trên 100 user đang chờ 5 giây — họ sẽ bỏ.
+
+**2. Traffic (Lưu lượng)** — Hệ thống đang nhận bao nhiêu yêu cầu? Đơn vị phụ thuộc vào loại hệ thống: requests/giây với web API, messages/giây với queue, transactions/giây với database. Traffic là ngữ cảnh để đọc các tín hiệu còn lại — error rate 1% khi có 100 req/s rất khác với khi có 10.000 req/s.
+
+**3. Errors (Lỗi)** — Tỷ lệ request thất bại là bao nhiêu? Bao gồm cả lỗi rõ ràng (HTTP 500) lẫn lỗi ngầm (trả về 200 nhưng nội dung sai, timeout xử lý quá lâu). Error rate tăng đột biến là dấu hiệu sớm nhất của sự cố.
+
+**4. Saturation (Bão hòa)** — Hệ thống đang được dùng bao nhiêu phần trăm tối đa? CPU, memory, disk I/O, connection pool, thread pool. Khi saturation đạt 80-90%, hiệu suất thường bắt đầu suy giảm — latency tăng, error tăng theo. Saturation là tín hiệu dự báo sớm trước khi sự cố xảy ra.
+
+## Ví dụ thật
+
+App thương mại điện tử lúc 11pm. Dashboard cho thấy:
+- Traffic: 800 req/s (bình thường)
+- Latency p95: tăng từ 200ms lên 1.2s (bất thường)
+- Errors: tăng từ 0.2% lên 3% (bất thường)
+- Saturation: database connection pool ở 95% (nguy hiểm)
+
+Bốn tín hiệu chỉ thẳng vào vấn đề: connection pool sắp cạn kiệt khiến query xếp hàng, dẫn đến latency tăng và một số request timeout thành error. Không cần đọc log, không cần trace — bốn con số đã kể câu chuyện đầy đủ.
+
+<Callout title="Cẩn thận">
+Đừng chỉ đo latency trung bình (mean). Trung bình che giấu đuôi phân phối — nơi user khổ nhất. Luôn đo và alert theo **p95 hoặc p99**. Một dịch vụ với mean 50ms nhưng p99 là 10 giây đang có vấn đề nghiêm trọng mà mean không lộ ra.
+</Callout>
+
+<Callout title="Nhớ nhé">
+Bốn tín hiệu vàng không thay thế toàn bộ observability — nhưng chúng là điểm khởi đầu tốt nhất. Nếu bạn mới bắt đầu đo lường hệ thống, triển khai bốn tín hiệu này trước. Mọi thứ khác có thể thêm dần.
+</Callout>
+
+## Đọc thêm
+
+- [Monitoring Distributed Systems — Google SRE Book](https://sre.google/sre-book/monitoring-distributed-systems/) — Chương gốc từ Google SRE Book giới thiệu bốn tín hiệu vàng; đây là nguồn tham chiếu chính thức và đáng đọc nguyên văn.
+- [The Four Golden Signals — Google Cloud](https://cloud.google.com/blog/products/devops-sre/sre-fundamentals-slis-slos-and-slas) — Google Cloud giải thích bốn tín hiệu trong ngữ cảnh SLI/SLO; liên kết thực tiễn giữa tín hiệu và mục tiêu dịch vụ.
+- [USE Method and RED Method — Brendan Gregg](https://www.brendangregg.com/usemethod.html) — Phương pháp USE (Utilization, Saturation, Errors) của Brendan Gregg; bổ sung góc nhìn về saturation và resource bottleneck.
+- [Four Golden Signals in Prometheus — Robust Perception](https://www.robustperception.io/monitoring-batch-jobs-in-python/) — Hướng dẫn triển khai bốn tín hiệu vàng bằng Prometheus và Grafana; ví dụ code thực tế.
+
+## Tự kiểm tra
+
+1. Tại sao latency trung bình (mean) có thể gây hiểu nhầm về trải nghiệm thực tế của người dùng? Bạn nên dùng chỉ số gì thay thế?
+2. Một hệ thống có saturation CPU ở mức 40% nhưng latency p99 đột ngột tăng gấp 5 lần. Bạn sẽ kiểm tra tín hiệu nào tiếp theo và tại sao?
+3. Trong bốn tín hiệu vàng, tín hiệu nào có tính dự báo (predictive) — nghĩa là cảnh báo bạn trước khi sự cố xảy ra? Giải thích tại sao.

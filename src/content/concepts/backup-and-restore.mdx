@@ -1,0 +1,63 @@
+---
+id: concept-backup-and-restore
+title: "Backup & Restore"
+type: "concept"
+aliases: ["backup and restore", "sao lưu và phục hồi dữ liệu", "database backup strategy", "3-2-1 backup rule", "kiểm tra restore backup", "tần suất backup"]
+tags: [reliability, backup, restore, data-protection, devops, ship-and-operate, disaster-recovery]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Bạn có bao giờ backup dữ liệu xong rồi cảm thấy an tâm chưa? Đó là cảm giác nguy hiểm nhất trong nghề vận hành hệ thống.
+
+Vì backup không có nghĩa lý gì nếu bạn chưa bao giờ test restore từ nó.
+
+## Là gì
+
+**Backup** là bản sao dữ liệu được lưu ở chỗ khác để phục hồi khi dữ liệu gốc bị mất hoặc hỏng. Nhưng backup chỉ có giá trị khi bạn có thể **restore** từ nó thành công — và biết restore mất bao lâu.
+
+**3-2-1 Rule** là quy tắc cơ bản nhất:
+- **3** bản sao dữ liệu (bản gốc + 2 backup)
+- **2** loại phương tiện lưu trữ khác nhau (ví dụ: disk và cloud)
+- **1** bản được lưu off-site (không cùng vị trí địa lý với bản gốc)
+
+Quy tắc này bảo vệ bạn khỏi hầu hết kịch bản mất dữ liệu: ổ cứng hỏng, server bị hack, trung tâm dữ liệu cháy.
+
+**Tần suất backup** phụ thuộc vào câu hỏi: *"Mất dữ liệu của bao nhiêu giờ/ngày là chấp nhận được?"*
+
+- Dữ liệu thay đổi liên tục (transactions, orders): backup mỗi giờ hoặc real-time replication
+- Dữ liệu thay đổi hàng ngày (user profiles, settings): backup hàng ngày là đủ
+- Dữ liệu ít thay đổi (static content, configs): backup hàng tuần
+
+## Ví dụ thật
+
+App SaaS nhỏ với Postgres trên Railway. Chiến lược backup đơn giản nhưng đủ:
+
+**Cấp 1 — Automatic backup của Railway:** Mỗi ngày Railway tự backup. Nhưng backup này nằm cùng provider — nếu Railway có vấn đề, backup cũng bị ảnh hưởng.
+
+**Cấp 2 — Backup ra ngoài:** Thêm cron job chạy hàng ngày, dump database và upload lên S3 (hoặc Backblaze B2 — rẻ hơn nhiều). Đây là bản off-site.
+
+**Test restore mỗi tháng:** Download file backup mới nhất, restore vào một Postgres instance khác (có thể là local), kiểm tra dữ liệu có đúng không. Ghi lại thời gian mất bao lâu — đó là RTO thực tế của bạn (xem thêm [concept-disaster-recovery](/concepts/disaster-recovery)).
+
+<Callout title="Cẩn thận">
+Backup không được mã hóa là rủi ro bảo mật nghiêm trọng. File dump database chứa toàn bộ dữ liệu user — email, password hash, thông tin cá nhân. Luôn mã hóa backup trước khi upload lên cloud storage, đặc biệt là dữ liệu nhạy cảm. Dùng `gpg` hoặc tính năng encryption của S3.
+</Callout>
+
+Một điều ít ai nhớ: **xóa backup cũ**. Nếu backup tích lũy vô tận, chi phí storage tăng không kiểm soát. Đặt retention policy rõ ràng: giữ 7 bản daily, 4 bản weekly, 12 bản monthly.
+
+<Callout title="Nhớ nhé">
+Backup chưa được test restore = chưa có backup. Lên lịch test restore định kỳ, ít nhất mỗi tháng. Dùng 3-2-1 rule làm checklist cơ bản. Và nhớ: backup giải quyết "dữ liệu bị mất" — không giải quyết "hệ thống bị down". Đó là việc của disaster recovery plan.
+</Callout>
+
+## Đọc thêm
+
+- [The 3-2-1 Backup Strategy — Backblaze](https://www.backblaze.com/blog/the-3-2-1-backup-strategy/) — Backblaze giải thích chi tiết 3-2-1 rule với các ví dụ thực tế; họ là nhà cung cấp cloud backup nên giải thích rất thực dụng.
+- [PostgreSQL Backup and Restore — Official Docs](https://www.postgresql.org/docs/current/backup.html) — Tài liệu chính thức của PostgreSQL về các phương pháp backup; từ pg_dump đơn giản đến WAL archiving cho continuous backup.
+- [How to Test Your Backups — Linode Docs](https://www.linode.com/docs/guides/backing-up-your-data/) — Hướng dẫn thực hành backup và restore trên Linux; có phần quan trọng về cách test restore để đảm bảo backup thật sự dùng được.
+- [Automating PostgreSQL Backups to S3 — Digital Ocean](https://www.digitalocean.com/community/tutorials/how-to-backup-postgresql-databases-on-an-ubuntu-vps) — Tutorial từng bước về tự động hóa backup Postgres lên cloud storage; áp dụng được cho hầu hết VPS/cloud setup.
+
+## Tự kiểm tra
+
+1. Tại sao backup cùng provider với dữ liệu gốc vẫn có thể là rủi ro? 3-2-1 rule giải quyết vấn đề này như thế nào?
+2. Bạn có app với database thay đổi dữ liệu user mỗi giờ. Tần suất backup hợp lý là bao nhiêu? Căn cứ vào đâu để đưa ra con số đó?
+3. "Mình backup hàng ngày" — điều gì còn thiếu trong tuyên bố này để nó thật sự có giá trị?
