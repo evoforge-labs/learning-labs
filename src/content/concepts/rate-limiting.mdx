@@ -1,0 +1,68 @@
+---
+id: concept-rate-limiting
+title: "Rate Limiting"
+type: "concept"
+aliases: ["rate limiting", "rate limit", "giới hạn tốc độ", "throttling", "429", "token bucket"]
+tags: [system-design, rate-limiting, api, reliability, availability, api-design]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Một nhà hàng có 10 đầu bếp. Nếu 500 khách kéo vào cùng lúc và ai cũng gọi món cùng một lúc, nhà bếp sụp. Giải pháp? Lễ tân chỉ nhận tối đa 50 khách cùng lúc. Người đến sau chờ hoặc quay lại sau.
+
+Đó là **rate limiting** — bảo vệ hệ thống bằng cách giới hạn số lượng request được chấp nhận trong một khoảng thời gian.
+
+## Là gì
+
+**Rate Limiting** là cơ chế kiểm soát tần suất request từ một client (theo IP, API key, user ID...). Khi client vượt ngưỡng cho phép, server trả về `HTTP 429 Too Many Requests` và thường kèm header `Retry-After` cho biết bao lâu nữa có thể thử lại.
+
+**Một số thuật toán phổ biến**:
+
+- **Fixed Window**: Đếm request trong cửa sổ thời gian cố định (ví dụ: 100 req/phút). Đơn giản nhưng có thể bị burst ở biên giới cửa sổ.
+- **Sliding Window**: Cửa sổ trượt liên tục, chính xác hơn.
+- **Token Bucket**: Bucket có tối đa N token. Mỗi request tiêu 1 token. Token tự nạp lại theo thời gian. Cho phép burst ngắn hạn — gần với hành vi thực tế nhất.
+
+**Token Bucket** là intuition dễ nhớ nhất: bạn có 60 token, nạp 1 token/giây. Bạn có thể gửi 60 request cùng lúc (dùng hết token), rồi phải chờ token nạp lại. Hệ thống vẫn hoạt động mượt — không chặn hoàn toàn, chỉ kiểm soát tốc độ.
+
+## Ví dụ thật
+
+GitHub API: 60 request/giờ với token không xác thực, 5,000 request/giờ với token xác thực. Stripe API: 100 read request/giây, 100 write/giây. Khi vượt: `429 Too Many Requests`.
+
+Response điển hình:
+
+```http
+HTTP/1.1 429 Too Many Requests
+Retry-After: 60
+X-RateLimit-Limit: 100
+X-RateLimit-Remaining: 0
+X-RateLimit-Reset: 1718000460
+
+{ "error": "rate_limit_exceeded", "message": "Too many requests. Retry after 60 seconds." }
+```
+
+Client tốt sẽ đọc `Retry-After` và wait trước khi thử lại — thay vì hammer server liên tục.
+
+<Callout title="Góc kỹ thuật">
+Rate limiting theo IP dễ bị lách (proxy, VPN). Rate limiting theo API key hoặc user ID chính xác hơn nhưng cần authentication trước. Trong thực tế, nhiều hệ thống kết hợp cả hai: limit per IP cho unauthenticated, limit per key cho authenticated.
+</Callout>
+
+<Callout title="Nhớ nhé">
+Rate limiting không phải để phạt user — mà để **bảo vệ hệ thống cho mọi người**. Một client gửi 10,000 request/giây sẽ làm chậm hoặc crash hệ thống cho tất cả client khác. Rate limit giữ sân chơi công bằng.
+</Callout>
+
+**Khi nào cần**: Bất kỳ API public nào, bảo vệ endpoint tốn kém (search, export, AI generation), ngăn abuse và DoS đơn giản. Xem liên hệ với [concept-api-design](/concepts/api-design) — rate limiting là một phần của contract API tốt.
+
+**Khi nào chưa cần**: API nội bộ giữa các service bạn kiểm soát hoàn toàn, môi trường prototype/staging.
+
+## Đọc thêm
+
+- [HTTP 429 Too Many Requests — MDN](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/429) — Định nghĩa chính thức của status code 429, cách dùng `Retry-After` header, ví dụ response.
+- [Retry-After Header — MDN](https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Retry-After) — Cách client đọc và xử lý `Retry-After` để retry đúng cách sau khi bị rate limit.
+- [What is Rate Limiting? — Cloudflare Learning](https://www.cloudflare.com/learning/bots/what-is-rate-limiting/) — Giải thích rate limiting từ góc độ bảo mật và hiệu suất; các thuật toán phổ biến.
+- [System Design Primer](https://github.com/donnemartin/system-design-primer) — Tổng quan về rate limiting trong bối cảnh system design, bao gồm các pattern phòng thủ khác.
+
+## Tự kiểm tra
+
+1. API của bạn cho phép 100 req/phút. User A gửi 60 req trong giây đầu tiên, rồi 50 req trong giây tiếp theo. Với Fixed Window algorithm, điều gì xảy ra? Token Bucket xử lý khác thế nào?
+2. Client nhận `429 Too Many Requests` và ngay lập tức retry liên tục — không đọc `Retry-After`. Điều này gây ra vấn đề gì cho server? Bạn làm gì để buộc client phải backoff?
+3. Bạn có endpoint `POST /ai/generate` rất tốn CPU. Rate limit nào hợp lý hơn: theo IP hay theo user ID đã đăng nhập? Tại sao?

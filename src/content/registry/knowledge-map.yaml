@@ -57,3 +57,210 @@ edges:
   - source: concept-success-metric
     target: concept-north-star-metric
     rel: specializes
+
+  # --- System Design for Builders: Module 1 — Foundations ---
+  # M1 theory progression
+  - source: concept-system-design
+    target: concept-functional-vs-nonfunctional
+    rel: leads-to
+  - source: concept-functional-vs-nonfunctional
+    target: concept-back-of-envelope-estimation
+    rel: leads-to
+  - source: concept-back-of-envelope-estimation
+    target: concept-latency-vs-throughput
+    rel: leads-to
+  # M1 -> M2
+  - source: concept-latency-vs-throughput
+    target: concept-data-modeling
+    rel: leads-to
+  # Lesson + exercise wiring
+  - source: concept-system-design
+    target: lesson-sysd-001
+    rel: supports
+  - source: concept-functional-vs-nonfunctional
+    target: lesson-sysd-001
+    rel: supports
+  - source: concept-back-of-envelope-estimation
+    target: lesson-sysd-001
+    rel: supports
+  - source: concept-latency-vs-throughput
+    target: lesson-sysd-001
+    rel: supports
+  - source: concept-back-of-envelope-estimation
+    target: exercise-sysd-001
+    rel: trains
+  - source: concept-latency-vs-throughput
+    target: exercise-sysd-001
+    rel: trains
+  - source: concept-functional-vs-nonfunctional
+    target: exercise-sysd-001
+    rel: trains
+  - source: rubric-system-design
+    target: exercise-sysd-001
+    rel: evaluates
+
+  # --- System Design: Module 2 — Data ---
+  - source: concept-data-modeling
+    target: concept-sql-vs-nosql
+    rel: leads-to
+  - source: concept-sql-vs-nosql
+    target: concept-normalization-denormalization
+    rel: leads-to
+  - source: concept-normalization-denormalization
+    target: concept-database-indexing
+    rel: leads-to
+  - source: concept-database-indexing
+    target: concept-acid-transactions
+    rel: leads-to
+  # M2 -> M3
+  - source: concept-acid-transactions
+    target: concept-vertical-vs-horizontal-scaling
+    rel: leads-to
+  - source: concept-data-modeling
+    target: lesson-sysd-002
+    rel: supports
+  - source: concept-sql-vs-nosql
+    target: lesson-sysd-002
+    rel: supports
+  - source: concept-data-modeling
+    target: exercise-sysd-002
+    rel: trains
+  - source: concept-sql-vs-nosql
+    target: exercise-sysd-002
+    rel: trains
+  - source: concept-database-indexing
+    target: exercise-sysd-002
+    rel: trains
+  - source: rubric-system-design
+    target: exercise-sysd-002
+    rel: evaluates
+
+  # --- System Design: Module 3 — Scaling ---
+  - source: concept-vertical-vs-horizontal-scaling
+    target: concept-load-balancing
+    rel: leads-to
+  - source: concept-load-balancing
+    target: concept-caching
+    rel: leads-to
+  - source: concept-caching
+    target: concept-cdn
+    rel: leads-to
+  - source: concept-cdn
+    target: concept-database-replication
+    rel: leads-to
+  - source: concept-database-replication
+    target: concept-sharding
+    rel: leads-to
+  # M3 -> M4
+  - source: concept-sharding
+    target: concept-api-design
+    rel: leads-to
+  - source: concept-caching
+    target: lesson-sysd-003
+    rel: supports
+  - source: concept-load-balancing
+    target: lesson-sysd-003
+    rel: supports
+  - source: concept-caching
+    target: exercise-sysd-003
+    rel: trains
+  - source: concept-load-balancing
+    target: exercise-sysd-003
+    rel: trains
+  - source: concept-database-replication
+    target: exercise-sysd-003
+    rel: trains
+  - source: rubric-system-design
+    target: exercise-sysd-003
+    rel: evaluates
+  # cross-link: replication lag explains eventual consistency
+  - source: concept-database-replication
+    target: concept-consistency-models
+    rel: supports
+
+  # --- System Design: Module 4 — Communication & Reliability ---
+  - source: concept-api-design
+    target: concept-sync-vs-async
+    rel: leads-to
+  - source: concept-sync-vs-async
+    target: concept-message-queue
+    rel: leads-to
+  - source: concept-message-queue
+    target: concept-webhooks
+    rel: leads-to
+  - source: concept-webhooks
+    target: concept-idempotency
+    rel: leads-to
+  - source: concept-idempotency
+    target: concept-rate-limiting
+    rel: leads-to
+  # M4 -> M5
+  - source: concept-rate-limiting
+    target: concept-monolith-vs-microservices
+    rel: leads-to
+  - source: concept-message-queue
+    target: lesson-sysd-004
+    rel: supports
+  - source: concept-idempotency
+    target: lesson-sysd-004
+    rel: supports
+  - source: concept-message-queue
+    target: exercise-sysd-004
+    rel: trains
+  - source: concept-idempotency
+    target: exercise-sysd-004
+    rel: trains
+  - source: concept-webhooks
+    target: exercise-sysd-004
+    rel: trains
+  - source: rubric-system-design
+    target: exercise-sysd-004
+    rel: evaluates
+
+  # --- System Design: Module 5 — Trade-offs & Synthesis ---
+  - source: concept-monolith-vs-microservices
+    target: concept-cap-theorem
+    rel: leads-to
+  - source: concept-cap-theorem
+    target: concept-consistency-models
+    rel: leads-to
+  - source: concept-consistency-models
+    target: concept-single-point-of-failure
+    rel: leads-to
+  - source: concept-single-point-of-failure
+    target: concept-observability
+    rel: leads-to
+  - source: concept-cap-theorem
+    target: lesson-sysd-005
+    rel: supports
+  - source: concept-consistency-models
+    target: lesson-sysd-005
+    rel: supports
+  - source: concept-cap-theorem
+    target: exercise-sysd-005
+    rel: trains
+  - source: concept-consistency-models
+    target: exercise-sysd-005
+    rel: trains
+  - source: concept-monolith-vs-microservices
+    target: exercise-sysd-005
+    rel: trains
+  - source: rubric-system-design
+    target: exercise-sysd-005
+    rel: evaluates
+  # capstone draws on the whole track
+  - source: concept-system-design
+    target: exercise-sysd-006
+    rel: trains
+  - source: concept-data-modeling
+    target: exercise-sysd-006
+    rel: trains
+  - source: concept-caching
+    target: exercise-sysd-006
+    rel: trains
+  - source: concept-cap-theorem
+    target: exercise-sysd-006
+    rel: trains
+  - source: rubric-system-design
+    target: exercise-sysd-006
+    rel: evaluates

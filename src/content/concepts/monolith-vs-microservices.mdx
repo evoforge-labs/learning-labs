@@ -1,0 +1,56 @@
+---
+id: concept-monolith-vs-microservices
+title: "Monolith vs Microservices"
+type: "concept"
+aliases: ["monolith", "microservices", "kiến trúc nguyên khối", "kiến trúc vi dịch vụ", "tách service"]
+tags: [system-design, architecture, monolith, microservices, trade-off, solo-builder, scalability]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Hãy nghĩ đến một nhà hàng nhỏ. Ban đầu, một đầu bếp vừa nấu, vừa phục vụ, vừa rửa bát — tất cả trong một căn bếp. Hoàn toàn ổn khi chỉ có 10 bàn. Rồi quán nổi lên, bạn thuê thêm người, tách bếp riêng, quầy pha chế riêng, nhân viên phục vụ riêng. Mỗi bộ phận độc lập — nhưng quản lý phức tạp hơn nhiều.
+
+Monolith vs Microservices là cuộc tranh luận kiến trúc phần mềm phổ biến nhất — và thường bị trả lời sai nhất.
+
+## Là gì
+
+**Monolith** là một ứng dụng trong đó toàn bộ code chạy như *một đơn vị triển khai duy nhất*. API, logic nghiệp vụ, truy cập database — tất cả trong một codebase, deploy cùng lúc.
+
+**Microservices** là cách chia ứng dụng thành *nhiều service nhỏ độc lập*, mỗi service chạy tiến trình riêng, giao tiếp qua mạng (HTTP, gRPC, message queue). Mỗi service có thể deploy và scale riêng lẻ.
+
+## Ví dụ thật
+
+Một builder xây app quản lý công việc. Ngày đầu họ build monolith: một Rails app, một Postgres database, deploy lên một máy chủ. Chạy ngon.
+
+Sáu tháng sau có 10.000 user, họ nghe nói Netflix dùng microservices, quyết định tách ra: service Auth, service Task, service Notification... Kết quả: mỗi deploy mất 2 giờ, bug khó trace vì lỗi xảy ra ở ranh giới giữa các service, và team chỉ có... 2 người.
+
+Netflix có hàng trăm kỹ sư để vận hành microservices. Bạn thì không.
+
+<Callout title="Cẩn thận">
+Microservices giải quyết vấn đề của **tổ chức lớn** — teams độc lập, deploy riêng lẻ, scale từng phần. Với solo builder hoặc team nhỏ, cái giá phải trả (network latency, distributed tracing, orchestration, service discovery) thường lớn hơn lợi ích. Đừng trả cái giá đó khi chưa có vấn đề cần giải.
+</Callout>
+
+**Nguyên tắc thực tế:**
+
+- **Bắt đầu monolith** — một codebase, một database, một nơi để debug. Đơn giản là một ưu điểm.
+- **Tách service khi có lý do cụ thể**: một phần cần scale khác phần còn lại (ví dụ: video processing tách khỏi API), hoặc team đủ lớn để làm chủ từng service.
+- **Modular monolith** là vùng đất giữa — code chia module rõ ràng bên trong monolith, dễ tách sau nếu cần.
+
+Quan hệ giữa quyết định này và các ràng buộc khác của hệ thống: xem [concept-cap-theorem](/concepts/cap-theorem) để hiểu tại sao tách service lại làm phức tạp hóa vấn đề consistency.
+
+<Callout title="Nhớ nhé">
+Không có kiến trúc "đúng". Chỉ có kiến trúc phù hợp với quy mô, team, và vấn đề bạn đang có *hôm nay*. Bắt đầu đơn giản. Tách ra khi có bằng chứng cần tách.
+</Callout>
+
+## Đọc thêm
+
+- [Monolith First — Martin Fowler](https://martinfowler.com/bliki/MonolithFirst.html) — Fowler lập luận tại sao hầu hết dự án nên bắt đầu bằng monolith trước rồi mới tách microservices; bài kinh điển, ngắn và đáng đọc kỹ.
+- [Microservices — Martin Fowler & James Lewis](https://martinfowler.com/articles/microservices.html) — Định nghĩa gốc về microservices từ người đặt tên cho pattern này; giúp bạn hiểu microservices thật sự là gì trước khi quyết định có nên dùng không.
+- [System Design Primer — GitHub](https://github.com/donnemartin/system-design-primer) — Kho tổng hợp kiến thức system design thực chiến, bao gồm so sánh kiến trúc, scalability patterns, và rất nhiều case study cụ thể.
+- [CAP Twelve Years Later — InfoQ](https://www.infoq.com/articles/cap-twelve-years-later-how-the-rules-have-changed/) — Eric Brewer (cha đẻ CAP theorem) giải thích tại sao phân tán hệ thống (microservices) buộc bạn phải đối mặt với trade-off consistency vs availability.
+
+## Tự kiểm tra
+
+1. Tại sao "Netflix dùng microservices" không phải là lý do đủ để bạn dùng microservices?
+2. Một startup 3 người với 5.000 user nên chọn monolith hay microservices? Lý do?
+3. "Modular monolith" khác gì so với monolith thông thường và khác gì so với microservices?

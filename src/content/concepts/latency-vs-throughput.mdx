@@ -1,0 +1,55 @@
+---
+id: concept-latency-vs-throughput
+title: "Độ trễ vs Thông lượng"
+type: "concept"
+aliases: ["latency", "throughput", "độ trễ", "thông lượng", "latency vs throughput", "response time vs requests per second"]
+tags: [system-design, latency, throughput, scalability, performance, trade-off, architecture]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Hình dung một con đường cao tốc. **Độ trễ** là thời gian một chiếc xe đi từ điểm A đến điểm B. **Thông lượng** là tổng số xe qua được trong một giờ.
+
+Bạn có thể mở rộng đường (thêm làn) để nhiều xe đi qua hơn — nhưng mỗi xe không nhất thiết đến nhanh hơn. Và nếu tất cả xe đều lao nhanh hết tốc độ, cũng không chắc tổng lưu lượng tăng lên.
+
+Đây chính xác là quan hệ giữa latency và throughput trong hệ thống phần mềm.
+
+## Là gì
+
+**Latency** (độ trễ) là thời gian để xử lý *một* request, từ khi gửi đến khi nhận được response. Đo bằng millisecond (ms).
+
+**Throughput** (thông lượng) là số lượng request hệ thống xử lý được *mỗi giây* (RPS — requests per second, hoặc QPS — queries per second).
+
+Hai chỉ số này đo hai thứ khác nhau: latency đo *tốc độ cho từng user*, throughput đo *sức chứa của hệ thống*.
+
+## Ví dụ thật
+
+API tìm kiếm sản phẩm trong app thương mại. Hai kịch bản:
+
+**Kịch bản A** — Latency thấp, throughput thấp: Mỗi request xử lý ngay lập tức, response trong 50ms. Nhưng server chỉ xử lý được 100 request/giây — vào giờ sale, hàng nghìn người cùng tìm kiếm, queue đầy, người dùng timeout.
+
+**Kịch bản B** — Throughput cao, latency tăng: Bạn batch các search request, xử lý 1.000/giây. Nhưng mỗi request phải chờ batch fill đủ — latency từ 50ms tăng lên 300ms. Người dùng cảm thấy chậm dù server khỏe.
+
+Không có kịch bản nào tốt hoàn toàn — đây là đánh đổi (trade-off) cần cân nhắc theo mục tiêu sản phẩm.
+
+**Nguyên tắc thực tế:** Latency quan trọng hơn với real-time interaction (chat, search, payment). Throughput quan trọng hơn với batch job, data pipeline, hay file upload.
+
+<Callout title="Cẩn thận">
+Tối ưu latency và throughput đồng thời thường mâu thuẫn nhau. Thêm caching giảm latency nhưng tốn RAM (giới hạn throughput). Batching tăng throughput nhưng tăng latency. Hãy biết *mục tiêu của bạn là gì* trước khi tối ưu — tối ưu sai hướng lãng phí công sức và có khi còn làm hệ thống tệ hơn.
+</Callout>
+
+<Callout title="Nhớ nhé">
+Latency = một xe đi bao lâu. Throughput = bao nhiêu xe đi qua mỗi giờ. Tối ưu một cái thường ảnh hưởng cái kia — hãy biết cái nào quan trọng hơn với người dùng của bạn.
+</Callout>
+
+## Đọc thêm
+
+- [Latency vs Throughput — cs.fyi](https://cs.fyi/guide/latency-vs-throughput) — Bài giải thích cô đọng, rõ ràng về hai khái niệm, kèm ví dụ web server và database; điểm khởi đầu tốt.
+- [Understanding Throughput vs Latency — System Design School](https://systemdesignschool.io/blog/throughput-vs-latency) — Bao gồm cả công cụ đo, kịch bản thực tế (gaming vs backup), và câu hỏi thường gặp về cách cải thiện cả hai cùng lúc.
+- [Difference Between Latency and Throughput — System Design Handbook](https://www.systemdesignhandbook.com/blog/difference-between-latency-and-throughput-in-system-design/) — Giải thích thêm về bottleneck, và cách xác định cái nào đang là vấn đề trong hệ thống của bạn.
+
+## Tự kiểm tra
+
+1. App chat real-time và hệ thống export báo cáo hàng đêm: cái nào cần ưu tiên latency, cái nào cần ưu tiên throughput? Tại sao?
+2. Hệ thống xử lý 200 request/giây, mỗi request mất 5ms. Nếu tải tăng lên 400 request/giây, latency có chắc giữ nguyên 5ms không? Điều gì quyết định điều đó?
+3. "Tối ưu throughput có thể làm tăng latency" — giải thích tại sao bằng một ví dụ cụ thể.

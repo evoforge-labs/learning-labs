@@ -1,0 +1,61 @@
+---
+id: concept-observability
+title: "Observability (Logs, Metrics, Traces)"
+type: "concept"
+aliases: ["observability", "quan sát hệ thống", "logs metrics traces", "monitoring", "giám sát hệ thống", "ba trụ cột quan sát"]
+tags: [system-design, observability, monitoring, reliability, devops, logs, metrics, traces]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Bạn lái xe và đèn cảnh báo động cơ bật sáng. Bạn đưa vào gara. Thợ cắm máy chẩn đoán vào — nó đọc mã lỗi, xem lịch sử sự kiện, kiểm tra từng cảm biến. Năm phút sau thợ biết chính xác vấn đề ở đâu. Không cần tháo toàn bộ xe ra.
+
+Đó là observability: khả năng hiểu *tại sao* hệ thống đang hoạt động như vậy, chỉ bằng cách nhìn từ ngoài vào qua dữ liệu nó phát ra.
+
+## Là gì
+
+**Observability** là khả năng suy ra trạng thái bên trong của hệ thống từ những gì nó *xuất ra*. Không phải "hệ thống có đang chạy không?" — mà là "tại sao nó chạy chậm, tại sao user X bị lỗi, tại sao request này mất 3 giây?"
+
+Ba trụ cột của observability:
+
+**Logs (Nhật ký)** — bản ghi các sự kiện xảy ra theo thứ tự thời gian. *"Lúc 14:32:01, user #1234 gọi /checkout, gặp lỗi NullPointerException ở dòng 87."* Logs giúp debug sự kiện cụ thể. Nhược điểm: lượng lớn, khó tổng hợp.
+
+**Metrics (Chỉ số)** — con số được đo theo thời gian: CPU usage, request/giây, error rate, latency p99. Metrics giúp bạn thấy *xu hướng* và *ngưỡng bất thường*. Ví dụ: error rate tăng đột biến từ 0.1% lên 5% lúc 14:30.
+
+**Traces (Dấu vết)** — theo dõi một request *xuyên suốt* qua các service. Trong microservices, một request có thể đi qua 5-6 service; trace cho bạn thấy nó mất bao lâu ở mỗi bước. Ví dụ: request checkout mất 2.8 giây, trong đó 2.5 giây là do gọi service Payment.
+
+## Ví dụ thật
+
+App thanh toán đột nhiên có nhiều user phàn nàn "thanh toán thất bại". Không có observability: bạn không biết bắt đầu điều tra từ đâu — app server? database? cổng thanh toán? Bạn bắt đầu đoán mò, SSH vào từng server, đọc log thủ công.
+
+Với observability đầy đủ: metric dashboard cho thấy error rate tăng lúc 14:30, đúng lúc một deploy mới lên. Trace cho thấy request checkout bị timeout khi gọi service Payment. Log tại service Payment cho thấy connection pool bị cạn kiệt. Nguyên nhân: deploy mới có bug làm connection không được đóng đúng cách. Thời gian điều tra: 8 phút thay vì 2 giờ.
+
+<Callout title="Cẩn thận">
+Đừng nhầm **monitoring** với **observability**. Monitoring là bạn đặt câu hỏi trước ("CPU > 80% thì alert"), rồi hệ thống kiểm tra. Observability cho phép bạn đặt câu hỏi *sau* khi sự cố xảy ra, kể cả những câu hỏi bạn chưa nghĩ đến trước. Monitoring cần thiết; observability là bước tiếp theo.
+</Callout>
+
+**Bắt đầu từ đâu với solo builder?** Không cần ngay một hệ thống observability hoành tráng. Ưu tiên theo thứ tự:
+1. **Logs tập trung** — gửi tất cả log về một nơi (Cloudwatch, Logtail, Papertrail). Miễn phí đủ dùng.
+2. **Error tracking** — Sentry hoặc tương đương. Nhận alert ngay khi có exception, kèm stack trace.
+3. **Uptime monitoring** — Better Uptime, UptimeRobot (miễn phí). Ping app mỗi phút, alert khi down.
+4. **Metrics cơ bản** — CPU, memory, request count từ provider (Railway, Fly.io, Render đều có sẵn).
+5. Traces và APM khi hệ thống đủ phức tạp để cần.
+
+Observability không phải chỉ dành cho hệ thống lớn. Bạn không thể sửa những gì bạn không nhìn thấy.
+
+<Callout title="Nhớ nhé">
+Ba trụ cột: Logs (chuyện gì đã xảy ra), Metrics (xu hướng theo thời gian), Traces (request đi đâu mất bao lâu). Triển khai lần lượt — logs trước, error tracking ngay sau. Đừng chờ đến khi có sự cố mới nghĩ đến observability.
+</Callout>
+
+## Đọc thêm
+
+- [Observability Primer — OpenTelemetry](https://opentelemetry.io/docs/concepts/observability-primer/) — Tài liệu chính thức của OpenTelemetry giải thích ba trụ cột logs/metrics/traces; chuẩn mực công nghiệp, trung lập với vendor.
+- [Monitoring Distributed Systems — Google SRE Book](https://sre.google/sre-book/monitoring-distributed-systems/) — Chương từ Google SRE Book về bốn tín hiệu vàng (latency, traffic, errors, saturation) và triết lý chỉ alert khi cần hành động; bài đọc định hình tư duy.
+- [What is Observability — New Relic](https://newrelic.com/blog/best-practices/what-is-observability) — Giải thích thực tế sự khác biệt giữa monitoring và observability, kèm ví dụ tình huống cụ thể; phù hợp cho người mới bắt đầu.
+- [What Is Observability? — Datadog](https://www.datadoghq.com/three-pillars-of-observability/) — Datadog giải thích ba trụ cột theo góc nhìn thực hành; hữu ích vì trình bày cả challenges khi triển khai thực tế.
+
+## Tự kiểm tra
+
+1. Sự khác biệt giữa "monitoring" và "observability" là gì? Cho ví dụ tình huống mà monitoring đơn thuần là không đủ.
+2. Nếu chỉ được chọn *một* trong ba trụ cột để triển khai trước, bạn nên chọn gì và tại sao?
+3. Một hệ thống không có observability vẫn chạy ổn — vậy vấn đề nằm ở đâu?

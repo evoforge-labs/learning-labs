@@ -1,0 +1,71 @@
+---
+id: lesson-sysd-003
+title: "Khi hệ thống đông người dùng"
+type: "lesson"
+track: system-design-for-builders
+module: scaling
+level: intermediate
+tags: [system-design, scalability, architecture, load-balancing, caching, cdn, replication, sharding, trade-off, devops, solo-builder]
+prerequisites: [concept-vertical-vs-horizontal-scaling, concept-load-balancing, concept-caching, concept-cdn, concept-database-replication, concept-sharding]
+related: [exercise-sysd-003, rubric-system-design]
+status: published
+---
+import Callout from '../../../components/content/Callout.astro';
+
+App của bạn hoạt động tốt với 100 user. Rồi bạn được lên báo, traffic tăng x10 trong một ngày. Server quá tải, trang tải chậm, database timeout. Bạn phải làm gì?
+
+Câu trả lời không phải "thêm tất cả mọi thứ ngay lập tức". Scaling là một hành trình có thứ tự — từ bước rẻ nhất, ít rủi ro nhất, đến bước mạnh nhất nhưng tốn kém nhất. Làm đúng thứ tự, bạn tiết kiệm được rất nhiều thời gian và tiền.
+
+## Nguyên tắc cốt lõi: chỉ scale khi có bằng chứng
+
+Trước khi làm bất cứ điều gì, hãy đo lường. CPU đang cao? RAM đầy? Database query chậm? Mỗi triệu chứng có giải pháp khác nhau. Scale không có bằng chứng là lãng phí.
+
+Công cụ cần có trước: APM (Application Performance Monitoring) cơ bản — ít nhất là response time trung bình, error rate, và database slow query log.
+
+## Bước 1 — Scale dọc: nâng cấp máy (rẻ, nhanh, không cần thay code)
+
+[Scale dọc](/concepts/vertical-vs-horizontal-scaling) là bước đầu tiên vì nó đơn giản nhất: thay instance $20 bằng instance $80, lập tức có thêm CPU và RAM. Không cần thay đổi kiến trúc, không cần deploy lại.
+
+Giới hạn: máy có trần tối đa. Và một máy duy nhất là điểm chết — nếu nó chết, app chết.
+
+Dùng khi: bạn vừa thấy dấu hiệu quá tải đầu tiên và cần phản ứng nhanh.
+
+## Bước 2 — Caching: đừng làm lại những gì đã làm
+
+[Caching](/concepts/caching) thường là cải tiến có ROI cao nhất. Nếu 80% request của bạn đang đọc cùng dữ liệu (trang chủ, danh sách sản phẩm, profile user...), caching giảm 80% tải database mà không cần thêm server nào.
+
+Chiến lược: thêm Redis, cache kết quả query đắt giá với TTL hợp lý. Bắt đầu từ những endpoint chậm nhất và nhiều lượt gọi nhất.
+
+Đồng thời: đưa file tĩnh lên [CDN](/concepts/cdn). Hình ảnh, CSS, JS không cần về server gốc mỗi lần — đây là cải thiện UX toàn cầu với chi phí gần như bằng không.
+
+## Bước 3 — Scale ngang + Load Balancer: nhiều server, chia tải
+
+Khi một máy không còn đủ dù đã scale dọc và tối ưu cache, đến lúc thêm server thứ hai và đặt [load balancer](/concepts/load-balancing) phía trước.
+
+Load balancer phân phối traffic giữa các server, đồng thời làm health check — server nào chết tự động bị loại khỏi pool.
+
+Điều kiện bắt buộc trước khi scale ngang: app phải **stateless** — session, cart, user state không được lưu trong RAM server. Chuyển ra Redis hoặc database. Nếu chưa làm điều này, scale ngang sẽ phá vỡ trải nghiệm người dùng.
+
+<Callout title="Mẹo">
+Scale ngang không nhất thiết phải scale toàn bộ app. Bạn có thể chỉ scale service đang bị bottleneck — ví dụ API server chạy 3 instance trong khi background worker vẫn chạy 1.
+</Callout>
+
+## Bước 4 — Database Replication: đọc nhiều thì chia đọc ra
+
+Sau khi app tier đã scale ngang, bottleneck thường dịch chuyển xuống database. [Replication](/concepts/database-replication) giải quyết phần đọc: thêm read replica, route tất cả SELECT query sang đó, primary chỉ chịu ghi.
+
+Hầu hết web app đọc nhiều hơn ghi gấp 10 lần — read replica thường đủ để giải quyết database bottleneck trong một thời gian dài.
+
+Lưu ý replication lag: với dữ liệu cần consistency cao (số dư, tồn kho), vẫn đọc từ primary.
+
+## Bước 5 — Sharding: khi dữ liệu không còn vừa trong một database
+
+[Sharding](/concepts/sharding) là bước cuối cùng, chỉ cần thiết khi bạn đã cạn kiệt các bước trước. Dữ liệu quá lớn để lưu trong một database — dù đã có replica — thì mới cần chia ra nhiều shard.
+
+Sharding thêm độ phức tạp vận hành đáng kể: cross-shard query khó, rebalancing rủi ro, debug phức tạp hơn. Đừng làm sớm.
+
+<Callout title="Nhớ nhé">
+Thứ tự chuẩn: vertical scale → caching + CDN → load balancing + horizontal scale → read replica → sharding. Mỗi bước giải quyết một bottleneck cụ thể. Nhảy thẳng vào sharding khi chưa cần là một trong những cạm bẫy phổ biến nhất và tốn kém nhất trong system design.
+</Callout>
+
+Bài tập thực hành: [exercise-sysd-003](/exercises/system-design-for-builders/m3-add-caching) — cho một scenario app thật đang chậm, bạn sẽ xác định bottleneck và đề xuất các bước scaling theo thứ tự hợp lý.

@@ -1,0 +1,72 @@
+---
+id: concept-webhooks
+title: "Webhook"
+type: "concept"
+aliases: ["webhook", "HTTP callback", "event push", "server push notification"]
+tags: [system-design, webhook, api, async, reliability, api-design]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Hãy tưởng tượng hai cách để biết bưu kiện đã đến:
+
+**Cách 1 — polling**: Cứ 30 phút bạn chạy ra bưu điện hỏi "Bưu kiện của tôi đến chưa?" — lặp đi lặp lại, lãng phí thời gian.
+
+**Cách 2 — webhook**: Bạn để lại số điện thoại. Khi bưu kiện đến, bưu điện *tự gọi cho bạn*. Không cần hỏi, không lãng phí.
+
+Đó là bản chất của webhook: **đừng gọi chúng tôi — chúng tôi sẽ gọi cho bạn**.
+
+## Là gì
+
+**Webhook** là cơ chế để một hệ thống tự động gửi thông báo HTTP đến URL của bạn khi có sự kiện xảy ra. Bạn đăng ký một URL ("callback URL"), và mỗi khi event xảy ra — thanh toán thành công, user đăng ký mới, đơn hàng được ship — server sẽ gửi một HTTP POST đến URL đó với dữ liệu của event.
+
+**So sánh polling vs webhook**:
+
+| | Polling | Webhook |
+|---|---|---|
+| Cơ chế | Bạn hỏi định kỳ | Server tự notify |
+| Tài nguyên | Tốn nhiều (hỏi liên tục dù không có gì) | Hiệu quả (chỉ gửi khi có event) |
+| Độ trễ | Phụ thuộc tần suất poll | Gần real-time |
+| Phức tạp | Đơn giản hơn | Cần endpoint công khai |
+
+## Ví dụ thật
+
+Bạn dùng Stripe để nhận thanh toán. Khi user trả tiền thành công, Stripe gửi webhook đến `https://yourapp.com/webhooks/stripe`:
+
+```json
+{
+  "type": "payment_intent.succeeded",
+  "data": { "object": { "amount": 99000, "currency": "vnd", ... } }
+}
+```
+
+Server của bạn nhận, cập nhật trạng thái đơn hàng, gửi email xác nhận — tất cả tự động.
+
+**Ba việc phải làm khi nhận webhook**:
+
+1. **Verify signature**: Stripe ký payload bằng secret. Bạn phải kiểm tra chữ ký — nếu không, bất kỳ ai cũng có thể giả mạo event và kích hoạt logic của bạn.
+2. **Trả 200 ngay**: Xử lý nặng nên đẩy vào queue. Nếu endpoint của bạn timeout, bên gửi sẽ retry — dẫn đến duplicate event.
+3. **Xử lý idempotent**: Vì retry xảy ra, cùng một event có thể đến nhiều lần. Xem [concept-idempotency](/concepts/idempotency).
+
+<Callout title="Cẩn thận">
+Webhook gửi theo kiểu "at-least-once" — nếu bên gửi không nhận được 2xx trong timeout, họ retry. Endpoint của bạn có thể nhận cùng một event 2-3 lần. Đừng xử lý ngây thơ rồi charge tiền user hai lần.
+</Callout>
+
+<Callout title="Nhớ nhé">
+Webhook là push, polling là pull. Khi cần real-time notification từ hệ thống bên ngoài, webhook gần như luôn là lựa chọn đúng — nhưng nhớ verify + idempotency.
+</Callout>
+
+**Khi nào dùng**: Nhận event từ payment provider (Stripe, PayPal), nhận notification từ GitHub, Slack, Shopify, hay bất kỳ third-party service nào hỗ trợ webhook. **Khi nào chưa cần**: Nếu bạn cần dữ liệu theo yêu cầu (on-demand), polling hoặc API call thẳng là đủ.
+
+## Đọc thêm
+
+- [Stripe Webhooks — docs.stripe.com](https://docs.stripe.com/webhooks) — Hướng dẫn đầy đủ về webhook: setup, verify signature, handle retry, debug. Ví dụ thực tế tốt nhất hiện có.
+- [Stripe Webhooks Best Practices — docs.stripe.com](https://docs.stripe.com/webhooks/best-practices) — Các lỗi phổ biến và cách tránh: idempotency, xử lý event thứ tự sai, timeout handling.
+- [HTTP Methods — MDN](https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods) — Hiểu HTTP POST (method webhook dùng) và các verb khác trong bối cảnh HTTP.
+- [System Design Primer](https://github.com/donnemartin/system-design-primer) — Tổng quan về communication patterns trong hệ thống phân tán, bao gồm push vs pull.
+
+## Tự kiểm tra
+
+1. Tại sao bạn phải verify chữ ký (signature) của webhook trước khi xử lý? Chuyện gì xảy ra nếu bỏ qua bước này?
+2. Endpoint webhook của bạn mất 8 giây để xử lý mỗi event. Stripe timeout sau 5 giây và retry. Vấn đề gì sẽ xảy ra? Bạn sẽ sửa thế nào?
+3. So sánh: khi nào nên dùng webhook, khi nào nên dùng polling để lấy dữ liệu từ bên thứ ba?

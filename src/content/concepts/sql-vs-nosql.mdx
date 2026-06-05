@@ -1,0 +1,46 @@
+---
+id: concept-sql-vs-nosql
+title: "SQL vs NoSQL"
+type: "concept"
+aliases: ["SQL vs NoSQL", "relational vs non-relational", "relational database", "document database", "chọn database", "khi nào dùng SQL", "khi nào dùng NoSQL"]
+tags: [system-design, database, sql, nosql, trade-off, architecture]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Hãy nghĩ đến một tủ hồ sơ văn phòng cũ: mỗi tờ giấy có đúng một ngăn kéo, đúng một định dạng, và mọi thứ được đánh số cẩn thận. Đó là SQL. Còn NoSQL giống như một đống note dán — mỗi tờ có thể có hình dạng khác nhau, dán ở bất cứ đâu, và bạn tìm bằng màu sắc thay vì số ngăn.
+
+Cả hai cách đều dùng được. Câu hỏi là: *loại dữ liệu bạn đang giải quyết trông như cái nào?*
+
+## Là gì
+
+**SQL (relational)**: Dữ liệu được tổ chức thành bảng với cột cố định, các bảng liên kết nhau qua khóa ngoại (foreign key). Hỗ trợ JOIN, đảm bảo ACID, schema rõ ràng. Ví dụ: PostgreSQL, MySQL.
+
+**NoSQL (non-relational)**: Dữ liệu được lưu dưới dạng linh hoạt hơn — document (JSON), key-value, wide-column, hay graph. Không cần schema cố định, dễ scale ngang, nhưng thường hy sinh một số đảm bảo về consistency. Ví dụ: MongoDB, Redis, DynamoDB.
+
+## Ví dụ thật
+
+Bạn build app quản lý đơn hàng. Mỗi đơn có khách hàng, địa chỉ giao, nhiều sản phẩm, trạng thái. Dữ liệu có cấu trúc rõ, liên quan chặt chẽ với nhau, cần đảm bảo "nếu thanh toán thành công thì đơn hàng phải được cập nhật" — **SQL** là lựa chọn tự nhiên.
+
+Nhưng nếu bạn build tính năng lưu "user preferences" — mỗi user có thể có bất kỳ cặp key-value nào, khác nhau hoàn toàn giữa các user — thì **NoSQL** (document hoặc key-value) linh hoạt hơn nhiều.
+
+<Callout title="Mẹo">
+**Default của bạn nên là SQL** — PostgreSQL cụ thể. Lý do: nó mature, hỗ trợ ACID, có thể JOIN linh hoạt, và scale được đến hàng trăm triệu dòng mà không cần phức tạp hóa infrastructure. Chỉ chuyển sang NoSQL khi bạn có lý do cụ thể: dữ liệu thực sự không có schema, hoặc cần scale ngang cực lớn theo chiều write.
+</Callout>
+
+<Callout title="Cẩn thận">
+"NoSQL thì nhanh hơn" là hiểu sai phổ biến. NoSQL nhanh hơn ở một số access pattern cụ thể — khi bạn lấy toàn bộ document theo ID mà không cần JOIN. Nhưng nếu bạn cần query phức tạp, lọc nhiều điều kiện, NoSQL có thể chậm hơn hoặc cần bạn denormalize trước — mà denormalize thì bạn tự quản lý tính nhất quán, không còn database lo nữa.
+</Callout>
+
+## Đọc thêm
+
+- [What is NoSQL? — AWS](https://aws.amazon.com/nosql/) — Giải thích ngắn gọn các loại NoSQL (document, key-value, graph, in-memory) và khi nào phù hợp — không thiên vị sản phẩm cụ thể.
+- [NoSQL Explained — MongoDB](https://www.mongodb.com/nosql-explained) — Tổng quan về NoSQL từ góc nhìn document database, kèm so sánh với SQL về schema và scalability.
+- [NoSQL Definition — Martin Fowler](https://martinfowler.com/bliki/NosqlDefinition.html) — Bài viết ngắn của Martin Fowler làm rõ "NoSQL là gì" và tại sao nó không có nghĩa là "no SQL mãi mãi" — góc nhìn pragmatic.
+- [System Design Primer — SQL or NoSQL](https://github.com/donnemartin/system-design-primer#database) — Tóm tắt súc tích các lý do chọn SQL vs NoSQL trong context system design thực tế.
+
+## Tự kiểm tra
+
+1. Bạn đang build app blog đơn giản: user, bài viết, comment, tag. Bạn chọn SQL hay NoSQL? Lập luận như thế nào?
+2. Một đồng nghiệp nói "dùng MongoDB cho tất cả vì linh hoạt hơn". Bạn đồng ý không? Rủi ro cụ thể nào họ đang bỏ qua?
+3. Kể một trường hợp mà NoSQL thực sự là lựa chọn tốt hơn SQL — và giải thích tại sao, không phải chỉ vì "nó nhanh hơn".

@@ -1,0 +1,47 @@
+---
+id: concept-database-replication
+title: "Nhân bản Database (Replication)"
+type: "concept"
+aliases: ["database replication", "primary replica", "read replica", "replication lag", "nhân bản cơ sở dữ liệu", "database failover"]
+tags: [system-design, replication, database, scalability, availability, reliability, trade-off]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Giả sử bạn có một cuốn sổ ghi tất cả đơn hàng của cửa hàng. Một cuốn duy nhất. Nếu nó bị mất, bạn mất tất cả. Nếu mọi người cùng đọc một cuốn, họ phải xếp hàng chờ nhau. Giải pháp đơn giản: sao chép ra nhiều cuốn — đó là replication.
+
+## Là gì
+
+**Database Replication** là quá trình đồng bộ dữ liệu từ một database (gọi là **primary** hay master) sang một hoặc nhiều database khác (gọi là **replica** hay secondary).
+
+Mô hình cơ bản: **primary** nhận mọi thao tác ghi (INSERT, UPDATE, DELETE). **Replica** liên tục nhận bản sao của các thao tác đó và áp dụng — kết quả là replica gần như có dữ liệu giống hệt primary.
+
+Replication giải quyết hai vấn đề:
+1. **Read scaling**: route các query đọc sang replica → giảm tải cho primary.
+2. **Failover**: primary chết → promote một replica lên làm primary → hệ thống tiếp tục chạy.
+
+## Ví dụ thật
+
+App của bạn có tỉ lệ đọc/ghi là 90/10 — điển hình cho hầu hết web app. Primary đang chịu 100% tải mặc dù 90% request chỉ đọc. Thêm một read replica, route SELECT query sang đó — primary chỉ còn chịu 10% tải ghi. Throughput đọc tăng gần như tuyến tính với mỗi replica bạn thêm vào.
+
+Postgres, MySQL, và hầu hết RDBMS đều hỗ trợ replication. AWS RDS cho phép tạo read replica bằng vài click, với automated failover.
+
+<Callout title="Cẩn thận">
+**Replication lag** là vấn đề thực tế quan trọng nhất. Vì replica cập nhật bất đồng bộ (async), có khoảng trễ từ vài millisecond đến vài giây giữa primary và replica. Nếu user vừa ghi xong rồi đọc ngay từ replica, họ có thể thấy dữ liệu cũ. Giải pháp: sau khi ghi, đọc từ primary cho request ngay tiếp theo — gọi là *read-your-writes consistency*.
+</Callout>
+
+<Callout title="Nhớ nhé">
+Replication **không thay thế backup**. Nếu bạn vô tình xóa một bảng trên primary, lệnh DELETE đó sẽ được nhân bản sang tất cả replica ngay lập tức. Replica không bảo vệ bạn khỏi lỗi của chính mình — backup mới làm được điều đó. Luôn có cả hai.
+</Callout>
+
+## Đọc thêm
+
+- [Amazon RDS Read Replicas — AWS Docs](https://aws.amazon.com/rds/features/read-replicas/) — Chi tiết về read replica trên AWS RDS: cách setup, failover tự động, và so sánh với Multi-AZ deployment.
+- [High Availability, Load Balancing, and Replication — PostgreSQL Docs](https://www.postgresql.org/docs/current/high-availability.html) — Tài liệu chính thức của PostgreSQL về streaming replication, standby server, và các chiến lược HA khác nhau.
+- [Database Replication — System Design Primer (GitHub)](https://github.com/donnemartin/system-design-primer#database) — Tóm tắt ngắn gọn về primary-replica pattern và tradeoff trong bối cảnh system design tổng thể.
+
+## Tự kiểm tra
+
+1. Tại sao bạn không nên ghi dữ liệu trực tiếp vào read replica? Điều gì sẽ xảy ra nếu bạn làm vậy?
+2. Replication lag 2 giây có vấn đề gì cho một trang hiển thị feed bài viết? Và với một trang hiển thị số dư tài khoản ngân hàng?
+3. Nếu primary database đột ngột chết, quá trình failover diễn ra như thế nào? Có khoảng thời gian downtime không?

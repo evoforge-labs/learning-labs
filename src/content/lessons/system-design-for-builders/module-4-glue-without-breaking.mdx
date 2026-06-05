@@ -1,0 +1,137 @@
+---
+id: lesson-sysd-004
+title: "Ghép các mảnh lại mà không vỡ"
+type: "lesson"
+track: system-design-for-builders
+module: communication
+level: intermediate
+tags: [system-design, architecture, reliability, api, async, message-queue, webhook, idempotency, rate-limiting, trade-off]
+prerequisites: [concept-api-design, concept-sync-vs-async, concept-message-queue, concept-webhooks, concept-idempotency, concept-rate-limiting]
+related: [exercise-sysd-004, rubric-system-design]
+status: published
+---
+import Callout from '../../../components/content/Callout.astro';
+
+Bạn đã có database, đã biết scale. Nhưng câu hỏi tiếp theo mới là câu hỏi thật: **các phần trong hệ thống nói chuyện với nhau như thế nào mà không sụp?**
+
+Mạng fail. Server restart. Client retry. Third-party service trả về lỗi 500 lúc nửa đêm. Đây không phải edge case — đây là cuộc sống bình thường của một hệ thống đang chạy thật.
+
+Module này về một điều: thiết kế cho thực tế đó.
+
+## Bước 1: Hợp đồng rõ ràng — API Design
+
+Trước khi hai service nói chuyện, cần có hợp đồng. Đó là lý do [API Design](/concepts/api-design) quan trọng — không phải về đẹp hay chuẩn, mà về **không surprises**.
+
+Hợp đồng tốt gồm ba phần:
+
+- **URL & verbs rõ ràng**: `POST /orders` tạo đơn, `GET /orders/42` lấy đơn — caller không cần đoán.
+- **Error response có ý nghĩa**: Đừng chỉ trả `400`. Cho biết *field nào sai*, *sai thế nào*. Caller mới biết phải làm gì.
+- **Versioning**: Khi API thay đổi breaking, dùng `/v2/...` — không phá người dùng cũ.
+
+<Callout title="Mẹo">
+Thiết kế API như bạn viết thư cho đồng nghiệp sẽ phải đọc lúc 2 giờ sáng khi có incident. Rõ ràng, dự đoán được, không có bẫy ẩn.
+</Callout>
+
+## Bước 2: Tách việc chậm ra — Sync vs Async
+
+Không phải mọi thứ đều cần trả lời ngay. Câu hỏi cốt lõi của [sync vs async](/concepts/sync-vs-async):
+
+> *"Caller có cần kết quả này ngay để tiếp tục không?"*
+
+Trong luồng đặt hàng điển hình:
+
+| Hành động | Sync hay Async? | Lý do |
+|---|---|---|
+| Tạo đơn hàng trong DB | Sync | User cần order ID để hiển thị |
+| Kiểm tra tồn kho | Sync | Cần biết trước khi confirm |
+| Gửi email xác nhận | Async | User không cần chờ email |
+| Thông báo kho hàng | Async | Không ảnh hưởng UX |
+| Cập nhật analytics | Async | Background, không time-sensitive |
+
+Làm tất cả sync: user chờ 3-5 giây. Làm đúng chỗ async: user thấy kết quả trong 200ms.
+
+## Bước 3: Bộ đệm chịu lỗi — Message Queue
+
+Async cần một nơi để "đặt việc" khi caller không muốn chờ. Đó là vai trò của [Message Queue](/concepts/message-queue).
+
+Queue cho bạn ba thứ quan trọng:
+
+1. **Decouple**: Email service down không ảnh hưởng luồng đặt hàng — job nằm trong queue, khi service up nó tự xử lý.
+2. **Smooth spike**: 10,000 đơn hàng trong 1 phút không làm crash email worker — worker xử lý đều đặn theo tốc độ của mình.
+3. **Retry tự động**: Job fail? Queue retry sau vài giây. Không mất dữ liệu.
+
+```
+User đặt hàng
+    → DB: tạo order (sync, 50ms)
+    → Queue: đẩy job "send_confirmation_email" (5ms)
+    → Trả "Thành công!" cho user (tổng ~60ms)
+
+Email Worker (chạy nền):
+    → Lấy job từ queue
+    → Gọi email API
+    → Nếu fail → retry sau 30 giây
+```
+
+## Bước 4: Nhận sự kiện từ bên ngoài — Webhook
+
+Khi third-party system (Stripe, GitHub, Shopify) cần thông báo cho bạn khi có event, đừng poll. Dùng [webhook](/concepts/webhooks).
+
+Webhook là "don't call us, we'll call you": bạn để lại URL, họ POST vào URL đó khi event xảy ra.
+
+**Ba việc bắt buộc** khi nhận webhook:
+
+1. **Verify signature** — đảm bảo event đến từ nguồn thật, không phải ai đó giả mạo.
+2. **Trả 200 nhanh** — đừng xử lý nặng trong handler. Nhận xong, đẩy vào queue, trả 200. Nếu timeout, bên gửi sẽ retry.
+3. **Xử lý duplicate** — vì retry có thể gửi event nhiều lần.
+
+<Callout title="Cẩn thận">
+Webhook handler chậm + retry = event được xử lý nhiều lần. Đây là bug phổ biến nhất khi làm việc với payment webhook. Luôn trả 200 nhanh + xử lý idempotent.
+</Callout>
+
+## Bước 5: Thiết kế cho retry — Idempotency
+
+Queue dùng at-least-once delivery. Webhook provider retry khi timeout. Client bấm Submit hai lần vì mạng chậm.
+
+Kết luận: **retry là bình thường, không phải ngoại lệ**. Hệ thống phải xử lý được retry mà không gây side effect thừa.
+
+Đó là [idempotency](/concepts/idempotency): làm lại N lần = kết quả giống làm 1 lần.
+
+**Công thức** cho các thao tác quan trọng (thanh toán, gửi email, tạo đơn):
+
+```
+1. Client gửi request với idempotency_key = unique UUID
+2. Server check: key này đã xử lý chưa?
+   - Có → trả kết quả cũ (không làm lại)
+   - Chưa → xử lý + lưu (key → result)
+```
+
+Stripe làm điều này cho mọi POST request. Bạn cũng nên làm vậy cho các thao tác quan trọng.
+
+## Bước 6: Bảo vệ hệ thống — Rate Limiting
+
+Một API public không có rate limit là một API đang chờ bị abuse. Một client lỗi loop vô hạn có thể làm chậm toàn bộ hệ thống cho mọi người khác.
+
+[Rate limiting](/concepts/rate-limiting) giới hạn số request từ mỗi client trong khoảng thời gian nhất định. Khi vượt ngưỡng: `429 Too Many Requests` + `Retry-After` header.
+
+Tư duy Token Bucket: mỗi client có N token, dùng 1 token/request, nạp lại theo thời gian. Burst ngắn hạn được phép; flood liên tục thì không.
+
+<Callout title="Nhớ nhé">
+Rate limit không phải phạt user tốt — nó bảo vệ user tốt khỏi bị ảnh hưởng bởi user xấu (hoặc code lỗi).
+</Callout>
+
+## Sợi chỉ xuyên suốt module
+
+```
+Hợp đồng rõ (API Design)
+    → Tách việc chậm (Async)
+        → Buffer chịu lỗi (Queue)
+            → Nhận event bên ngoài (Webhook)
+                → Thiết kế cho retry (Idempotency)
+                    → Bảo vệ hệ thống (Rate Limiting)
+```
+
+Mỗi lớp giải quyết một điểm yếu: API design ngăn confusion, async ngăn block, queue ngăn cascade failure, idempotency ngăn double-processing, rate limiting ngăn abuse.
+
+Không cần áp dụng tất cả ngay từ ngày đầu. Nhưng khi hệ thống có retry, có third-party, có traffic thật — bạn sẽ cần từng lớp một.
+
+Thực hành với scenario thực tế: [exercise-sysd-004](/exercises/system-design-for-builders/m4-make-it-reliable).

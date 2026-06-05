@@ -1,0 +1,47 @@
+---
+id: concept-vertical-vs-horizontal-scaling
+title: "Scale dọc vs Scale ngang"
+type: "concept"
+aliases: ["vertical scaling", "horizontal scaling", "scale up", "scale out", "mở rộng hệ thống"]
+tags: [system-design, scalability, architecture, trade-off, devops]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Tưởng tượng bạn có một xe tải chở hàng. Khi hàng tăng, bạn có hai lựa chọn: mua xe to hơn, hoặc thuê thêm xe. Đó chính xác là hai hướng "scale" hệ thống.
+
+## Là gì
+
+**Scale dọc (Vertical Scaling / Scale Up)**: nâng cấp máy chủ hiện tại — CPU mạnh hơn, RAM nhiều hơn, SSD nhanh hơn. Máy to hơn, chạy cùng một phần mềm.
+
+**Scale ngang (Horizontal Scaling / Scale Out)**: thêm nhiều máy chủ hơn, chia tải giữa chúng. Mười máy nhỏ thay vì một máy lớn.
+
+Về mặt lý thuyết, cả hai đều tăng được năng lực. Về mặt thực tế, chúng có giới hạn và chi phí rất khác nhau.
+
+## Ví dụ thật
+
+**Scale dọc** phù hợp khi bạn vừa ra mắt sản phẩm và cần phản hồi nhanh: chuyển từ instance $20/tháng lên instance $80/tháng là đủ — không cần đụng code. Đơn giản, ngay lập tức.
+
+Nhưng scale dọc có trần: không có máy nào vô hạn RAM hay vô hạn CPU. Và khi máy đó chết, toàn bộ hệ thống chết theo — không có dự phòng.
+
+**Scale ngang** phá vỡ giới hạn đó: thêm một máy nữa bất cứ lúc nào. Một máy chết, những máy còn lại vẫn chạy. Nhưng đổi lại, bạn phải giải quyết một vấn đề mới: làm sao chia tải? Và bởi vì nhiều máy cùng xử lý request, app của bạn phải **stateless** — không lưu trạng thái người dùng trên RAM máy chủ (session, cart...). Trạng thái phải ra ngoài: database, Redis, cookie phía client.
+
+<Callout title="Cẩn thận">
+Scale ngang nghe hay, nhưng đừng vội. Nếu app của bạn lưu session trong bộ nhớ server (in-memory session), scale ngang sẽ phá vỡ trải nghiệm người dùng — request lần sau có thể vào máy khác, session biến mất. Phải refactor trước khi scale.
+</Callout>
+
+<Callout title="Nhớ nhé">
+Mới ra mắt? Scale dọc trước — rẻ hơn, không cần thay đổi kiến trúc. Chỉ chuyển sang scale ngang khi bạn đã có bằng chứng (metric, traffic thật) rằng một máy không còn đủ. Premature scaling là một trong những cạm bẫy tốn kém nhất.
+</Callout>
+
+## Đọc thêm
+
+- [Patterns for scalable and resilient apps — Google Cloud Architecture Center](https://docs.cloud.google.com/architecture/scalable-and-resilient-apps) — Hướng dẫn thực tế từ Google Cloud về kiến trúc scalable: từ load balancing đến auto-scaling, kèm các pattern cụ thể.
+- [Horizontal scaling — System Design Primer (GitHub)](https://github.com/donnemartin/system-design-primer#horizontal-scaling) — Tóm tắt ngắn gọn sự khác biệt giữa scale dọc và ngang, tại sao horizontal scaling phổ biến hơn ở quy mô lớn.
+- [What is Load Balancing? — AWS](https://aws.amazon.com/what-is/load-balancing/) — Giải thích cách load balancer là thành phần bắt buộc để scale ngang hoạt động hiệu quả.
+
+## Tự kiểm tra
+
+1. Tại sao app lưu session trong RAM server sẽ gặp vấn đề khi scale ngang? Cần sửa gì để khắc phục?
+2. Bạn có một API đang chạy trên instance $50/tháng, CPU peak 80%. Bạn sẽ chọn scale dọc hay scale ngang? Lý do?
+3. "Scale ngang luôn tốt hơn scale dọc" — đúng hay sai? Hãy giải thích bằng một ví dụ cụ thể khi scale dọc là lựa chọn hợp lý hơn.

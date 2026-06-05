@@ -1,0 +1,50 @@
+---
+id: concept-load-balancing
+title: "Cân bằng tải (Load Balancing)"
+type: "concept"
+aliases: ["load balancer", "cân bằng tải", "phân phối traffic", "reverse proxy"]
+tags: [system-design, scalability, architecture, load-balancing, reliability, availability]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Nhà hàng đông khách, có một lễ tân đứng ở cửa. Khách vào, lễ tân nhìn nhanh các bàn còn trống, rồi dẫn khách đến bàn phù hợp. Không để bàn nào quá tải, không để bàn nào ngồi không. Đó là load balancer.
+
+## Là gì
+
+**Load balancer** là thành phần đứng trước các server, nhận toàn bộ request từ client và phân phối chúng ra các server phía sau theo một thuật toán nào đó.
+
+Mục tiêu có ba phần:
+1. **Phân tải đều** — không để một server chết mệt trong khi server kia ngủ gật.
+2. **Health check** — nếu một server chết, load balancer ngừng gửi request đến đó, tự động route sang server còn sống.
+3. **Điểm vào duy nhất** — client chỉ biết đến một địa chỉ (load balancer), không cần biết phía sau có bao nhiêu server.
+
+## Ví dụ thật
+
+Bạn scale ngang app lên 3 instance. Không có load balancer, client phải tự biết IP của từng instance — vô lý. Với load balancer (ví dụ AWS ALB, NGINX, HAProxy), client gọi một địa chỉ duy nhất. Load balancer nhận request, chọn instance khỏe mạnh theo thuật toán Round Robin (lần lượt), Least Connections (ít tải nhất), hoặc IP Hash (cùng client → cùng server).
+
+**Health check** hoạt động ngầm: load balancer định kỳ gọi `/health` trên mỗi instance. Instance không trả lời → đánh dấu unhealthy → không gửi traffic đến đó nữa. Khi instance phục hồi → tự động đưa lại vào pool.
+
+<Callout title="Góc kỹ thuật">
+Load balancer hoạt động ở hai tầng: **Layer 4** (TCP — nhanh, đơn giản, dựa trên IP:port) và **Layer 7** (HTTP — thông minh hơn, có thể route theo URL path, header, cookie). Hầu hết web app cần Layer 7.
+</Callout>
+
+<Callout title="Cẩn thận">
+Load balancer bản thân nó có thể trở thành Single Point of Failure nếu chỉ có một con. Production thường chạy một cặp load balancer active-passive, hoặc dùng dịch vụ managed như AWS ALB vốn đã có HA sẵn.
+</Callout>
+
+<Callout title="Nhớ nhé">
+Chưa cần load balancer nếu bạn chỉ có một server. Load balancer chỉ có ý nghĩa khi bạn bắt đầu [scale ngang](/concepts/vertical-vs-horizontal-scaling). Đừng thêm vào sớm — nó tăng độ phức tạp vận hành.
+</Callout>
+
+## Đọc thêm
+
+- [What is Load Balancing? — AWS](https://aws.amazon.com/what-is/load-balancing/) — Giải thích toàn diện từ AWS: định nghĩa, các thuật toán, và khi nào nên dùng loại load balancer nào.
+- [HTTP Load Balancing — NGINX Documentation](https://docs.nginx.com/nginx/admin-guide/load-balancer/http-load-balancer/) — Hướng dẫn thực hành cấu hình NGINX làm load balancer: upstream, round robin, least connections, IP hash.
+- [Load balancer — System Design Primer (GitHub)](https://github.com/donnemartin/system-design-primer#load-balancer) — Tóm tắt nhanh về tradeoff của load balancing trong kiến trúc hệ thống lớn.
+
+## Tự kiểm tra
+
+1. Load balancer dùng thuật toán Round Robin có vấn đề gì nếu một số request xử lý lâu hơn nhiều so với request khác?
+2. Vì sao cần health check? Điều gì xảy ra nếu load balancer không có health check và một server bị chết?
+3. Bạn có app yêu cầu sticky session (cùng user phải vào cùng server). Thuật toán nào phù hợp và có đánh đổi gì?

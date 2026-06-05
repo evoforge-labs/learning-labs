@@ -1,0 +1,138 @@
+---
+id: exercise-sysd-004
+title: "Làm cho luồng xử lý đáng tin cậy"
+type: "exercise"
+track: system-design-for-builders
+tags: [system-design, reliability, api-design, async, message-queue, webhook, idempotency, rate-limiting, architecture, trade-off, solo-builder]
+estimatedMinutes: 25
+related: [lesson-sysd-004, concept-message-queue, concept-idempotency, concept-webhooks, rubric-system-design]
+status: published
+---
+import Callout from '../../../components/content/Callout.astro';
+
+## Tình huống
+
+Bạn vừa nhận được bug report từ production:
+
+> *"Có 3 user bị charge tiền hai lần trong tuần trước. Ngoài ra, khoảng 15% đơn hàng không nhận được email xác nhận trong giờ cao điểm — hệ thống email bị quá tải."*
+
+Nhìn lại code, luồng xử lý đặt hàng hiện tại trông như thế này:
+
+```
+POST /checkout
+    1. Validate giỏ hàng
+    2. Gọi Stripe API để charge thẻ (sync, ~800ms)
+    3. Lưu đơn hàng vào DB
+    4. Gọi email service để gửi xác nhận (sync, ~1200ms)
+    5. Trả về { success: true } cho user
+
+Stripe webhook handler:
+    POST /webhooks/stripe
+    → Khi nhận "payment_intent.succeeded":
+       → Cập nhật trạng thái đơn hàng → "paid"
+       → Gửi email xác nhận (một lần nữa)
+```
+
+**Vấn đề bạn xác định được:**
+
+- User bấm "Mua" → mạng yếu → timeout → bấm lại → bị charge hai lần (step 2 chạy hai lần)
+- Email service chậm làm toàn bộ request `/checkout` chậm (~2 giây); giờ cao điểm email service quá tải → request fail
+- Webhook handler gửi email một lần nữa → một số user nhận email xác nhận *hai lần*
+- Không có rate limiting → một integration partner gọi API liên tục gây ảnh hưởng đến user khác
+
+<Callout title="Nhớ nhé">
+Mục tiêu không phải viết code hoàn chỉnh — mà là thiết kế và lý giải được lựa chọn. Giải thích rõ *tại sao* quan trọng hơn *cái gì*.
+</Callout>
+
+---
+
+## Task 1 — Redesign luồng: Sync vs Async split + Queue
+
+Vẽ lại luồng xử lý `/checkout` bằng cách phân tách: cái gì phải sync, cái gì nên async qua queue.
+
+**Yêu cầu cụ thể:**
+
+1. Liệt kê từng bước trong luồng mới, ghi rõ: sync hay async? Tại sao?
+2. Vẽ sơ đồ đơn giản (dạng text/ASCII cũng được) mô tả luồng sau khi redesign — bao gồm queue và worker.
+3. Trả lời: Với thiết kế mới, nếu email service down 30 phút, điều gì xảy ra với:
+   - User đang checkout?
+   - Email xác nhận của các đơn đặt trong 30 phút đó?
+
+**Gợi ý cấu trúc trả lời:**
+
+```
+Step 1: [tên] → [sync/async] → [lý do]
+Step 2: ...
+
+Luồng mới:
+User → /checkout → [...]
+               ↓
+           Queue: [...]
+               ↓
+           Worker: [...]
+```
+
+---
+
+## Task 2 — Make payment idempotent
+
+Double-charge là bug nghiêm trọng nhất. Thiết kế cơ chế idempotency cho bước charge thẻ.
+
+**Yêu cầu cụ thể:**
+
+1. **Xác định idempotency key**: Bạn sẽ dùng gì làm key cho payment request? Giải thích tại sao key đó đảm bảo uniqueness — và tại sao các lựa chọn sau *không tốt*: `user_id`, `timestamp`, `cart_total`.
+
+2. **Mô tả server-side logic**: Khi nhận `POST /checkout` với idempotency key:
+   - Server check gì trước tiên?
+   - Lưu gì vào đâu sau khi xử lý thành công?
+   - Khi nhận lại cùng key (retry), server làm gì?
+
+3. **Stripe integration**: Stripe đã support idempotency key built-in. Bạn truyền key đó như thế nào? (Mô tả, không cần code đầy đủ.)
+
+4. **Edge case**: User bấm lại trong lúc request đầu tiên *vẫn đang xử lý* (concurrent duplicate). Cơ chế của bạn xử lý trường hợp này thế nào?
+
+---
+
+## Task 3 — Webhook handler đáng tin cậy
+
+Stripe sẽ retry webhook nếu bạn không trả 2xx trong 5 giây. Cùng event có thể đến nhiều lần.
+
+**Yêu cầu cụ thể:**
+
+1. **Verify signature**: Mô tả bước đầu tiên bắt buộc khi nhận webhook. Tại sao bỏ qua bước này là lỗ hổng bảo mật?
+
+2. **Fast acknowledgment**: Handler hiện tại xử lý nặng rồi mới trả 200. Bạn sẽ thay đổi thế nào? (Gợi ý: liên quan đến Task 1.)
+
+3. **Deduplicate event**: `payment_intent.succeeded` có thể đến 2-3 lần do Stripe retry. Cách đơn giản nhất để đảm bảo email xác nhận chỉ được gửi **một lần** là gì? Mô tả schema hoặc logic cần thêm.
+
+4. **Reconcile với Task 1**: Với luồng mới ở Task 1, webhook handler nên làm gì — và không nên làm gì — để tránh trùng lặp với queue worker?
+
+<Callout title="Mẹo">
+Xem lại bug ban đầu: email xác nhận được gửi ở bước 4 của `/checkout` **và** trong webhook handler. Với thiết kế mới, chỉ một trong hai nên chịu trách nhiệm gửi email. Quyết định cái nào và lý giải tại sao.
+</Callout>
+
+---
+
+## Bonus — Rate Limiting cho Integration Partner
+
+*(Không bắt buộc — làm nếu còn thời gian)*
+
+Integration partner đang gọi `GET /orders` liên tục mỗi giây để poll trạng thái đơn hàng, gây tải lên DB.
+
+1. Bạn sẽ rate limit endpoint này thế nào? Ngưỡng nào hợp lý? Theo IP hay theo API key?
+2. Response khi bị rate limit nên trả về gì? Viết ra HTTP status code, header, và body example.
+3. Giải pháp tốt hơn polling cho use case này là gì? (Gợi ý: liên quan đến module này.)
+
+---
+
+## Tiêu chí đánh giá
+
+Xem [System Design Rubric](../../rubrics/system-design-rubric) để biết cách bài này được chấm. Đặc biệt chú ý các tiêu chí:
+
+- **Reliability**: Thiết kế có xử lý được failure và retry không?
+- **Trade-offs**: Bạn có giải thích tại sao chọn cách này thay vì cách khác không?
+- **Simplicity**: Giải pháp có đơn giản nhất có thể mà vẫn đúng không?
+
+<Callout title="Nhớ nhé">
+Bài này không có một đáp án duy nhất đúng. Grader tìm kiếm lập luận rõ ràng — bạn hiểu trade-off, không chỉ biết tên công nghệ.
+</Callout>

@@ -1,0 +1,52 @@
+---
+id: concept-functional-vs-nonfunctional
+title: "Yêu cầu chức năng vs phi chức năng"
+type: "concept"
+aliases: ["functional requirements", "non-functional requirements", "NFR", "yêu cầu chức năng", "yêu cầu phi chức năng", "functional vs nonfunctional"]
+tags: [system-design, requirements, scalability, availability, reliability, architecture]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Bạn đặt pizza online. "App phải cho tôi chọn topping và đặt hàng" — đó là *chức năng*. "App phải load trong vòng 2 giây, không được sập vào tối thứ Sáu, và không được để lộ thông tin thẻ tín dụng" — đó là *phi chức năng*.
+
+Ai cũng nhớ phần đầu. Phần sau mới là thứ quyết định app của bạn có đáng tin hay không.
+
+## Là gì
+
+**Yêu cầu chức năng (Functional Requirements)** mô tả hệ thống *làm gì*: đăng nhập, đặt hàng, tìm kiếm, gửi thông báo. Đây là những tính năng người dùng thấy và dùng trực tiếp.
+
+**Yêu cầu phi chức năng (Non-Functional Requirements — NFR)** mô tả hệ thống *hoạt động tốt thế nào*: tốc độ phản hồi (latency), khả năng chịu tải (scalability), thời gian hoạt động (availability), bảo mật (security). Người dùng không thấy NFR — nhưng họ *cảm thấy* khi nó bị thiếu.
+
+## Ví dụ thật
+
+Một builder làm app đặt lịch cho spa. Yêu cầu chức năng rõ ràng:
+- Khách đặt lịch, chọn dịch vụ, chọn nhân viên.
+- Nhân viên xem lịch, xác nhận.
+
+Nhưng NFR lại quyết định sản phẩm có dùng được không:
+- **Latency:** Trang xác nhận lịch phải load dưới 1.5s — khách chờ lâu hơn sẽ thoát.
+- **Availability:** App phải lên 99% vào cuối tuần — đúng lúc đặt lịch nhiều nhất.
+- **Scalability:** Hệ thống phải chịu 500 lượt đặt đồng thời vào ngày lễ.
+
+Nếu builder này không nghĩ đến NFR từ đầu, họ có thể chọn database sai, không cache ở đúng chỗ, không có retry logic — và chỉ phát hiện ra khi app sập vào chiều 30 Tết.
+
+<Callout title="Cẩn thận">
+Builder hay bỏ qua NFR vì nó "không thấy được" trong demo. Nhưng NFR là thứ người dùng *cảm nhận hàng ngày*. App load chậm 3 giây mỗi lần mở — người dùng bỏ. App sập vào lúc cần nhất — họ không quay lại. Viết NFR ra cùng lúc với functional requirements, trước khi code.
+</Callout>
+
+<Callout title="Nhớ nhé">
+Functional = hệ thống *làm gì*. Non-functional = hệ thống *tốt đến mức nào*. Cả hai đều cần có số cụ thể, không phải "nhanh" hay "ổn định" chung chung.
+</Callout>
+
+## Đọc thêm
+
+- [Functional vs. Non-Functional Requirements — Jama Software](https://www.jamasoftware.com/requirements-management-guide/writing-requirements/functional-vs-non-functional-requirements/) — Giải thích rõ ràng sự khác biệt, có ví dụ thực tế và lý do NFR thường bị bỏ sót trong quá trình phát triển.
+- [Functional and Non-Functional Requirements — GeeksforGeeks](https://www.geeksforgeeks.org/software-engineering/functional-vs-non-functional-requirements/) — So sánh chi tiết, ví dụ từ banking app và food delivery; bao gồm cả "extended requirements" thường bị quên (logging, monitoring).
+- [Functional vs. Non-Functional Requirements — Agilemania](https://agilemania.com/functional-vs-nonfunctional-requirements) — Góc nhìn Agile: cách đưa NFR vào sprint và definition of done.
+
+## Tự kiểm tra
+
+1. Trong app giao đồ ăn: "người dùng có thể theo dõi vị trí shipper real-time" là FR hay NFR? Còn "hệ thống cập nhật vị trí mỗi 3 giây, không delay quá 1 giây" thì sao?
+2. Tại sao "hệ thống phải nhanh" không phải một NFR tốt? NFR tốt trông như thế nào?
+3. Một builder nói "NFR quan trọng nhưng mình sẽ lo sau khi có user". Rủi ro cụ thể nào có thể xảy ra?

@@ -1,0 +1,69 @@
+---
+id: concept-message-queue
+title: "Hàng đợi tin nhắn (Message Queue)"
+type: "concept"
+aliases: ["message queue", "hàng đợi tin nhắn", "job queue", "task queue", "MQ", "RabbitMQ", "SQS"]
+tags: [system-design, async, message-queue, architecture, reliability, throughput]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Hãy nghĩ đến phòng tiếp nhận hồ sơ ở cơ quan nhà nước. Không phải mỗi người nộp hồ sơ đều được giải quyết ngay lập tức — họ lấy số, ngồi chờ, nhân viên xử lý từng hồ sơ một theo thứ tự. Dù có 200 người đến cùng lúc, hệ thống vẫn không sụp — vì có **hàng đợi** làm bộ đệm.
+
+Message Queue hoạt động y hệt vậy trong phần mềm.
+
+## Là gì
+
+**Message Queue** là một bộ đệm trung gian giữa **producer** (bên gửi công việc) và **consumer** (bên xử lý công việc). Producer đẩy message vào queue và tiếp tục làm việc khác; consumer lấy message ra và xử lý theo tốc độ của mình.
+
+Ba lợi ích cốt lõi:
+
+1. **Decouple**: Producer và consumer không cần chạy cùng lúc. Producer up, consumer down → message vẫn an toàn trong queue.
+2. **Smooth spikes**: Có 10,000 đơn hàng trong 1 phút? Queue hấp thụ spike đó, consumer xử lý đều đặn 100/phút.
+3. **Retry**: Nếu consumer fail, message có thể được thử lại — không mất dữ liệu.
+
+Phần mềm queue phổ biến: **RabbitMQ**, **Amazon SQS**, **Redis Streams**, **Kafka** (cho throughput cực cao).
+
+## Ví dụ thật
+
+**Gửi email sau khi đặt hàng**:
+
+Không có queue:
+```
+User đặt hàng → server gọi email API (300ms) → trả kết quả cho user
+```
+Nếu email API chậm hoặc down, user chờ hoặc gặp lỗi.
+
+Có queue:
+```
+User đặt hàng → server đẩy job "send_email" vào queue (5ms) → trả "Đặt hàng thành công" ngay
+                                    ↓
+                     Email worker lấy job → gọi email API → gửi thành công
+```
+
+User nhận phản hồi ngay. Email đến sau vài giây. Nếu email API tạm down, worker retry — user không bao giờ thấy lỗi.
+
+<Callout title="Góc kỹ thuật">
+Có hai mô hình phân phối message chính: **Point-to-point** (một message, một consumer xử lý — dùng cho job queue) và **Pub/Sub** (một message, nhiều subscriber nhận — dùng khi nhiều service cần phản ứng với cùng một event). Kafka và nhiều cloud service hỗ trợ cả hai.
+</Callout>
+
+<Callout title="Nhớ nhé">
+Queue không làm công việc nhanh hơn — nó làm hệ thống **tin cậy hơn** và **responsive hơn** bằng cách tách rời thời điểm nhận việc và thời điểm xử lý việc.
+</Callout>
+
+**Khi nào dùng**: Công việc chậm (email, PDF, video encoding), cần retry khi fail, có traffic spike không đều, cần decouple hai service. Xem thêm về [concept-sync-vs-async](/concepts/sync-vs-async) để hiểu khi nào async là lựa chọn đúng.
+
+**Khi nào chưa cần**: App đơn giản ít traffic, công việc cần kết quả ngay lập tức, hoặc overhead vận hành thêm một queue service không xứng với lợi ích.
+
+## Đọc thêm
+
+- [RabbitMQ Tutorial — "Hello World"](https://www.rabbitmq.com/tutorials/tutorial-one-python) — Hướng dẫn cơ bản nhất về message queue với RabbitMQ: producer, queue, consumer qua ví dụ Python thực tế.
+- [What is a Message Queue? — AWS](https://aws.amazon.com/message-queue/) — Giải thích rõ ràng về message queue và use case, kèm so sánh với pub/sub messaging.
+- [System Design Primer — Asynchronism](https://github.com/donnemartin/system-design-primer) — Phần asynchronism trong System Design Primer: message queue, task queue, back pressure và trade-off.
+- [Introducing Asynchronous JavaScript — MDN](https://developer.mozilla.org/en-US/docs/Learn_web_development/Extensions/Async_JS/Introducing) — Nền tảng tư duy async; hiểu rõ sync/async trước khi làm việc với queue.
+
+## Tự kiểm tra
+
+1. Nếu consumer bị crash và xử lý 50 messages, điều gì xảy ra với những messages đó? Cần cơ chế gì của queue để không mất dữ liệu?
+2. App của bạn xử lý ảnh upload: resize + tạo thumbnail. Nên dùng queue hay xử lý sync? Giải thích lý do.
+3. Sự khác nhau giữa "at-least-once delivery" và "exactly-once delivery" là gì? Tại sao at-least-once phổ biến hơn — và điều đó đặt ra yêu cầu gì cho consumer?

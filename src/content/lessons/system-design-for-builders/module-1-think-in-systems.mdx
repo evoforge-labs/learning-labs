@@ -1,0 +1,62 @@
+---
+id: lesson-sysd-001
+title: "Nghĩ về hệ thống trước khi viết dòng code đầu tiên"
+type: "lesson"
+track: system-design-for-builders
+module: foundations
+level: beginner
+tags: [system-design, requirements, estimation, latency, throughput, architecture, solo-builder, trade-off]
+prerequisites: [concept-system-design, concept-functional-vs-nonfunctional, concept-back-of-envelope-estimation, concept-latency-vs-throughput]
+related: [exercise-sysd-001, rubric-system-design]
+status: published
+---
+import Callout from '../../../components/content/Callout.astro';
+
+Hầu hết builder bắt đầu bằng cách mở code editor và gõ. Điều đó không sai — nhưng 15 phút suy nghĩ trước có thể tiết kiệm 15 giờ refactor sau.
+
+Lesson này xâu chuỗi bốn công cụ tư duy của Module 1 thành một quy trình ngắn bạn chạy *trước khi viết dòng code đầu tiên*.
+
+## Bước 1 — Làm rõ yêu cầu
+
+Trước khi hỏi "build thế nào", hỏi "build *cái gì*".
+
+[System design](/concepts/system-design) bắt đầu từ việc phân biệt rõ hai loại yêu cầu:
+
+- **Functional:** App làm gì? Ai dùng? Những luồng chính là gì?
+- **Non-functional:** Hệ thống phải nhanh đến mức nào? Sập bao lâu là chấp nhận được? Bảo mật ở mức nào?
+
+Xem chi tiết tại [concept-functional-vs-nonfunctional](/concepts/functional-vs-nonfunctional).
+
+Nhiều builder bỏ qua NFR vì "chưa cần". Nhưng NFR ảnh hưởng trực tiếp đến quyết định kiến trúc ngay từ ngày đầu: chọn database nào, có cần cache không, độ tin cậy ra sao. Viết NFR ra — dù chỉ 3-5 dòng — trước khi bắt tay code.
+
+## Bước 2 — Ước lượng tải
+
+Biết yêu cầu rồi, hỏi tiếp: *hệ thống phải chịu bao nhiêu?*
+
+[Back-of-the-envelope estimation](/concepts/back-of-envelope-estimation) là kỹ thuật tính nhẩm nhanh: QPS, storage/ngày, bandwidth. Không cần chính xác đến chữ số thập phân — chỉ cần đủ để tránh chọn sai kiến trúc.
+
+Ví dụ: 10 QPS peak → SQLite hoặc Postgres đơn giản là đủ. 10.000 QPS peak → cần caching layer, có thể cần read replica. Hai con số này dẫn đến hai quyết định thiết kế hoàn toàn khác nhau.
+
+Nếu bạn không tính, bạn đang đoán mò.
+
+## Bước 3 — Xác định mục tiêu latency và throughput
+
+Sau khi có ước lượng tải, hỏi: *hệ thống phải phản hồi nhanh đến mức nào, và chịu được bao nhiêu người cùng lúc?*
+
+[Latency vs throughput](/concepts/latency-vs-throughput) không phải khái niệm lý thuyết — nó trực tiếp quyết định bạn có cần cache không, xử lý đồng bộ hay bất đồng bộ, có cần queue không.
+
+Hãy viết ra hai con số mục tiêu cụ thể trước khi thiết kế:
+- **Latency target:** "P95 response time dưới 500ms"
+- **Throughput target:** "Chịu được 200 concurrent users"
+
+Khi có target, bạn có thể đo được — và biết khi nào đủ tốt, khi nào cần tối ưu thêm.
+
+## Kết nối lại
+
+Ba bước trên mất khoảng 20-30 phút với một tờ giấy (hoặc một file markdown). Kết quả không phải bản thiết kế hoàn chỉnh — mà là *đủ thông tin để bắt đầu đúng hướng*.
+
+<Callout title="Nhớ nhé">
+Không phải mọi app đều cần kiến trúc phức tạp. Mục tiêu của bước này là tránh over-engineer — và tránh under-engineer. Biết rõ yêu cầu, ước lượng tải, đặt target: sau đó build cái đơn giản nhất đáp ứng được ba điều đó.
+</Callout>
+
+Thực hành ngay với [bài tập ước lượng tải →](/exercises/system-design-for-builders/m1-estimate-the-load)

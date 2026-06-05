@@ -1,0 +1,70 @@
+---
+id: concept-idempotency
+title: "Idempotency"
+type: "concept"
+aliases: ["idempotency", "idempotent", "idempotency key", "tính lũy đẳng", "safe retry"]
+tags: [system-design, idempotency, reliability, api-design, api, webhook]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Bạn bấm nút "Đặt hàng", màn hình trắng xoá vì mạng yếu. Bạn không chắc có thành công không — nên bấm lại. Bây giờ bạn bị charge tiền hai lần và nhận hai đơn hàng.
+
+Đây không phải lỗi của user. Đây là lỗi thiết kế hệ thống — hệ thống chưa **idempotent**.
+
+## Là gì
+
+**Idempotency** có nghĩa: thực hiện thao tác đó một lần hay mười lần đều cho kết quả giống nhau. "Làm lại không gây thêm tác hại."
+
+Trong HTTP: `GET`, `DELETE`, `PUT` thường idempotent theo định nghĩa. `POST` thì không — mỗi lần gọi thường tạo ra một resource mới.
+
+**Idempotency key** là giải pháp phổ biến cho `POST`: client tạo một unique ID (ví dụ UUID) và đính kèm vào request. Server dùng ID đó để nhận diện "đây là cùng một request" và không xử lý lại nếu đã thành công.
+
+```http
+POST /payments
+Idempotency-Key: a1b2c3d4-uuid-here
+
+{ "amount": 99000, "currency": "vnd" }
+```
+
+Dù request này gửi 1 lần hay 5 lần — server chỉ charge tiền 1 lần. Lần thứ 2 trở đi, nó trả về kết quả đã cache từ lần đầu.
+
+## Ví dụ thật
+
+Stripe làm điều này cực tốt. Mỗi khi bạn tạo payment intent, bạn truyền một `idempotency_key`. Stripe lưu kết quả của request đó trong 24 giờ. Bất kể mạng có ngắt hay server có restart, retry sẽ luôn cho ra kết quả nhất quán — không bao giờ double charge.
+
+Tương tự với webhook (xem [concept-webhooks](/concepts/webhooks)): bên gửi retry nếu không nhận được 2xx. Handler của bạn có thể nhận cùng event nhiều lần. Nếu handler không idempotent, bạn sẽ gửi email xác nhận hai lần, cập nhật điểm thưởng hai lần, hoặc tệ hơn — trừ tiền hai lần.
+
+**Cách implement đơn giản**:
+
+```
+1. Client gửi request với idempotency_key = UUID
+2. Server check: key này đã được xử lý chưa?
+   - Có → trả kết quả cũ
+   - Chưa → xử lý + lưu (key, result) vào cache/DB
+```
+
+<Callout title="Cẩn thận">
+Idempotency key phải đủ unique. Dùng UUID v4 hoặc chuỗi random entropy cao. Đừng dùng email user, timestamp, hay số thứ tự đơn hàng — những thứ này có thể bị trùng hoặc đoán được.
+</Callout>
+
+<Callout title="Nhớ nhé">
+Mạng fail. Server restart. Client retry. Đây là quy luật bình thường — không phải ngoại lệ. Hệ thống tốt thiết kế cho điều này từ đầu, không phải vá sau khi có bug double-charge.
+</Callout>
+
+**Khi nào cần**: Bất kỳ thao tác nào có side effect quan trọng (thanh toán, gửi email, tạo đơn hàng) và có khả năng bị retry — hoặc do client retry, hoặc do queue at-least-once delivery ([concept-message-queue](/concepts/message-queue)).
+
+**Khi nào chưa cần**: Read-only operations (GET) đã idempotent tự nhiên. App prototype nội bộ không có retry logic cũng chưa cần phức tạp hóa.
+
+## Đọc thêm
+
+- [Idempotent Requests — Stripe API Docs](https://docs.stripe.com/api/idempotent_requests) — Cách Stripe implement idempotency key: format, lifecycle 24h, code ví dụ trong 8 ngôn ngữ.
+- [Idempotency — Stripe Docs](https://docs.stripe.com/idempotency) — Giải thích sâu hơn: khi nào cần dùng, khi nào không cần, cách retry an toàn với idempotency key.
+- [Stripe Webhooks Best Practices](https://docs.stripe.com/webhooks/best-practices) — Phần "Handle duplicate events" giải thích cách idempotency áp dụng trực tiếp cho webhook handler.
+- [System Design Primer](https://github.com/donnemartin/system-design-primer) — Bối cảnh rộng hơn: idempotency trong distributed systems, at-least-once vs exactly-once delivery.
+
+## Tự kiểm tra
+
+1. `DELETE /users/42` — operation này đã idempotent chưa? Lần đầu xoá thành công (200), lần hai gọi lại thì sao (404)? Có phải vấn đề không?
+2. Bạn nhận webhook "payment.succeeded" và xử lý: gửi email, cộng điểm thưởng, đổi trạng thái đơn hàng. Nếu không có idempotency, điều tệ nhất có thể xảy ra là gì?
+3. Client tạo idempotency key = `payment-${user_id}-${timestamp}`. Vấn đề tiềm ẩn của cách này là gì?

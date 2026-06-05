@@ -1,0 +1,85 @@
+---
+id: track-system-design-for-builders
+title: "System Design for Builders"
+type: "track"
+summary: "Thiết kế hệ thống cho người tự build: mô hình dữ liệu, mở rộng quy mô, độ tin cậy và đánh đổi — đủ dùng, không over-engineer."
+tags: [system-design, scalability, database, architecture, solo-builder]
+status: published
+---
+
+# System Design for Builders
+
+Lộ trình thiết kế hệ thống cho **builder tự làm** (solo hoặc team nhỏ): không phải để luyện phỏng vấn FAANG, mà để hệ thống của *bạn* không phải đập đi xây lại khi người dùng đông lên.
+
+## Outcome
+
+Sau track này, bạn chuyển từ:
+
+> Tôi code cho app chạy được.
+
+sang:
+
+> Tôi thiết kế hệ thống để nó vẫn chạy khi dữ liệu, người dùng và độ phức tạp lớn lên — và biết *khi nào thì chưa cần* mở rộng.
+
+## Track này luyện gì?
+
+- Bóc yêu cầu thành chức năng + phi chức năng, ước lượng tải bằng phép tính nhẩm.
+- Mô hình hóa dữ liệu đúng từ đầu; chọn SQL vs NoSQL có lý do.
+- Biết khi nào cache, replicate, shard — và khi nào đừng.
+- Ghép các thành phần (API, queue, webhook) lại mà không vỡ.
+- Hiểu đánh đổi cốt lõi: CAP, consistency, điểm chết đơn lẻ.
+- Thiết kế dưới ràng buộc thật: 1 người, deadline ngắn, ngân sách nhỏ.
+
+## Năm chặng từ cơ bản đến nâng cao
+
+1. **Tư duy hệ thống** — yêu cầu, ước lượng, độ trễ vs thông lượng.
+2. **Dữ liệu là trung tâm** — mô hình hóa, SQL/NoSQL, index, chuẩn hóa, ACID.
+3. **Mở rộng quy mô** — scale dọc/ngang, load balancer, cache, CDN, replication, sharding.
+4. **Giao tiếp & độ tin cậy** — API, đồng bộ/bất đồng bộ, queue, webhook, idempotency, rate limit.
+5. **Đánh đổi & tổng hợp** — monolith vs microservices, CAP, consistency, SPOF, observability.
+
+Tra cứu nhanh mọi thuật ngữ ở trang [Glossary](/glossary).
+
+## Curriculum
+
+### Module 1 — Tư duy hệ thống
+- Thiết kế hệ thống là gì (cho builder)
+- Yêu cầu chức năng vs phi chức năng
+- Ước lượng nhanh (back-of-the-envelope)
+- Độ trễ vs thông lượng
+
+### Module 2 — Dữ liệu là trung tâm
+- Mô hình hóa dữ liệu
+- SQL vs NoSQL
+- Index trong database
+- Chuẩn hóa vs phi chuẩn hóa
+- ACID & transaction
+
+### Module 3 — Mở rộng quy mô
+- Scale dọc vs scale ngang
+- Cân bằng tải (load balancing)
+- Caching
+- CDN
+- Nhân bản database (replication)
+- Sharding / phân mảnh
+
+### Module 4 — Giao tiếp & độ tin cậy
+- Thiết kế API
+- Đồng bộ vs bất đồng bộ
+- Hàng đợi tin nhắn (message queue)
+- Webhook
+- Idempotency
+- Rate limiting
+
+### Module 5 — Đánh đổi & tổng hợp
+- Monolith vs Microservices
+- Định lý CAP
+- Consistency models (strong vs eventual)
+- Single point of failure & dự phòng
+- Observability (logs, metrics, traces)
+
+Mỗi module có 1 lesson xâu chuỗi + 1 bài tập tình huống. Cuối track có **capstone**: thiết kế một hệ thống thật từ đầu bằng [System Design Template](/templates/system-design-template).
+
+## First principle
+
+Thiết kế cho quy mô *bạn sắp có*, không phải quy mô *bạn mơ có*. Đơn giản nhất mà chịu được tải hôm nay — rồi mở rộng khi có bằng chứng cần.

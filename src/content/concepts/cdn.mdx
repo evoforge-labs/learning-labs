@@ -1,0 +1,51 @@
+---
+id: concept-cdn
+title: "CDN (Content Delivery Network)"
+type: "concept"
+aliases: ["content delivery network", "CDN", "edge server", "static asset delivery", "mạng phân phối nội dung"]
+tags: [system-design, cdn, caching, latency, scalability, architecture, devops]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Nếu server của bạn ở Hà Nội mà người dùng ở Los Angeles, mỗi request phải đi nửa vòng Trái Đất — khoảng 150-200ms chỉ riêng latency vật lý. Không thể tối ưu bằng code. Giải pháp duy nhất là đặt dữ liệu gần người dùng hơn.
+
+## Là gì
+
+**CDN (Content Delivery Network)** là mạng lưới các server đặt rải rác khắp nơi trên thế giới (gọi là "edge servers" hay "Points of Presence — PoP"). Thay vì mỗi request đến tận server gốc, CDN phục vụ nội dung từ edge server gần người dùng nhất.
+
+Người dùng ở Singapore → CDN Singapore trả file. Người dùng ở Paris → CDN Paris trả file. Server gốc của bạn ở đâu không còn quan trọng với họ nữa.
+
+CDN lưu **bản sao** của các file tĩnh: hình ảnh, CSS, JavaScript, font, video. Khi file chưa có trên edge, CDN tự đến server gốc lấy về — gọi là **cache fill** — rồi lưu lại để phục vụ những request sau.
+
+## Ví dụ thật
+
+Bạn build một app landing page với 2MB ảnh sản phẩm và bundle JS 500KB. Không có CDN, mỗi người dùng toàn cầu phải tải từ server gốc — chậm, tốn bandwidth, server chịu tải nhiều.
+
+Với CDN (Cloudflare, AWS CloudFront, Bunny.net...): file được cache tại hàng trăm edge location. 95% request không bao giờ đến server gốc. Trang tải nhanh hơn, server gốc nhẹ hơn, chi phí bandwidth giảm.
+
+**Không nên để trên CDN**: API endpoint trả dữ liệu động, trang cần authentication, nội dung cá nhân hóa theo user. CDN tốt cho file **tĩnh, công khai, và ít thay đổi**.
+
+<Callout title="Góc kỹ thuật">
+CDN và [caching](/concepts/caching) có liên quan nhưng không giống nhau. Cache thường nói đến lưu dữ liệu trong RAM trên server của bạn. CDN là cache ở tầng phân phối địa lý — "cache ở biên". Cả hai giải quyết vấn đề tốc độ, nhưng ở hai tầng khác nhau.
+</Callout>
+
+<Callout title="Cẩn thận">
+Khi deploy phiên bản mới, file CSS/JS cũ vẫn có thể đang nằm trên CDN. Dùng **cache busting** — thêm hash vào tên file (ví dụ `app.abc123.js`) để CDN hiểu đây là file mới và không serve bản cũ.
+</Callout>
+
+<Callout title="Nhớ nhé">
+CDN là một trong những cải tiến có ROI cao nhất cho builder: giá rẻ (hoặc miễn phí với Cloudflare free tier), setup đơn giản, tác động ngay lập tức với người dùng quốc tế. Nhưng nếu toàn bộ user của bạn đang ở Việt Nam và server cũng ở Việt Nam — CDN không phải ưu tiên ngay bây giờ.
+</Callout>
+
+## Đọc thêm
+
+- [What is a CDN? — AWS](https://aws.amazon.com/what-is/cdn/) — Giải thích toàn diện về CDN: cách hoạt động, lợi ích về latency và bandwidth, các use case phổ biến.
+- [Key Features of CloudFront — AWS](https://aws.amazon.com/cloudfront/features/) — Tính năng cụ thể của AWS CloudFront: global PoP, bảo mật, edge computing, và cách tích hợp với S3/EC2.
+- [Default Cache Behavior — Cloudflare Docs](https://developers.cloudflare.com/cache/concepts/default-cache-behavior/) — Tài liệu chính thức về hành vi cache mặc định của Cloudflare: file nào được cache, TTL, và cách tùy chỉnh.
+
+## Tự kiểm tra
+
+1. Tại sao CDN không phù hợp để cache API response trả về dữ liệu cá nhân của từng user?
+2. Bạn deploy version mới của app nhưng user vẫn thấy giao diện cũ dù đã xóa cache trình duyệt. Nguyên nhân có thể là gì?
+3. Sự khác biệt giữa CDN cache và application cache (Redis) là gì? Trong trường hợp nào bạn cần cả hai?

@@ -1,0 +1,88 @@
+---
+id: lesson-sysd-005
+title: "Không có đúng, chỉ có phù hợp"
+type: "lesson"
+track: system-design-for-builders
+module: tradeoffs
+level: advanced
+tags: [system-design, trade-off, architecture, cap-theorem, monolith, microservices, observability, reliability, consistency]
+prerequisites: [concept-monolith-vs-microservices, concept-cap-theorem, concept-consistency-models, concept-single-point-of-failure, concept-observability]
+related: [exercise-sysd-005, exercise-sysd-006, rubric-system-design]
+status: published
+---
+import Callout from '../../../components/content/Callout.astro';
+
+Mỗi lần bạn đưa ra một quyết định thiết kế hệ thống, bạn đang làm một việc: **đổi vấn đề này lấy vấn đề khác**.
+
+Chọn eventual consistency → đổi lấy availability cao hơn, nhưng phải xử lý stale data. Chọn microservices → đổi lấy khả năng scale độc lập, nhưng phải chấp nhận độ phức tạp vận hành. Thêm redundancy → đổi lấy độ tin cậy cao hơn, nhưng tốn tiền và thêm component để quản lý.
+
+Không có kiến trúc "đúng". Chỉ có kiến trúc **phù hợp với ràng buộc của bạn tại thời điểm này**.
+
+## Bắt đầu đơn giản: Monolith trước
+
+Nguyên tắc số một của module này: **bắt đầu với monolith**.
+
+Một monolith không phải là kiến trúc kém — nó là kiến trúc *hiệu quả nhất* khi team nhỏ, khi sản phẩm chưa tìm được product-market fit, khi bạn cần tốc độ thay đổi cao hơn tốc độ scale. Bạn debug dễ hơn, deploy đơn giản hơn, không cần lo về network latency giữa services.
+
+Martin Fowler gọi đây là "Monolith First" — xây monolith, tìm ranh giới tự nhiên của code, rồi tách service khi có lý do cụ thể. Không phải khi nghe Netflix dùng microservices.
+
+Xem thêm: [concept-monolith-vs-microservices](/concepts/monolith-vs-microservices).
+
+## CAP buộc tay bạn khi mạng gặp sự cố
+
+Khi hệ thống phân tán (và sớm hay muộn, mọi hệ thống production đều có tính phân tán nào đó), bạn gặp bài toán CAP: **khi network partition xảy ra, bạn phải chọn giữa Consistency và Availability**.
+
+Đây không phải câu hỏi kỹ thuật — là câu hỏi về nghiệp vụ. Dữ liệu bạn đang bảo vệ có thể sai trong bao lâu? Không thể sai tí nào (tài khoản ngân hàng) → chọn C, chấp nhận service đôi khi không trả lời. Sai vài giây là ổn (feed mạng xã hội) → chọn A, chấp nhận stale data.
+
+Xem thêm: [concept-cap-theorem](/concepts/cap-theorem).
+
+## Chọn consistency model theo từng tính năng
+
+Không phải toàn bộ hệ thống phải có cùng một consistency model. Một app thương mại điện tử có thể dùng:
+
+- **Strong consistency** cho tồn kho và thanh toán — không thể bán quá số lượng thực.
+- **Eventual consistency** cho đánh giá sản phẩm, số lượt xem, lịch sử duyệt — hiển thị chậm vài giây là ổn.
+- **Read-your-writes** cho profile người dùng — bạn phải thấy ngay những gì bạn vừa thay đổi.
+
+Quyết định này ảnh hưởng trực tiếp đến lựa chọn database và cách bạn viết code xử lý conflict.
+
+Xem thêm: [concept-consistency-models](/concepts/consistency-models).
+
+## Tìm và triệt SPOF trước khi production tìm thấy nó
+
+Sau khi kiến trúc đã hình thành, vẽ sơ đồ và hỏi: *"thành phần nào nếu chết sẽ kéo sập toàn bộ hệ thống?"*
+
+Đó là SPOF — và mọi hệ thống non-trivial đều có ít nhất một. Database master duy nhất? Load balancer không có pair? Một third-party API không có fallback?
+
+Fix SPOF không phải là làm cho hệ thống không bao giờ sập — là làm cho *một thành phần chết không kéo chết cả hệ thống*. Redundancy, failover, health check, graceful degradation.
+
+Xem thêm: [concept-single-point-of-failure](/concepts/single-point-of-failure).
+
+## Không thể sửa những gì không nhìn thấy: Observability
+
+Sau tất cả những quyết định trên, câu hỏi cuối: *"khi có sự cố lúc 3 giờ sáng, bạn biết điều gì đang xảy ra trong bao nhiêu phút?"*
+
+Observability — logs, metrics, traces — là thứ biến câu trả lời từ "vài giờ đoán mò" thành "vài phút truy nguyên". Không phải luxury; là điều kiện để bạn học từ production và cải thiện liên tục.
+
+Với solo builder: error tracking (Sentry) + logs tập trung + uptime monitoring là bộ tối thiểu. Thêm khi cần.
+
+Xem thêm: [concept-observability](/concepts/observability).
+
+## Sợi chỉ xuyên suốt: thiết kế cho quy mô *bạn sắp có*
+
+<Callout title="Nhớ nhé">
+Track này bắt đầu từ nguyên tắc: thiết kế cho quy mô bạn *sắp có*, không phải quy mô bạn *mơ có*. Module 5 không ngoại lệ. Mỗi đánh đổi — monolith vs microservices, C vs A, strong vs eventual, SPOF vs cost — đều có giá. Trả đúng giá đúng lúc. Đừng trả trước khi cần.
+</Callout>
+
+Nếu bạn có 100 user: monolith, strong consistency ở đâu cần, fix SPOF rõ ràng nhất, cài Sentry.
+
+Nếu bạn có 100.000 user và đang gặp vấn đề cụ thể: mới là lúc xem xét tách service, chuyển sang eventual consistency cho một số tính năng, thêm redundancy phức tạp hơn.
+
+Quyết định tốt là quyết định *phù hợp với bối cảnh* — không phải quyết định "đúng" theo sách vở.
+
+---
+
+**Bài tập tiếp theo:**
+
+- [exercise-sysd-005](/exercises/system-design-for-builders/m5-pick-your-tradeoff) — Thực hành chọn đánh đổi dưới ràng buộc cụ thể.
+- [exercise-sysd-006](/exercises/system-design-for-builders/capstone-design-a-system) — Capstone: thiết kế một hệ thống từ đầu.
