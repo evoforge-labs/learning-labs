@@ -1,0 +1,61 @@
+---
+id: concept-reasoning-models
+title: "Reasoning Models (Mô hình suy luận)"
+type: "concept"
+aliases: ["reasoning model", "mô hình suy luận", "extended thinking", "chain of thought ẩn", "o-series", "thinking model"]
+tags: [llm, reasoning-models, ai-engineering, sampling]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Hầu hết LLM trả lời như học sinh làm bài trắc nghiệm: đọc câu hỏi → khoanh đáp án → nộp bài. Nhanh, nhưng với bài khó, sai nhiều. Reasoning model giống học sinh được phép dùng nháp — suy nghĩ dài, xóa đi viết lại, rồi mới viết đáp án cuối.
+
+## Là gì
+
+**Reasoning model** là lớp LLM có khả năng sinh **chuỗi suy luận nội bộ** (internal chain-of-thought) trước khi trả ra câu trả lời cuối. Quá trình "suy nghĩ" này thường ẩn với người dùng — bạn chỉ thấy kết quả, hoặc tóm tắt thinking nếu được bật.
+
+**Các model tiêu biểu 2026:**
+- **OpenAI o-series** (o1, o3, o4-mini...)
+- **Claude Sonnet 4.6 với extended thinking** — bật bằng `thinking: {type: "enabled", budget_tokens: N}`
+- **Gemini 3.x thinking mode**
+
+## Ví dụ thật
+
+Bài toán: "Viết code Python xử lý tệp CSV 10GB mà không load hết vào RAM."
+
+Với **standard model**: thường trả lời ngay, có thể đúng, có thể bỏ sót edge case.
+
+Với **reasoning model**: model "suy nghĩ" vài nghìn token (streaming thinking blocks) — cân nhắc chunking vs generator, memory profiling, edge case của encoding — rồi mới đưa ra code. Kết quả thường chắc chắn hơn, ít bug hơn trên bài toán phức tạp.
+
+## Đảo ngược lời khuyên cũ — quan trọng!
+
+Những kỹ thuật từng dùng với standard model **KHÔNG nên dùng** với reasoning models:
+
+<Callout title="Cẩn thận">
+**Đừng** thêm "hãy suy nghĩ từng bước" (chain-of-thought prompt) — model đã tự làm rồi, nhắc lại có thể cản quá trình suy luận nội bộ của nó.
+
+**Đừng** chỉnh temperature — reasoning models không dùng temperature theo cách thông thường.
+
+**Đừng** dùng few-shot example phức tạp ngay từ đầu — thử zero-shot trước, thêm example chỉ khi zero-shot thất bại.
+</Callout>
+
+**Điều khiển reasoning models đúng cách:**
+- Dùng `budget_tokens` (Claude) hoặc `reasoning_effort` (OpenAI) để cân bằng chất lượng vs chi phí/tốc độ.
+- Đặt câu hỏi rõ ràng, ngắn gọn. Model tự biết khi nào cần suy luận sâu.
+- Với Claude Opus 4.8, dùng `effort` parameter (low/medium/high) thay vì budget_tokens thủ công.
+
+<Callout title="Mẹo">
+Reasoning models **đắt hơn và chậm hơn** standard models. Dùng chúng cho bài toán thực sự cần: lập luận nhiều bước, debug phức tạp, phân tích pháp lý/khoa học. Đừng dùng để trả lời câu hỏi đơn giản hay tóm tắt văn bản.
+</Callout>
+
+## Đọc thêm
+
+- [OpenAI – Reasoning best practices](https://developers.openai.com/api/docs/guides/reasoning-best-practices) — Hướng dẫn chính thức từ OpenAI: đơn giản hóa prompt, zero-shot trước, không chain-of-thought, và cách dùng reasoning_effort.
+- [Anthropic – Extended thinking](https://platform.claude.com/docs/en/docs/build-with-claude/extended-thinking) — Tài liệu chi tiết Claude extended thinking: bật tắt, budget_tokens, streaming thinking, interleaved thinking với tool use.
+- [Anthropic – Prompting best practices](https://platform.claude.com/docs/en/docs/build-with-claude/prompt-engineering/claude-prompting-best-practices) — Hướng dẫn chính thức về prompting cho tất cả Claude model, bao gồm phần riêng cho Opus 4.8 và reasoning mode.
+
+## Tự kiểm tra
+
+1. Kể 3 tác vụ phù hợp với reasoning model và 3 tác vụ KHÔNG phù hợp (tốn tiền thừa). Giải thích tiêu chí phân loại.
+2. Với Claude Sonnet 4.6 + extended thinking, tham số nào điều khiển "độ sâu" suy luận? Nó khác temperature như thế nào?
+3. Bạn thấy một tutorial cũ (2023) hướng dẫn thêm "Let's think step by step" vào prompt. Năm 2026, lời khuyên đó còn đúng không? Giải thích.

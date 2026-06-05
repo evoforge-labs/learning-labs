@@ -1,0 +1,55 @@
+---
+id: concept-mcp
+title: "MCP (Model Context Protocol)"
+type: "concept"
+aliases: ["Model Context Protocol", "MCP server", "MCP client", "MCP host", "USB-C AI"]
+tags: [ai-engineering, agents, mcp, tool-calling, interoperability, protocol, standards]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Trước khi có USB-C, mỗi hãng điện thoại có một loại cáp riêng. Kết nối một thiết bị Samsung với màn hình Apple? Cần adapter đặc biệt. Rồi USB-C ra đời — một chuẩn, kết nối được tất cả. MCP là USB-C đó, nhưng cho AI.
+
+## Là gì
+
+**MCP (Model Context Protocol)** là chuẩn mở do Anthropic công bố tháng 11/2024 để kết nối LLM với data source và tool bên ngoài theo cách chuẩn hóa, không cần mỗi app viết integration riêng.
+
+Kiến trúc gồm 3 vai:
+- **Host**: app AI (Claude Desktop, VS Code Copilot...)
+- **Client**: connector trong host, quản lý kết nối
+- **Server**: dịch vụ cung cấp data/tool (GitHub MCP Server, Postgres MCP Server...)
+
+3 primitive mà MCP server có thể cung cấp:
+| Primitive | Là gì | Ví dụ |
+|---|---|---|
+| **Resources** | Dữ liệu/context để đọc | File, database record, web page |
+| **Prompts** | Template workflow định sẵn | "Tóm tắt PR này theo format..." |
+| **Tools** | Hàm để model thực thi | `create_issue`, `query_db` |
+
+Giao tiếp qua **JSON-RPC 2.0** — lightweight, language-agnostic.
+
+## Ví dụ thật
+
+Trước MCP: bạn muốn Claude đọc GitHub + query Postgres + gọi Slack → viết 3 integration tùy chỉnh, maintain 3 bộ code, 3 auth flow khác nhau.
+
+Sau MCP: cài 3 MCP server tương ứng (đã có sẵn trong ecosystem ~2000+ server tính đến 2026), khai báo trong config — xong. Khi bạn đổi sang Cursor hay VS Code, các server đó vẫn dùng được.
+
+<Callout title="Cẩn thận">
+**Đừng tin MCP server lạ như tin tool của mình.** MCP spec nhắc rõ: mô tả tool từ server bên ngoài phải được coi là *không tin cậy* cho đến khi bạn kiểm tra. Một MCP server độc hại có thể mô tả tool theo cách dẫn LLM đến hành vi không mong muốn (prompt injection qua tool description). Chỉ cài server từ nguồn tin cậy.
+</Callout>
+
+<Callout title="Nhớ nhé">
+MCP = chuẩn kết nối một lần, dùng khắp nơi. Build một MCP server cho hệ thống nội bộ → tất cả AI client hỗ trợ MCP đều dùng được ngay, không cần viết lại.
+</Callout>
+
+## Đọc thêm
+
+- [MCP Introduction — modelcontextprotocol.io](https://modelcontextprotocol.io/introduction) — Tài liệu chính thức giới thiệu MCP: kiến trúc Host/Client/Server, 3 primitive, và ví dụ use case.
+- [MCP Specification — modelcontextprotocol.io](https://modelcontextprotocol.io/specification) — Spec đầy đủ: base protocol JSON-RPC, server features (Resources/Prompts/Tools), client features (Sampling/Roots), và security guidelines.
+- [Model Context Protocol announcement — Anthropic](https://www.anthropic.com/news/model-context-protocol) — Thông báo ra mắt MCP (Nov 2024): lý do Anthropic tạo chuẩn này, early adopter (Block, Apollo, Zed, Replit), và tầm nhìn dài hạn.
+
+## Tự kiểm tra
+
+1. Sự khác biệt giữa Resources, Prompts và Tools trong MCP là gì? Cho ví dụ cụ thể cho từng loại.
+2. Tại sao MCP dùng JSON-RPC thay vì REST? Lợi ích gì khi dùng stateful connection?
+3. Bạn tìm thấy một MCP server hữu ích trên GitHub nhưng không biết ai viết. Những rủi ro gì cần xem xét trước khi cài vào production agent?

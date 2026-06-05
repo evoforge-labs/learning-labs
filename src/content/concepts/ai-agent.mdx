@@ -1,0 +1,51 @@
+---
+id: concept-ai-agent
+title: "AI Agent"
+type: "concept"
+aliases: ["agent", "autonomous agent", "LLM agent", "agentic AI", "tác tử AI"]
+tags: [ai-engineering, agents, llm, autonomy, tool-calling, agentic-workflows]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Bạn nhờ người trợ lý đặt vé máy bay. Có hai kiểu trợ lý: một người chờ bạn chỉ từng bước ("giờ tìm chuyến nào?", "giờ nhập thẻ nào?"), và một người tự lo từ đầu đến cuối — chỉ hỏi lại khi thực sự cần. Kiểu thứ hai mới là **agent**.
+
+## Là gì
+
+**AI Agent** là hệ thống trong đó LLM *tự điều hướng tiến trình*: nó quyết định bước tiếp theo là gì, gọi tool nào, dừng lại khi nào — mà không cần con người chỉ thị từng bước.
+
+Điểm mấu chốt: **agent ≠ chatbot, và agent ≠ workflow**.
+
+| | Chatbot | Workflow | Agent |
+|---|---|---|---|
+| Ai điều hướng? | Người dùng | Code định sẵn | LLM |
+| Bước tiếp theo | Do người hỏi | Do if/else | Do model quyết định |
+| Dùng tool? | Không | Cố định | Động, tuỳ ngữ cảnh |
+
+## Ví dụ thật
+
+Một **workflow** xử lý ticket support: phân loại → gọi API tra cứu đơn hàng → điền template trả lời. Đường code cố định, dự đoán được.
+
+Một **agent** xử lý ticket support: đọc ticket, tự quyết định cần tra cứu đơn hàng không, nếu cần thì gọi API, nếu thấy cần hoàn tiền thì gọi API hoàn tiền, rồi soạn câu trả lời phù hợp — toàn bộ logic do model tự suy luận.
+
+Agent linh hoạt hơn, nhưng cũng khó dự đoán và debug hơn.
+
+<Callout title="Cẩn thận">
+Anthropic khuyến cáo rõ: **bắt đầu đơn giản nhất**. Hầu hết tác vụ thực tế — workflow với vài bước cố định — chạy tốt hơn, rẻ hơn, dễ debug hơn một agent phức tạp. Chỉ chuyển sang agent khi workflow không đủ xử lý sự biến thiên của input.
+</Callout>
+
+<Callout title="Nhớ nhé">
+Agent = LLM tự điều hướng + dùng tool động. Nhưng "có thể làm agent" không có nghĩa "nên làm agent" — sự đơn giản là lợi thế.
+</Callout>
+
+## Đọc thêm
+
+- [Building effective agents — Anthropic](https://www.anthropic.com/research/building-effective-agents) — Bài viết nền tảng của Anthropic: phân biệt agent vs workflow, 5 pattern agentic workflow, và khi nào nên dùng từng loại.
+- [Agents SDK Overview — OpenAI](https://developers.openai.com/api/docs/guides/agents) — Góc nhìn của OpenAI về agents: định nghĩa, kiến trúc orchestrator-worker, và cách build agent code-first với Python/TypeScript.
+- [LLM Powered Autonomous Agents — Lilian Weng](https://lilianweng.github.io/posts/2023-06-23-agent/) — Bài tổng quan sâu về kiến trúc agent: planning, memory, tool use — nền tảng lý thuyết quan trọng dù đã từ 2023.
+
+## Tự kiểm tra
+
+1. Bạn đang build một hệ thống đặt lịch hẹn khám bệnh: kiểm tra lịch trống → gửi SMS xác nhận → ghi vào database. Đây là agent hay workflow? Vì sao?
+2. Tại sao Anthropic khuyên "bắt đầu với cái đơn giản nhất"? Rủi ro gì khi dùng agent cho tác vụ thực ra chỉ cần workflow?
+3. Điểm khác biệt cốt lõi giữa agent và chatbot là gì, dù cả hai đều dùng LLM?

@@ -1,0 +1,52 @@
+---
+id: concept-temperature-sampling
+title: "Temperature & Sampling"
+type: "concept"
+aliases: ["temperature", "sampling", "top-p", "top_p", "nhiệt độ model", "cách model chọn token"]
+tags: [llm, sampling, ai-engineering, reasoning-models]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Mỗi khi model cần chọn token tiếp theo, nó có một danh sách xác suất: "hello" có 40%, "hi" có 30%, "greetings" có 10%... Temperature quyết định model có chọn theo xác suất cao nhất hay "xáo trộn" danh sách đó để ra kết quả bất ngờ hơn.
+
+## Là gì
+
+**Temperature** là tham số điều chỉnh mức độ ngẫu nhiên trong quá trình sinh token:
+
+- **Temperature thấp (0.0 – 0.3)**: Model luôn chọn token có xác suất cao nhất. Kết quả xác định, nhất quán, dễ dự đoán. Dùng cho: extraction, classification, code generation, câu trả lời có đúng/sai rõ ràng.
+- **Temperature cao (0.7 – 1.0)**: Model "xáo trộn" xác suất, dám chọn token ít phổ biến hơn. Kết quả sáng tạo, đa dạng, ít lặp. Dùng cho: brainstorming, copywriting, storytelling.
+
+**Top-p (nucleus sampling)** là tham số tương tự: thay vì chỉnh nhiệt độ, bạn giới hạn model chỉ chọn trong nhóm token có tổng xác suất đạt *p* (ví dụ: top-p=0.9 → chỉ chọn trong top 90% xác suất tích lũy).
+
+<Callout title="Mẹo">
+Chỉnh **temperature HOẶC top-p** — không cả hai cùng lúc. Hai tham số này tương tác phức tạp với nhau; chỉnh song song thường làm kết quả khó kiểm soát hơn.
+</Callout>
+
+## Ví dụ thật
+
+Bạn build công cụ trích xuất thông tin từ hóa đơn (tên công ty, số tiền, ngày). Đặt temperature=0 — model luôn trả ra cùng kết quả với cùng input. Tốt.
+
+Cùng model, bạn muốn sinh 5 ý tưởng tên sản phẩm khác nhau. Đặt temperature=0 — model sinh 5 cái gần như giống hệt nhau. Thất bại. Cần temperature=0.8–1.0.
+
+## Shift 2026: Reasoning models đổi luật chơi
+
+Với **reasoning models** — Claude Sonnet 4.6 (extended thinking), OpenAI o-series, Gemini 3.x thinking — temperature **gần như không có tác dụng hoặc không được hỗ trợ**.
+
+Lý do: những model này có chuỗi suy luận nội bộ riêng (chain-of-thought ẩn). Chúng tự điều chỉnh "nhiệt độ tư duy" bên trong — bạn không cần và không nên can thiệp. Anthropic và OpenAI đều khuyến cáo để temperature mặc định khi dùng reasoning models.
+
+<Callout title="Cẩn thận">
+Với reasoning models: **đừng chỉnh temperature, đừng prompt "think step by step"** — model đã tự làm điều đó rồi. Điều khiển reasoning qua tham số `thinking.budget_tokens` (Claude) hoặc `reasoning_effort` (OpenAI), không phải qua temperature hay prompt tricks.
+</Callout>
+
+## Đọc thêm
+
+- [Anthropic Glossary – Temperature](https://platform.claude.com/docs/en/docs/resources/glossary) — Định nghĩa chính thức, giải thích cách temperature ảnh hưởng đến tính ngẫu nhiên của output Claude.
+- [OpenAI – Reasoning best practices](https://developers.openai.com/api/docs/guides/reasoning-best-practices) — Hướng dẫn chính thức về o-series: tại sao không cần chain-of-thought prompt, zero-shot trước, và cách dùng reasoning_effort thay temperature.
+- [Anthropic – Extended thinking](https://platform.claude.com/docs/en/docs/build-with-claude/extended-thinking) — Chi tiết về Claude extended thinking: cách bật, budget_tokens, và lý do temperature không áp dụng theo cách thông thường.
+
+## Tự kiểm tra
+
+1. Bạn build hệ thống phân loại email khách hàng (spam / không spam). Nên đặt temperature bao nhiêu? Tại sao?
+2. Tại sao với reasoning models, việc thêm "hãy suy nghĩ từng bước" vào prompt lại không cần thiết, thậm chí có thể gây hại?
+3. Sự khác biệt giữa temperature và top-p là gì? Tại sao không nên chỉnh cả hai cùng lúc?

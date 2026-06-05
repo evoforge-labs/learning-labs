@@ -1,0 +1,60 @@
+---
+id: concept-react-pattern
+title: "ReAct Pattern (Reason + Act)"
+type: "concept"
+aliases: ["ReAct", "Reason Act", "thought-action-observation", "TAO loop", "agentic loop"]
+tags: [ai-engineering, agents, react-pattern, reasoning, planning, agentic-workflows]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Khi giải một bài toán khó, bạn không chỉ hành động — bạn *suy nghĩ*, rồi *thử*, rồi *nhìn kết quả*, rồi suy nghĩ tiếp. Đó chính xác là những gì ReAct dạy LLM làm.
+
+## Là gì
+
+**ReAct** (Reason + Act) là pattern để agent xen kẽ hai pha trong mỗi lượt:
+
+1. **Thought** — LLM viết ra suy luận nội tâm: "tôi cần tra đơn hàng trước"
+2. **Action** — LLM gọi một tool cụ thể
+3. **Observation** — kết quả tool được đưa lại
+4. → lặp lại cho đến khi xong
+
+Vòng lặp này giúp LLM *không đoán mò* — nó có thể điều chỉnh kế hoạch dựa trên kết quả thực tế từng bước.
+
+## Ví dụ thật
+
+Ticket: *"Đơn ORD-9821 của tôi chưa đến sau 2 tuần"*
+
+```
+Thought: Cần tra trạng thái đơn hàng trước.
+Action: get_order("ORD-9821")
+Observation: { status: "delivered", delivered_at: "2026-05-20", address: "123 Lê Lợi" }
+
+Thought: Đơn ghi là đã giao nhưng khách chưa nhận. Có thể giao nhầm địa chỉ hoặc giao cho người khác. Cần xem chi tiết vận chuyển.
+Action: get_shipping_log("ORD-9821")
+Observation: { signed_by: "Trần B", note: "Giao cho bảo vệ tòa nhà" }
+
+Thought: Đã có đủ thông tin. Giải thích tình huống và đề xuất liên hệ bảo vệ.
+```
+
+Không có Thought, LLM có thể nhảy thẳng đến kết luận sai ("đơn chưa giao") mà không tra cứu gì.
+
+<Callout title="Góc kỹ thuật">
+**2026 update:** Các reasoning model (Claude 3.7+, o3, Gemini 2.0 Thinking) *internalize* bước Thought vào quá trình suy luận ẩn — bạn không thấy chain-of-thought trong output nhưng model vẫn "suy nghĩ" trước khi gọi tool. Biến thể **Pre-Act** (plan first, then execute) phổ biến cho task phức tạp: agent lập kế hoạch toàn bộ trước rồi mới bắt đầu gọi tool.
+</Callout>
+
+<Callout title="Nhớ nhé">
+ReAct là sàn tối thiểu của mọi agent hoạt động đúng. Nếu agent của bạn không có vòng lặp Thought→Action→Observation, nó đang đoán mò thay vì suy luận.
+</Callout>
+
+## Đọc thêm
+
+- [ReAct: Synergizing Reasoning and Acting in Language Models — arXiv](https://arxiv.org/abs/2210.03629) — Paper gốc của ReAct (ICLR 2023): kết quả benchmark, so sánh với chain-of-thought thuần, và thiết kế prompt mẫu.
+- [LLM Powered Autonomous Agents — Lilian Weng](https://lilianweng.github.io/posts/2023-06-23-agent/) — Phần "Reasoning" và "Tool Use" giải thích ReAct trong bối cảnh kiến trúc agent tổng thể, kèm diagram rõ ràng.
+- [Anthropic multi-agent research system — Anthropic Engineering](https://www.anthropic.com/engineering/multi-agent-research-system) — Cách Anthropic áp dụng ReAct loop trong hệ thống multi-agent thực tế: orchestrator suy luận trước khi dispatch subagent.
+
+## Tự kiểm tra
+
+1. Không có bước Thought, điều gì có thể xảy ra khi agent gặp kết quả tool bất ngờ (ví dụ: đơn hàng đã giao nhưng khách chưa nhận)?
+2. Biến thể Pre-Act khác ReAct gốc ở điểm nào? Khi nào Pre-Act có lợi hơn?
+3. Reasoning model "internalize" bước Thought — điều này ảnh hưởng gì đến cách bạn debug agent khi nó gọi tool sai?

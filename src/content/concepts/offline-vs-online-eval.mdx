@@ -1,0 +1,59 @@
+---
+id: concept-offline-vs-online-eval
+title: "Offline vs Online Eval"
+type: "concept"
+aliases: ["offline eval", "online eval", "ci eval", "production eval", "eval vòng lặp", "eval ngoại tuyến", "eval trực tuyến"]
+tags: [evals, ai-engineering, eval-dataset, llmops, observability]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Một cầu thủ tập penalty trong phòng gym (offline) và đá penalty trong trận đấu thật (online) — hai môi trường rất khác nhau. Bạn cần cả hai: gym để luyện kỹ thuật, trận đấu thật để biết bạn đang đứng ở đâu.
+
+AI pipeline cũng vậy.
+
+## Là gì
+
+**Offline eval** chạy trên golden set cố định trong môi trường kiểm soát — thường trong CI, mỗi khi có PR mới. Mục tiêu: phát hiện regression trước khi ship.
+
+**Online eval** chạy trên trace production thật — sample một tỷ lệ nhỏ request đang chạy live, chấm bằng grader reference-free (không cần ground-truth). Mục tiêu: theo dõi chất lượng thực tế theo thời gian.
+
+Hai loại không thay thế nhau — chúng bổ sung cho nhau.
+
+## Ví dụ thật
+
+**Offline eval trong CI:**
+Mỗi PR thay đổi prompt → GitHub Actions chạy bộ 60 golden case → pass rate phải ≥ baseline − 5%. Nếu thấp hơn, PR bị block. Không cần con người ngồi review.
+
+**Online eval trong production:**
+5% request thật được chấm tự động bằng LLM-judge (groundedness + relevance). Dashboard hiển thị pass rate theo ngày. Khi pass rate giảm 10% trong 3 ngày liên tiếp → alert → team vào xem trace.
+
+**The flywheel — vòng lặp cải tiến:**
+
+```
+Lỗi production → error analysis → case mới → thêm vào golden set → offline eval chặt hơn
+                                                                              ↑
+                                              ← giảm lỗi production tương lai ←
+```
+
+Đây là lý do online eval và offline eval phải kết nối: lỗi từ online feed trực tiếp vào golden set cho offline.
+
+<Callout title="Mẹo">
+Bắt đầu với confidence interval khi theo dõi online eval. Pass rate 73% từ 20 sample rất khác với 73% từ 500 sample — cần đủ sample size mới kết luận được xu hướng.
+</Callout>
+
+<Callout title="Nhớ nhé">
+Offline = CI gate, ngăn regression. Online = production monitor, phát hiện drift. Lỗi online → golden set offline. Đây là flywheel cải tiến liên tục.
+</Callout>
+
+## Đọc thêm
+
+- [Hamel Husain – LLM Evals FAQ (Jan 2026)](https://hamel.dev/blog/posts/evals-faq/) — Giải thích tại sao cần cả hai loại eval, cách lỗi production trở thành nguồn case tốt nhất cho golden set, và bẫy khi chỉ dùng một trong hai.
+- [OpenAI – Evaluation best practices](https://developers.openai.com/api/docs/guides/evaluation-best-practices) — Framework "continuously evaluate": từ offline snapshot đến monitoring production liên tục, với ví dụ về multi-agent workflows.
+- [Langfuse – Scores overview](https://langfuse.com/docs/scores/overview) — Hướng dẫn thực tế về online eval với Langfuse: track scores từ LLM-judge, human annotation, và custom evaluator trên production trace. Tích hợp CI/CD để làm offline eval.
+
+## Tự kiểm tra
+
+1. Offline eval và online eval giải quyết vấn đề gì khác nhau? Tại sao không thể chỉ dùng một loại?
+2. "Flywheel eval" là gì? Mô tả vòng lặp từ lỗi production đến cải thiện offline eval.
+3. Tại sao cần confidence interval khi đọc kết quả online eval? Sample size 20 case khác gì 500 case?

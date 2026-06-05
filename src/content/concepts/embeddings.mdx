@@ -1,0 +1,48 @@
+---
+id: concept-embeddings
+title: "Embeddings"
+type: "concept"
+aliases: ["vector embedding", "text embedding", "embedding model", "sentence embedding", "dense vector", "Matryoshka embedding"]
+tags: [ai-engineering, embeddings, rag, retrieval, semantic-search, llm]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Thử nghĩ: làm sao máy tính biết "xe hơi" và "ô tô" là cùng một thứ, còn "xe hơi" và "máy bay" thì không? Máy tính không đọc chữ — nó chỉ hiểu số. Vậy ta phải biến chữ thành số theo cách mà *số gần nhau = nghĩa gần nhau*.
+
+Đó là embeddings.
+
+## Là gì
+
+**Embedding** là một danh sách số thực (vector) đại diện cho nghĩa của một đoạn văn bản. Model embedding đọc câu, rồi trả về — ví dụ — 1536 con số. Hai câu có nghĩa tương tự sẽ có vector gần nhau trong không gian đó (đo bằng cosine similarity).
+
+Không giống từ khóa (chỉ khớp ký tự), embedding nắm bắt *ý nghĩa*: "giá sản phẩm" và "bao nhiêu tiền" sẽ ra vector gần nhau dù không chung từ nào.
+
+## Ví dụ thật
+
+Bạn xây chatbot hỗ trợ khách hàng. Người dùng gõ: *"tôi muốn hủy đơn hàng"*. Hệ thống cần tìm đúng tài liệu hướng dẫn hủy đơn — nhưng tài liệu đó viết là *"cancellation policy"*. Không từ nào khớp keyword. Nhưng embedding của hai câu sẽ rất gần nhau → tìm được.
+
+**Chọn model embedding:** Tham khảo [MTEB Leaderboard](https://huggingface.co/spaces/mteb/leaderboard) — bảng xếp hạng benchmark cho embedding models. Model tốt nhất tùy task: search, classification, clustering đòi hỏi khác nhau. Với tiếng Anh thông dụng: `text-embedding-3-large` (OpenAI) hoặc `embed-v4.0` (Cohere) là lựa chọn solid.
+
+**Matryoshka Embeddings:** Một số model (như `text-embedding-3-large`) hỗ trợ cắt bớt chiều (dimension). Vector 1536 chiều có thể cắt còn 256 chiều mà vẫn giữ phần lớn chất lượng — tiết kiệm bộ nhớ và tăng tốc query đáng kể.
+
+<Callout title="Cẩn thận">
+**Bắt buộc dùng cùng một model lúc index và lúc query.** Nếu bạn embed tài liệu bằng `text-embedding-3-small` nhưng query bằng `text-embedding-3-large`, kết quả sẽ vô nghĩa — hai model tạo ra "ngôn ngữ số" khác nhau hoàn toàn. Đây là lỗi phổ biến nhất khi migrate model.
+</Callout>
+
+<Callout title="Nhớ nhé">
+Embedding không phải ma thuật — nó chỉ tốt bằng model tạo ra nó và data bạn đưa vào. Chọn model theo task thực tế của bạn, kiểm tra trên MTEB, và giữ nhất quán giữa lúc index và query.
+</Callout>
+
+## Đọc thêm
+
+- [OpenAI Embeddings Guide](https://developers.openai.com/api/docs/guides/embeddings) — Tài liệu chính thức về `text-embedding-3` models: cách dùng, dimension reduction, và ví dụ code thực tế.
+- [MTEB Leaderboard — Hugging Face](https://huggingface.co/spaces/mteb/leaderboard) — Bảng xếp hạng embedding models theo nhiều task: retrieval, classification, clustering. Dùng để chọn model phù hợp với usecase của bạn.
+- [LlamaIndex: Basic RAG Strategies](https://developers.llamaindex.ai/python/framework/optimizing/basic_strategies/basic_strategies/) — Hướng dẫn thực chiến: chọn embedding model, điều chỉnh chunk size, dùng metadata filter và hybrid search trong pipeline RAG.
+- [LLM Patterns — Eugene Yan](https://eugeneyan.com/writing/llm-patterns/) — Tổng hợp 7 pattern thiết yếu cho hệ thống LLM production, bao gồm RAG và cách embeddings đóng vai trò trung tâm.
+
+## Tự kiểm tra
+
+1. Bạn embed 10.000 tài liệu bằng model A, sau đó quyết định đổi sang model B vì B mạnh hơn. Bạn cần làm gì? Tại sao không thể chỉ đổi model ở phần query?
+2. Matryoshka embedding giúp ích gì trong prod? Khi nào nên dùng vector 256 chiều thay vì 1536 chiều?
+3. Tại sao embedding giỏi tìm "hủy đơn hàng" → "cancellation policy" nhưng kém hơn khi tìm mã lỗi như "ERR_CODE_4021"?

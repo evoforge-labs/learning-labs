@@ -1,0 +1,68 @@
+---
+id: exercise-aieng-003
+title: "Thiết kế một pipeline RAG"
+type: "exercise"
+track: ai-engineering
+tags: [ai-engineering, rag, chunking, hybrid-search, reranking, contextual-retrieval, retrieval]
+estimatedMinutes: 35
+related:
+  - lesson-aieng-003
+  - concept-rag
+  - concept-chunking
+  - concept-hybrid-search
+  - concept-reranking
+  - concept-contextual-retrieval
+  - rubric-ai-engineering
+status: published
+---
+import Callout from '../../../components/content/Callout.astro';
+
+## Tình huống
+
+Công ty bạn có khoảng **10.000 tài liệu nội bộ**: hướng dẫn sản phẩm, chính sách hỗ trợ, báo cáo kỹ thuật và nhật ký lỗi. Tài liệu dài từ 1 đến 50 trang. Nhiều tài liệu chứa mã sản phẩm (ví dụ: `SKU-PRD-2041`), mã lỗi (`ERR_SYNC_408`), và số phiên bản (`v2.3.1`).
+
+Bạn được giao build một **trợ lý hỏi-đáp nội bộ** để nhân viên có thể hỏi bất kỳ câu nào và nhận câu trả lời có dẫn nguồn tài liệu. Yêu cầu: câu trả lời phải chính xác và có thể truy nguyên.
+
+<Callout title="Mẹo">
+Đừng nghĩ về code ngay. Trước tiên hãy thiết kế pipeline trên giấy — hiểu rõ từng bước trước khi chọn tool hay framework.
+</Callout>
+
+## Nhiệm vụ
+
+### Nhiệm vụ 1 — Chiến lược chunking và metadata (10 phút)
+
+Tài liệu của bạn không đồng nhất: có file markdown có cấu trúc rõ, có PDF scan, có log text thuần. Hãy trả lời:
+
+1. Bạn sẽ dùng chunking strategy nào cho từng loại tài liệu? Tại sao không dùng fixed-size chunking thống nhất cho tất cả?
+2. Liệt kê **ít nhất 4 trường metadata** bạn sẽ gắn vào mỗi chunk. Giải thích tại sao từng trường quan trọng (hint: nghĩ đến filter khi query và cite nguồn khi trả lời).
+3. Bạn có nên áp dụng contextual retrieval (prepend context 50-100 token) cho tất cả 10.000 tài liệu không? Ai sẽ sinh context đó và khi nào? Nêu một trường hợp bạn sẽ bỏ qua bước này.
+
+### Nhiệm vụ 2 — Thiết kế retrieval pipeline (15 phút)
+
+Một nhân viên gõ: *"lỗi ERR_SYNC_408 xảy ra khi nào và cách khắc phục?"*
+
+1. Tại sao semantic search đơn thuần sẽ thất bại hoặc cho kết quả kém với query này? Loại retrieval nào sẽ bắt được mã lỗi chính xác?
+2. Vẽ (mô tả bằng text) pipeline retrieval của bạn: từ query đầu vào đến danh sách chunk cuối cùng trước khi đưa vào LLM. Bao gồm: số ứng viên ở mỗi bước, loại model/algorithm dùng, và lý do.
+3. Bạn có dùng reranking không? Nếu có: bạn sẽ lấy bao nhiêu ứng viên trước rerank và chọn top bao nhiêu sau? Nếu không: tại sao và điều kiện gì thay đổi sẽ khiến bạn thêm vào?
+
+### Nhiệm vụ 3 — Quyết định kiến trúc: RAG vs Long Context (10 phút)
+
+Cuối năm 2026, model LLM của team bạn đang dùng hỗ trợ context window 500K token. Một đồng nghiệp đề xuất: *"Hay là mình nhét hết 10.000 tài liệu vào context luôn cho đơn giản, khỏi cần RAG?"*
+
+1. Ước tính xem 10.000 tài liệu có fit vào 500K token không? (Gợi ý: trung bình 1 trang ≈ 500 token; tài liệu dài 1-50 trang)
+2. Ngay cả khi fit được, hãy nêu **2 lý do kỹ thuật** tại sao RAG vẫn là lựa chọn tốt hơn trong trường hợp này.
+3. Có tình huống nào với corpus này mà bạn sẽ chọn long context thay vì RAG không? Mô tả điều kiện cụ thể.
+
+<Callout title="Cẩn thận">
+Không có câu trả lời "đúng tuyệt đối" — điều quan trọng là lập luận của bạn có nhất quán và thực tế không. Đánh giá sẽ theo [AI Engineering Rubric](../../rubrics/ai-engineering-rubric).
+</Callout>
+
+## Tiêu chí tự đánh giá
+
+Sau khi hoàn thành, kiểm tra lại:
+
+- [ ] Chunking strategy của bạn có phù hợp với từng loại tài liệu không, hay bạn dùng một-size-fits-all?
+- [ ] Metadata bạn chọn có đủ để filter và cite nguồn không?
+- [ ] Pipeline retrieval có giải quyết được exact match (mã lỗi, SKU) và semantic match đồng thời không?
+- [ ] Quyết định RAG vs long context có dựa trên số liệu ước tính thực tế không?
+- [ ] Có điểm nào trong thiết kế của bạn sẽ gây bottleneck khi scale lên 100.000 tài liệu không?

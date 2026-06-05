@@ -1,0 +1,52 @@
+---
+id: concept-rag
+title: "RAG (Retrieval-Augmented Generation)"
+type: "concept"
+aliases: ["retrieval augmented generation", "retrieval-augmented generation", "RAG pipeline", "grounded generation", "knowledge-augmented LLM"]
+tags: [ai-engineering, rag, retrieval, embeddings, llm, context-engineering]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+LLM giỏi viết lách, giỏi suy luận — nhưng nó chỉ biết những gì nó đã học trước ngày cutoff. Hỏi về tài liệu nội bộ công ty bạn? Chính sách cập nhật tuần trước? Nó sẽ... bịa. Giải pháp không phải là train lại model. Giải pháp là: *tra cứu trước, rồi trả lời sau*.
+
+Đó là RAG.
+
+## Là gì
+
+**RAG (Retrieval-Augmented Generation)** là kỹ thuật đưa tài liệu liên quan vào context của LLM ngay trước khi nó sinh câu trả lời. Thay vì để model "nhớ" mọi thứ trong trọng số, bạn cung cấp đúng ngữ cảnh cần thiết tại thời điểm query.
+
+Pipeline cơ bản: `Query → Retrieve relevant chunks → Inject into prompt → LLM answers`.
+
+## Ví dụ thật
+
+Bạn xây trợ lý hỏi-đáp trên 50.000 tài liệu nội bộ. Không có RAG: LLM trả lời theo knowledge cũ, bịa số liệu. Có RAG: hệ thống tìm 5 đoạn tài liệu liên quan nhất, đưa vào prompt → LLM trả lời có dẫn nguồn, đúng với dữ liệu của bạn.
+
+**RAG vs Long Context:** Năm 2025-2026, các model có context window cực lớn (1M+ token). Câu hỏi thực tế: *khi nào nên nhét cả corpus vào context thay vì dùng RAG?*
+
+- **Long context thắng** khi corpus nhỏ (dưới 200 tài liệu), câu hỏi cần tổng hợp toàn bộ, và cost không phải vấn đề.
+- **RAG thắng** khi corpus lớn (nghìn đến triệu tài liệu), cần cập nhật realtime, hoặc phải tối ưu cost.
+- **"Context rot"** là vấn đề thực: model kém chú ý đến thông tin ở giữa context dài. RAG lọc ra chỉ phần liên quan → chất lượng tốt hơn.
+
+**2026: Context Engineering > RAG đơn thuần.** Anthropic và cộng đồng đang chuyển sang tư duy rộng hơn: *context engineering* — quản lý toàn bộ những gì đưa vào context window, không chỉ retrieval. Xem thêm [context-engineering](/concepts/context-engineering).
+
+<Callout title="Cẩn thận">
+RAG không tự động giải quyết hallucination. Nếu chunk retrieved sai hoặc không liên quan, LLM vẫn có thể hallucinate — thậm chí tự tin hơn vì "có nguồn". Quality của retrieval quyết định quality của câu trả lời. Xem [concept-rag-evaluation](/concepts/rag-evaluation) để biết cách đo.
+</Callout>
+
+<Callout title="Nhớ nhé">
+RAG không phải một kỹ thuật — đó là cả một pipeline với nhiều điểm cần tối ưu: chunking, embedding, retrieval, reranking. "Naive RAG" (chunk-and-embed đơn giản) thường cho kết quả kém. Xây đúng từng layer.
+</Callout>
+
+## Đọc thêm
+
+- [Contextual Retrieval — Anthropic](https://www.anthropic.com/news/contextual-retrieval) — Anthropic giới thiệu contextual retrieval: thêm context vào chunk trước khi embed, giảm 49-67% lỗi retrieval. Baseline mới cho RAG production.
+- [Effective Context Engineering for AI Agents — Anthropic](https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents) — Tư duy 2025-2026: từ "RAG" sang "context engineering" — cách quản lý toàn bộ context window để agent hoạt động hiệu quả.
+- [OpenAI Retrieval Guide](https://developers.openai.com/api/docs/guides/retrieval) — Tài liệu chính thức về RAG với OpenAI: vector store, chunking strategy, hybrid search và cách synthesize câu trả lời từ retrieved context.
+- [LLM Patterns — Eugene Yan](https://eugeneyan.com/writing/llm-patterns/) — RAG trong bức tranh lớn hơn: so sánh RAG vs fine-tuning, khi nào dùng cái nào, và các pattern thực chiến.
+
+## Tự kiểm tra
+
+1. Tại sao LLM context window lớn hơn không tự động thay thế RAG? Kể hai tình huống RAG vẫn tốt hơn long context.
+2. "Context rot" là gì? Điều này ảnh hưởng thế nào đến quyết định dùng RAG vs nhét cả corpus vào context?
+3. RAG pipeline của bạn đang trả lời sai dù tài liệu đúng đã có trong corpus. Bạn sẽ debug ở đâu trước tiên?

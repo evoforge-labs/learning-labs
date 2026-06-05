@@ -1,0 +1,58 @@
+---
+id: concept-fine-tuning
+title: "Fine-tuning"
+type: "concept"
+aliases: ["model fine-tuning", "SFT", "DPO", "RFT", "LoRA", "PEFT", "instruction tuning", "supervised fine-tuning"]
+tags: [ai-engineering, fine-tuning, llm, cost-optimization, llmops]
+prerequisites: [concept-llm, concept-foundation-model, concept-prompt-engineering]
+related: [concept-fine-tuning-vs-rag, concept-latency-cost-optimization, concept-llmops]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Bạn thuê một nhân viên mới — họ thông minh, nền tảng tốt. Nhưng mỗi ngày bạn phải nhắc lại: "Ở công ty này, email viết theo format này, tone như này, không bao giờ đề cập đối thủ theo cách đó." Sau vài tháng, họ tự biết — không cần nhắc nữa.
+
+Fine-tuning làm đúng chuyện đó cho LLM.
+
+## Là gì
+
+**Fine-tuning** là tiếp tục huấn luyện một model đã có sẵn trên tập dữ liệu của bạn, để model "nội hóa" behavior, format, hoặc kiến thức chuyên biệt mà bạn muốn.
+
+Khác với prompting (nhắc mỗi lần), fine-tuning ghi behavior vào trọng số model — không cần nhắc lại.
+
+**Ba phương pháp phổ biến (OpenAI 2026):**
+- **SFT (Supervised Fine-Tuning)** — Cho model xem cặp (prompt, response tốt). Phù hợp nhất cho format, classification, translation.
+- **DPO (Direct Preference Optimization)** — Cho model xem (response tốt, response tệ) để học preference. Tốt cho tone, style, safety.
+- **RFT (Reinforcement Fine-Tuning)** — Dùng grader tự động đánh giá reasoning để reinforcement learning. Chỉ dùng cho reasoning models khi task có ground truth verify được.
+
+**LoRA / PEFT — fine-tune tiết kiệm:**
+Thay vì cập nhật toàn bộ tỷ tỷ tham số, LoRA chỉ huấn luyện một tập ma trận nhỏ "ghép" vào model gốc (rank r=4 đến 8). Giảm tới 90% số tham số cần train — chạy được trên GPU consumer, không cần cụm H100.
+
+**Khi nào nên fine-tune:**
+- Bạn cần format/behavior **nhất quán tuyệt đối** (model phải luôn trả về JSON đúng schema, luôn viết email theo template cố định).
+- Bạn có dữ liệu riêng **không thể nhồi vào prompt** (quá nhiều, hoặc nhạy cảm).
+- Bạn muốn **thay thế few-shot dài** bằng model nhỏ hơn để giảm token và latency.
+
+## Ví dụ thật
+
+Công ty bạn có 500 mẫu email hỗ trợ khách hàng theo đúng giọng văn thương hiệu. Hiện tại bạn đang nhét 10 ví dụ vào mỗi prompt (few-shot) → tốn 3.000 token/request. Fine-tune SFT trên 500 mẫu: model học format và tone, loại bỏ hết few-shot → còn 200 token/request, giảm 93% token cost, latency nhanh hơn đáng kể.
+
+<Callout title="Cẩn thận">
+Fine-tuning **không phải cách inject kiến thức động**. Nếu bạn cần model biết thông tin hay thay đổi (giá sản phẩm, tin tức mới nhất, chính sách cập nhật), dùng RAG — không phải fine-tune. Fine-tune chỉ tốt cho *behavior ổn định*, không phải *kiến thức biến động*.
+</Callout>
+
+<Callout title="Nhớ nhé">
+Fine-tune = dạy model **cách hành xử** (format, tone, style), không phải dạy **sự kiện**. Cần dữ liệu chất lượng cao (ít nhưng tốt hơn nhiều mà lộn xộn) và eval rõ ràng để biết có cải thiện không.
+</Callout>
+
+## Đọc thêm
+
+- [Model Optimization — OpenAI](https://developers.openai.com/api/docs/guides/model-optimization) — Tổng quan các phương pháp fine-tuning của OpenAI (SFT, DPO, Vision, RFT): khi nào dùng cái nào, workflow từ prompt đến fine-tune.
+- [Fine-Tuning LLMs with LoRA — Hugging Face LLM Course](https://huggingface.co/learn/llm-course/en/chapter11/4) — Hướng dẫn thực chiến LoRA/PEFT: config rank/alpha, dùng SFTTrainer, và so sánh với full fine-tuning về cost và hiệu quả.
+- [Supervised Fine-Tuning — Hugging Face LLM Course Ch.11](https://huggingface.co/learn/llm-course/en/chapter11/1) — Tổng quan SFT trong LLM Course: chat templates, supervised fine-tuning, LoRA, và evaluation — bài học thực chiến có code đi kèm.
+
+## Tự kiểm tra
+
+1. Bạn muốn model luôn trả về JSON đúng schema và tuân theo format email thương hiệu. Bạn nên dùng prompting (few-shot), fine-tuning, hay cả hai? Tại sao?
+2. Tại sao fine-tune model để "biết về sản phẩm mới ra tháng trước" là ý tưởng tệ? Giải pháp thay thế đúng là gì?
+3. LoRA với rank r=4 khác gì full fine-tuning? Khi nào bạn chọn r=4 thay vì r=16?

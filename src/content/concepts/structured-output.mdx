@@ -1,0 +1,71 @@
+---
+id: concept-structured-output
+title: "Structured Output"
+type: "concept"
+aliases: ["structured outputs", "JSON schema", "output schema", "strict mode", "Pydantic", "Zod", "output có cấu trúc"]
+tags: [ai-engineering, prompt, llm, structured-output, json, schema, tool-use]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Bạn đặt nhà hàng qua điện thoại và nhân viên ghi đơn theo form có sẵn: tên, số bàn, giờ, số người. Không ai trả lời "Oke anh nhé, em nhớ rồi" — vì "nhớ rồi" không vào được hệ thống đặt bàn.
+
+LLM mặc định "nói chuyện" — nhưng production cần dữ liệu đi vào database, API, hay hàm tiếp theo. Bạn cần ép nó theo form.
+
+## Là gì
+
+**Structured output** là cách buộc model trả về dữ liệu theo schema định trước (thường là JSON) thay vì văn xuôi tự do.
+
+Có hai mức:
+
+1. **Hướng dẫn bằng prompt** ("trả về JSON với các trường...") — không đảm bảo, model vẫn có thể trả sai format.
+2. **Schema-enforced qua API** — đảm bảo 100% output match schema:
+   - OpenAI: `response_format: {type: "json_schema", json_schema: {...}, strict: true}`
+   - Anthropic: tool use với `strict: true`, hoặc Structured Outputs API (beta)
+
+Luôn ưu tiên mức 2 trong production. Prompt "trả JSON" chỉ dùng khi prototyping.
+
+## Ví dụ thật
+
+Phân loại và trích xuất thông tin từ email khách hàng:
+
+```python
+from pydantic import BaseModel
+from openai import OpenAI
+
+class EmailAnalysis(BaseModel):
+    category: Literal["billing", "technical", "general"]
+    priority: Literal["high", "medium", "low"]
+    summary: str
+    requires_human: bool
+
+client = OpenAI()
+response = client.responses.parse(
+    model="gpt-4o",
+    input=[{"role": "user", "content": email_text}],
+    text={"format": EmailAnalysis},
+)
+result = response.output_parsed  # guaranteed EmailAnalysis object
+```
+
+Với Anthropic, dùng tool use với `strict: true` — model phải gọi tool với đúng schema trước khi trả lời.
+
+<Callout title="Cẩn thận">
+Model có thể trả về **refusal** thay vì data — ví dụ khi nội dung vi phạm safety policy. Luôn kiểm tra trường `refusal` trong response trước khi parse. Đừng assume output luôn là data hợp lệ.
+</Callout>
+
+<Callout title="Nhớ nhé">
+Dùng schema-enforced API (strict mode) trong production — đừng chỉ dặn "trả JSON" trong prompt. Dùng Pydantic (Python) hoặc Zod (TypeScript) để định nghĩa schema và parse kết quả an toàn. Xử lý cả trường hợp model từ chối.
+</Callout>
+
+## Đọc thêm
+
+- [Structured Outputs — OpenAI](https://developers.openai.com/api/docs/guides/structured-outputs) — Tài liệu chính thức: strict mode, JSON schema definition, Pydantic integration, và cách xử lý refusal trong structured outputs.
+- [Structured Outputs Cookbook — OpenAI](https://developers.openai.com/cookbook/examples/structured_outputs_intro) — Ví dụ thực tế: math tutor, entity extraction, UI generation — minh họa cách dùng Pydantic `parse` helper trong các tình huống khác nhau.
+- [Strict Tool Use — Anthropic](https://platform.claude.com/docs/en/docs/build-with-claude/tool-use) — Cách dùng `strict: true` trong tool definitions của Claude để đảm bảo output luôn match schema, kết hợp với agentic workflows.
+
+## Tự kiểm tra
+
+1. Tại sao chỉ dặn "trả JSON" trong prompt không đủ cho production? Điều gì có thể xảy ra sai?
+2. Model trả về `refusal` thay vì data JSON — điều này nghĩa là gì và code của bạn cần xử lý thế nào?
+3. Khi nào bạn chọn Pydantic vs Zod để define schema? Cả hai giải quyết vấn đề gì so với viết JSON schema thủ công?

@@ -1,0 +1,88 @@
+---
+id: exercise-aieng-005
+title: "Xây một bộ eval cho feature LLM"
+type: "exercise"
+track: ai-engineering
+tags: [ai-engineering, evals, llm-as-judge, eval-dataset, groundedness, hallucination, rag-evaluation]
+estimatedMinutes: 35
+related:
+  - lesson-aieng-005
+  - concept-llm-evals
+  - concept-llm-as-judge
+  - concept-eval-dataset
+  - concept-groundedness
+  - rubric-ai-engineering
+status: published
+---
+import Callout from '../../../components/content/Callout.astro';
+
+## Tình huống
+
+Công ty bạn có feature **"tóm tắt hồ sơ khách hàng từ tài liệu"**: nhân viên tư vấn upload hợp đồng + lịch sử giao dịch, model tóm tắt các điểm chính (giá trị hợp đồng, điều khoản thanh toán, rủi ro nổi bật).
+
+Sau 2 tuần chạy production, khách hàng báo: model **bịa số liệu** — đặc biệt giá trị hợp đồng và ngày gia hạn. Đôi khi model còn tự suy diễn rủi ro không có trong tài liệu.
+
+Nhiệm vụ của bạn: xây bộ eval để phát hiện và theo dõi vấn đề này một cách có hệ thống.
+
+<Callout title="Mẹo">
+Đừng bắt đầu bằng code. Thiết kế trên giấy trước — golden set trông như thế nào, grader chấm tiêu chí gì, cái gì chạy CI cái gì chạy production.
+</Callout>
+
+## Nhiệm vụ
+
+### Nhiệm vụ 1 — Xây golden set (12 phút)
+
+Bạn có quyền truy cập vào trace production của 2 tuần vừa qua (input tài liệu + output model). Hãy thiết kế golden set gồm **8–10 case** cho feature này.
+
+Trả lời từng câu:
+
+1. **Nguồn case**: Bạn lấy case từ đâu? Tại sao nên bắt đầu từ trace production thay vì tự nghĩ? Mô tả quy trình error analysis bạn sẽ làm (gợi ý: open coding → nhóm lỗi → viết case từ nhóm lỗi).
+
+2. **Phân bổ case**: Trong 8–10 case, bạn sẽ phân bổ thế nào giữa: (a) tài liệu có đủ thông tin để tóm tắt đúng, (b) tài liệu thiếu số liệu — model nên nói "không tìm thấy thay vì bịa". Tại sao loại (b) không thể thiếu?
+
+3. **Cấu trúc một case mẫu**: Viết ra cấu trúc JSON/YAML cho một case cụ thể, bao gồm: input tài liệu (có thể là đoạn ngắn), expected output (hoặc tiêu chí pass), và loại case (nên-trả-lời hay nên-từ-chối).
+
+### Nhiệm vụ 2 — Thiết kế LLM-as-judge (13 phút)
+
+Bạn quyết định dùng LLM-as-judge để chấm groundedness — kiểm từng câu khẳng định trong output có truy về tài liệu nguồn không.
+
+1. **Verdict**: Bạn sẽ dùng thang điểm nào cho judge — 1–5, hay binary pass/fail? Giải thích tại sao một lựa chọn đáng tin hơn cho trường hợp này.
+
+2. **Viết prompt judge**: Viết prompt (tiếng Việt hoặc tiếng Anh) cho LLM-judge của bạn. Prompt phải gồm: (a) tài liệu nguồn, (b) output cần chấm, (c) yêu cầu lý luận từng claim trước khi ra verdict, (d) format verdict rõ ràng. Đừng để judge chỉ nói "tốt" hay "đủ" — phải có critique cụ thể khi FAIL.
+
+3. **Calibrate**: Trước khi scale judge lên toàn bộ trace, bạn cần làm gì để kiểm tra judge có đáng tin không? Bạn cần bao nhiêu case để calibrate, và agreement rate nào là đủ?
+
+### Nhiệm vụ 3 — Phân loại offline vs online (10 phút)
+
+Bạn có hai nhóm eval:
+
+**Nhóm A:**
+- Chạy 60 golden case mỗi khi có PR thay đổi prompt
+- So sánh pass rate với baseline của phiên bản trước
+- Block merge nếu pass rate giảm quá 5%
+
+**Nhóm B:**
+- Sample 5% trace production mỗi ngày
+- Chạy groundedness judge tự động
+- Alert khi pass rate giảm liên tục 3 ngày
+
+1. Nhóm A là offline hay online eval? Nhóm B là offline hay online eval? Tại sao mỗi nhóm phù hợp với mục tiêu đó?
+
+2. Giả sử bạn phát hiện qua Nhóm B rằng model đang bịa ngày gia hạn hợp đồng trong 12% trace. Bạn sẽ làm gì tiếp theo với Nhóm A (golden set offline)? Mô tả vòng lặp flywheel.
+
+3. Có case nào bạn *không nên* đưa vào golden set offline mà chỉ theo dõi qua online eval không? Cho ví dụ và giải thích tại sao.
+
+<Callout title="Cẩn thận">
+Không có thiết kế "hoàn hảo" — điều quan trọng là lập luận nhất quán và thực tế. Đánh giá theo [AI Engineering Rubric](../../rubrics/ai-engineering-rubric).
+</Callout>
+
+## Tiêu chí tự đánh giá
+
+Sau khi hoàn thành, kiểm tra lại:
+
+- [ ] Golden set có bao gồm case "nên-từ-chối" (tài liệu thiếu số liệu) không?
+- [ ] LLM-judge của bạn dùng binary pass/fail hay thang điểm? Lý do có thuyết phục không?
+- [ ] Prompt judge có yêu cầu lý luận từng claim trước khi ra verdict không?
+- [ ] Có kế hoạch calibrate judge với domain expert trước khi scale không?
+- [ ] Phân biệt được rõ cái gì chạy trong CI (offline) và cái gì monitor production (online)?
+- [ ] Mô tả được flywheel từ lỗi online → cải thiện golden set offline?

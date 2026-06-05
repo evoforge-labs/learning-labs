@@ -1,0 +1,63 @@
+---
+id: lesson-aieng-002
+title: "Từ prompt đến context engineering"
+type: "lesson"
+track: ai-engineering
+module: prompt
+level: beginner
+tags: [ai-engineering, prompt, context-engineering, few-shot, chain-of-thought, structured-output, prompt-injection, reasoning-models]
+prerequisites: [concept-prompt-engineering, concept-system-vs-user-prompt, concept-few-shot-prompting, concept-chain-of-thought, concept-structured-output, concept-prompt-injection, concept-context-engineering]
+related: [exercise-aieng-002, rubric-ai-engineering]
+status: published
+---
+import Callout from '../../../components/content/Callout.astro';
+
+Khi mới gọi API LLM, bạn viết một câu, nhận một câu trả lời, xong. Đơn giản.
+
+Nhưng khi build sản phẩm thật — endpoint phải ổn định, output phải parse được, agent phải an toàn — bạn cần một tư duy khác hẳn. Module này kéo bạn từ "viết prompt" sang "thiết kế context".
+
+## Bước 1: Cấu trúc trước, tối ưu sau
+
+[Prompt engineering](/concepts/prompt-engineering) bắt đầu không phải bằng câu lệnh — mà bằng tiêu chí thành công. Bạn muốn gì? Đo được không? Có test set chưa?
+
+Rồi mới dùng đúng công cụ:
+- [System prompt](/concepts/system-vs-user-prompt) để đặt luật và bối cảnh — viết gọn, rõ, không thừa.
+- [Few-shot examples](/concepts/few-shot-prompting) để kiểm soát format và edge case mà lời giải thích không đủ.
+
+## Bước 2: Reasoning models đổi luật chơi
+
+[Reasoning models](/concepts/reasoning-models) (Claude Opus 4.x extended thinking, OpenAI o3/o4) không cần — và đôi khi không muốn — bị prompt chi tiết.
+
+Ba điều thay đổi khi bạn dùng reasoning models:
+
+1. **Thử zero-shot trước** — bỏ few-shot, xem model tự làm tốt không.
+2. **Đừng dùng "think step by step"** — chúng đã suy luận nội bộ, xem [chain-of-thought](/concepts/chain-of-thought).
+3. **Dùng tham số effort/thinking** thay vì nhồi CoT vào prompt.
+
+<Callout title="Mẹo">
+Quy tắc thực tế: mỗi khi chuyển sang model mới (đặc biệt reasoning model), hãy bắt đầu lại từ prompt đơn giản nhất. Đừng giả sử prompt cũ vẫn là tối ưu.
+</Callout>
+
+## Bước 3: Ép output — đừng chỉ xin
+
+[Structured output](/concepts/structured-output) không phải "dặn model trả JSON" — mà là dùng API schema-enforced. OpenAI `strict: true`, Anthropic tool use với strict mode, Pydantic/Zod để parse an toàn. Xử lý cả trường hợp model trả về `refusal`.
+
+Production cần đảm bảo, không phải hi vọng.
+
+## Bước 4: Coi mọi input là không đáng tin
+
+[Prompt injection](/concepts/prompt-injection) — OWASP LLM01 #1 — xảy ra khi input ghi đè chỉ thị. Với agent, **indirect injection** (lệnh ẩn trong tài liệu agent đọc) nguy hiểm hơn direct injection rất nhiều.
+
+Không có silver bullet. Phòng vệ là layered: least-privilege + input classifier + human approval cho hành động cao rủi ro.
+
+## Bước 5: Lên tầng — context engineering
+
+[Context engineering](/concepts/context-engineering) là bước cuối: không chỉ viết câu lệnh tốt, mà thiết kế *toàn bộ thứ đưa vào model*. System prompt + tools + memory + retrieved data + few-shot + output schema — tất cả đều là token, và token đều có cost và ảnh hưởng đến chất lượng.
+
+Nguyên tắc: **tập token tín-hiệu-cao nhỏ nhất**. Just-in-time retrieval, compaction, token budget allocation.
+
+Với agent, đây là kỹ năng phân biệt prototype và production.
+
+---
+
+Bài tập thực hành: [exercise-aieng-002](/exercises/ai-engineering/m2-design-a-prompt) — thiết kế system prompt + structured output schema + phòng thủ injection cho một endpoint phân loại email thật.

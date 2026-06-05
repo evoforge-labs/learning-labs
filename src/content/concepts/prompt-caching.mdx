@@ -1,0 +1,60 @@
+---
+id: concept-prompt-caching
+title: "Prompt Caching"
+type: "concept"
+aliases: ["cache prefix", "KV cache", "prompt cache", "cache_control", "cached tokens"]
+tags: [ai-engineering, prompt-caching, caching, cost-optimization, latency, llm, llmops]
+prerequisites: [concept-caching, concept-llm, concept-tokens-tokenization]
+related: [concept-latency-cost-optimization, concept-llmops]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Mỗi lần bạn gọi API LLM, model phải đọc toàn bộ prompt từ đầu — kể cả phần system prompt 2.000 token y hệt lần trước. Giống như bạn yêu cầu nhân viên đọc lại toàn bộ nội quy công ty trước mỗi câu trả lời, dù họ đã đọc hàng trăm lần rồi.
+
+Prompt caching sinh ra để giải quyết chuyện lãng phí đó.
+
+## Là gì
+
+**Prompt caching** là kỹ thuật lưu lại phần *prefix tĩnh* của prompt (system prompt, ví dụ few-shot, tài liệu context) trên server của provider — để các request sau không phải tính toán lại phần đó từ đầu.
+
+Phần bạn cache là phần **không đổi giữa các request**: system instructions, tool definitions, nội dung tài liệu dài. Phần **thay đổi** (câu hỏi của user, lịch sử hội thoại mới) vẫn phải xử lý bình thường.
+
+**Anthropic** (explicit caching):
+- Đánh dấu vị trí cache bằng `cache_control: {"type": "ephemeral"}`.
+- Cache đọc tốn **0.1x** giá token thông thường (rẻ hơn 10 lần).
+- Cache ghi tốn **1.25x** (TTL 5 phút) hoặc **2x** (TTL 1 giờ).
+- Tối thiểu **1.024 token** cho các model mới nhất (Sonnet 4.6, Opus 4); một số model cũ cần 4.096 token.
+
+**OpenAI** (tự động):
+- Không cần cấu hình — prefix ≥1.024 token được cache tự động.
+- Tiết kiệm tới **90% cost** và giảm **80% latency** cho phần được cache.
+- TTL 5–10 phút khi hoạt động; tối đa 1 giờ (một số model mới nhất hỗ trợ 24 giờ).
+
+## Ví dụ thật
+
+Bạn build chatbot tư vấn pháp lý, mỗi request gửi kèm 50 trang tài liệu luật (~40.000 token). Không cache: mỗi request tốn đủ 40.000 token đầu vào. Với cache: lần đầu ghi cache (1.25x), các lần sau chỉ tốn 0.1x — tiết kiệm **87.5%** chi phí cho phần context tĩnh đó.
+
+**Thứ tự quan trọng:** Đặt phần ổn định (system prompt, tài liệu, few-shot examples) ở đầu, phần thay đổi (user message, lịch sử gần) ở cuối. Cache chỉ match được khi prefix khớp hoàn toàn từ đầu.
+
+**Pre-warming:** Với Anthropic, bạn có thể warm cache trước giờ cao điểm bằng cách gửi request với `max_tokens: 0` — cache được tạo mà không tốn chi phí inference.
+
+<Callout title="Cẩn thận">
+Cache chỉ match khi prefix **giống hệt nhau** tới byte cuối. Nếu bạn thêm ngày tháng vào system prompt ("Hôm nay là 5/6/2026"), mỗi ngày là một cache miss mới. Giữ phần tĩnh thực sự tĩnh.
+</Callout>
+
+<Callout title="Nhớ nhé">
+Prompt caching là **table-stakes** khi dùng context dài (RAG, tài liệu, few-shot dài). Với Anthropic: đánh dấu `cache_control`, đặt static content trước. Với OpenAI: tự động — chỉ cần đảm bảo prefix ổn định.
+</Callout>
+
+## Đọc thêm
+
+- [Prompt Caching — Anthropic](https://platform.claude.com/docs/en/docs/build-with-claude/prompt-caching) — Tài liệu chính thức: cú pháp `cache_control`, bảng giá đầy đủ, giới hạn token tối thiểu, cách pre-warm cache và theo dõi `cache_read_input_tokens` trong response.
+- [Prompt Caching — OpenAI](https://developers.openai.com/api/docs/guides/prompt-caching) — Cách caching tự động của OpenAI hoạt động, prefix length tối thiểu, thống kê tiết kiệm (tới 90% cost / 80% latency), và retention policy theo model.
+- [Caching — Learning Lab](/concepts/caching) — Nền tảng về cache hit/miss, TTL, và cache invalidation — áp dụng trực tiếp vào hiểu prompt caching.
+
+## Tự kiểm tra
+
+1. System prompt của bạn có 3.000 token. Bạn gọi API Anthropic 1.000 lần/ngày. Ước tính % tiết kiệm nếu dùng prompt caching so với không dùng (TTL 5 phút, giả sử mỗi request cách nhau < 5 phút).
+2. Tại sao đặt user message ở giữa prompt (giữa system prompt và few-shot examples) lại phá vỡ cache? Thứ tự nào đúng?
+3. OpenAI và Anthropic có cách tiếp cận prompt caching khác nhau như thế nào? Cách nào cho bạn kiểm soát nhiều hơn, và cái đó có nghĩa là gì trong thực tế?

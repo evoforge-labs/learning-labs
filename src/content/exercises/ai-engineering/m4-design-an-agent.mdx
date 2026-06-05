@@ -1,0 +1,71 @@
+---
+id: exercise-aieng-004
+title: "Thiết kế một agent (và quyết định không multi-agent)"
+type: "exercise"
+track: ai-engineering
+tags: [ai-engineering, agents, tool-calling, harness, multi-agent, human-in-the-loop, memory, design]
+estimatedMinutes: 35
+related: [lesson-aieng-004, concept-ai-agent, concept-tool-calling, concept-multi-agent, concept-agent-harness, rubric-ai-engineering]
+status: published
+---
+import Callout from '../../../components/content/Callout.astro';
+
+## Tình huống
+
+Công ty bạn có một hệ thống support ticket. Hiện tại, nhân viên support phải: đọc ticket → tra cứu knowledge base → kiểm tra đơn hàng → quyết định có hoàn tiền không → trả lời khách. Mỗi ticket mất 8-15 phút.
+
+PM muốn build một **trợ lý AI tự xử lý ticket support**, có thể:
+- Đọc và phân tích nội dung ticket
+- Tra cứu knowledge base nội bộ (FAQ, chính sách hoàn tiền)
+- Kiểm tra trạng thái đơn hàng của khách
+- Thực hiện hoàn tiền nếu đủ điều kiện (tối đa $50, không qua 30 ngày)
+- Trả lời khách bằng tiếng Việt, tông chuyên nghiệp
+
+Bạn là AI engineer được giao thiết kế hệ thống này.
+
+<Callout title="Nhớ nhé">
+Mục tiêu không phải "build cái phức tạp nhất" — mà là thiết kế đủ tốt để chạy production, đủ đơn giản để debug khi sai.
+</Callout>
+
+## Nhiệm vụ
+
+### Task 1 — Workflow hay Agent? (và vì sao chưa cần multi-agent)
+
+Phân tích tình huống và đưa ra quyết định kiến trúc có lý:
+
+**Phần A:** Đây nên là **workflow** hay **agent**? Trả lời câu hỏi sau:
+- Các bước xử lý ticket có đủ biến thiên để cần LLM tự điều hướng không?
+- Nếu workflow, phác 3-4 bước cố định. Nếu agent, mô tả rõ phần nào LLM tự quyết định.
+
+**Phần B:** Tại sao hệ thống này **chưa cần multi-agent**? Dùng ít nhất 2 trong 3 tiêu chí (context window, song song, chuyên biệt hóa) để lập luận. Điều kiện nào phải đúng để trong tương lai bạn *nên* chuyển sang multi-agent?
+
+### Task 2 — Thiết kế 3-4 Tool
+
+Thiết kế bộ tool cho agent theo nguyên tắc "ít và rộng, trả ngữ nghĩa". Với mỗi tool, điền vào template:
+
+```
+Tên tool: 
+Mô tả (cho LLM, viết như "intern test"): 
+Tham số: 
+Ví dụ output (trả ngữ nghĩa, không phải kỹ thuật): 
+```
+
+Gợi ý bắt đầu (bạn hoàn thiện và thêm nếu cần): `search_knowledge_base`, `get_order_details`, `process_refund`.
+
+<Callout title="Mẹo">
+Kiểm tra mỗi tool: nếu đưa mô tả này cho intern chưa biết hệ thống, họ có biết *khi nào* gọi tool này và *truyền gì* không? Nếu không chắc — rewrite mô tả.
+</Callout>
+
+### Task 3 — Phác Harness Tối Thiểu
+
+Thiết kế harness cần thiết để agent chạy tin cậy ở production. Trả lời 3 câu:
+
+**Memory:** Agent cần nhớ gì giữa các turn trong một ticket? Có cần nhớ gì cross-ticket (ví dụ: khách này đã hoàn tiền 3 lần tháng trước) không? Dùng loại memory nào cho từng trường hợp?
+
+**Circuit breaker:** Liệt kê ít nhất 2 điều kiện cụ thể khiến bạn dừng agent ngay lập tức (không tiếp tục xử lý). Với mỗi điều kiện, mô tả hành động fallback là gì.
+
+**Human-in-the-loop:** Xác định các bước nào cần có người xác nhận trước khi thực hiện. Viết rõ: (a) điều kiện trigger HITL, (b) thông tin cần show cho người review, (c) timeout nếu người không phản hồi.
+
+## Tiêu chí đánh giá
+
+Xem [AI Engineering Rubric](../../rubrics/ai-engineering-rubric) để biết cách bài này được chấm. Đặc biệt chú ý tiêu chí **"Quyết định kiến trúc có căn cứ"** — grader kiểm tra xem lý do của bạn có dựa trên đặc điểm của task cụ thể (không phải "nghe có vẻ tốt hơn") và **"Tool design thực chiến"** — tool mô tả có đủ để LLM dùng đúng không.

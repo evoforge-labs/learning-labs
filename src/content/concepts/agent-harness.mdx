@@ -1,0 +1,53 @@
+---
+id: concept-agent-harness
+title: "Agent Harness"
+type: "concept"
+aliases: ["agent harness", "harness", "agent infrastructure", "agent framework", "khung đỡ agent"]
+tags: [ai-engineering, agents, harness, infrastructure, production, error-recovery, circuit-breaker, memory]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Một phi công giỏi không đủ để bay an toàn — còn cần buồng lái, đồng hồ đo lường, hệ thống cảnh báo, quy trình khởi động, và kế hoạch khẩn cấp. Agent AI cũng vậy: model tốt mới là điều kiện cần. Thứ quyết định agent *sống nổi ở production* là **harness** quanh nó.
+
+## Là gì
+
+**Agent harness** là bộ "khung đỡ" kỹ thuật bao quanh LLM, gồm tất cả thứ cần thiết để agent chạy tin cậy trong thực tế:
+
+- **Môi trường**: filesystem, shell access, browser, sandbox
+- **Tool registry**: danh sách tool + schema + auth
+- **Khởi tạo bộ nhớ**: load context từ session trước, progress file, git history
+- **Vòng lặp chính**: ReAct loop, token budget, max turns
+- **Phục hồi lỗi**: retry logic, fallback, graceful degradation
+- **Circuit breaker**: dừng agent khi phát hiện vòng lặp vô hạn, chi phí bất thường, hoặc hành động nguy hiểm
+
+## Ví dụ thật
+
+**Pattern Anthropic** cho agent chạy dài nhiều session:
+
+1. **Initializer agent** (session đầu): tạo `init.sh` (thiết lập môi trường), `progress.md` (tracking tiến độ), commit git ban đầu
+2. **Coding agent** (session tiếp theo): đọc git log + `progress.md` → biết mình đang ở đâu → tiếp tục từ điểm dừng
+
+Đây là cách harness giải quyết vấn đề cơ bản: LLM không có bộ nhớ liên session — harness *tạo ra bộ nhớ đó* bên ngoài model.
+
+[Context engineering](/concepts/context-engineering) là phần thiết kế bên trong harness: quyết định token nào đưa vào context window ở mỗi bước — không phải nhồi tất cả vào, mà chọn lọc thứ model thực sự cần.
+
+<Callout title="Góc kỹ thuật">
+**Circuit breaker** là thứ nhiều người quên khi build agent. Không có circuit breaker, một agent bị lạc (stuck in loop, hallucinate về trạng thái) có thể: gọi tool vô số lần → tốn tiền, gây side effect khó đảo ngược, hoặc làm sập downstream service. Implement ít nhất: max_turns, max_cost, và phát hiện tool call lặp (gọi cùng tool với cùng args 3 lần liên tiếp → dừng + alert).
+</Callout>
+
+<Callout title="Nhớ nhé">
+Harness quyết định agent có chạy nổi production hay không — không phải model. Đầu tư vào error recovery và circuit breaker trước khi lo fine-tuning hay prompt phức tạp.
+</Callout>
+
+## Đọc thêm
+
+- [Effective harnesses for long-running agents — Anthropic Engineering](https://www.anthropic.com/engineering/effective-harnesses-for-long-running-agents) — Pattern chi tiết: initializer/coder agent, progress file, git memory, browser verification — bài học từ agent chạy thực tế nhiều session.
+- [Effective context engineering for AI agents — Anthropic Engineering](https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents) — Phần thiết kế context trong harness: just-in-time retrieval, compaction, sub-agent context isolation.
+- [Building effective agents — Anthropic](https://www.anthropic.com/research/building-effective-agents) — Framework chọn kiến trúc: khi nào harness đơn giản đủ, khi nào cần thêm lớp.
+
+## Tự kiểm tra
+
+1. Agent của bạn xử lý đặt hàng: đọc giỏ hàng → gọi payment API → gửi email xác nhận. Bạn cần circuit breaker ở bước nào nhất? Tại sao?
+2. Nếu không có `progress.md` hay git history, điều gì xảy ra khi agent bị interrupt giữa chừng (crash, timeout) và phải khởi động lại session mới?
+3. Phân biệt harness và framework (như LangChain, AutoGen). Khi nào bạn tự viết harness thay vì dùng framework có sẵn?

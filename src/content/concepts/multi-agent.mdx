@@ -1,0 +1,47 @@
+---
+id: concept-multi-agent
+title: "Multi-Agent Systems"
+type: "concept"
+aliases: ["multi-agent", "multi-agent system", "MAS", "orchestrator-worker", "agent swarm", "hệ thống đa agent"]
+tags: [ai-engineering, agents, multi-agent, orchestrator, parallel, scalability]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Một bác sĩ giỏi đủ để khám đa số bệnh nhân. Nhưng khi cần mổ tim, đọc X-quang, và tư vấn dinh dưỡng cùng lúc trong một ca phức tạp — bạn cần cả ekip. Multi-agent là khi "ekip bác sĩ" tốt hơn "một bác sĩ siêu giỏi". Nhưng đừng gọi ekip để khám cảm cúm.
+
+## Là gì
+
+**Multi-agent system** là kiến trúc gồm nhiều agent LLM phối hợp với nhau để hoàn thành một tác vụ lớn hơn khả năng của từng agent đơn lẻ.
+
+Pattern phổ biến nhất: **orchestrator-worker** — một agent trung tâm (orchestrator) nhận nhiệm vụ lớn, phân rã thành subtask, dispatch cho các worker agent xử lý song song, rồi tổng hợp kết quả.
+
+**Khi nào multi-agent thực sự đáng:**
+1. Task quá dài để fit trong một context window đơn
+2. Task có thể xử lý song song độc lập với nhau
+3. Subtask đòi hỏi context chuyên biệt hoàn toàn khác nhau
+
+## Ví dụ thật
+
+Anthropic build hệ thống research report: orchestrator nhận topic, tạo 5-10 câu hỏi con, dispatch cho 5-10 subagent mỗi con research một góc độ, tổng hợp thành report cuối. Kết quả: outperform single-agent 90.2% trong internal eval — nhưng với chi phí token cao hơn nhiều lần.
+
+Bài học: single-agent + nhiều token *thường thắng* với task vừa. Multi-agent chỉ thắng khi task thực sự cần song song hoặc vượt context window.
+
+<Callout title="Cẩn thận">
+**"Token budget" giải thích ~80% chênh lệch hiệu năng** giữa single-agent và multi-agent. Nhiều khi bạn nghĩ cần multi-agent, thực ra chỉ cần cho single agent nhiều token hơn (context dài hơn, model mạnh hơn). Thêm agent = thêm độ phức tạp để debug, thêm latency giữa các agent, thêm risk propagation lỗi. Luôn thử single-agent trước.
+</Callout>
+
+<Callout title="Nhớ nhé">
+Multi-agent không phải "agent mạnh hơn" — nó là "nhiều agent phối hợp". Dùng khi đáng: task song song, task vượt context, task cần chuyên môn hóa. Không dùng để "nghe có vẻ cool hơn".
+</Callout>
+
+## Đọc thêm
+
+- [How we built our multi-agent research system — Anthropic Engineering](https://www.anthropic.com/engineering/multi-agent-research-system) — Case study thực tế: kiến trúc, kết quả benchmark, bài học sản xuất (error recovery, observability, stateful deployment).
+- [Building effective agents — Anthropic](https://www.anthropic.com/research/building-effective-agents) — Phần "Orchestrator-workers" và "When to use agents" — framework quyết định khi nào multi-agent xứng đáng với độ phức tạp thêm vào.
+
+## Tự kiểm tra
+
+1. Bạn build agent tóm tắt email hàng ngày (50-100 email/ngày, mỗi email vài trăm chữ). Đây có phải use case phù hợp cho multi-agent không? Vì sao?
+2. Token budget ảnh hưởng đến hiệu năng multi-agent như thế nào? Tại sao đây là yếu tố quan trọng hơn số lượng agent?
+3. Trong pattern orchestrator-worker, điều gì xảy ra nếu một worker agent gặp lỗi giữa chừng? Orchestrator cần xử lý trường hợp này thế nào?

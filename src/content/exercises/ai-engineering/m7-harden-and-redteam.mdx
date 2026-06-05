@@ -1,0 +1,123 @@
+---
+id: exercise-aieng-007
+title: "Hardening + red-team một agent có quyền thật"
+type: "exercise"
+track: ai-engineering
+tags: [ai-engineering, safety, guardrails, production-hardening, human-in-the-loop, red-teaming]
+estimatedMinutes: 30
+related: [lesson-aieng-007, concept-guardrails, concept-production-hardening, concept-human-in-the-loop, concept-red-teaming, rubric-ai-engineering]
+status: published
+---
+import Callout from '../../../components/content/Callout.astro';
+
+## Tình huống
+
+Bạn vừa hoàn thành một **customer support agent** cho công ty thương mại điện tử và chuẩn bị đưa lên production. Agent có **ba tool thật**:
+
+- **`send_email(to, subject, body)`** — gửi email tới khách hàng
+- **`process_refund(order_id, amount)`** — hoàn tiền vào thẻ/ví của khách
+- **`fetch_web(url)`** — đọc nội dung web (dùng để tra cứu thông tin vận chuyển từ trang carrier)
+
+Agent nhận ticket từ queue, xử lý tự động, và escalate nếu cần. Không có giám sát real-time — hệ thống chạy 24/7.
+
+Đây là bài tập thiết kế bảo mật trước khi ship.
+
+---
+
+## Task 1 — Thiết kế guardrails ở tầng hạ tầng (10 phút)
+
+**Không được dùng system prompt là lớp phòng thủ chính.**
+
+Thiết kế guardrails theo pipeline:
+
+```
+[User ticket] → [Input classifier] → [LLM agent] → [Output classifier] → [Tool executor]
+```
+
+Cho mỗi điểm kiểm soát, hãy xác định:
+
+1. **Input classifier**: loại nội dung nào cần chặn trước khi vào agent? (Gợi ý: nghĩ về prompt injection trong nội dung ticket, và nội dung mà `fetch_web` có thể trả về — đây cũng là input gián tiếp.)
+
+2. **Output classifier**: loại nội dung nào trong response của agent cần chặn trước khi gửi đến khách hàng?
+
+3. **Tool executor guard**: quy tắc nào bạn enforce ở tầng code (không phải prompt) trước khi tool được gọi? Ví dụ: giới hạn amount tối đa của `process_refund`, whitelist domain cho `fetch_web`.
+
+<Callout title="Gợi ý">
+`fetch_web` là vector đặc biệt nguy hiểm: trang web bên ngoài có thể chứa indirect prompt injection — nội dung ẩn hướng dẫn agent làm điều khác. Guardrails cần xử lý output của `fetch_web` trước khi đưa vào context của agent.
+</Callout>
+
+---
+
+## Task 2 — Circuit breaker, HITL, và Least-privilege (12 phút)
+
+### 2a. Circuit breaker
+
+Liệt kê **3 circuit breaker cụ thể** bạn sẽ implement, mỗi cái gồm: điều kiện kích hoạt + hành động khi kích hoạt.
+
+Ví dụ format:
+> **[Tên]**: Nếu `[điều kiện]` → `[hành động]`
+
+Gợi ý: nghĩ về cost, số lần retry, số tool call mỗi session, tổng refund trong một khoảng thời gian.
+
+### 2b. Human-in-the-Loop
+
+Điền bảng sau — với mỗi hành động, quyết định ai thực hiện:
+
+| Hành động | Tự động / HITL / Reject | Ngưỡng / Điều kiện |
+|---|---|---|
+| Gửi email xác nhận đơn hàng | | |
+| Gửi email xin lỗi + coupon | | |
+| Hoàn tiền ≤ $20 | | |
+| Hoàn tiền $20–$200 | | |
+| Hoàn tiền > $200 | | |
+| Gửi email cho > 10 khách trong một session | | |
+
+Giải thích logic phân loại của bạn: bạn dùng tiêu chí nào để quyết định cần HITL?
+
+### 2c. Least-privilege
+
+Agent hiện tại có cả 3 tool: `send_email`, `process_refund`, `fetch_web`.
+
+- Có kịch bản nào mà agent **không cần** một trong ba tool đó không? Đề xuất cách giới hạn tool theo loại ticket hoặc context.
+- Tại sao "mount hết tool rồi để model tự biết không dùng" lại là thiết kế tệ?
+
+---
+
+## Task 3 — Phác 3 kịch bản red-team (8 phút)
+
+Cho mỗi kịch bản, viết:
+- **Input tấn công** (ví dụ: nội dung ticket hoặc URL)
+- **Mục tiêu của kẻ tấn công** (họ muốn agent làm gì?)
+- **Cách phát hiện** (signal nào trong log hoặc guardrails sẽ catch được?)
+
+**Kịch bản 1 — Jailbreak trực tiếp**
+
+User gửi ticket kết hợp câu hỏi bình thường với lệnh ẩn để bypass guardrails. Viết ví dụ ticket cụ thể.
+
+**Kịch bản 2 — Indirect prompt injection qua `fetch_web`**
+
+Agent dùng `fetch_web` để tra cứu tracking number từ một URL do khách hàng cung cấp. Trang web đó chứa nội dung ẩn. Viết ví dụ nội dung trang web và phân tích điều gì có thể xảy ra.
+
+**Kịch bản 3 — Privilege escalation qua social engineering**
+
+Kẻ tấn công không cố bypass guardrails trực tiếp — họ viết ticket theo cách khiến agent tin rằng mình được phép làm điều không được phép. Viết ví dụ ticket và phân tích điểm yếu nào trong thiết kế có thể bị khai thác.
+
+<Callout title="Gợi ý">
+Kịch bản 2 là lý do `fetch_web` cần output sanitization đặc biệt — không phải chỉ input từ user. Mọi nội dung bên ngoài đưa vào context của agent đều là attack surface.
+</Callout>
+
+---
+
+## Tiêu chí đánh giá
+
+Xem rubric đầy đủ tại [AI Engineering Rubric](../../rubrics/ai-engineering-rubric).
+
+| Tiêu chí | Trọng số |
+|---|---|
+| Guardrails ở tầng code/infra — không phải prompt; bao phủ cả input gián tiếp từ `fetch_web` | 30% |
+| Circuit breaker có điều kiện cụ thể; HITL calibrated theo rủi ro; least-privilege có lý do rõ ràng | 35% |
+| 3 kịch bản red-team thực tế và khác nhau; kịch bản 2 (indirect injection) phân tích đúng attack vector | 35% |
+
+<Callout title="Nhớ nhé">
+Bài tập này không có đáp án duy nhất. Điều quan trọng: **lập luận nhất quán với threat model**, và thiết kế đặt kiểm soát ở đúng tầng — hạ tầng trước, prompt sau.
+</Callout>

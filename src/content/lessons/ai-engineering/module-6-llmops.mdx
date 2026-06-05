@@ -1,0 +1,60 @@
+---
+id: lesson-aieng-006
+title: "Đưa LLM ra production: nhanh, rẻ, quan sát được"
+type: "lesson"
+track: ai-engineering
+module: llmops
+level: advanced
+tags: [ai-engineering, llmops, prompt-caching, cost-optimization, observability, fine-tuning, latency]
+prerequisites: [concept-llmops, concept-prompt-caching, concept-latency-cost-optimization, concept-llm-observability, concept-fine-tuning, concept-fine-tuning-vs-rag]
+related: [exercise-aieng-006, rubric-ai-engineering]
+status: published
+---
+import Callout from '../../../components/content/Callout.astro';
+
+Có một khoảng cách lớn giữa "gọi được API LLM" và "chạy được LLM trong production đáng tin cậy". Bài này kết nối sáu concept của Module 6 thành một luồng kỹ thuật thực tế — từ lần đầu deploy đến khi hệ thống ổn định, rẻ và quan sát được.
+
+## Luồng kỹ thuật
+
+**Bước 1 — Bọc kỷ luật ngay từ đầu**
+
+LLM không tất định. Nếu bạn treat nó như một REST API bình thường (gọi → nhận kết quả → tin), bạn sẽ gặp sự cố không tái hiện được, lỗi không debug được, chi phí không giải thích được.
+
+[LLMOps](/concepts/llmops) là bộ kỷ luật giúp bạn thoát khỏi tình trạng đó: prompt versioning (prompt là code), eval pipeline (CI offline trước khi deploy), observability (trace mọi request), và guardrails (circuit breaker cho cost).
+
+**Bước 2 — Cắt cost ngay với prompt caching**
+
+Trước khi tối ưu bất cứ thứ gì, hãy kiểm tra: system prompt + context tĩnh của bạn có bao nhiêu token? Nếu >1.024 token và lặp lại qua nhiều request, [prompt caching](/concepts/prompt-caching) là đòn bẩy cost hiệu quả nhất — không cần thay đổi kiến trúc.
+
+Với Anthropic: thêm `cache_control` vào content block tĩnh, giảm 90% chi phí phần đó. Với OpenAI: tự động cho prefix ≥1.024 token. Đặt phần ổn định ở đầu prompt, phần thay đổi ở cuối.
+
+**Bước 3 — Tối ưu latency & cost theo đúng thứ tự ưu tiên**
+
+[Tối ưu latency & cost](/concepts/latency-cost-optimization) không phải chọn một trick — mà là áp dụng đúng thứ tự:
+
+1. **Streaming** — cải thiện UX lớn nhất, implement một dòng code.
+2. **Model routing** — task đơn giản → model nhỏ (rẻ hơn 10–20x).
+3. **Giảm token input** — RAG top-3 thay vì top-10, cắt prompt thừa.
+4. **Caching** — đã làm ở bước 2.
+5. **Batching** — khi task không cần real-time (offline eval, generate hàng loạt).
+
+Dùng lại nền tảng từ [latency vs throughput](/concepts/latency-vs-throughput): biết bạn đang tối ưu cho *user cụ thể* (latency) hay *tổng sản lượng hệ thống* (throughput) trước khi chọn chiến lược.
+
+**Bước 4 — Quan sát để thấy lỗi ngữ nghĩa**
+
+Sau khi deploy, HTTP 200 không đủ. [LLM observability](/concepts/llm-observability) cho bạn thấy điều monitoring truyền thống bỏ qua: nội dung prompt/response, token usage, cost từng request, và điểm eval gắn vào trace.
+
+Dùng [observability](/concepts/observability) như đã học trong System Design, nhưng thêm tầng ngữ nghĩa: mỗi request = 1 trace, mỗi bước pipeline = 1 span, gắn user_id và session_id từ đầu.
+
+**Bước 5 — Fine-tune khi prompt + RAG hết đường**
+
+[Fine-tuning](/concepts/fine-tuning) không phải bước đầu tiên — là bước cuối cùng khi bạn đã:
+- Tối ưu prompt → vẫn format/tone không nhất quán.
+- Dùng RAG → tri thức đã có, nhưng behavior vẫn sai.
+- Có eval rõ ràng → biết chính xác vấn đề nằm ở behavior, không phải knowledge.
+
+Tham khảo [Fine-tuning vs RAG vs Prompting](/concepts/fine-tuning-vs-rag) để quyết định đúng thứ tự: prompting → RAG (nếu thiếu tri thức biến động) → fine-tuning (nếu cần behavior ổn định). Hybrid thường thắng — nhưng phải đo bằng eval.
+
+<Callout title="Nhớ nhé">
+LLMOps là vòng lặp, không phải checklist: deploy → quan sát (trace + eval) → diagnose (lỗi ngữ nghĩa?) → tối ưu (caching, routing, fine-tune) → deploy lại. Hệ thống tốt là hệ thống bạn *thấy được* và *cải thiện được*.
+</Callout>

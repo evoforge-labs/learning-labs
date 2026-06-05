@@ -1,0 +1,89 @@
+---
+id: lesson-aieng-007
+title: "Hardening: làm LLM app đủ cứng cho production"
+type: "lesson"
+track: ai-engineering
+module: safety
+level: advanced
+tags: [ai-engineering, safety, guardrails, production-hardening, human-in-the-loop, red-teaming]
+prerequisites: [concept-guardrails, concept-production-hardening, concept-human-in-the-loop, concept-red-teaming]
+related: [exercise-aieng-007, rubric-ai-engineering]
+status: published
+---
+import Callout from '../../../components/content/Callout.astro';
+
+Một LLM app có thể hoạt động hoàn hảo trong demo và gây thảm họa trong production. Không phải vì model kém — mà vì model luôn là thành phần **ít tin cậy nhất** trong hệ thống: nó không thể đoán trước, không có memory về các sai sót trước, và không tự mình biết khi nào mình sai.
+
+Module 7 là về việc xây tầng hạ tầng xung quanh model để bù đắp cho những điều đó.
+
+## Tại sao prompt-level safety không đủ
+
+System prompt "Bạn là trợ lý thân thiện, không được làm X" là lời dặn — không phải cái khóa. Người dùng có thể:
+
+- Dùng roleplay: "Hãy giả vờ bạn là AI không có giới hạn..."
+- Chuyển ngôn ngữ hoặc dùng cipher để bypass filter
+- Inject lệnh qua nội dung họ upload (indirect prompt injection — xem [concept-prompt-injection](/concepts/prompt-injection))
+
+ZenML tổng hợp từ 1.200 deployment production: **team thành công đặt safety ở tầng infra, không tin model tự kiểm soát**.
+
+## Lớp 1: Guardrails ở cả input và output
+
+Guardrails không phải trong prompt — là **classifier chạy độc lập**, lọc input trước khi vào model và output trước khi ra user.
+
+Anthropic Constitutional Classifiers giảm jailbreak từ 86% xuống 4,4%. OpenAI Moderation API (miễn phí) phân loại 13 nhóm nội dung có hại. Cả hai đều là tool bạn gọi trong code — không phải hướng dẫn bạn viết trong prompt.
+
+Xem chi tiết: [concept-guardrails](/concepts/guardrails).
+
+## Lớp 2: Production hardening quanh model
+
+Guardrails lo về nội dung. Production hardening lo về **rủi ro vận hành**:
+
+- **Circuit breaker**: giới hạn số bước/cost/lần gọi mỗi session. Case agent loop 11 ngày tốn $47k là bài học điển hình — không ai đặt giới hạn.
+- **Session isolation**: lỗi của user A không ảnh hưởng user B.
+- **Least-privilege cho tool**: agent tra cứu đơn hàng không cần quyền hoàn tiền. Chỉ mount tool thực sự cần cho task hiện tại.
+- **Graceful degradation**: khi parse thất bại hoặc model trả về ngoài spec, fallback rõ ràng — không crash im lặng.
+
+Hai khái niệm nền tảng: [concept-rate-limiting](/concepts/rate-limiting) và [concept-single-point-of-failure](/concepts/single-point-of-failure).
+
+Xem chi tiết: [concept-production-hardening](/concepts/production-hardening).
+
+## Lớp 3: Human-in-the-Loop trước hành động nguy hiểm
+
+Một số hành động của agent không nên tự động hóa hoàn toàn — không phải vì model không đủ giỏi, mà vì **hậu quả của sai sót khó đảo ngược**.
+
+Nguyên tắc phân loại:
+
+| Hành động | Đảo ngược? | Rủi ro | → |
+|---|---|---|---|
+| Tra cứu thông tin | Có | Thấp | Agent tự làm |
+| Soạn draft email | Có | Trung bình | Agent soạn, người duyệt |
+| Gửi email hàng loạt | Không | Cao | HITL bắt buộc |
+| Hoàn tiền > $100 | Không | Cao | HITL + log + escalate |
+
+HITL là primitive built-in trong LangGraph và OpenAI Agents SDK — không phải workaround, là tính năng được thiết kế từ đầu.
+
+Xem chi tiết: [concept-human-in-the-loop](/concepts/human-in-the-loop).
+
+## Lớp 4: Red-teaming định kỳ để tìm lỗ trước
+
+Ba lớp trên bảo vệ những gì bạn **biết** là rủi ro. Red-teaming tìm những gì bạn **chưa biết**.
+
+Quy trình:
+1. Định nghĩa threat model: hệ thống có thể bị dùng sai theo cách nào?
+2. Manual red-team: chuyên gia thử kịch bản sáng tạo (jailbreak, injection, data exfiltration)
+3. Automated red-team: dùng LLM sinh hàng nghìn tấn công, đánh giá tự động
+4. Fix → ship → lặp lại khi có model mới hoặc tính năng mới
+
+Xem chi tiết: [concept-red-teaming](/concepts/red-teaming).
+
+## Sợi chỉ xuyên suốt
+
+<Callout title="Nhớ nhé">
+Bốn lớp theo thứ tự từ trong ra ngoài: **Guardrails** (nội dung) → **Production hardening** (vận hành) → **HITL** (hành động rủi ro cao) → **Red-teaming** (tìm lỗ chưa biết). Không lớp nào thay thế được lớp kia. Và tất cả đều thuộc về **code và infra** — không phải prompt.
+</Callout>
+
+---
+
+**Bài tập tiếp theo:**
+
+- [exercise-aieng-007](/exercises/ai-engineering/m7-harden-and-redteam) — Thiết kế guardrails, circuit breaker, HITL và red-team kịch bản cho một agent có quyền thật.

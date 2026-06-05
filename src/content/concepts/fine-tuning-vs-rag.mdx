@@ -1,0 +1,64 @@
+---
+id: concept-fine-tuning-vs-rag
+title: "Fine-tuning vs RAG vs Prompting"
+type: "concept"
+aliases: ["prompting vs RAG vs fine-tuning", "RAG vs fine-tuning", "when to fine-tune", "LLM optimization strategy"]
+tags: [ai-engineering, fine-tuning, rag, prompt-engineering, llm, cost-optimization, llmops]
+prerequisites: [concept-rag, concept-fine-tuning, concept-prompt-engineering]
+related: [concept-fine-tuning, concept-rag, concept-llmops, concept-latency-cost-optimization]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Nhiều người nghĩ đây là cái thang: thử prompting → không được thì RAG → không được thì fine-tune. Sai hoàn toàn. Đây là ba công cụ giải quyết **ba vấn đề khác nhau** — và chúng thường dùng cùng nhau.
+
+## Là gì
+
+Ba công cụ, ba vai trò:
+
+**Prompting** — Hướng dẫn model tại runtime. Nhanh nhất, linh hoạt nhất, không tốn chi phí training. Đây luôn là điểm xuất phát. Nếu prompting tốt đã đủ, dừng lại ở đây.
+
+**RAG** (Retrieval-Augmented Generation) — Inject kiến thức *từ bên ngoài* vào context lúc runtime. Dùng khi model thiếu thông tin: tài liệu nội bộ, dữ liệu hay thay đổi, kiến thức chuyên ngành không có trong training data. RAG sở hữu **tri thức biến động**.
+
+**Fine-tuning** — Thay đổi *cách model hành xử* ở mức trọng số. Dùng khi bạn cần behavior/format nhất quán tuyệt đối, hoặc muốn thay thế few-shot dài để giảm token. Fine-tuning sở hữu **hành vi ổn định**.
+
+**Framework quyết định thực tế:**
+
+| Câu hỏi chẩn đoán | Công cụ phù hợp |
+|---|---|
+| Model không biết thông tin hay thay đổi (sản phẩm, chính sách, tài liệu)? | RAG |
+| Model biết thông tin nhưng format/tone không đúng? | Fine-tuning (SFT/DPO) |
+| Chưa thử gì, cần baseline nhanh? | Prompting trước |
+| Few-shot quá dài, tốn token, latency cao? | Fine-tune để loại bỏ few-shot |
+| Cần reasoning chính xác hơn với task có ground truth? | RFT (reasoning models) |
+
+## Ví dụ thật
+
+Bạn build chatbot hỗ trợ khách hàng cho một ngân hàng.
+
+- **Lần 1 — Prompting:** Viết system prompt chi tiết về tone, quy trình. Chạy tốt cho 80% câu hỏi, nhưng khi hỏi về sản phẩm cụ thể (lãi suất hôm nay, điều kiện vay), model bịa số.
+- **Thêm RAG:** Connect vào database sản phẩm cập nhật hàng ngày. Câu hỏi sản phẩm giờ chính xác. Nhưng format trả lời vẫn không nhất quán — đôi khi quá dài, đôi khi thiếu disclaimer.
+- **Thêm Fine-tuning (SFT):** Train trên 300 mẫu email chuẩn → format và disclaimer luôn xuất hiện đúng chỗ. Loại bỏ được 8 ví dụ few-shot khỏi prompt → giảm 30% token cost.
+
+Kết quả: prompting + RAG + fine-tuning hoạt động *cộng hưởng*, không thay thế nhau.
+
+<Callout title="Cẩn thận">
+"Thêm RAG vào là xong" không phải lúc nào cũng đúng. Nghiên cứu của OpenAI cho thấy có case fine-tuning đạt 87/100, nhưng thêm RAG vào *giảm* xuống còn 83/100 — vì retrieved context nhiễu gây confusion. Đo lường trước khi kết hợp.
+</Callout>
+
+<Callout title="Nhớ nhé">
+Prompting trước → RAG nếu thiếu **tri thức** → Fine-tuning nếu cần **hành vi ổn định**. Không phải cái thang, mà là ba công cụ giải ba vấn đề. Hybrid thường thắng — nhưng phải đo bằng eval, không phỏng đoán.
+</Callout>
+
+## Đọc thêm
+
+- [Optimizing LLM Accuracy — OpenAI](https://developers.openai.com/api/docs/guides/optimizing-llm-accuracy) — Framework matrix của OpenAI: khi nào context optimization (RAG) vs LLM optimization (fine-tuning), kèm case study Icelandic showing RAG đôi khi làm giảm hiệu quả.
+- [Model Optimization — OpenAI](https://developers.openai.com/api/docs/guides/model-optimization) — Workflow tối ưu model end-to-end: bắt đầu từ eval → prompt → fine-tuning (SFT/DPO/RFT), giải thích khi nào dừng ở mỗi bước.
+- [RAG — Learning Lab](/concepts/rag) — Nền tảng về RAG: retrieval pipeline, embedding, vector search — hiểu rõ RAG để biết nó giải quyết vấn đề gì và giới hạn của nó.
+- [Evals FAQ — Hamel Husain](https://hamel.dev/blog/posts/evals-faq/) — Quan điểm thực tế: phân tích lỗi trước, dùng data để quyết định công cụ, không lý thuyết hóa về RAG vs fine-tuning.
+
+## Tự kiểm tra
+
+1. Một công ty muốn chatbot biết toàn bộ catalog sản phẩm (10.000 SKU, cập nhật hàng tuần) và trả lời đúng format JSON. Họ nên dùng gì — RAG, fine-tuning, hay cả hai? Giải thích rõ vai trò của từng cái.
+2. "Fine-tuning thay thế RAG" hay "RAG thay thế fine-tuning" — cả hai đều sai. Giải thích tại sao bằng ví dụ cụ thể cho từng câu.
+3. Bạn thử thêm RAG vào hệ thống nhưng chất lượng giảm so với prompting thuần túy. Nguyên nhân có thể là gì, và bạn diagnose bằng cách nào?

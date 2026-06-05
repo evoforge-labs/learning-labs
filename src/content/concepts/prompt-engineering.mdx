@@ -1,0 +1,51 @@
+---
+id: concept-prompt-engineering
+title: "Prompt Engineering"
+type: "concept"
+aliases: ["prompt", "prompt design", "prompting", "kỹ thuật prompt", "viết prompt"]
+tags: [ai-engineering, prompt, llm, context-engineering, eval]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Hãy tưởng tượng bạn thuê một chuyên gia mới vào làm. Bạn có thể nói: *"Làm cái này đi"* — hoặc bạn có thể giải thích bối cảnh, cho xem ví dụ, nói rõ tiêu chí thành công. Kết quả khác nhau hoàn toàn, dù người đó giỏi như nhau.
+
+Viết lệnh cho LLM cũng vậy.
+
+## Là gì
+
+**Prompt engineering** là kỹ thuật thiết kế lời nhắc (prompt) để LLM ra kết quả đúng ý, ổn định, đủ chất lượng. Không phải "nói chuyện với AI" — mà là *lập trình bằng ngôn ngữ tự nhiên*.
+
+Năm 2026, cộng đồng AI engineering đang dùng thuật ngữ **context engineering** để chỉ phiên bản rộng hơn: không chỉ câu lệnh, mà toàn bộ thông tin bạn đưa vào model (xem [concept-context-engineering](/concepts/context-engineering)). Prompt engineering vẫn là kỹ năng cốt lõi — bạn cần thành thạo nó trước.
+
+## Ví dụ thật
+
+Bạn muốn model phân loại email khách hàng thành: `hỏi_giá`, `khiếu_nại`, `khác`.
+
+Prompt kém:
+> "Phân loại email sau."
+
+Prompt tốt hơn:
+> "Bạn là nhân viên CSKH. Đọc email và phân loại vào đúng một trong: hỏi_giá / khiếu_nại / khác. Chỉ trả về nhãn, không giải thích."
+
+Prompt tốt nhất: thêm 2–3 ví dụ mẫu (few-shot), định nghĩa output schema, và — quan trọng nhất — đã có bộ test để đo xem output có đúng không.
+
+<Callout title="Cẩn thận">
+Đừng tối ưu prompt khi chưa có eval. Nếu bạn chỉnh prompt mà không có cách đo kết quả, bạn đang đoán mò. Hãy định nghĩa tiêu chí thành công trước (ví dụ: "đúng nhãn ≥ 90% trên 50 email thật"), rồi mới prompt engineer.
+</Callout>
+
+<Callout title="Nhớ nhé">
+Prompt engineering = ngôn ngữ chính xác + ví dụ cụ thể + tiêu chí rõ ràng. Và luôn có eval để biết bạn đang tốt hơn hay tệ hơn sau mỗi lần chỉnh.
+</Callout>
+
+## Đọc thêm
+
+- [Prompt Engineering Overview — Anthropic](https://platform.claude.com/docs/en/docs/build-with-claude/prompt-engineering/overview) — Hướng dẫn chính thức của Anthropic: tại sao cần eval trước khi tối ưu prompt, và các công cụ hỗ trợ như prompt generator, prompt improver trong Claude Console.
+- [Prompting Best Practices — Anthropic](https://platform.claude.com/docs/en/docs/build-with-claude/prompt-engineering/claude-prompting-best-practices) — Tài liệu tham chiếu sống cho Claude 4.x: XML structuring, role prompting, thinking, agentic systems — cập nhật liên tục theo model mới nhất.
+- [Prompt Engineering Guide — OpenAI](https://developers.openai.com/api/docs/guides/prompt-engineering) — Hướng dẫn của OpenAI: six strategies bao gồm few-shot, structured format, và cách phân biệt prompting cho reasoning models vs GPT models.
+
+## Tự kiểm tra
+
+1. Vì sao nên xác định tiêu chí thành công và cách đo *trước* khi chỉnh prompt? Điều gì xảy ra nếu bạn bỏ qua bước này?
+2. Phân biệt "prompt engineering" và "context engineering" — khi nào bạn cần nghĩ theo khung context engineering thay vì chỉ chỉnh câu lệnh?
+3. Bạn có một prompt cho model tóm tắt bài viết. Làm sao bạn biết prompt đã tốt hơn sau khi chỉnh?

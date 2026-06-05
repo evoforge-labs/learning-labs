@@ -1,0 +1,60 @@
+---
+id: concept-rag-evaluation
+title: "RAG Evaluation"
+type: "concept"
+aliases: ["rag eval", "retrieval augmented generation evaluation", "đánh giá RAG", "eval RAG pipeline"]
+tags: [rag-evaluation, rag, evals, groundedness, hallucination, ai-engineering, retrieval]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Khi món ăn dở, lỗi ở đầu bếp hay ở nguyên liệu? Nếu bạn chỉ chấm "món ăn ngon/dở" mà không tách hai khâu, bạn không biết cần sửa gì. RAG pipeline cũng vậy: retrieval và generation là hai khâu riêng — phải đánh giá riêng.
+
+## Là gì
+
+**RAG Evaluation** là bộ metric đo chất lượng của RAG pipeline, tách biệt giữa hai thành phần:
+
+- **Retrieval** — chunk đúng có được lấy ra không?
+- **Generation** — model có dùng chunk đó đúng không?
+
+Sai lầm phổ biến là chỉ đo answer quality cuối cùng — không biết lỗi do retrieval hay do model.
+
+**Bốn metric cốt lõi (RAGAS framework):**
+
+| Metric | Đo gì | Cần gì |
+|---|---|---|
+| Context Precision | Chunk retrieved có liên quan không? | Query + chunks |
+| Context Recall | Đủ thông tin để trả lời không? | Query + chunks + ground-truth |
+| Faithfulness | Output có bịa ngoài chunks không? | Chunks + output |
+| Answer Relevance | Output có trả lời đúng câu hỏi không? | Query + output |
+
+## Ví dụ thật
+
+Feature hỏi đáp tài liệu kỹ thuật. Câu hỏi: "Timeout mặc định của API là bao nhiêu?"
+
+- **Context Precision thấp**: Retriever trả về 5 chunks, chỉ 1 chunk liên quan. Model phải "tìm kim trong đống rơm".
+- **Context Recall thấp**: Chunk liên quan không được retrieve. Model không có thông tin → bịa hoặc nói không biết.
+- **Faithfulness thấp**: Retriever lấy đúng chunk (30 giây), nhưng model trả lời "60 giây". Lỗi ở generation.
+- **Answer Relevance thấp**: Model trả lời đúng về timeout nhưng thêm 3 đoạn không liên quan.
+
+Biết metric nào thấp → biết sửa chỗ nào: chunking/retriever hay prompt/model.
+
+<Callout title="Góc kỹ thuật">
+Test chunking strategy mà không cần gọi LLM mỗi lần: tạo câu hỏi test → đo context precision/recall bằng embedding similarity hoặc BM25 match → nhanh hơn 10x, rẻ hơn nhiều. Chỉ chạy full pipeline (bao gồm generation) khi retrieval đã ổn.
+</Callout>
+
+<Callout title="Nhớ nhé">
+Tách eval retrieval và generation. Faithfulness không cần ground-truth (dùng được ngay trên production). Context recall cần ground-truth nhưng bù lại nói được retriever có đang bỏ sót thông tin quan trọng không.
+</Callout>
+
+## Đọc thêm
+
+- [RAGAS – Available metrics](https://docs.ragas.io/en/stable/concepts/metrics/available_metrics/) — Tài liệu chính thức RAGAS: định nghĩa đầy đủ context precision, context recall, faithfulness, answer relevance, với code mẫu Python. Framework chuẩn cho RAG eval.
+- [Confident AI – RAG evaluation metrics: answer relevancy, faithfulness and more](https://www.confident-ai.com/blog/rag-evaluation-metrics-answer-relevancy-faithfulness-and-more) — Giải thích trực quan từng metric, cách implement bằng DeepEval, so sánh khi nào dùng metric nào.
+- [Patronus AI – RAG evaluation metrics](https://www.patronus.ai/llm-testing/rag-evaluation-metrics) — Tổng quan thực tế về 4 framework eval RAG (RAGAS, DeepEval, TruLens, Patronus), best practices về golden standard và automated testing pipeline trong production.
+
+## Tự kiểm tra
+
+1. Tại sao phải đánh giá retrieval và generation riêng biệt? Cho ví dụ một lỗi chỉ thấy được khi tách hai khâu.
+2. Trong 4 metric (context precision, context recall, faithfulness, answer relevance) — cái nào không cần ground-truth label? Điều đó có ý nghĩa gì trong production?
+3. Bạn phát hiện faithfulness score thấp (0.5). Điều đó gợi ý bạn nên sửa phần retrieval hay phần generation?

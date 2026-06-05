@@ -1,0 +1,64 @@
+---
+id: track-ai-engineering
+title: "AI Engineering A-Z"
+type: "track"
+summary: "Xây sản phẩm chạy trên LLM, từ A đến Z: nền tảng, prompt & context engineering, RAG, agents, evals, LLMOps và hardening — theo best practice mới nhất 2026."
+tags: [ai-engineering, llm, rag, agents, evals]
+status: published
+---
+
+# AI Engineering A-Z
+
+Lộ trình xây *sản phẩm* chạy trên LLM — không phải train model từ đầu, mà là nghề **ghép API + dữ liệu + đánh giá** thành app chạy được trong production. Nội dung bám sát best practice **mới nhất (2026)** từ tài liệu chính thống (Anthropic, OpenAI, Google AI, MCP spec).
+
+## Outcome
+
+Sau track này, bạn chuyển từ:
+
+> Tôi gọi được API của ChatGPT.
+
+sang:
+
+> Tôi thiết kế, đánh giá và vận hành một hệ thống LLM đáng tin cậy: prompt/context có kỷ luật, RAG đúng cách, agent có harness, eval định lượng, tối ưu cost/latency và hardening cho production.
+
+## Track này luyện gì?
+
+- Hiểu LLM ở mức kỹ sư: token, context window, sampling, reasoning models.
+- **Context engineering** (không chỉ prompt) — quản trị toàn bộ thông tin đưa vào model.
+- RAG hiện đại: embeddings, hybrid search, reranking, **contextual retrieval**.
+- Agents & tools: tool calling, ReAct, **MCP**, multi-agent, **harness** cho agent chạy dài.
+- **Evals** — kỹ năng cốt lõi nhất: LLM-as-judge, golden set, RAG/agent eval, offline vs online.
+- LLMOps: **prompt caching**, tối ưu cost/latency, observability, fine-tuning.
+- **An toàn & hardening**: guardrails ở tầng hạ tầng, circuit breaker, human-in-the-loop, red-teaming.
+
+## Bảy chặng
+
+1. **Nền tảng LLM** — token, context window, sampling, foundation & reasoning models, multimodal.
+2. **Prompt & Context Engineering** — prompt có cấu trúc, structured output, prompt injection, context engineering.
+3. **RAG & Retrieval** — embeddings, vector DB, hybrid search, reranking, contextual retrieval.
+4. **Agents, Tools & Harness** — agent, tool calling, ReAct, MCP, multi-agent, memory, harness.
+5. **Evaluation & Quality** ⭐ — evals, LLM-as-judge, golden set, hallucination, RAG/agent eval.
+6. **LLMOps & Tối ưu** — LLMOps, prompt caching, cost/latency, observability, fine-tuning.
+7. **An toàn & Hardening** — guardrails, production hardening, human-in-the-loop, red-teaming.
+
+Tra cứu nhanh mọi thuật ngữ ở trang [Glossary](/glossary).
+
+## Liên kết với track khác
+
+Dùng lại nền tảng từ [System Design for Builders](/tracks/system-design-for-builders): [caching](/concepts/caching), [latency vs throughput](/concepts/latency-vs-throughput), [observability](/concepts/observability), [rate limiting](/concepts/rate-limiting) — track này áp dụng chúng vào ngữ cảnh LLM.
+
+## Một vài "shift" 2026 mà track dạy đúng
+
+- "Prompt engineering" đang được thay bằng **context engineering** cho agent.
+- Với **reasoning models** (o-series, Claude extended thinking, Gemini 3.x): đừng prompt "think step by step", đừng chỉnh temperature, thử zero-shot trước.
+- **Multi-agent không phải mặc định** — single-agent + nhiều token thường thắng.
+- **Evals là kỹ năng số một**; dùng binary pass/fail + critique, bỏ thang điểm 1–5 và BLEU/cosine.
+- **Guardrails thuộc về hạ tầng**, không phải prompt; luôn có circuit breaker cho cost.
+
+## Capstone
+
+Thiết kế + đánh giá một **RAG-powered assistant** end-to-end: từ chọn model, context engineering, retrieval, tool/agent, đến eval và tối ưu cost/latency + hardening.
+
+## First principle
+
+LLM là một *thành phần không tất định*. Nghề AI engineer không phải gọi cho đúng API — mà là dựng đủ kỷ luật (eval, context, guardrail) quanh nó để kết quả đáng tin.

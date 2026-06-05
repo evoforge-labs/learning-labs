@@ -1,0 +1,48 @@
+---
+id: concept-agent-memory
+title: "Agent Memory"
+type: "concept"
+aliases: ["agent memory", "bộ nhớ agent", "episodic memory", "semantic memory", "procedural memory", "in-context memory"]
+tags: [ai-engineering, agents, memory, context-window, vector-database, episodic, semantic]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Bạn có thể nhớ cuộc trò chuyện vừa rồi (bộ nhớ ngắn hạn), nhớ họ hàng bạn gặp 10 năm trước (dài hạn), nhớ cách đi xe đạp mà không cần suy nghĩ (thủ tục). Agent AI cũng cần cả ba — nhưng phải được thiết kế thủ công vì LLM không có bộ nhớ nào ngoài context window.
+
+## Là gì
+
+Agent memory là cách agent lưu trữ và truy xuất thông tin. Có 4 loại, ánh xạ từ bộ nhớ con người:
+
+| Loại | Lưu ở đâu | Dùng cho | Ví dụ |
+|---|---|---|---|
+| **In-context** | Context window | Thông tin trong lượt hiện tại | Nội dung ticket đang xử lý |
+| **Episodic** | Vector DB / file | Các lần tương tác trước | Lịch sử request của khách hàng này |
+| **Semantic** | Vector DB / knowledge base | Kiến thức domain | Chính sách hoàn tiền, FAQ |
+| **Procedural** | System prompt / fine-tuning | Cách làm, quy trình | "Luôn xác nhận trước khi hoàn tiền" |
+
+## Ví dụ thật
+
+**Pattern Anthropic** cho agent chạy dài (nhiều session): agent giữ một `progress.md` ghi lại đã làm gì, còn gì chưa xong — đây là **episodic memory** bên ngoài. Kết hợp với git history, agent session mới có thể "nhớ" toàn bộ tiến độ project mà không cần replay toàn bộ conversation.
+
+[Context window](/concepts/context-window) là **bộ nhớ làm việc** — nhanh nhưng giới hạn. Khi task cần nhiều thông tin hơn context window chứa được, phần còn lại phải nằm ở vector DB (semantic/episodic) và được retrieve khi cần.
+
+<Callout title="Mẹo">
+Đừng nhồi tất cả vào context window. "Context rot" — hiệu năng model giảm khi context quá dài — là có thật. Thiết kế memory tốt là: **chỉ đưa vào context những gì thực sự cần cho bước tiếp theo**, retrieve phần còn lại just-in-time.
+</Callout>
+
+<Callout title="Nhớ nhé">
+Bộ nhớ làm việc (in-context) = nhanh, giới hạn. Bộ nhớ dài hạn (vector DB, file) = chậm hơn, không giới hạn. Agent tốt biết khi nào cần retrieve gì — không phải cứ nhét hết vào system prompt.
+</Callout>
+
+## Đọc thêm
+
+- [LLM Powered Autonomous Agents — Lilian Weng](https://lilianweng.github.io/posts/2023-06-23-agent/) — Phần "Memory" phân tích 4 loại bộ nhớ ánh xạ từ neuroscience, kèm so sánh in-context vs long-term external storage.
+- [Effective harnesses for long-running agents — Anthropic Engineering](https://www.anthropic.com/engineering/effective-harnesses-for-long-running-agents) — Pattern cụ thể: progress file, git history làm episodic memory, cách agent khởi động lại đúng chỗ sau mỗi session.
+- [Effective context engineering for AI agents — Anthropic Engineering](https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents) — Context engineering: just-in-time retrieval, compaction, structured note-taking — kỹ thuật quản lý bộ nhớ làm việc hiệu quả.
+
+## Tự kiểm tra
+
+1. Agent support của bạn cần nhớ lịch sử tương tác của từng khách hàng (có hàng nghìn khách). Bạn dùng loại memory nào? Lưu ở đâu?
+2. "Context rot" là gì? Tại sao nhồi quá nhiều vào context window lại làm agent kém hơn?
+3. Khác biệt giữa episodic và semantic memory trong agent là gì? Cùng dùng vector DB nhưng nội dung khác nhau thế nào?

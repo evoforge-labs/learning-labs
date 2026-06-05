@@ -1,0 +1,62 @@
+---
+id: concept-tool-calling
+title: "Tool Calling (Function Calling)"
+type: "concept"
+aliases: ["function calling", "tool use", "gọi hàm", "tool call", "external tools"]
+tags: [ai-engineering, agents, tool-calling, llm, function-calling, prompt-engineering]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Thử nghĩ LLM như một nhân viên mới rất thông minh nhưng không có quyền truy cập vào bất kỳ hệ thống nào. Muốn nó kiểm tra đơn hàng? Bạn phải *đưa cho nó một cái nút* có nhãn rõ ràng là "Tra cứu đơn hàng". Tool calling chính là cơ chế đưa những cái nút đó cho LLM.
+
+## Là gì
+
+**Tool calling** (hay function calling) là cơ chế LLM có thể yêu cầu thực thi một hàm bên ngoài — tra database, gọi API, chạy code — rồi dùng kết quả đó để tiếp tục suy luận.
+
+Quy trình 5 bước:
+1. Bạn mô tả các tool cho LLM (tên, tham số, mô tả)
+2. LLM nhận input, quyết định cần gọi tool nào
+3. LLM trả về *yêu cầu* gọi tool (không tự gọi)
+4. Code của bạn thực thi tool, lấy kết quả
+5. Kết quả được đưa lại cho LLM để tiếp tục
+
+## Ví dụ thật
+
+Tool "tra cứu đơn hàng" được mô tả:
+
+```json
+{
+  "name": "get_order",
+  "description": "Tra cứu thông tin đơn hàng theo mã. Trả về trạng thái, ngày giao dự kiến, và tên khách.",
+  "parameters": {
+    "order_id": { "type": "string", "description": "Mã đơn hàng (ví dụ: ORD-12345)" }
+  }
+}
+```
+
+Nếu description mơ hồ — "get order info" không hơn — LLM sẽ gọi sai lúc, thiếu tham số, hoặc dùng UUID thô thay vì mã có nghĩa.
+
+<Callout title="Góc kỹ thuật">
+**Thiết kế tool = prompt engineering.** Anthropic dùng "intern test": nếu bạn đưa mô tả này cho một intern thông minh chưa biết codebase, họ có biết *khi nào* dùng tool này và *truyền gì* không? Nếu không, rewrite mô tả.
+
+Hai nguyên tắc thực chiến:
+- **Ít tool rộng, tốt hơn nhiều tool hẹp.** Tool `search_orders(query, status_filter, date_range)` tốt hơn 4 tool `search_by_id`, `search_by_date`, `search_pending`, `search_completed`.
+- **Trả ngữ nghĩa, không trả kỹ thuật.** Trả `"Nguyễn Văn A"` thay vì `user_id: "usr_8f2a9"` để LLM không hallucinate khi dùng giá trị đó.
+</Callout>
+
+<Callout title="Nhớ nhé">
+Tool calling không phải "cho LLM làm gì cũng được" — mà là thiết kế một bộ công cụ rõ ràng đủ để LLM dùng đúng. Mô tả tool tệ → agent tệ, dù model tốt đến đâu.
+</Callout>
+
+## Đọc thêm
+
+- [Writing tools for agents — Anthropic Engineering](https://www.anthropic.com/engineering/writing-tools-for-agents) — Hướng dẫn chi tiết của Anthropic về thiết kế tool: namespacing, trả ngữ nghĩa, tối ưu token, và "intern test" để kiểm tra chất lượng mô tả.
+- [Function calling — OpenAI Docs](https://developers.openai.com/api/docs/guides/function-calling) — Tài liệu chính thức về function calling API: strict mode, parallel tool calls, và 5 bước flow từ request đến response.
+- [Building effective agents — Anthropic](https://www.anthropic.com/research/building-effective-agents) — Phần "Augmented LLMs" giải thích tool calling như building block cơ bản của mọi agent.
+
+## Tự kiểm tra
+
+1. Bạn có tool `send_email(to, subject, body)` và tool `send_notification(user_id, message)`. Theo nguyên tắc "ít tool rộng", bạn có thể gộp thành một tool không? Gộp thế nào?
+2. Một tool trả về `{ "user": "usr_4f9a2b", "status": 3 }`. Điều gì có thể xảy ra khi LLM dùng giá trị này trong lượt tiếp theo? Sửa thế nào?
+3. "Strict mode" trong function calling có nghĩa là gì? Khi nào bạn nên bật nó?

@@ -1,0 +1,58 @@
+---
+id: concept-tokens-tokenization
+title: "Token & Tokenization"
+type: "concept"
+aliases: ["token", "tokenization", "tokenizer", "bộ mã hóa token", "đơn vị văn bản"]
+tags: [llm, tokens, ai-engineering, cost-optimization]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Bạn đặt hàng pizza và bị tính tiền theo từng nguyên liệu — không phải theo miếng, không phải theo chiếc. Token cũng vậy: model không đọc chữ, nó đọc *mảnh chữ*. Và bạn trả tiền theo mảnh đó.
+
+## Là gì
+
+**Token** là đơn vị nhỏ nhất mà LLM xử lý. Tokenization là bước chuyển đổi văn bản thành chuỗi token trước khi đưa vào model.
+
+Token không phải là từ. Một token thường là:
+- 3.5–4 ký tự tiếng Anh (ví dụ: "hello" = 1 token, "unbelievable" = 3 token)
+- Khoảng 0.75 từ tiếng Anh
+- Một ký tự hoặc nửa từ với tiếng ít phổ biến hơn
+
+**Tiếng Việt và code tốn nhiều token hơn tiếng Anh** vì tokenizer (thường huấn luyện trên data tiếng Anh nhiều hơn) phải cắt thành mảnh nhỏ hơn.
+
+## Ví dụ thật
+
+Câu tiếng Anh: *"Hello, how are you?"* → khoảng 5–6 token.
+
+Câu tiếng Việt tương đương: *"Xin chào, bạn có khỏe không?"* → khoảng 10–14 token — gấp đôi.
+
+Điều đó ảnh hưởng trực tiếp đến **chi phí và tốc độ**. Claude Sonnet 4.6 tính $3 / 1M input token và $15 / 1M output token (tháng 6/2026). Một request tóm tắt tài liệu tiếng Việt 10 trang có thể tốn gấp 2 lần so với tài liệu tiếng Anh cùng độ dài.
+
+**Quy tắc ước lượng nhanh:**
+
+| Ngôn ngữ | ~token / từ |
+|---|---|
+| Tiếng Anh | 0.75 từ/token |
+| Tiếng Việt | ~1.5–2 từ/token |
+| Code (Python/JS) | ~1 token/từ, nhưng symbol tốn thêm |
+
+<Callout title="Mẹo">
+Trước khi deploy, hãy chạy token-counting API để ước lượng chi phí thực. Anthropic cung cấp endpoint `/v1/messages/count_tokens` miễn phí — gọi nó với prompt mẫu của bạn, nhân với số request/ngày, ra ngay ngân sách tháng.
+</Callout>
+
+<Callout title="Cẩn thận">
+Đừng ước lượng token bằng số từ. "Số từ × 1.5" chỉ là xấp xỉ thô. Với prompt phức tạp, XML tags, hoặc code lẫn văn bản, sai số có thể lớn. Dùng tool đo thật.
+</Callout>
+
+## Đọc thêm
+
+- [Anthropic Glossary – Tokens](https://platform.claude.com/docs/en/docs/resources/glossary) — Định nghĩa chính thức của Anthropic: token là gì, ví dụ cụ thể về cách Claude mã hóa văn bản.
+- [Anthropic – Token Counting API](https://platform.claude.com/docs/en/docs/build-with-claude/token-counting) — Hướng dẫn dùng endpoint đếm token trước khi gửi request: quản lý rate limit, tối ưu cost, và routing thông minh.
+- [OpenAI – Key concepts (tokens & context)](https://developers.openai.com/api/docs/concepts) — Giải thích token từ góc nhìn OpenAI, so sánh với Anthropic để hiểu sự nhất quán giữa các provider.
+
+## Tự kiểm tra
+
+1. Tại sao cùng một nội dung, viết bằng tiếng Việt lại tốn nhiều token hơn tiếng Anh? Điều đó ảnh hưởng thế nào đến chi phí API?
+2. Bạn có 1M token ngân sách/tháng với Claude Sonnet 4.6. Một request tóm tắt ước tính 2.000 input token + 500 output token. Bạn handle được tối đa bao nhiêu request?
+3. Tại sao không nên ước lượng số token bằng cách đếm số từ rồi chia 0.75?

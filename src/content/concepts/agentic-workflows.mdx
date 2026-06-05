@@ -1,0 +1,53 @@
+---
+id: concept-agentic-workflows
+title: "Agentic Workflows"
+type: "concept"
+aliases: ["agentic workflow", "workflow pattern", "prompt chaining", "routing", "parallelization", "orchestrator-workers", "evaluator-optimizer"]
+tags: [ai-engineering, agents, workflow, pattern, prompt-chaining, routing, parallelization, human-in-the-loop]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Bạn không cần tuyển một CEO để pha cà phê mỗi sáng. Nhưng để dẫn dắt một công ty qua khủng hoảng, một nhân viên thông thường không đủ. Agentic workflows là về việc chọn đúng mức độ tự trị — từ script đơn giản đến agent phức tạp — cho đúng loại task.
+
+## Là gì
+
+**Agentic workflows** là các pattern kiến trúc để tổ chức LLM call trong hệ thống AI. Anthropic đúc kết 5 pattern từ đơn giản đến phức tạp:
+
+| Pattern | Khi nào dùng | Ví dụ |
+|---|---|---|
+| **Prompt chaining** | Task có bước tuần tự rõ ràng | Dịch → kiểm tra → format |
+| **Routing** | Input nhiều loại, xử lý khác nhau | Ticket kỹ thuật → eng team, billing → finance |
+| **Parallelization** | Subtask độc lập, cần nhanh hoặc vote | 3 model review độc lập → vote kết quả |
+| **Orchestrator-workers** | Task phức tạp, cần phân rã động | Research report: orchestrator tạo câu hỏi, workers research song song |
+| **Evaluator-optimizer** | Cần chất lượng cao, có tiêu chí đánh giá | Code → test → fix → test lại |
+
+## Ví dụ thật
+
+**Prompt chaining** cho pipeline dịch tài liệu kỹ thuật:
+1. LLM 1: dịch thô từ English → Vietnamese
+2. LLM 2: kiểm tra thuật ngữ kỹ thuật có đúng không
+3. LLM 3: format lại theo template công ty
+
+Mỗi bước nhỏ, dễ kiểm tra, dễ swap. Tốt hơn nhiều so với một prompt khổng lồ cố làm cả 3 việc.
+
+**Human-in-the-loop (HITL)** là first-class citizen trong agentic workflows, không phải afterthought. Đặt checkpoint HITL trước mọi hành động không đảo ngược được (xóa dữ liệu, gửi email hàng loạt, thực hiện thanh toán). Xem thêm tại [concept-human-in-the-loop](/concepts/human-in-the-loop).
+
+<Callout title="Cẩn thận">
+**Ưu tiên pattern đơn giản nhất chạy được.** Evaluator-optimizer trông đẹp trên diagram nhưng nếu task không cần iteration loop — bạn đang thêm latency và cost vô ích. Bắt đầu với prompt chaining, chỉ leo thang khi có bằng chứng cụ thể cần phức tạp hơn.
+</Callout>
+
+<Callout title="Nhớ nhé">
+5 pattern này không phải để chọn một cái — chúng kết hợp được. Một pipeline thực tế có thể là: routing → parallelization (mỗi nhánh) → evaluator-optimizer (cho output cuối). Điểm quan trọng: mỗi bước đều có thể test độc lập.
+</Callout>
+
+## Đọc thêm
+
+- [Building effective agents — Anthropic](https://www.anthropic.com/research/building-effective-agents) — Nguồn gốc của 5 pattern: giải thích từng pattern kèm diagram, trade-off, và ví dụ use case cụ thể.
+- [Effective context engineering for AI agents — Anthropic Engineering](https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents) — Cách thiết kế context cho từng node trong workflow: just-in-time retrieval, sub-agent context isolation.
+
+## Tự kiểm tra
+
+1. Bạn cần build hệ thống moderating nội dung user-generated: ảnh + text + video. Mỗi loại cần model khác nhau. Pattern nào phù hợp nhất? Tại sao?
+2. Evaluator-optimizer khác gì với việc chỉ chạy một prompt nhiều lần rồi lấy kết quả tốt nhất?
+3. HITL nên đặt ở đâu trong workflow xử lý hoàn tiền tự động? Trước bước nào, sau bước nào?
