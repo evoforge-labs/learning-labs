@@ -1,0 +1,72 @@
+---
+id: concept-api-design
+title: "Thiết kế API"
+type: "concept"
+aliases: ["API contract", "REST API design", "thiết kế giao diện lập trình", "HTTP API"]
+tags: [system-design, api, api-design, rest, architecture]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Hãy tưởng tượng bạn gọi đồ ăn qua điện thoại. Bạn không cần biết bếp hoạt động thế nào — bạn chỉ cần biết cách gọi, món nào có, và nhân viên sẽ trả lời ra sao. Đó chính xác là vai trò của API: một **hợp đồng** giữa hai bên, độc lập với cách mỗi bên tự vận hành bên trong.
+
+## Là gì
+
+**API (Application Programming Interface)** là tập hợp các quy tắc quy định cách một phần mềm giao tiếp với phần mềm khác. Trong web, API thường chạy qua HTTP — frontend gọi backend, backend gọi dịch vụ khác.
+
+**REST** là phong cách thiết kế phổ biến nhất hiện nay. Nó dùng:
+
+- **URL** để đặt tên tài nguyên: `/users/42`, `/orders/123`
+- **HTTP verbs** để diễn tả hành động: `GET` (lấy), `POST` (tạo), `PUT/PATCH` (cập nhật), `DELETE` (xoá)
+- **HTTP status codes** để phản hồi kết quả: `200 OK`, `201 Created`, `400 Bad Request`, `404 Not Found`, `500 Internal Server Error`
+
+Một API tốt đọc như văn nói: `GET /orders/123` — "lấy đơn hàng số 123". `POST /orders` — "tạo một đơn hàng mới".
+
+## Ví dụ thật
+
+Giả sử bạn xây app quản lý task. API xấu trông như này:
+
+```
+POST /doSomething?action=createTask
+POST /doSomething?action=getTask&id=5
+```
+
+API tốt trông như này:
+
+```
+POST   /tasks          → tạo task mới, trả về 201 + task object
+GET    /tasks/5        → lấy task 5
+PATCH  /tasks/5        → cập nhật một phần
+DELETE /tasks/5        → xoá, trả về 204 No Content
+```
+
+**Versioning**: Khi API thay đổi breaking, đừng phá vỡ người dùng cũ. Dùng prefix `/v1/tasks`, `/v2/tasks`. Người dùng cũ giữ v1, người mới lên v2.
+
+**Error response**: Đừng chỉ trả về `400`. Trả về body giải thích lỗi — caller mới biết phải làm gì:
+
+```json
+{ "error": "validation_failed", "field": "email", "message": "Email không hợp lệ" }
+```
+
+<Callout title="Cẩn thận">
+API là hợp đồng. Một khi public, thay đổi breaking (đổi tên field, bỏ endpoint) sẽ phá code của người dùng. Hãy thiết kế cẩn thận ngay từ đầu — thêm field dễ hơn bỏ field rất nhiều.
+</Callout>
+
+<Callout title="Nhớ nhé">
+Thiết kế API không phải cho chính bạn — mà cho **caller**. Câu hỏi đúng là: "Caller cần biết gì và cần làm gì?" Ẩn mọi chi tiết nội bộ. Expose chỉ những gì caller thật sự cần.
+</Callout>
+
+**Khi nào cần API tốt, khi nào chưa?** Nếu bạn đang build solo app chỉ có một frontend, API "đủ dùng" là ổn. Nhưng ngay khi có bên thứ ba tích hợp (mobile app, partner, webhook), hợp đồng rõ ràng sẽ tiết kiệm rất nhiều đau đầu về sau.
+
+## Đọc thêm
+
+- [HTTP Methods — MDN Web Docs](https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods) — Giải thích chi tiết từng HTTP verb (GET, POST, PUT, PATCH, DELETE) và khi nào dùng cái nào.
+- [What is a RESTful API? — AWS](https://aws.amazon.com/what-is/restful-api/) — Tổng quan về REST: nguyên tắc thiết kế, cách request/response hoạt động, so sánh với SOAP.
+- [HTTP Response Status Codes — MDN](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status) — Bảng tra cứu đầy đủ các HTTP status code và ý nghĩa của từng mã.
+- [System Design Primer — API Design](https://github.com/donnemartin/system-design-primer) — Tài liệu tổng hợp system design rất được cộng đồng tin dùng, bao gồm phần giao tiếp và API.
+
+## Tự kiểm tra
+
+1. Endpoint `POST /getUser?id=42` vi phạm nguyên tắc REST ở điểm nào? Bạn sẽ sửa lại thế nào?
+2. Khi nào nên dùng `PUT` thay vì `PATCH`? Sự khác biệt thực tế là gì?
+3. API của bạn trả về lỗi `400` nhưng không có body. Caller sẽ gặp vấn đề gì? Bạn nên trả về gì thay thế?

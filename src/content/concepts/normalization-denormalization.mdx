@@ -1,0 +1,48 @@
+---
+id: concept-normalization-denormalization
+title: "Chuẩn hóa vs Phi chuẩn hóa"
+type: "concept"
+aliases: ["normalization", "denormalization", "chuẩn hóa", "phi chuẩn hóa", "1NF", "2NF", "3NF", "tránh trùng lặp dữ liệu"]
+tags: [system-design, data-modeling, database, normalization, trade-off, sql]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Hãy tưởng tượng bạn có danh sách đơn hàng, và mỗi dòng đơn hàng đều ghi đầy đủ tên, địa chỉ, số điện thoại của khách. Khách thay đổi số điện thoại — bạn phải cập nhật 50 dòng. Lỡ sót một dòng, dữ liệu bị lệch.
+
+Đó chính xác là vấn đề mà **chuẩn hóa** (normalization) giải quyết.
+
+## Là gì
+
+**Chuẩn hóa (Normalization)**: Tổ chức dữ liệu để tránh trùng lặp. Mỗi thông tin chỉ tồn tại ở một chỗ duy nhất. Khi cần thông tin đó, bạn JOIN các bảng lại. Đây là cách mặc định của SQL tốt.
+
+**Phi chuẩn hóa (Denormalization)**: Cố ý sao chép một số dữ liệu sang bảng khác để tránh JOIN — đánh đổi tính nhất quán lấy tốc độ đọc.
+
+## Ví dụ thật
+
+**Chuẩn hóa**: Bảng `orders` chỉ có `customer_id`. Muốn lấy tên khách, bạn JOIN với bảng `customers`. Khách đổi tên? Sửa một dòng trong `customers`, toàn bộ đơn hàng tự nhiên phản ánh đúng.
+
+**Phi chuẩn hóa**: Bảng `orders` lưu luôn `customer_name`. Không cần JOIN — query nhanh hơn. Nhưng khách đổi tên? Bạn phải cập nhật tất cả dòng trong `orders` — và nếu quên, bạn có dữ liệu mâu thuẫn.
+
+Khi nào denormalize hợp lý? Khi bạn có bảng được đọc cực kỳ nhiều, JOIN trở thành bottleneck, và thông tin bạn sao chép thực tế ít thay đổi. Ví dụ: lưu `product_name` và `price_at_order_time` vào bảng `order_items` — vì giá có thể đổi theo thời gian, bạn cần lưu giá *tại thời điểm đặt hàng*, không phải giá hiện tại.
+
+<Callout title="Cẩn thận">
+Denormalize quá sớm là dạng over-engineering phổ biến. Hầu hết app ở giai đoạn early-stage không cần lo về JOIN overhead — PostgreSQL JOIN trên vài triệu dòng với index đúng chỗ vẫn cực nhanh. Chỉ denormalize khi bạn có **dữ liệu thực tế chứng minh** JOIN là bottleneck — không phải vì bạn "đoán là sẽ chậm".
+</Callout>
+
+<Callout title="Nhớ nhé">
+Normalize để đúng, denormalize để nhanh — và chỉ denormalize khi bạn có bằng chứng cần nhanh hơn.
+</Callout>
+
+## Đọc thêm
+
+- [PostgreSQL: Constraints](https://www.postgresql.org/docs/current/ddl-constraints.html) — Tài liệu về foreign key và các constraint khác — nền tảng để implement normalization đúng cách trong PostgreSQL.
+- [Evolutionary Database Design — Martin Fowler](https://martinfowler.com/articles/evodb.html) — Bài viết về cách quản lý schema thay đổi theo thời gian trong team agile — liên quan trực tiếp đến việc refactor normalization dần dần.
+- [Use The Index, Luke — Primary Keys](https://use-the-index-luke.com/sql/where-clause/the-equals-operator/primary-keys) — Giải thích cách JOIN hoạt động qua index — giúp bạn hiểu tại sao JOIN được index tốt thì không chậm như nhiều người nghĩ.
+- [MongoDB Data Modeling](https://www.mongodb.com/docs/manual/data-modeling/) — Cách NoSQL tiếp cận vấn đề tương tự (embed vs reference) — đọc để thấy denormalization không phải khái niệm của SQL, mà là trade-off xuất hiện ở mọi loại database.
+
+## Tự kiểm tra
+
+1. Bạn đang lưu `category_name` trực tiếp vào bảng `products` thay vì dùng `category_id` + bảng `categories`. Điều gì có thể xảy ra khi tên category cần thay đổi?
+2. Trường hợp nào bạn nên lưu `price_at_purchase` vào bảng `order_items` thay vì lấy từ bảng `products`? Đây là lỗi hay là thiết kế có chủ ý?
+3. Một bảng `posts` có 50 triệu dòng và query trang chủ cần hiện `author_name` — hiện tại JOIN với bảng `users` mất 800ms. Bạn có denormalize ngay không? Còn cách nào khác không?

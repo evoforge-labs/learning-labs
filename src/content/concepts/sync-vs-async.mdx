@@ -1,0 +1,63 @@
+---
+id: concept-sync-vs-async
+title: "Đồng bộ vs Bất đồng bộ"
+type: "concept"
+aliases: ["synchronous", "asynchronous", "đồng bộ", "bất đồng bộ", "sync async"]
+tags: [system-design, async, architecture, latency, reliability]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Bạn đứng ở quán cà phê gọi một ly. Hai cách phục vụ:
+
+**Cách 1 — đồng bộ**: Bạn đứng đó, nhìn chằm chằm vào quầy, không làm gì cả, chờ đến khi ly cà phê xong mới bước đi.
+
+**Cách 2 — bất đồng bộ**: Bạn đặt hàng, lấy số thứ tự, ngồi xuống đọc tin tức. Khi ly xong, bạn được gọi tên.
+
+Đây chính xác là sự khác biệt giữa **synchronous** và **asynchronous** trong hệ thống phần mềm.
+
+## Là gì
+
+**Đồng bộ (sync)**: Caller gửi request → *chờ* → nhận kết quả → mới tiếp tục. Toàn bộ luồng bị block trong thời gian chờ.
+
+**Bất đồng bộ (async)**: Caller gửi request → *tiếp tục làm việc khác* → kết quả đến sau (qua callback, event, queue, hoặc poll).
+
+Trong thực tế web:
+
+- `GET /products/1` → server trả kết quả ngay → **sync** điển hình
+- "Gửi email xác nhận sau khi đặt hàng" → đẩy vào hàng đợi, worker xử lý sau → **async** điển hình
+
+## Ví dụ thật
+
+**Đặt hàng e-commerce**: Khi user nhấn "Mua", hệ thống cần:
+1. Tạo đơn hàng trong database (nhanh, cần kết quả ngay → sync)
+2. Gửi email xác nhận (chậm, 1-2 giây, user không cần chờ → async)
+3. Thông báo kho hàng (external service, có thể chậm hoặc fail → async)
+4. Tính điểm thưởng (không quan trọng tức thì → async)
+
+Nếu làm tất cả sync, user phải chờ 3-5 giây mới thấy trang "Đặt hàng thành công". Nếu async đúng chỗ, trang load trong 200ms — email và phần còn lại xử lý nền.
+
+<Callout title="Cẩn thận">
+Async không phải "nhanh hơn" — tổng thời gian xử lý có thể như nhau. Nó chỉ **giải phóng caller** khỏi việc phải chờ. Nếu caller *thật sự cần kết quả ngay* (ví dụ: kiểm tra số dư trước khi cho phép thanh toán), bạn buộc phải sync.
+</Callout>
+
+<Callout title="Nhớ nhé">
+Câu hỏi cốt lõi: *"Caller có cần kết quả ngay để tiếp tục không?"* Nếu có → sync. Nếu không → xem xét async để tránh block và tăng khả năng chịu lỗi.
+</Callout>
+
+**Khi nào async wins**: Công việc chậm (email, thumbnail generation, report), công việc có thể fail và cần retry, công việc không quan trọng tức thì, hoặc khi bạn muốn decouple hai phần hệ thống. Xem thêm [concept-message-queue](/concepts/message-queue) để hiểu công cụ phổ biến nhất cho async.
+
+**Khi nào chưa cần async**: App nhỏ với ít request, luồng đơn giản mà sync đủ nhanh, hoặc khi overhead của queue phức tạp hơn lợi ích.
+
+## Đọc thêm
+
+- [Introducing Asynchronous JavaScript — MDN](https://developer.mozilla.org/en-US/docs/Learn_web_development/Extensions/Async_JS/Introducing) — Giải thích trực quan sync vs async qua ví dụ code; dù là JS nhưng khái niệm áp dụng cho mọi ngôn ngữ.
+- [What is a Message Queue? — AWS](https://aws.amazon.com/message-queue/) — Cách async hoạt động trong thực tế với message queue; ví dụ producer-consumer cụ thể.
+- [System Design Primer — Asynchronism](https://github.com/donnemartin/system-design-primer) — Phần "Asynchronism" trong System Design Primer giải thích trade-off và các pattern phổ biến.
+- [What is an API? — AWS](https://aws.amazon.com/what-is/api/) — Bối cảnh rộng hơn về cách các hệ thống giao tiếp, sync và async trong kiến trúc tổng thể.
+
+## Tự kiểm tra
+
+1. Hệ thống đặt phòng khách sạn cần: (a) kiểm tra phòng còn trống, (b) gửi email xác nhận, (c) trừ tiền thẻ. Cái nào nên sync, cái nào nên async? Tại sao?
+2. Async không phải lúc nào cũng tốt hơn. Hãy nêu một tình huống mà async sẽ gây vấn đề nghiêm trọng.
+3. Nếu worker xử lý async job bị crash giữa chừng, điều gì có thể xảy ra? Cần cơ chế gì để giải quyết?

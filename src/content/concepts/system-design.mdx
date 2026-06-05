@@ -1,0 +1,47 @@
+---
+id: concept-system-design
+title: "System Design (cho builder)"
+type: "concept"
+aliases: ["system design", "thiết kế hệ thống", "software architecture for builders", "kiến trúc phần mềm cho builder"]
+tags: [system-design, architecture, scalability, trade-off, solo-builder, requirements]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Bạn xây một cái nhà. Nếu không vẽ sơ đồ trước, cứ đổ bê tông rồi tính — thì khi muốn thêm phòng, bạn phải đập tường. Phần mềm cũng vậy: viết code mà không nghĩ đến cấu trúc, đến khi người dùng đông lên, mọi thứ bắt đầu nứt từ móng.
+
+System design không phải môn học của FAANG. Đó là kỹ năng của *bất kỳ ai xây sản phẩm thật*.
+
+## Là gì
+
+**System design** là quá trình quyết định *cách hệ thống được tổ chức*: dữ liệu lưu ở đâu, các thành phần giao tiếp với nhau thế nào, và hệ thống sẽ xử lý tải như thế nào khi scale lên.
+
+Nó không phải viết code — nó là những quyết định *trước khi* viết code, và những quyết định đó sẽ sống với bạn suốt vòng đời sản phẩm.
+
+## Ví dụ thật
+
+Một builder build app ghi chú cá nhân. Ngày đầu, họ lưu tất cả vào một bảng `notes` trong SQLite. Hoàn toàn ổn — cho 100 user.
+
+Sáu tháng sau có 50.000 user, search chậm như rùa. Họ phải thêm full-text index, tách search service, migrate dữ liệu — trong khi app đang chạy. Mất hai tuần, vài lần downtime.
+
+Nếu ngay từ đầu họ dành 30 phút nghĩ "search sẽ quan trọng không, user sẽ đến bao nhiêu?", quyết định thiết kế đã khác. Không nhất thiết phải xịn hơn ngay — chỉ cần *không chặn đường mình sau*.
+
+<Callout title="Cẩn thận">
+System design không có nghĩa là over-engineer. Một app 500 user không cần Kubernetes, message queue, hay microservices. Thiết kế cho quy mô *bạn sắp có*, không phải quy mô *bạn mơ có*. Thêm độ phức tạp khi có bằng chứng cần — không phải trước đó.
+</Callout>
+
+<Callout title="Nhớ nhé">
+System design là kỹ năng đặt câu hỏi đúng trước khi code: dữ liệu trông như thế nào, ai dùng, bao nhiêu người, phần nào không được chết?
+</Callout>
+
+## Đọc thêm
+
+- [Software Architecture Guide — Martin Fowler](https://martinfowler.com/architecture/) — Tổng quan về kiến trúc phần mềm từ một trong những tác giả có ảnh hưởng nhất ngành; viết cho developer thực chiến, không phải lý thuyết suông.
+- [System Design Introduction — GeeksforGeeks](https://www.geeksforgeeks.org/system-design/what-is-system-design-learn-system-design/) — Giải thích khái niệm HLD/LLD, quy trình 7 bước tiếp cận bài toán thiết kế; dễ đọc cho người mới bắt đầu.
+- [Software Architecture — ByteByteGo](https://bytebytego.com/guides/software-architecture/) — Bộ tài liệu thực hành về các pattern kiến trúc phổ biến (microservices, event-driven, v.v.) kèm case study thật.
+
+## Tự kiểm tra
+
+1. Tại sao system design quan trọng với solo builder, không chỉ team lớn?
+2. Một người nói "tôi sẽ thiết kế hệ thống cho 10 triệu user ngay từ ngày đầu". Vấn đề với cách nghĩ này là gì?
+3. Sự khác biệt giữa "viết code cho app chạy" và "thiết kế hệ thống cho app chịu tải" là gì?

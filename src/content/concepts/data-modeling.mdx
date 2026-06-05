@@ -1,0 +1,50 @@
+---
+id: concept-data-modeling
+title: "Mô hình hóa dữ liệu"
+type: "concept"
+aliases: ["data modeling", "mô hình dữ liệu", "entity relationship", "access pattern", "ER diagram"]
+tags: [system-design, data-modeling, database, architecture]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Trước khi bạn viết dòng SQL đầu tiên, hãy hỏi một câu: *"App của mình sẽ đọc dữ liệu như thế nào?"* Không phải "lưu như thế nào" — mà là **đọc như thế nào**.
+
+Đây là điểm mà hầu hết builder mới đi sai. Họ thiết kế bảng theo cách dữ liệu trông trong đầu, rồi sau đó viết những câu query ngày càng dài và chậm để lôi dữ liệu ra theo cách app cần.
+
+## Là gì
+
+**Mô hình hóa dữ liệu** là quá trình xác định: có những đối tượng nào (entities), chúng liên kết với nhau ra sao (relationships), và app sẽ truy cập chúng theo những pattern nào (access patterns).
+
+Ba câu hỏi đó quyết định toàn bộ cấu trúc database của bạn.
+
+## Ví dụ thật
+
+Giả sử bạn build một app đặt lịch. Bạn có: `User`, `Service`, `Booking`. Đơn giản. Nhưng hãy hỏi ngay: *app thường lấy gì nhất?*
+
+- Trang chủ: danh sách lịch hôm nay của người dùng — cần join `Booking` + `Service`
+- Trang admin: tất cả booking theo ngày — cần lọc theo `date`
+- Notification: nhắc lịch 1 tiếng trước — cần query theo `scheduled_at`
+
+Nếu bạn biết ba pattern này từ đầu, bạn sẽ đặt index đúng chỗ, biết cột nào cần đặt ở đâu, và tránh được việc phải refactor schema sau khi data đã có vài nghìn dòng.
+
+<Callout title="Cẩn thận">
+Đừng thiết kế schema theo "cách dữ liệu tồn tại trong thực tế" — thiết kế theo "cách app của bạn cần đọc nó". Hai cái này khác nhau hoàn toàn. Một cuốn sách trong thực tế có tác giả, nhà xuất bản, thể loại — nhưng nếu app chỉ cần tìm sách theo tên, bạn không cần join ba bảng để lấy được trang chủ.
+</Callout>
+
+<Callout title="Nhớ nhé">
+**Model around access patterns** — thiết kế dữ liệu xoay quanh cách bạn đọc, không phải cách bạn lưu.
+</Callout>
+
+## Đọc thêm
+
+- [PostgreSQL: Table Basics](https://www.postgresql.org/docs/current/ddl-basics.html) — Tài liệu chính thức của PostgreSQL về cách định nghĩa bảng, cột, và kiểu dữ liệu — điểm khởi đầu tốt khi thiết kế schema.
+- [MongoDB Data Modeling Guide](https://www.mongodb.com/docs/manual/data-modeling/) — Dù bạn không dùng MongoDB, phần giải thích về embedded vs reference documents rất hữu ích để hiểu tư duy access-pattern-first.
+- [System Design Primer — Database](https://github.com/donnemartin/system-design-primer#database) — Tổng quan về database trong system design: RDBMS, NoSQL, replication, sharding — có hình minh họa rõ ràng.
+- [PostgreSQL: Constraints](https://www.postgresql.org/docs/current/ddl-constraints.html) — Hướng dẫn chi tiết về constraints (NOT NULL, UNIQUE, FOREIGN KEY) — thứ giúp schema của bạn tự "bảo vệ" tính toàn vẹn dữ liệu.
+
+## Tự kiểm tra
+
+1. Bạn đang build app quản lý task. Hãy liệt kê 3 access pattern quan trọng nhất — và nói cụ thể những pattern đó ảnh hưởng gì đến cấu trúc bảng của bạn.
+2. Tại sao thiết kế schema "giống thực tế" lại có thể gây ra vấn đề về performance về sau?
+3. Giữa việc biết entity nào cần tồn tại vs biết app đọc dữ liệu theo pattern nào — cái nào quan trọng hơn khi bắt đầu thiết kế? Tại sao?

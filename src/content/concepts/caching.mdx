@@ -1,0 +1,52 @@
+---
+id: concept-caching
+title: "Caching"
+type: "concept"
+aliases: ["cache", "bộ nhớ đệm", "cache-aside", "TTL", "cache invalidation", "cache hit", "cache miss"]
+tags: [system-design, scalability, caching, latency, throughput, performance, database]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Bạn tra từ điển một từ. Lần đầu mất 30 giây tìm trang. Lần sau, bạn nhớ nó ở trang 247 — mở ngay được. Não bạn vừa làm caching.
+
+## Là gì
+
+**Cache** là nơi lưu kết quả của một tính toán hoặc truy vấn tốn thời gian, để lần sau có thể trả lời ngay mà không cần làm lại từ đầu.
+
+Hai khái niệm cần thuộc:
+- **Cache hit**: dữ liệu đã có trong cache → trả về ngay, nhanh.
+- **Cache miss**: chưa có → phải đi lấy từ nguồn gốc (database, API...) → chậm hơn, sau đó lưu vào cache.
+
+**TTL (Time To Live)**: khoảng thời gian cache được giữ trước khi hết hạn. Dữ liệu cũ bị xóa, lần sau sẽ là cache miss và lấy dữ liệu mới.
+
+Cache hoạt động vì một nguyên lý đơn giản: đọc từ bộ nhớ (RAM) nhanh hơn đọc từ database hàng trăm lần. Nếu một query tốn 50ms mỗi lần chạy, mà được gọi 10,000 lần/ngày — cache có thể tiết kiệm 8 phút CPU mỗi ngày và giảm áp lực database đáng kể.
+
+## Ví dụ thật
+
+**Cache-aside** là pattern phổ biến nhất: app kiểm tra Redis trước, nếu có → trả về, nếu không → query database → lưu vào Redis với TTL → trả về cho client. Lần sau lấy từ Redis.
+
+Dùng cho: trang chủ hiển thị bài viết mới nhất, kết quả tìm kiếm phổ biến, thông tin sản phẩm ít thay đổi.
+
+**Không phù hợp cho**: dữ liệu phải realtime tuyệt đối (số dư tài khoản ngân hàng, tồn kho flash sale), hay dữ liệu cá nhân hóa phức tạp thay đổi liên tục.
+
+<Callout title="Cẩn thận">
+**Cache invalidation** — biết khi nào xóa cache — là bài toán nổi tiếng khó. Phil Karlton từng nói: *"There are only two hard things in Computer Science: cache invalidation and naming things."* Nếu bạn cập nhật database nhưng quên xóa cache, người dùng sẽ thấy dữ liệu cũ cho đến hết TTL. Hãy thiết kế TTL ngắn hơn nếu dữ liệu thay đổi thường xuyên.
+</Callout>
+
+<Callout title="Nhớ nhé">
+Cache không phải giải pháp đầu tiên khi app chậm. Trước tiên hãy kiểm tra [database indexing](/concepts/database-indexing) — index đúng chỗ thường nhanh hơn nhiều và không tạo thêm layer phức tạp. Cache phù hợp nhất khi dữ liệu **đọc nhiều, thay đổi ít**.
+</Callout>
+
+## Đọc thêm
+
+- [What is Caching and How it Works — AWS](https://aws.amazon.com/caching/) — Giải thích toàn diện về caching: các loại cache, tradeoff, và khi nào nên dùng từng chiến lược (cache-aside, write-through, write-behind...).
+- [Cache — System Design Primer (GitHub)](https://github.com/donnemartin/system-design-primer#cache) — Tóm tắt các cache update pattern phổ biến (cache-aside, write-through, write-behind, refresh-ahead) với ưu nhược điểm từng loại.
+- [Two Hard Things — Martin Fowler](https://martinfowler.com/bliki/TwoHardThings.html) — Bối cảnh của câu nói kinh điển về cache invalidation — và tại sao nó vẫn đúng sau hàng thập kỷ.
+- [What is Amazon ElastiCache? — AWS Docs](https://docs.aws.amazon.com/AmazonElastiCache/latest/dg/WhatIs.html) — Tài liệu chính thức về ElastiCache (Redis/Memcached managed): cách setup một distributed cache trong môi trường cloud.
+
+## Tự kiểm tra
+
+1. App của bạn hiển thị số lượng tồn kho. Nếu cache TTL là 5 phút, điều gì có thể xảy ra trong flash sale? Bạn sẽ xử lý thế nào?
+2. Cache-aside khác write-through ở điểm nào? Khi nào bạn chọn write-through?
+3. Cache hit rate 60% có tốt không? Tại sao con số này quan trọng và bạn muốn nó cao hay thấp?

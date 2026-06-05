@@ -1,0 +1,51 @@
+---
+id: concept-database-indexing
+title: "Index trong Database"
+type: "concept"
+aliases: ["database index", "database indexing", "index", "B-tree index", "chỉ mục cơ sở dữ liệu", "query chậm", "tăng tốc query"]
+tags: [system-design, database, indexing, sql, performance, scalability]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Bạn cầm một cuốn sách 500 trang và cần tìm mọi chỗ nhắc đến từ "transaction". Bạn có hai cách: lật từng trang một từ đầu đến cuối, hoặc lật ra trang chỉ mục (index) ở cuối sách và tìm "transaction — trang 47, 83, 201".
+
+Database index hoạt động hệt như vậy.
+
+## Là gì
+
+**Index** là một cấu trúc dữ liệu riêng mà database duy trì song song với bảng chính. Nó lưu giá trị của một hoặc nhiều cột theo thứ tự được sắp xếp, cùng con trỏ đến dòng tương ứng trong bảng. Khi bạn query theo cột đó, database tra index thay vì quét toàn bộ bảng (full table scan).
+
+Không có index: database đọc từng dòng một từ đầu đến cuối. Có 10 triệu dòng? Đọc hết 10 triệu.
+
+Có index: database nhảy thẳng đến đúng dòng cần tìm, theo kiểu tìm kiếm nhị phân trên cây B-tree. Nhanh hơn hàng nghìn lần.
+
+## Ví dụ thật
+
+Bảng `orders` có 5 triệu dòng. Query `SELECT * FROM orders WHERE user_id = 42` mà không có index sẽ đọc toàn bộ 5 triệu dòng. Với index trên cột `user_id`, database nhảy thẳng đến vài trăm dòng của user 42 — xong trong milliseconds.
+
+Bạn tạo index bằng:
+```sql
+CREATE INDEX idx_orders_user_id ON orders(user_id);
+```
+
+<Callout title="Cẩn thận">
+**Index không miễn phí.** Mỗi lần bạn INSERT, UPDATE, hoặc DELETE, database phải cập nhật tất cả index trên bảng đó. Một bảng có 10 index nghĩa là mỗi lần write phải làm 10 việc phụ. Bảng write nhiều mà index quá nhiều sẽ chậm hơn đáng kể. Builder mới hay đặt index trên mọi cột "phòng khi cần" — đây là anti-pattern. Chỉ index những cột bạn thực sự filter, sort, hoặc join trong query thường xuyên.
+</Callout>
+
+<Callout title="Nhớ nhé">
+Index tăng tốc READ nhưng làm chậm WRITE. Đặt index đúng chỗ — dựa trên access pattern thật, không phải phỏng đoán.
+</Callout>
+
+## Đọc thêm
+
+- [Use The Index, Luke — Anatomy of an Index](https://use-the-index-luke.com/sql/anatomy) — Giải thích cấu trúc B-tree index từ bên trong: leaf node, doubly linked list, và tại sao index làm query nhanh theo cơ chế nào. Bắt buộc đọc.
+- [Use The Index, Luke — INSERT Performance](https://use-the-index-luke.com/sql/dml/insert) — Phân tích cụ thể chi phí của index trên write operations — một index thôi có thể làm INSERT chậm gấp 100 lần.
+- [PostgreSQL: Chapter 11 — Indexes](https://www.postgresql.org/docs/current/indexes.html) — Tài liệu chính thức của PostgreSQL về tất cả loại index: B-tree, Hash, GiST, GIN, partial index, covering index.
+- [System Design Primer — Database](https://github.com/donnemartin/system-design-primer#database) — Phần về indexing và denormalization trong context system design thực tế.
+
+## Tự kiểm tra
+
+1. Bạn có bảng `users` với 10 triệu dòng. Query `SELECT * FROM users WHERE email = 'a@b.com'` chạy 3 giây. Bước đầu tiên bạn làm gì và tại sao?
+2. Một bảng `events` được INSERT liên tục (100 lần/giây) và ít khi được đọc. Bạn có nên đặt nhiều index không? Lập luận của bạn là gì?
+3. Index trên cột `status` với chỉ 3 giá trị có thể ('pending', 'active', 'done') — có hữu ích không? Tại sao?

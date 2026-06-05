@@ -1,0 +1,49 @@
+---
+id: concept-sharding
+title: "Sharding (Phân mảnh dữ liệu)"
+type: "concept"
+aliases: ["sharding", "horizontal partitioning", "shard key", "phân mảnh dữ liệu", "database sharding", "data partitioning"]
+tags: [system-design, sharding, partitioning, database, scalability, architecture, trade-off]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Một thư viện có 10 triệu cuốn sách, tất cả chứa trong một phòng. Muốn tìm sách, bạn phải tìm khắp phòng đó. Giải pháp rõ ràng: chia sách ra nhiều phòng — A-F phòng 1, G-M phòng 2, N-Z phòng 3. Giờ bạn biết ngay phải vào phòng nào. Đó là sharding.
+
+## Là gì
+
+**Sharding** (còn gọi là horizontal partitioning) là kỹ thuật chia một database lớn ra thành nhiều database nhỏ hơn (gọi là "shard"), mỗi shard chứa một phần dữ liệu. Toàn bộ dữ liệu được phân phối dựa trên **shard key** — thường là user ID, tenant ID, hoặc một trường có phân phối đều.
+
+Ví dụ: shard theo `user_id % 4` — user 1, 5, 9... vào shard A; user 2, 6, 10... vào shard B; và tiếp tục. Mỗi shard là một database riêng biệt, có thể nằm trên máy chủ khác nhau.
+
+## Ví dụ thật
+
+Twitter shard theo tweet ID. Facebook shard theo user ID. Khi bạn có hàng tỉ dòng dữ liệu, không một database đơn lẻ nào có thể chứa hết — sharding là bắt buộc ở quy mô đó.
+
+Nhưng ở quy mô nhỏ hơn? Hầu hết startup không cần sharding. Một Postgres instance tốt có thể xử lý hàng trăm triệu row với index đúng. Trước sharding, hãy thử [caching](/concepts/caching), [replication](/concepts/database-replication), và tối ưu query.
+
+<Callout title="Cẩn thận">
+Sharding tạo ra nhiều bài toán mới cực kỳ khó giải:
+
+**Cross-shard query**: query join dữ liệu từ nhiều shard phức tạp hơn gấp nhiều lần — đôi khi phải query nhiều shard rồi merge kết quả trong app.
+
+**Rebalancing**: khi một shard quá đầy, phải migrate dữ liệu sang shard mới — phức tạp, rủi ro, tốn thời gian.
+
+**Shard key sai**: nếu chọn shard key không đều, một shard có thể chứa 80% dữ liệu — "hot shard" — và toàn bộ vấn đề quay lại điểm ban đầu.
+</Callout>
+
+<Callout title="Nhớ nhé">
+Sharding là vũ khí cuối cùng trong bộ công cụ scaling database. Thứ tự ưu tiên: index đúng → caching → read replica → vertical scaling → sharding. Đừng nhảy thẳng vào sharding vì nghe hay — chi phí vận hành và phức tạp kỹ thuật rất cao. Chỉ làm khi bạn có bằng chứng rõ ràng rằng không có cách nào khác.
+</Callout>
+
+## Đọc thêm
+
+- [Sharding with Amazon RDS — AWS Database Blog](https://aws.amazon.com/blogs/database/sharding-with-amazon-relational-database-service/) — Hướng dẫn thực tế từ AWS về cách implement sharding với RDS: kiến trúc, shard key selection, và tradeoff.
+- [Sharding — MongoDB Documentation](https://www.mongodb.com/docs/manual/sharding/) — Tài liệu chính thức MongoDB về sharding: shard key strategies (hashed vs ranged), balancing, và khi nào nên sharding.
+- [Database — System Design Primer (GitHub)](https://github.com/donnemartin/system-design-primer#database) — Bức tranh tổng thể về các kỹ thuật scale database, giúp bạn đặt sharding đúng chỗ trong hành trình scaling.
+
+## Tự kiểm tra
+
+1. Bạn chọn `email` làm shard key. Vấn đề gì có thể xảy ra nếu đa số user đều có email từ một tên miền phổ biến?
+2. Một query cần JOIN dữ liệu từ bảng `orders` và `users`, nhưng hai bảng này nằm ở các shard khác nhau. Bạn xử lý thế nào?
+3. Tại sao sharding được khuyên là bước cuối cùng trong hành trình scaling, không phải bước đầu tiên?

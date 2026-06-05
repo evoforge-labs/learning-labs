@@ -1,0 +1,59 @@
+---
+id: concept-single-point-of-failure
+title: "Single Point of Failure & Dự phòng"
+type: "concept"
+aliases: ["SPOF", "single point of failure", "điểm chết đơn", "dự phòng", "high availability", "redundancy"]
+tags: [system-design, reliability, availability, architecture, trade-off, devops, solo-builder]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Ngôi làng có một cây cầu duy nhất bắc qua sông. Cả làng đi chợ qua đó, xe tải chở hàng qua đó, xe cứu thương cũng qua đó. Một hôm lũ về, cây cầu sập — cả làng bị cô lập. Không ai có thể vào hay ra. Cây cầu đó là **single point of failure**.
+
+## Là gì
+
+**Single Point of Failure (SPOF)** là bất kỳ thành phần nào trong hệ thống mà nếu nó ngừng hoạt động, *toàn bộ hệ thống* ngừng theo. Không có fallback, không có backup, không có con đường khác.
+
+SPOF có thể là:
+- Một database server duy nhất
+- Một load balancer không có cặp dự phòng
+- Một third-party API mà không có circuit breaker
+- Một người duy nhất biết deploy hệ thống (SPOF của con người)
+- Một vùng cloud region duy nhất
+
+**Dự phòng (Redundancy)** là cách loại bỏ SPOF: thêm bản sao, thêm con đường thay thế, thêm cơ chế failover tự động.
+
+## Ví dụ thật
+
+**Trường hợp phổ biến**: một SaaS nhỏ chạy trên một EC2 instance duy nhất, không có backup, không có health check. Lúc 3 giờ sáng instance bị crash — app down hoàn toàn. Không ai biết đến tận sáng hôm sau khi khách hàng báo. Đây là SPOF cổ điển.
+
+**Cách fix rẻ nhất**:
+- Database: bật **read replica** và **automated backup** (AWS RDS làm được điều này với vài click).
+- App server: đặt sau **load balancer** với ít nhất hai instance — nếu một instance die, traffic tự chuyển sang instance kia.
+- DNS và CDN: dùng dịch vụ có SLA cao (Cloudflare) thay vì tự host.
+- Deploy: dùng **rolling deploy** hoặc **blue-green deploy** thay vì tắt app để cập nhật.
+
+<Callout title="Mẹo">
+Cách tìm SPOF nhanh nhất: vẽ sơ đồ hệ thống, rồi hỏi với mỗi ô *"nếu cái này chết lúc 3 giờ sáng, điều gì xảy ra?"*. Nếu câu trả lời là "toàn bộ app down" — đó là SPOF cần xử lý.
+</Callout>
+
+**Không phải mọi SPOF đều cần fix ngay**: ưu tiên theo mức độ ảnh hưởng và xác suất xảy ra. SPOF của database cần fix sớm. SPOF của một tính năng phụ có thể chờ. Đây cũng là một đánh đổi — redundancy tốn tiền và tăng độ phức tạp.
+
+**Liên quan đến observability** ([concept-observability](/concepts/observability)): biết SPOF ở đâu chưa đủ — bạn còn cần phát hiện *khi nào* nó gần sập, trước khi nó sập thật.
+
+<Callout title="Nhớ nhé">
+Mọi hệ thống đều có SPOF — câu hỏi là bạn đã biết chúng ở đâu chưa. Tìm SPOF trước khi production tìm thấy nó cho bạn. Fix theo thứ tự ưu tiên: mức độ ảnh hưởng cao nhất trước.
+</Callout>
+
+## Đọc thêm
+
+- [What is High Availability? — DigitalOcean](https://www.digitalocean.com/community/tutorials/what-is-high-availability) — Giải thích rõ khái niệm high availability, cách loại bỏ SPOF với load balancer và cluster, kèm ví dụ cụ thể; đọc nhanh và thực tế.
+- [Monitoring Distributed Systems — Google SRE Book](https://sre.google/sre-book/monitoring-distributed-systems/) — Google SRE chia sẻ cách họ xây dựng khả năng phát hiện sự cố trước khi nó ảnh hưởng người dùng; chương thiết yếu để kết hợp dự phòng với giám sát.
+- [System Design Primer — GitHub](https://github.com/donnemartin/system-design-primer) — Phần Availability và Reliability patterns giải thích các kỹ thuật loại bỏ SPOF phổ biến như active-passive, active-active failover và replication.
+- [CAP Twelve Years Later — InfoQ](https://www.infoq.com/articles/cap-twelve-years-later-how-the-rules-have-changed/) — Hiểu vì sao việc thêm node để loại bỏ SPOF lại đặt ra câu hỏi về consistency — dự phòng và phân tán không phải miễn phí.
+
+## Tự kiểm tra
+
+1. Liệt kê ba dạng SPOF phổ biến trong một web app thông thường và cách dự phòng rẻ nhất cho mỗi loại.
+2. Tại sao "backup database hàng ngày" không phải là đủ để loại bỏ SPOF của database?
+3. Khi nào thì việc chấp nhận một SPOF là hợp lý thay vì bỏ công sức xử lý nó?

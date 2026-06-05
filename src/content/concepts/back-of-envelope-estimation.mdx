@@ -1,0 +1,62 @@
+---
+id: concept-back-of-envelope-estimation
+title: "Ước lượng nhanh (Back-of-the-envelope)"
+type: "concept"
+aliases: ["back of the envelope estimation", "capacity planning", "ước lượng tải", "ước lượng nhanh", "back-of-envelope", "QPS estimation"]
+tags: [system-design, estimation, scalability, throughput, architecture, requirements]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Trước khi xây cầu, kỹ sư không cần bản vẽ chi tiết để biết "cái cầu này chịu được bao nhiêu xe?". Họ lấy tờ giấy ra, tính nhẩm: xe nặng trung bình bao nhiêu, mặt cầu rộng bao nhiêu, vật liệu chịu lực thế nào — rồi có con số đủ để quyết định tiếp.
+
+Trong phần mềm, đây gọi là **ước lượng nhanh** (back-of-the-envelope estimation). Không cần chính xác tuyệt đối — cần đủ chính xác để chọn đúng hướng.
+
+## Là gì
+
+Back-of-the-envelope estimation là kỹ thuật tính nhẩm nhanh để ước lượng nhu cầu hệ thống: bao nhiêu request mỗi giây (QPS), cần bao nhiêu storage, băng thông ra sao. Kết quả không phải con số tuyệt đối — mà là thứ tự của độ lớn (order of magnitude): hàng chục, hàng trăm, hàng triệu?
+
+Ba con số bạn cần nhẩm được:
+- **QPS (Queries Per Second)** — hệ thống chịu bao nhiêu request mỗi giây?
+- **Storage/ngày** — mỗi ngày tích lũy bao nhiêu dữ liệu?
+- **Bandwidth** — băng thông vào/ra là bao nhiêu?
+
+## Ví dụ thật
+
+App habit tracking, 10.000 user đang dùng hàng ngày. Bạn cần ước lượng tải trước khi chọn database và server:
+
+**Giả định hợp lý:**
+- Mỗi user check vào app trung bình 3 lần/ngày.
+- Mỗi lần dùng: ~5 request (load habits, ghi check-in, cập nhật streak, v.v.).
+- Mỗi record check-in: ~500 bytes.
+
+**Tính QPS:**
+- Tổng request/ngày = 10.000 × 3 × 5 = 150.000 request
+- Request/giây (trung bình) = 150.000 ÷ 86.400 ≈ **1,7 QPS**
+- Peak (giả sử 80% traffic vào 4 giờ buổi sáng/tối): ≈ **10 QPS**
+
+**Tính storage/ngày:**
+- 10.000 user × 3 check-in × 500 bytes ≈ **15 MB/ngày**
+- Một năm: ~5.5 GB — một database bình thường chịu tốt.
+
+**Kết luận thiết kế:** 10 QPS peak → một server nhỏ đủ. 5.5 GB/năm → không cần sharding. Bạn không cần Redis, không cần microservices — một Postgres instance là đủ cho giai đoạn này.
+
+<Callout title="Mẹo">
+Dùng các con số tròn để tính nhanh: 1 ngày ≈ 86.400 giây (nhẩm thành 100.000 cho dễ). 1 tháng ≈ 30 ngày. Peak traffic thường gấp 5-10 lần trung bình. Không cần chính xác đến chữ số lẻ — sai 2x vẫn ổn nếu kết luận thiết kế giống nhau.
+</Callout>
+
+<Callout title="Nhớ nhé">
+Mục tiêu của ước lượng nhanh không phải "ra đúng con số" mà là "tránh chọn sai kiến trúc". 10 QPS vs 10.000 QPS là hai quyết định thiết kế hoàn toàn khác nhau.
+</Callout>
+
+## Đọc thêm
+
+- [Back-of-the-Envelope Estimation — ByteByteGo](https://bytebytego.com/courses/system-design-interview/back-of-the-envelope-estimation) — Bài chuẩn với bảng latency number, power-of-two, và ví dụ tính QPS cho Twitter; nền tảng cần đọc trước.
+- [Back of the Envelope Estimation — GeeksforGeeks](https://www.geeksforgeeks.org/system-design/back-of-the-envelope-estimation-in-system-design/) — Hướng dẫn step-by-step với ví dụ video streaming; trình bày rõ các kỹ thuật estimation khác nhau.
+- [Back of the Envelope — systemdesign.one](https://systemdesign.one/back-of-the-envelope/) — Tài liệu tham khảo nhanh về các con số quan trọng (latency, storage, bandwidth) mà mọi builder cần nhớ.
+
+## Tự kiểm tra
+
+1. App blog có 50.000 user, mỗi user đọc trung bình 5 bài/ngày, mỗi request đọc bài ~2KB. Tính storage bandwidth ra/ngày.
+2. Tại sao peak QPS quan trọng hơn QPS trung bình khi thiết kế hệ thống?
+3. Kết quả tính được là 3 QPS peak. Bạn có cần cache, load balancer, hay database replication ngay không? Tại sao?

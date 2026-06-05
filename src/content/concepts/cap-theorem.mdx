@@ -1,0 +1,54 @@
+---
+id: concept-cap-theorem
+title: "Định lý CAP"
+type: "concept"
+aliases: ["CAP theorem", "CAP", "định lý CAP", "consistency availability partition", "brewer theorem"]
+tags: [system-design, cap-theorem, consistency, availability, reliability, distributed-systems, trade-off]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Tưởng tượng siêu thị có hai thu ngân ở hai quầy khác nhau. Bạn vừa thanh toán tiền mặt ở quầy 1 — số dư tài khoản giảm đi. Ngay lúc đó, người vợ bạn ở quầy 2 quẹt thẻ ngân hàng. Hệ thống phân tán phải quyết định: quầy 2 có thấy số dư cập nhật chưa, hay cứ cho qua trước?
+
+Đây chính là bài toán mà định lý CAP đặt ra.
+
+## Là gì
+
+Năm 2000, Eric Brewer đề xuất: trong một hệ thống phân tán, bạn *không thể đồng thời đảm bảo cả ba*:
+
+- **C — Consistency (Tính nhất quán)**: mọi node đều trả về dữ liệu mới nhất. Đọc ở đâu cũng thấy kết quả giống nhau.
+- **A — Availability (Tính sẵn sàng)**: hệ thống luôn trả lời yêu cầu — kể cả khi một số node đang gặp vấn đề.
+- **P — Partition Tolerance (Chịu phân vùng)**: hệ thống vẫn hoạt động dù có sự cố mạng khiến các node không liên lạc được với nhau.
+
+**Vấn đề**: network partition (mạng bị gián đoạn) luôn *có thể xảy ra* trong hệ thống thực. Vì vậy P không phải lựa chọn — bạn buộc phải chịu partition. Câu hỏi thật là: **khi partition xảy ra, bạn chọn C hay A?**
+
+## Ví dụ thật
+
+**Chọn CP (nhất quán + chịu phân vùng)**: Ngân hàng. Khi mạng giữa hai datacenter bị đứt, hệ thống *từ chối xử lý giao dịch* thay vì cho phép số dư sai. Bạn gặp lỗi "dịch vụ tạm thời gián đoạn" — nhưng tài khoản không bị trừ nhầm. Ví dụ: HBase, Zookeeper.
+
+**Chọn AP (sẵn sàng + chịu phân vùng)**: Mạng xã hội. Khi bạn like một bài post, hệ thống ghi ngay và trả về thành công — nhưng người khác ở vùng khác có thể thấy số like cũ vài giây. Không ai chết vì điều đó. Ví dụ: Cassandra, DynamoDB.
+
+<Callout title="Góc kỹ thuật">
+CAP là framework tư duy, không phải công thức cứng nhắc. Thực tế, nhiều hệ thống hiện đại (như Google Spanner) đạt được cả C và A trong điều kiện bình thường — chỉ thỏa hiệp khi có partition thật. Brewer sau này cũng nhấn mạnh: sự đánh đổi xảy ra ở mức độ tinh tế hơn, không phải nhị phân hoàn toàn.
+</Callout>
+
+**Cách áp dụng thực tế**: với mỗi tính năng, hỏi "*nếu hệ thống bị lỗi mạng 30 giây, điều gì tệ hơn: user thấy dữ liệu cũ, hay không thể dùng tính năng đó?"*
+
+Để hiểu các mức consistency cụ thể trong thực tế, xem thêm [concept-consistency-models](/concepts/consistency-models).
+
+<Callout title="Nhớ nhé">
+Khi network partition xảy ra — và nó sẽ xảy ra — bạn phải chọn: C hoặc A. Không phải kiến trúc nào đúng hơn; chỉ có kiến trúc phù hợp với data bạn đang bảo vệ. Tiền và tồn kho → chọn C. Like, view count, feed → chọn A.
+</Callout>
+
+## Đọc thêm
+
+- [CAP Twelve Years Later: How the Rules Have Changed — InfoQ](https://www.infoq.com/articles/cap-twelve-years-later-how-the-rules-have-changed/) — Eric Brewer (tác giả gốc của CAP theorem) tự đính chính và làm rõ những hiểu lầm phổ biến về định lý của ông; bài đọc quan trọng để không dùng CAP một cách máy móc.
+- [Eventually Consistent — Werner Vogels (Amazon)](https://www.allthingsdistributed.com/2008/12/eventually_consistent.html) — CTO Amazon giải thích cách DynamoDB và S3 tiếp cận consistency trong thực tế vận hành quy mô toàn cầu.
+- [System Design Primer: Availability vs Consistency — GitHub](https://github.com/donnemartin/system-design-primer#availability-vs-consistency) — Tóm tắt súc tích về CAP với ví dụ CP và AP systems; điểm khởi đầu tốt trước khi đọc bài gốc.
+- [Observability Primer — OpenTelemetry](https://opentelemetry.io/docs/concepts/observability-primer/) — Khi bạn đã chọn consistency model, bạn cần quan sát hệ thống đang hoạt động thế nào; bài này giải thích tại sao observability là bước tiếp theo tất yếu.
+
+## Tự kiểm tra
+
+1. Tại sao Partition Tolerance (P) thực chất không phải một "lựa chọn" trong hệ thống phân tán thực tế?
+2. Với tính năng "đặt vé máy bay", bạn nên ưu tiên C hay A khi partition xảy ra? Vì sao?
+3. Sự khác biệt giữa hệ thống CP và AP là gì trong tình huống network bình thường (không có partition)?

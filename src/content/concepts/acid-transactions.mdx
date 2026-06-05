@@ -1,0 +1,62 @@
+---
+id: concept-acid-transactions
+title: "ACID & Transaction"
+type: "concept"
+aliases: ["ACID", "transaction", "atomicity", "consistency", "isolation", "durability", "database transaction", "giao dịch cơ sở dữ liệu", "rollback"]
+tags: [system-design, database, acid, transactions, reliability, sql]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Hãy hình dung bạn chuyển tiền ngân hàng: trừ 500k từ tài khoản A, cộng 500k vào tài khoản B. Đúng giữa chừng, server bị mất điện. Tiền đã trừ khỏi A — nhưng B chưa nhận được. Tiền biến đâu?
+
+Đây không phải ví dụ tưởng tượng. Đây là vấn đề thật mà mọi hệ thống tài chính đã từng phải đối mặt — và **transaction** là câu trả lời.
+
+## Là gì
+
+**Transaction** là một nhóm thao tác được xử lý như một đơn vị duy nhất: hoặc tất cả thành công, hoặc tất cả được hoàn tác như chưa từng xảy ra.
+
+**ACID** là bốn thuộc tính mà một transaction đảm bảo:
+
+- **Atomicity** — Tất cả hoặc không có gì. Không có trạng thái "làm nửa chừng".
+- **Consistency** — Trước và sau transaction, dữ liệu vẫn hợp lệ theo mọi ràng buộc đã định.
+- **Isolation** — Transaction đang chạy không thấy dữ liệu "chưa commit" của transaction khác.
+- **Durability** — Khi đã COMMIT, dữ liệu được ghi vĩnh viễn — dù server crash ngay sau đó.
+
+## Ví dụ thật
+
+```sql
+BEGIN;
+  UPDATE accounts SET balance = balance - 500000 WHERE id = 'A';
+  UPDATE accounts SET balance = balance + 500000 WHERE id = 'B';
+COMMIT;
+```
+
+Nếu dòng thứ hai thất bại, PostgreSQL tự động ROLLBACK dòng đầu. Tài khoản A vẫn nguyên vẹn. Không mất tiền.
+
+Khi nào bạn thực sự cần transaction?
+- Khi bạn cần **nhiều thao tác phải thành công cùng nhau** — đặt hàng + trừ tồn kho + tạo invoice.
+- Khi bạn cần **đọc rồi ghi** mà không muốn race condition — kiểm tra số lượng còn hàng, rồi mới trừ.
+
+Khi nào bạn **chưa cần**? Nếu mỗi request chỉ đụng vào một bảng, một dòng — transaction implicit của PostgreSQL đã lo.
+
+<Callout title="Góc kỹ thuật">
+MVCC (Multi-Version Concurrency Control) là cơ chế PostgreSQL dùng để implement Isolation mà không cần lock cả bảng. Mỗi transaction thấy một "snapshot" của database tại thời điểm nó bắt đầu. Đây là lý do PostgreSQL có thể đọc và ghi đồng thời mà không block lẫn nhau.
+</Callout>
+
+<Callout title="Nhớ nhé">
+Transaction là lưới an toàn khi bạn cần nhiều thao tác phải thành công cùng nhau. Nhưng giữ transaction ngắn — transaction dài giữ lock lâu, gây chậm cho toàn hệ thống.
+</Callout>
+
+## Đọc thêm
+
+- [PostgreSQL: Transactions](https://www.postgresql.org/docs/current/tutorial-transactions.html) — Tài liệu chính thức giải thích transaction bằng ví dụ ngân hàng thực tế, kèm cú pháp BEGIN/COMMIT/ROLLBACK/SAVEPOINT.
+- [PostgreSQL: Concurrency Control (MVCC)](https://www.postgresql.org/docs/current/mvcc.html) — Giải thích cơ chế bên dưới của Isolation: snapshot isolation và các mức độ isolation level khác nhau.
+- [Use The Index, Luke — Anatomy](https://use-the-index-luke.com/sql/anatomy) — Nền tảng về cấu trúc database, cần thiết để hiểu tại sao index và transaction tương tác với nhau như thế nào.
+- [System Design Primer — Database](https://github.com/donnemartin/system-design-primer#database) — Context rộng hơn: ACID trong SQL vs BASE trong NoSQL — và khi nào nên ưu tiên cái nào.
+
+## Tự kiểm tra
+
+1. Hệ thống đặt vé máy bay: khi user bấm "Mua vé", bạn cần kiểm tra ghế còn trống rồi mới trừ ghế. Nếu không dùng transaction, vấn đề gì có thể xảy ra?
+2. Giải thích bằng lời thường (không dùng thuật ngữ) tại sao "Atomicity" quan trọng hơn việc chỉ bắt lỗi từng câu SQL riêng lẻ.
+3. Một transaction kéo dài 30 giây vì phải gọi API bên ngoài ở giữa. Vấn đề gì có thể xảy ra? Bạn sẽ xử lý như thế nào?

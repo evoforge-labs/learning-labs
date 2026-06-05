@@ -1,0 +1,86 @@
+---
+id: exercise-sysd-005
+title: "Chọn đánh đổi dưới ràng buộc"
+type: "exercise"
+track: system-design-for-builders
+tags: [system-design, trade-off, cap-theorem, consistency, monolith, microservices, architecture, reliability]
+estimatedMinutes: 25
+related: [lesson-sysd-005, concept-cap-theorem, concept-consistency-models, concept-monolith-vs-microservices, concept-single-point-of-failure, rubric-system-design]
+status: published
+---
+import Callout from '../../../components/content/Callout.astro';
+
+## Tình huống
+
+Bạn đang là kỹ sư duy nhất (hoặc trong team 3 người) của một startup B2B SaaS tên **TaskFlow** — công cụ quản lý công việc dành cho team doanh nghiệp nhỏ. Hiện tại:
+
+- **800 khách hàng** (tổ chức), **~15.000 người dùng cuối**
+- Hệ thống là một **Rails monolith** + PostgreSQL, chạy trên một EC2 instance
+- Tính năng chính: tạo và phân công task, comment theo thời gian thực, báo cáo tiến độ, thông báo qua email
+- Startup vừa đóng được seed round, chuẩn bị mở rộng team lên 5 người trong 6 tháng tới
+
+**Cuộc tranh luận đang xảy ra trong team**: CTO mới (vừa từ một công ty scale-up gia nhập) muốn tách ngay sang microservices — service Auth, service Task, service Notification, service Analytics. Lý do: "sau này scale dễ hơn". Bạn không chắc đây là quyết định đúng.
+
+---
+
+## Nhiệm vụ
+
+### Task 1 — Monolith hay Microservices? (10 phút)
+
+Viết lập luận của bạn: ở giai đoạn này (800 khách hàng, team sắp tăng lên 5 người, 6 tháng tới), TaskFlow nên **giữ monolith hay tách microservices**?
+
+Lập luận cần trả lời cụ thể:
+- Cái giá phải trả của microservices ở giai đoạn này là gì?
+- Có lý do *cụ thể* nào buộc phải tách ngay không? (không phải "sau này scale dễ hơn")
+- Nếu giữ monolith, khi nào thì nên bắt đầu xem xét tách? Điều kiện là gì?
+
+<Callout title="Gợi ý">
+Tránh lập luận kiểu "microservices tốt hơn vì...". Hãy lập luận theo ràng buộc thực tế: team size, deployment complexity, debugging overhead, tốc độ ra tính năng mới. Trả lời câu hỏi: *cái giá của microservices hôm nay có xứng với lợi ích không?*
+</Callout>
+
+---
+
+### Task 2 — Strong hay Eventual? Chọn theo CAP (10 phút)
+
+TaskFlow có hai tính năng đang được thiết kế lại. Với mỗi tính năng, hãy:
+1. Chọn **strong consistency** hay **eventual consistency**
+2. Giải thích bằng logic CAP: *điều gì tệ hơn — user thấy dữ liệu cũ, hay tính năng không phản hồi?*
+3. Nêu một hậu quả cụ thể nếu bạn chọn sai
+
+**Tính năng A — Cập nhật trạng thái task**
+
+Người dùng A đánh dấu task "Đã hoàn thành". Ngay sau đó, người dùng B (manager) vào xem dashboard tiến độ của team. B cần thấy task đó là "Đã hoàn thành" ngay lập tức hay có thể chờ vài giây?
+
+**Tính năng B — Số thông báo chưa đọc (notification badge)**
+
+Cái badge đỏ góc trên màn hình hiển thị "bạn có N thông báo chưa đọc". Khi user đọc xong, badge cần cập nhật ngay lập tức trên tất cả thiết bị của user (laptop + điện thoại) hay có thể chậm vài giây?
+
+---
+
+### Task 3 — Tìm SPOF lớn nhất và đề xuất fix (5 phút)
+
+Dựa trên mô tả hệ thống (Rails monolith + PostgreSQL, một EC2 instance), xác định:
+
+1. **SPOF lớn nhất** — thành phần nào nếu chết sẽ khiến toàn bộ TaskFlow ngừng hoạt động?
+2. **Giải pháp dự phòng rẻ nhất** — một thay đổi cụ thể (không phải rebuild toàn bộ) bạn có thể làm trong tuần này để giảm thiểu rủi ro đó là gì?
+3. **Trade-off**: giải pháp đó có chi phí hoặc nhược điểm gì?
+
+<Callout title="Gợi ý">
+"Rẻ nhất" ở đây có nghĩa là thay đổi tối thiểu, không phải $0. Ví dụ: bật Read Replica trên RDS, thêm một instance sau load balancer, bật automated backup — đây đều là những bước nhỏ có thể làm ngay.
+</Callout>
+
+---
+
+## Tiêu chí đánh giá
+
+Xem rubric đầy đủ tại [System Design Rubric](../../rubrics/system-design-rubric).
+
+| Tiêu chí | Trọng số |
+|---|---|
+| Lập luận monolith/microservices dựa trên ràng buộc thực tế, không phải "best practice" chung chung | 35% |
+| Lựa chọn consistency model có căn cứ CAP rõ ràng, nêu được hậu quả cụ thể nếu chọn sai | 35% |
+| SPOF được xác định đúng, giải pháp dự phòng khả thi và nêu được trade-off | 30% |
+
+<Callout title="Nhớ nhé">
+Bài tập này không có đáp án duy nhất đúng. Điều quan trọng là lập luận của bạn phải *nhất quán với ràng buộc đã cho* và *nêu được trade-off rõ ràng*. Không có kiến trúc đúng — chỉ có lựa chọn được biện minh tốt.
+</Callout>

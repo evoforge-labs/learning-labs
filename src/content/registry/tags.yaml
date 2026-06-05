@@ -34,3 +34,43 @@ tags:
   - rubric
   - template
   - system-design
+  - scalability
+  - architecture
+  - reliability
+  - availability
+  - requirements
+  - estimation
+  - latency
+  - throughput
+  - data-modeling
+  - database
+  - sql
+  - nosql
+  - indexing
+  - normalization
+  - acid
+  - transactions
+  - load-balancing
+  - caching
+  - cdn
+  - replication
+  - sharding
+  - partitioning
+  - api
+  - api-design
+  - rest
+  - async
+  - message-queue
+  - webhook
+  - idempotency
+  - rate-limiting
+  - cap-theorem
+  - consistency
+  - monolith
+  - microservices
+  - observability
+  - monitoring
+  - distributed-systems
+  - performance
+  - logs
+  - traces

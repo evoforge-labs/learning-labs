@@ -1,0 +1,79 @@
+---
+id: exercise-sysd-001
+title: "Ước lượng tải cho một app thật"
+type: "exercise"
+track: system-design-for-builders
+tags: [system-design, estimation, requirements, latency, throughput, scalability, solo-builder]
+estimatedMinutes: 20
+related: [lesson-sysd-001, concept-back-of-envelope-estimation, concept-latency-vs-throughput, concept-functional-vs-nonfunctional, rubric-system-design]
+status: published
+---
+import Callout from '../../../components/content/Callout.astro';
+
+## Tình huống
+
+Bạn là builder chuẩn bị làm app **habit tracking** — giúp người dùng ghi lại và theo dõi thói quen hàng ngày (uống nước, tập thể dục, đọc sách, v.v.).
+
+Kế hoạch ra mắt: **10.000 user** trong 3 tháng đầu, tập trung thị trường Việt Nam.
+
+Trước khi viết một dòng code, bạn cần làm rõ ba thứ.
+
+---
+
+## Nhiệm vụ 1 — Liệt kê yêu cầu chức năng và phi chức năng
+
+Viết ra ít nhất:
+- **5 yêu cầu chức năng** — những thứ app *làm được*. Ví dụ: "Người dùng có thể thêm habit mới."
+- **4 yêu cầu phi chức năng** — những thứ quyết định app *hoạt động tốt thế nào*. Mỗi NFR cần có **số cụ thể**, không phải "nhanh" hay "ổn định" chung chung.
+
+<Callout title="Mẹo">
+Với NFR, hỏi: "Tệ đến mức nào thì user bỏ app?" Câu trả lời đó chính là target của bạn. Ví dụ: "Nếu trang chủ load quá 3 giây, 50% user thoát" → latency target: dưới 2 giây.
+</Callout>
+
+---
+
+## Nhiệm vụ 2 — Ước lượng QPS và storage
+
+Dựa vào 10.000 user dự kiến, thực hiện back-of-the-envelope estimation:
+
+**Giả định bạn cần đưa ra** (hãy viết rõ giả định trước khi tính):
+- Mỗi ngày, bao nhiêu % user mở app?
+- Một session trung bình gồm bao nhiêu request?
+- Mỗi bản ghi check-in habit chiếm bao nhiêu bytes?
+
+**Từ giả định đó, tính:**
+1. **QPS trung bình** (request/giây, cả ngày)
+2. **QPS peak** (giờ cao điểm — sáng sớm hoặc tối là lúc người ta check habit)
+3. **Storage tích lũy mỗi ngày** (bytes → MB)
+4. **Storage sau 1 năm** (có cần lo về storage không?)
+
+<Callout title="Mẹo">
+Không cần chính xác. Nếu tính ra 5 QPS peak hay 15 QPS peak, kết luận thiết kế vẫn như nhau: một server nhỏ là đủ. Mục tiêu là tránh *chọn sai* kiến trúc — không phải ra đúng con số.
+</Callout>
+
+---
+
+## Nhiệm vụ 3 — Xác định target latency/throughput và một implication thiết kế
+
+Dựa vào tính toán ở Nhiệm vụ 2:
+
+1. **Latency target:** P95 response time của API check-in habit nên là bao nhiêu ms? Tại sao con số đó?
+2. **Throughput target:** Hệ thống cần chịu bao nhiêu concurrent users vào giờ peak?
+3. **Một implication thiết kế:** Từ hai target trên, rút ra *một* quyết định thiết kế cụ thể. Ví dụ: "Với 8 QPS peak và latency target 300ms, mình không cần cache tầng API — Postgres với index là đủ." Hoặc: "Mình cần thêm rate limiting vì giờ peak có thể có burst từ notification push."
+
+---
+
+## Tiêu chí đánh giá
+
+Tham khảo [System Design Rubric](../../rubrics/system-design-rubric) để tự chấm.
+
+Với bài này, tập trung vào hai tiêu chí đầu:
+
+| Tiêu chí | Câu hỏi để tự kiểm tra |
+|---|---|
+| Làm rõ yêu cầu (chức năng + phi chức năng) | NFR của bạn có số cụ thể không? Hay vẫn là "nhanh/ổn định" chung chung? |
+| Mô hình dữ liệu & lựa chọn lưu trữ hợp lý | Kết luận thiết kế của bạn có xuất phát từ con số ước lượng không, hay chỉ là cảm tính? |
+
+<Callout title="Nhớ nhé">
+Bài tập này không có đáp án duy nhất đúng. Điều quan trọng là *quy trình*: giả định rõ ràng → tính toán có căn cứ → kết luận thiết kế cụ thể. Một kết luận sai nhưng có lý luận rõ ràng tốt hơn nhiều so với kết luận đúng nhưng đến từ trực giác mơ hồ.
+</Callout>

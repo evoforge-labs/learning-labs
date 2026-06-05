@@ -1,0 +1,74 @@
+---
+id: exercise-sysd-002
+title: "Thiết kế schema cho một app"
+type: "exercise"
+track: system-design-for-builders
+tags: [system-design, data-modeling, database, sql, nosql, indexing, normalization, acid, transactions, trade-off, solo-builder]
+estimatedMinutes: 25
+related: [lesson-sysd-002, concept-data-modeling, concept-sql-vs-nosql, concept-database-indexing, concept-normalization-denormalization, concept-acid-transactions, rubric-system-design]
+status: published
+---
+import Callout from '../../../components/content/Callout.astro';
+
+## Bối cảnh
+
+Bạn đang build **BookNow** — một app đặt lịch dịch vụ nhỏ (tương tự Calendly, nhưng cho các tiệm làm tóc, spa, phòng khám nhỏ). Khách hàng tìm dịch vụ, chọn giờ trống, đặt lịch. Chủ tiệm xem và quản lý lịch hẹn.
+
+Người dùng có hai loại: **khách đặt** (customer) và **nhà cung cấp dịch vụ** (provider). Mỗi provider có nhiều dịch vụ. Mỗi dịch vụ có thể có nhiều khung giờ trong tuần.
+
+<Callout title="Mẹo">
+Đừng vội code hay viết SQL ngay. Bài tập này về *tư duy* — đọc kỹ từng task, nghĩ ra câu trả lời trước, rồi mới viết ra.
+</Callout>
+
+---
+
+## Task 1 — Entities, relationships, và access patterns (10 phút)
+
+**a) Liệt kê các entities chính** của BookNow. Với mỗi entity, ghi vài cột đại diện (không cần đầy đủ).
+
+**b) Mô tả các relationships:**
+- Relationship nào là one-to-many?
+- Relationship nào là many-to-many? (Gợi ý: khách và dịch vụ có quan hệ gì qua booking?)
+
+**c) Xác định 4 access patterns quan trọng nhất** — cụ thể theo format: *"App cần lấy [gì] khi [điều kiện nào]"*. Ví dụ: "App cần lấy tất cả lịch hẹn của provider X trong ngày hôm nay."
+
+---
+
+## Task 2 — Chọn SQL hay NoSQL, và tại sao (8 phút)
+
+Dựa trên bài toán BookNow:
+
+**a) Bạn chọn SQL (PostgreSQL) hay NoSQL?** Đưa ra ít nhất **2 lý do cụ thể** từ đặc điểm của bài toán này — không phải lý do chung chung.
+
+**b) Có phần nào trong BookNow mà NoSQL có thể phù hợp hơn không?** Nếu có, phần nào và tại sao?
+
+---
+
+## Task 3 — Index và denormalization (7 phút)
+
+**a) Từ 4 access patterns bạn liệt kê ở Task 1**, đề xuất **3 index cụ thể** bạn sẽ tạo. Với mỗi index, giải thích:
+- Index trên cột/bảng nào?
+- Access pattern nào nó phục vụ?
+
+**b) Chỉ ra một chỗ trong BookNow bạn sẽ denormalize có chủ ý** — và giải thích tại sao đây là thiết kế hợp lý, không phải lỗi. (Gợi ý: nghĩ về thông tin nào cần "đóng băng" tại thời điểm booking được tạo.)
+
+**c) Có thao tác nào trong BookNow cần dùng transaction không?** Nếu có, mô tả cụ thể hai bước cần atomic.
+
+---
+
+## Tiêu chí đánh giá
+
+Xem [System Design Rubric](../../rubrics/system-design-rubric) để biết cách đánh giá toàn diện. Với bài này, tập trung vào:
+
+| Tiêu chí | Mức độ kỳ vọng |
+|---|---|
+| Entities và relationships | Xác định đúng, không thiếu relationship quan trọng |
+| Access patterns | Cụ thể và thực tế — không phải abstract |
+| Lý do chọn SQL/NoSQL | Có lập luận từ đặc điểm bài toán, không phải thói quen |
+| Index đề xuất | Liên kết trực tiếp với access pattern cụ thể |
+| Denormalization | Giải thích được *tại sao* hợp lý, không phải "cho nhanh" |
+| Transaction | Chỉ đúng ngữ cảnh cần atomicity |
+
+<Callout title="Nhớ nhé">
+Không có đáp án duy nhất đúng — nhưng có đáp án được lập luận tốt và đáp án không có lập luận. Phần giải thích quan trọng hơn phần chọn.
+</Callout>

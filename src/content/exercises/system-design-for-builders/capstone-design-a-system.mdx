@@ -1,0 +1,156 @@
+---
+id: exercise-sysd-006
+title: "Capstone: Thiết kế một hệ thống từ đầu"
+type: "exercise"
+track: system-design-for-builders
+tags: [system-design, scalability, architecture, reliability, availability, consistency, cap-theorem, monolith, trade-off, latency, throughput, solo-builder]
+estimatedMinutes: 90
+related: [lesson-sysd-005, concept-system-design, concept-data-modeling, concept-caching, concept-cap-theorem, concept-monolith-vs-microservices, concept-single-point-of-failure, concept-observability, rubric-system-design]
+status: published
+---
+import Callout from '../../../components/content/Callout.astro';
+
+Đây là bài tập tổng hợp cuối track. Bạn sẽ thiết kế một hệ thống thực tế từ đầu — từ yêu cầu đến kiến trúc — và viết thành một tài liệu thiết kế hoàn chỉnh.
+
+Không có đáp án mẫu. Chỉ có quyết định được biện minh tốt.
+
+---
+
+## Chọn hệ thống của bạn
+
+Chọn **một** trong ba hệ thống bên dưới. Chúng khác nhau về tính chất — hãy chọn cái bạn thấy thú vị nhất hoặc gần với dự án thật của bạn nhất.
+
+---
+
+**Hệ thống A — URL Shortener**
+
+Xây dịch vụ rút gọn link như bit.ly. Người dùng nhập URL dài, nhận URL ngắn (ví dụ: `short.ly/abc123`). Người khác bấm vào URL ngắn, được redirect đến URL gốc. Có dashboard xem số lần bấm.
+
+*Tính chất*: read-heavy (redirect nhiều hơn tạo link), latency nhạy cảm (redirect phải nhanh), cần analytics.
+
+---
+
+**Hệ thống B — News Feed cá nhân hóa**
+
+Xây tính năng news feed như Twitter/X dạng đơn giản: người dùng follow nhau, đăng bài, và thấy bài của những người họ follow theo thứ tự thời gian (không cần thuật toán ranking phức tạp).
+
+*Tính chất*: write amplification (một người đăng bài → nhiều người phải thấy), eventual consistency là chấp nhận được cho feed, khác với strong consistency cho profile.
+
+---
+
+**Hệ thống C — Đặt vé sự kiện**
+
+Xây hệ thống bán vé sự kiện: admin tạo sự kiện và số ghế có hạn, người dùng đặt vé, thanh toán, nhận confirmation. Cần xử lý tình huống flash sale (nhiều người đặt cùng lúc).
+
+*Tính chất*: write-heavy trong đợt peak, tính toàn vẹn dữ liệu rất quan trọng (không được bán quá số lượng ghế), consistency là ưu tiên cao.
+
+---
+
+## Ràng buộc chung (áp dụng cho cả ba hệ thống)
+
+- **Team**: solo builder hoặc team 2-3 người
+- **Thời gian xây**: ~4 tuần
+- **Ngân sách**: tối thiểu — dưới $100/tháng infrastructure
+- **Quy mô mục tiêu**: 10.000 user trong 6 tháng đầu, có thể tăng lên 100.000 user sau 1 năm
+- **Ưu tiên**: ra production nhanh, có thể scale sau khi có traction
+
+---
+
+## Nhiệm vụ: Viết tài liệu thiết kế
+
+Sử dụng [System Design Template](/templates/system-design-template) làm khung. Điền đầy đủ các mục sau:
+
+<Callout title="Mẹo">
+Đừng bỏ qua mục nào. Tài liệu thiết kế không chỉ để người khác đọc — nó buộc bạn phải suy nghĩ qua từng quyết định trước khi code. Nếu bạn không thể viết rõ lý do chọn một kiến trúc, có thể bạn chưa thật sự hiểu nó.
+</Callout>
+
+### Mục 1 — Requirements (Yêu cầu)
+
+**Functional requirements** (tính năng cụ thể):
+- Liệt kê 4-6 tính năng cốt lõi (không phải wishlist)
+- Xác định tính năng nào là MVP, tính năng nào có thể làm sau
+
+**Non-functional requirements** (ràng buộc phi chức năng):
+- Availability: hệ thống cần uptime bao nhiêu? (99%? 99.9%?)
+- Latency: response time chấp nhận được là bao nhiêu?
+- Scale: bao nhiêu request/giây ở peak? Bao nhiêu dữ liệu sau 1 năm?
+- Consistency: phần nào của hệ thống cần strong consistency?
+
+---
+
+### Mục 2 — API & Data Model
+
+**API design** (các endpoint chính):
+- Liệt kê 4-6 API endpoint quan trọng nhất (method, path, input, output)
+- Giải thích lý do thiết kế (tại sao REST hay không, pagination strategy, v.v.)
+
+**Data model**:
+- Các entity chính là gì? (ví dụ: User, Event, Booking)
+- Quan hệ giữa chúng (one-to-many, many-to-many?)
+- SQL hay NoSQL? Lý do cụ thể cho hệ thống này?
+- Các index cần thiết cho query patterns phổ biến nhất
+
+---
+
+### Mục 3 — High-level Architecture (Kiến trúc tổng thể)
+
+- Vẽ (hoặc mô tả bằng chữ) sơ đồ kiến trúc: client → ? → database
+- Monolith hay microservices? Lý do phù hợp với ràng buộc đã cho
+- Cache ở đâu? Cho dữ liệu nào?
+- Cần message queue không? Cho use case gì?
+- Chọn tech stack gì và tại sao (không phải "vì tôi biết nó")
+
+---
+
+### Mục 4 — Scaling & Bottlenecks (Điểm tắc nghẽn)
+
+- Bottleneck lớn nhất của hệ thống này ở đâu? (database? compute? network?)
+- Khi nào bạn cần scale? Dấu hiệu nào cho thấy đã đến lúc?
+- Chiến lược scale cụ thể: vertical hay horizontal? Cái gì scale trước?
+- SPOF lớn nhất là gì và bạn xử lý thế nào?
+
+---
+
+### Mục 5 — Tradeoffs (Đánh đổi)
+
+Đây là mục quan trọng nhất. Với ít nhất **3 quyết định thiết kế cụ thể**, trình bày theo format:
+
+> **Quyết định**: [bạn chọn gì]
+> **Thay thế đã xem xét**: [bạn đã cân nhắc cái gì]
+> **Lý do chọn**: [tại sao cái này phù hợp hơn với ràng buộc]
+> **Chi phí phải trả**: [bạn đang đánh đổi gì]
+
+Ví dụ các trade-off thường gặp:
+- Monolith vs microservices trong giai đoạn này
+- Strong vs eventual consistency cho từng tính năng
+- Cache vs không cache (tươi vs nhanh)
+- SQL vs NoSQL cho data chính
+- Tự build vs dùng third-party service
+
+<Callout title="Cẩn thận">
+Mục Tradeoffs không phải là "tôi chọn X vì X tốt hơn Y". Phải là "tôi chọn X mặc dù nó có nhược điểm Z, vì với ràng buộc A và B, X phù hợp hơn Y". Nếu không thấy nhược điểm của quyết định mình đã chọn — bạn chưa suy nghĩ đủ sâu.
+</Callout>
+
+---
+
+## Tiêu chí đánh giá
+
+Xem rubric đầy đủ tại [System Design Rubric](../../rubrics/system-design-rubric).
+
+| Tiêu chí | Trọng số | Câu hỏi kiểm tra |
+|---|---|---|
+| Làm rõ yêu cầu (functional + non-functional) | 20% | Requirements có cụ thể, đo lường được không? Hay chỉ là wishlist mơ hồ? |
+| Mô hình dữ liệu & lựa chọn lưu trữ hợp lý | 25% | Data model có phản ánh đúng domain? SQL/NoSQL được chọn có lý do? |
+| Xử lý scale & bottleneck đúng chỗ | 25% | Bottleneck thật sự được xác định đúng không? Scale strategy có khả thi với ràng buộc budget/team? |
+| Nêu rõ đánh đổi, không over-engineer | 20% | Mỗi quyết định có nêu chi phí không? Có dấu hiệu over-engineering cho quy mô hiện tại không? |
+| Độ tin cậy: điểm chết, dự phòng, xử lý lỗi | 10% | SPOF được xác định và có kế hoạch xử lý không? |
+
+<Callout title="Nhớ nhé">
+Một tài liệu thiết kế tốt không phải là tài liệu đầy đủ nhất — mà là tài liệu **rõ ràng nhất về những quyết định quan trọng nhất**. Bạn không cần thiết kế mọi thứ. Bạn cần thiết kế đúng những gì sẽ khó thay đổi sau này.
+</Callout>
+
+---
+
+## Sau khi hoàn thành
+
+Nếu bạn muốn feedback thêm, hãy chia sẻ bài làm và đặt câu hỏi cụ thể về phần bạn còn không chắc. Câu hỏi tốt nhất là: *"Tôi đã chọn X cho lý do Y — điều gì tôi có thể đang bỏ qua?"*

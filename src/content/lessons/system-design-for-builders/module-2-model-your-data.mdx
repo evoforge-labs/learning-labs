@@ -1,0 +1,53 @@
+---
+id: lesson-sysd-002
+title: "Mô hình hóa dữ liệu đúng từ đầu"
+type: "lesson"
+track: system-design-for-builders
+module: data
+level: beginner
+tags: [system-design, data-modeling, database, sql, nosql, indexing, normalization, acid, transactions, trade-off, solo-builder]
+prerequisites: [concept-data-modeling, concept-sql-vs-nosql, concept-database-indexing, concept-normalization-denormalization, concept-acid-transactions]
+related: [exercise-sysd-002, rubric-system-design]
+status: published
+---
+import Callout from '../../../components/content/Callout.astro';
+
+Hầu hết bug về dữ liệu không đến từ code sai — chúng đến từ schema sai. Schema sai thì bạn viết query càng ngày càng phức tạp, performance càng ngày càng tệ, và đến một lúc refactor sẽ rất đau.
+
+Module này xây theo một sợi chỉ: **từ cách bạn nghĩ về dữ liệu → đến quyết định kỹ thuật cụ thể**.
+
+## Bắt đầu từ cách bạn đọc, không phải cách bạn lưu
+
+[Mô hình hóa dữ liệu](/concepts/data-modeling) là bước đầu tiên — và cũng là bước bị bỏ qua nhiều nhất. Trước khi chọn database, trước khi tạo bảng, hãy hỏi: *app của mình thường đọc gì, từ đâu, theo điều kiện nào?*
+
+Access pattern quyết định tất cả: cấu trúc bảng, chỉ cần đặt index ở đâu, và cả loại database bạn nên chọn.
+
+## Chọn SQL hay NoSQL — có quy tắc rõ ràng
+
+[SQL vs NoSQL](/concepts/sql-vs-nosql): mặc định của bạn nên là SQL (PostgreSQL). Đó không phải bảo thủ — đó là pragmatic. SQL cho bạn JOIN linh hoạt, schema rõ ràng, và đảm bảo ACID mà không cần làm gì thêm.
+
+Chuyển sang NoSQL khi bạn có lý do cụ thể: dữ liệu thực sự không có schema (ví dụ: log events, user preferences tự do), hoặc cần scale ngang theo chiều write cực lớn mà SQL không còn đủ.
+
+## Index đúng chỗ — không phải nhiều nhất
+
+[Index trong Database](/concepts/database-indexing): khi query chậm, bước đầu tiên là xem bạn có index trên cột đang filter không. Nhưng đừng index mọi thứ — mỗi index là gánh nặng cho mỗi lần write.
+
+Nguyên tắc: index theo access pattern, không theo "phòng khi cần".
+
+## Normalize để đúng — denormalize để nhanh
+
+[Chuẩn hóa vs Phi chuẩn hóa](/concepts/normalization-denormalization): bắt đầu với schema normalized — mỗi thông tin ở một chỗ, liên kết qua foreign key. Chỉ denormalize khi bạn có bằng chứng JOIN là bottleneck thực sự, không phải vì "đoán là chậm".
+
+Một trường hợp denormalize hợp lý và thường gặp: lưu `price_at_order_time` vào bảng order items — vì giá sản phẩm thay đổi theo thời gian, bạn cần snapshot giá tại thời điểm mua, không phải giá hiện tại.
+
+## Transaction — lưới an toàn khi nhiều thao tác phải thành công cùng nhau
+
+[ACID & Transaction](/concepts/acid-transactions): bất cứ khi nào bạn cần "hoặc tất cả xảy ra, hoặc không có gì xảy ra" — đặt hàng + trừ tồn kho, chuyển tiền giữa hai tài khoản — hãy dùng transaction.
+
+Giữ transaction ngắn. Transaction dài giữ lock, gây chậm toàn hệ thống.
+
+<Callout title="Mẹo">
+Thứ tự ra quyết định cho một feature mới: (1) Xác định access patterns → (2) Thiết kế schema normalized → (3) Chọn SQL vs NoSQL → (4) Thêm index theo access pattern → (5) Thêm transaction nếu cần atomicity → (6) Chỉ denormalize khi có dữ liệu chứng minh cần.
+</Callout>
+
+Bài tập thực hành: [exercise-sysd-002](/exercises/system-design-for-builders/m2-design-the-schema) — thiết kế schema cho một app thật, từ entities đến index đến quyết định denormalize.

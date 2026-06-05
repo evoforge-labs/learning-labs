@@ -1,0 +1,59 @@
+---
+id: concept-consistency-models
+title: "Consistency Models (Strong vs Eventual)"
+type: "concept"
+aliases: ["consistency models", "strong consistency", "eventual consistency", "nhất quán mạnh", "nhất quán cuối cùng", "mô hình nhất quán"]
+tags: [system-design, consistency, cap-theorem, reliability, distributed-systems, trade-off, database]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Bạn gửi tin nhắn "anh yêu em" lúc 11 giờ đêm. Người nhận mở app, thấy tin. Nhưng người đó thấy tin *ngay lập tức* khi bạn gửi, hay thấy *vài giây sau* khi server đồng bộ xong? Với tin nhắn tình cảm, vài giây không thành vấn đề. Với lệnh chuyển tiền — lại là câu chuyện hoàn toàn khác.
+
+Đây là sự khác biệt cốt lõi giữa **strong consistency** và **eventual consistency**.
+
+## Là gì
+
+**Strong Consistency (Nhất quán mạnh)**: Sau khi ghi xong, *bất kỳ lần đọc nào tiếp theo* từ bất kỳ node nào đều thấy giá trị mới nhất. Dữ liệu được đồng bộ *trước khi* hệ thống xác nhận thành công.
+
+**Eventual Consistency (Nhất quán cuối cùng)**: Hệ thống xác nhận ghi ngay, rồi *dần dần* lan dữ liệu sang các node khác. Trong khoảng thời gian đồng bộ (thường vài mili-giây đến vài giây), các node khác nhau có thể trả về kết quả khác nhau — nhưng cuối cùng tất cả sẽ về cùng một giá trị.
+
+Giữa hai thái cực này còn có các mức trung gian: *Read-your-writes* (bạn luôn thấy điều bạn vừa ghi), *Session consistency* (nhất quán trong cùng một phiên), *Causal consistency* (ghi có quan hệ nhân quả được đảm bảo thứ tự).
+
+## Ví dụ thật
+
+**Nên dùng strong consistency**:
+- Số dư tài khoản ngân hàng. Hai máy ATM cùng một người rút tiền — phải thấy số dư cập nhật.
+- Tồn kho sản phẩm. Flash sale: nếu hai người cùng thấy "còn 1 sản phẩm" và cùng đặt — bạn sẽ bán quá số lượng thực.
+- Đặt chỗ, đặt vé. Hai người không thể ngồi cùng một ghế.
+
+**Có thể dùng eventual consistency**:
+- Số lượt like, view. Chậm vài giây là chấp nhận được.
+- Feed mạng xã hội. Bài đăng mới xuất hiện sau 1-2 giây — không ai phàn nàn.
+- Profile người dùng. Bạn đổi ảnh đại diện, hiển thị trên toàn cầu sau vài giây.
+- Danh sách sản phẩm (không phải tồn kho). Cập nhật mô tả, ảnh — eventual là ổn.
+
+<Callout title="Cẩn thận">
+Đừng chọn strong consistency cho mọi thứ vì "cho an toàn". Strong consistency đồng nghĩa với latency cao hơn (phải đợi đồng bộ), throughput thấp hơn, và hệ thống dễ bị block khi có sự cố mạng. Trả giá đó chỉ khi dữ liệu thật sự đòi hỏi — không phải vì lo ngại mơ hồ.
+</Callout>
+
+**Cách ra quyết định thực tế**: với mỗi tính năng, tự hỏi *"nếu user A ghi và user B đọc cùng lúc nhưng thấy dữ liệu cũ — điều tệ nhất có thể xảy ra là gì?"* Nếu câu trả lời là "mất tiền / xung đột không thể phục hồi" → strong. Nếu là "hơi bất tiện" → eventual.
+
+Quyết định này liên quan trực tiếp đến [concept-cap-theorem](/concepts/cap-theorem): strong consistency thường đồng nghĩa với việc hy sinh availability khi có partition.
+
+<Callout title="Nhớ nhé">
+Không phải toàn bộ hệ thống phải có cùng một consistency model. Cùng một app có thể dùng strong consistency cho thanh toán, eventual consistency cho feed. Chọn theo từng tính năng — không phải theo kiến trúc toàn cục.
+</Callout>
+
+## Đọc thêm
+
+- [Eventually Consistent — Werner Vogels (Amazon)](https://www.allthingsdistributed.com/2008/12/eventually_consistent.html) — CTO Amazon giải thích eventual consistency từ kinh nghiệm vận hành DynamoDB và S3 ở quy mô toàn cầu; bài viết thực tế, không phải lý thuyết suông.
+- [System Design Primer: Consistency Patterns — GitHub](https://github.com/donnemartin/system-design-primer#consistency-patterns) — Tóm tắt ngắn gọn và rõ ràng về weak / eventual / strong consistency kèm ví dụ; tốt để xem nhanh trước khi đọc sâu hơn.
+- [CAP Twelve Years Later — InfoQ](https://www.infoq.com/articles/cap-twelve-years-later-how-the-rules-have-changed/) — Bài của Brewer giải thích sự liên hệ giữa consistency models và CAP theorem trong thực tế các hệ thống hiện đại.
+- [Monitoring Distributed Systems — Google SRE Book](https://sre.google/sre-book/monitoring-distributed-systems/) — Khi đã chọn consistency model, bạn cần đo và giám sát; chương này giải thích tứ trụ quan sát (latency, traffic, errors, saturation) của Google.
+
+## Tự kiểm tra
+
+1. Sự khác biệt then chốt giữa strong và eventual consistency là gì? Cho một ví dụ cụ thể của mỗi loại.
+2. Tính năng "đổi mật khẩu" nên dùng strong hay eventual consistency? Giải thích.
+3. Tại sao chọn strong consistency cho *tất cả* tính năng là một sai lầm thiết kế?

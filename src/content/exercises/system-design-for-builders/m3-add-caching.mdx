@@ -1,0 +1,72 @@
+---
+id: exercise-sysd-003
+title: "Gỡ nút thắt khi traffic tăng"
+type: "exercise"
+track: system-design-for-builders
+tags: [system-design, scalability, caching, load-balancing, replication, architecture, trade-off, solo-builder]
+estimatedMinutes: 25
+related: [lesson-sysd-003, concept-caching, concept-load-balancing, concept-database-replication, rubric-system-design]
+status: published
+---
+import Callout from '../../../components/content/Callout.astro';
+
+## Scenario
+
+Bạn đang vận hành một app review nhà hàng — nghĩ như Foody hay Google Maps nhưng nhỏ hơn. App có:
+
+- **API `/restaurants` (GET)**: trả danh sách nhà hàng kèm điểm trung bình và top 3 review. Endpoint này được gọi **mỗi khi trang chủ load** và mỗi khi user search.
+- **API `/restaurants/:id/review` (POST)**: user gửi review mới. Trung bình 1 review mới mỗi 10 phút.
+- **Database**: một PostgreSQL instance đơn lẻ, không replica.
+- **App server**: một instance duy nhất.
+
+**Profile hiện tại** (đo từ APM):
+- `GET /restaurants`: p99 latency = 1,200ms. 90% thời gian là database query.
+- `POST /restaurants/:id/review`: p99 latency = 80ms. Bình thường.
+- Database CPU: 85% liên tục. RAM: 40%.
+- App server CPU: 15%.
+
+Traffic đang tăng 3× mỗi tháng. Bạn dự báo trong 4 tuần hệ thống sẽ không chịu được nếu không làm gì.
+
+---
+
+## Nhiệm vụ
+
+**Task 1 — Xác định bottleneck**
+
+Dựa trên profile ở trên, hãy trả lời:
+
+1. Bottleneck hiện tại là ở đâu? (app server, database, hay network?)
+2. Tại sao `GET /restaurants` chậm nhưng `POST /review` lại nhanh? Gợi ý: hãy nghĩ về tỉ lệ đọc/ghi và bản chất của từng query.
+3. App server CPU chỉ 15% — điều này nói lên gì về bước scaling tiếp theo?
+
+**Task 2 — Đề xuất các bước scaling theo thứ tự**
+
+Liệt kê **ít nhất 4 bước** bạn sẽ thực hiện, từ bước rẻ/an toàn nhất đến bước phức tạp nhất. Với mỗi bước, trả lời:
+
+- **Làm gì cụ thể** (không cần đi sâu kỹ thuật, nhưng phải rõ ràng)
+- **Giải quyết được gì** (bottleneck nào, cải thiện metric nào)
+- **Khi nào nên làm bước này** (ngay, hay khi traffic tăng thêm 2×, 10×...)
+
+Gợi ý: bạn không cần dùng tất cả kỹ thuật đã học. Chọn những gì phù hợp nhất với bottleneck này.
+
+**Task 3 — Một rủi ro cho mỗi bước**
+
+Với mỗi bước ở Task 2, nêu **một rủi ro hoặc đánh đổi** mà bước đó tạo ra. Ví dụ:
+
+- Caching → rủi ro: dữ liệu cũ (stale data) nếu TTL quá dài và review mới không hiển thị ngay.
+- Read replica → rủi ro: ...?
+- Scale ngang → rủi ro: ...?
+
+<Callout title="Nhớ nhé">
+Không có đáp án duy nhất đúng. Điều quan trọng là logic: bạn có đọc đúng bằng chứng từ profile không? Bạn có chọn đúng thứ tự (rẻ trước, phức tạp sau) không? Và bạn có ý thức được tradeoff của mỗi lựa chọn không?
+</Callout>
+
+## Tiêu chí đánh giá
+
+Xem rubric đầy đủ tại [System Design Rubric](../../rubrics/system-design-rubric).
+
+| Tiêu chí | Trọng số |
+|---|---|
+| Xác định đúng bottleneck và giải thích tại sao dựa trên profile | 30% |
+| Thứ tự scaling hợp lý: bước rẻ/an toàn trước, phức tạp sau | 35% |
+| Mỗi bước có rủi ro/đánh đổi cụ thể (không chung chung) | 35% |
