@@ -1,0 +1,53 @@
+---
+id: concept-reversible-vs-irreversible-decisions
+title: "Reversible vs Irreversible Decisions (Two-Way Doors)"
+type: "concept"
+aliases: ["reversible vs irreversible decisions", "cửa một chiều cửa hai chiều", "two-way door one-way door Bezos", "quyết định có thể hoàn tác"]
+tags: [decision-making, mental-models, thinking, uncertainty, speed, risk]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Hãy tưởng tượng hai cái cửa. Cửa thứ nhất: bạn đi qua, nó khóa lại, không về được nữa. Cửa thứ hai: bạn đi qua, thấy không ổn, quay lại được bất cứ lúc nào.
+
+Bạn sẽ do dự bao lâu trước khi mở mỗi cái cửa?
+
+Jeff Bezos dùng hình ảnh này để giải thích tại sao Amazon ra quyết định nhanh hơn hầu hết các công ty lớn khác.
+
+## Là gì
+
+**Quyết định cửa hai chiều (reversible):** có thể thay đổi, hoàn tác, hoặc thử nghiệm lại. Khi sai, chi phí sửa thấp. Nên *quyết nhanh* — chần chừ chỉ lãng phí thời gian, không thêm giá trị.
+
+**Quyết định cửa một chiều (irreversible):** một khi đi qua, rất khó hoặc không thể quay đầu. Sai ở đây tốn kém — mất tiền lớn, mất thời gian dài, mất uy tín khó lấy lại. Nên *quyết chậm* — thu thập thêm thông tin, hỏi thêm góc nhìn.
+
+Lỗi phổ biến nhất: dùng quy trình quyết định *nặng nề* cho cả hai loại. Họp to, phân tích dài, chờ sếp duyệt — kể cả với thứ hoàn toàn có thể thử và sửa.
+
+## Ví dụ thật
+
+Bạn đang build một tính năng mới. Trước khi bắt tay vào, hãy hỏi: "Nếu tính năng này sai hoàn toàn, tốn bao nhiêu để sửa?"
+
+- **Thay đổi màu nút CTA?** Cửa hai chiều — deploy, đo, rollback nếu tệ hơn. Quyết trong 5 phút.
+- **Chuyển từ monolith sang microservices?** Cửa một chiều — tốn vài tháng, rủi ro cao, khó rollback hoàn toàn. Cần họp, phân tích kỹ, ngủ thêm vài đêm.
+- **Chọn tên công ty?** Cửa một chiều — thay đổi sau rất tốn kém về thương hiệu và pháp lý.
+- **Chọn hosting provider?** Cửa hai chiều — migrate được, dù mất công. Quyết, thử, chuyển sau nếu cần.
+
+<Callout title="Mẹo">
+Bezos gợi ý: với cửa hai chiều, bạn chỉ cần 70% thông tin là ra quyết định được. Chờ đến 90% chỉ làm chậm mà không thêm nhiều giá trị — vì sai thì sửa được ngay.
+</Callout>
+
+<Callout title="Nhớ nhé">
+Phân loại trước, ra quyết định sau. Câu hỏi đơn giản nhất: "Nếu mình sai, mất bao lâu và bao nhiêu tiền để sửa?" Câu trả lời đó quyết định bạn cần bao nhiêu thời gian để ra quyết định.
+</Callout>
+
+## Đọc thêm
+
+- [Reversible and Irreversible Decisions — Farnam Street](https://fs.blog/reversible-irreversible-decisions/) — Giải thích sâu framework của Bezos kèm ví dụ thực tế; một trong những bài viết hay nhất về chủ đề này.
+- [One-way vs Two-way door decisions — Thoughtbot](https://thoughtbot.com/blog/one-way-vs-two-way-door-decisions) — Áp dụng framework vào quyết định kỹ thuật phần mềm với ví dụ cụ thể về tech stack và product.
+- [How Amazon defines and operationalizes a Day 1 culture — AWS Executive Insights](https://aws.amazon.com/executive-insights/content/how-amazon-defines-and-operationalizes-a-day-1-culture/) — Nguồn gốc từ Amazon: Bezos giải thích trực tiếp lý do ông tạo ra framework này để chống lại sự chậm chạp của tổ chức lớn.
+- [Decision Types — The Uncertainty Project](https://www.theuncertaintyproject.org/tools/decision-types) — So sánh nhiều cách phân loại quyết định; hữu ích khi bạn muốn mở rộng ngoài framework hai cửa.
+
+## Tự kiểm tra
+
+1. Phân loại các quyết định sau: (a) thuê nhân viên đầu tiên, (b) đổi màu background website, (c) pivot sang thị trường mới. Cái nào là cửa một chiều, cái nào là cửa hai chiều?
+2. Tại sao nhiều tổ chức lớn lại ra quyết định chậm? Framework cửa một/hai chiều giải thích điều này như thế nào?
+3. Một quyết định ban đầu có vẻ "cửa hai chiều" nhưng thực ra là "cửa một chiều" — bạn nghĩ đến ví dụ nào?

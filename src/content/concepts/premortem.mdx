@@ -1,0 +1,52 @@
+---
+id: concept-premortem
+title: "Premortem"
+type: "concept"
+aliases: ["premortem", "pre-mortem phân tích thất bại trước", "tưởng tượng thất bại để lộ rủi ro", "Gary Klein premortem technique"]
+tags: [decision-making, mental-models, thinking, risk, planning, uncertainty]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Trước khi tàu Titanic ra khơi, không ai họp lại để hỏi: "Giả sử tàu này đã chìm — chuyện gì đã xảy ra?" Nếu có, có lẽ ai đó đã nêu: "Số lượng xuồng cứu sinh không đủ cho toàn bộ hành khách."
+
+Rủi ro đó không phải bí mật — nó hoàn toàn có thể thấy được trước. Vấn đề là không ai hỏi câu hỏi đúng.
+
+**Premortem** là kỹ thuật buộc bạn hỏi câu đó — trước khi bắt đầu.
+
+## Là gì
+
+**Premortem** (ngược với "postmortem" — phân tích sau thất bại) là kỹ thuật do nhà tâm lý học Gary Klein phát triển: *trước khi bắt đầu*, toàn đội tưởng tượng rằng dự án đã **thất bại hoàn toàn** sau 6-12 tháng, rồi mỗi người độc lập viết ra tất cả lý do có thể gây ra thất bại đó.
+
+Sự chuyển dịch từ "điều gì *có thể* xảy ra sai?" sang "điều gì *đã* xảy ra sai?" kích hoạt một phần não khác — cụ thể hơn, thực tế hơn. Nghiên cứu cho thấy kỹ thuật này tăng khả năng phát hiện rủi ro thêm **30%**.
+
+## Ví dụ thật
+
+Bạn và team chuẩn bị launch tính năng payment mới sau 2 tháng build. Mọi người đều hào hứng. Thay vì chỉ làm QA bình thường, bạn tổ chức một buổi premortem 20 phút:
+
+"Giả sử hôm nay là 3 tháng sau ngày launch. Tính năng payment đã thất bại — users phàn nàn, chúng ta phải rollback. Mỗi người viết ra TẤT CẢ lý do bạn nghĩ đã gây ra điều này."
+
+Kết quả: một kỹ sư junior — người thường ít lên tiếng nhất trong họp — viết: "Chúng ta chưa test luồng refund khi payment gateway timeout." Đây là edge case nghiêm trọng mà cả team đã bỏ qua.
+
+Không có premortem, rủi ro đó chỉ lộ ra khi có user thật bị ảnh hưởng.
+
+<Callout title="Mẹo">
+Bước quan trọng nhất: viết **độc lập** trước khi chia sẻ. Nếu một người nói trước, confirmation bias và áp lực xã hội sẽ kéo mọi người đi theo — và những rủi ro không được ủng hộ sẽ không được nêu ra. Viết riêng → chia sẻ lần lượt → tổng hợp.
+</Callout>
+
+<Callout title="Nhớ nhé">
+Premortem không phải buổi họp để "nói tiêu cực". Đó là cách trân trọng nhất với công sức cả team đã bỏ ra — vì bạn muốn nó thực sự thành công, không chỉ cảm thấy tốt trong đầu.
+</Callout>
+
+## Đọc thêm
+
+- [Performing a Project Premortem — Harvard Business Review](https://hbr.org/2007/09/performing-a-project-premortem) — Bài gốc của Gary Klein trên HBR năm 2007; giải thích cách chạy buổi premortem từng bước và lý do tâm lý đằng sau.
+- [Pre-mortem Method of Risk Assessment — Gary Klein](https://www.gary-klein.com/premortem) — Trang chính thức của Gary Klein; tóm tắt kỹ thuật và khi nào nên áp dụng.
+- [The Pre-Mortem Method — Psychology Today](https://www.psychologytoday.com/us/blog/seeing-what-others-dont/202101/the-pre-mortem-method) — Góc nhìn tâm lý học về tại sao premortem hoạt động; liên kết với khái niệm "prospective hindsight" — nhìn về tương lai như nhìn về quá khứ.
+- [Pre-Mortem — The Uncertainty Project](https://www.theuncertaintyproject.org/tools/pre-mortem) — Template thực hành ngắn gọn để chạy premortem; phù hợp dùng ngay trong team.
+
+## Tự kiểm tra
+
+1. Tại sao yêu cầu viết *độc lập* trước khi chia sẻ lại là bước quan trọng nhất của premortem? Nếu bỏ bước đó, điều gì xảy ra?
+2. Sự khác biệt giữa premortem và postmortem là gì? Cái nào có giá trị hơn, và trong hoàn cảnh nào?
+3. Bạn chuẩn bị ra mắt một sản phẩm mới tuần sau. Hãy viết 3 lý do vì sao nó có thể thất bại — cụ thể, không chung chung.

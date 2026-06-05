@@ -1757,3 +1757,111 @@ edges:
   - source: rubric-design-for-builders
     target: exercise-ux-006
     rel: evaluates
+
+  # ============================================================
+  # Thinking & Learning (mind) — progression + drills
+  # ============================================================
+  - source: concept-active-recall
+    target: concept-spaced-repetition
+    rel: supports
+  - source: concept-deliberate-practice
+    target: concept-feynman-technique
+    rel: supports
+  - source: concept-feynman-technique
+    target: concept-learning-by-doing
+    rel: leads-to
+  - source: concept-learning-by-doing
+    target: concept-first-principles-thinking
+    rel: leads-to
+  - source: concept-first-principles-thinking
+    target: concept-inversion
+    rel: supports
+  - source: concept-inversion
+    target: concept-second-order-thinking
+    rel: supports
+  - source: concept-map-vs-territory
+    target: concept-cognitive-biases
+    rel: leads-to
+  - source: concept-second-order-thinking
+    target: concept-expected-value-thinking
+    rel: leads-to
+  - source: concept-expected-value-thinking
+    target: concept-reversible-vs-irreversible-decisions
+    rel: supports
+  - source: concept-cognitive-biases
+    target: concept-premortem
+    rel: leads-to
+  - source: concept-opportunity-cost
+    target: concept-expected-value-thinking
+    rel: supports
+  - source: concept-premortem
+    target: concept-deep-work
+    rel: leads-to
+  - source: concept-deep-work
+    target: concept-attention-management
+    rel: supports
+  - source: concept-attention-management
+    target: concept-energy-management
+    rel: supports
+  - source: concept-systems-vs-goals
+    target: concept-beating-procrastination
+    rel: supports
+  - source: concept-beating-procrastination
+    target: concept-reflection-and-retrospective
+    rel: leads-to
+  - source: concept-reflection-and-retrospective
+    target: concept-personal-feedback-loops
+    rel: supports
+  - source: concept-personal-feedback-loops
+    target: concept-growth-mindset
+    rel: leads-to
+  - source: concept-growth-mindset
+    target: concept-antifragility
+    rel: leads-to
+  # cross-track bridges
+  - source: concept-breaking-down-tasks
+    target: concept-deep-work
+    rel: supports
+  - source: concept-build-measure-learn
+    target: concept-personal-feedback-loops
+    rel: related
+  - source: concept-solo-founder-burnout
+    target: concept-energy-management
+    rel: related
+  - source: concept-first-principles-thinking
+    target: concept-finding-startup-ideas
+    rel: supports
+  # Drills: which concept each mind exercise trains
+  - source: concept-deliberate-practice
+    target: exercise-mind-001
+    rel: trains
+  - source: concept-active-recall
+    target: exercise-mind-001
+    rel: trains
+  - source: concept-first-principles-thinking
+    target: exercise-mind-002
+    rel: trains
+  - source: concept-inversion
+    target: exercise-mind-002
+    rel: trains
+  - source: concept-reversible-vs-irreversible-decisions
+    target: exercise-mind-003
+    rel: trains
+  - source: concept-premortem
+    target: exercise-mind-003
+    rel: trains
+  - source: concept-deep-work
+    target: exercise-mind-004
+    rel: trains
+  - source: concept-systems-vs-goals
+    target: exercise-mind-004
+    rel: trains
+  - source: concept-reflection-and-retrospective
+    target: exercise-mind-005
+    rel: trains
+  - source: concept-growth-mindset
+    target: exercise-mind-005
+    rel: trains
+  - source: rubric-thinking-and-learning
+    target: exercise-mind-006
+    rel: evaluates
