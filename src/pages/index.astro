@@ -8,15 +8,18 @@ import { Compass, GitFork } from '@lucide/astro';
 import { getAll } from '../lib/content';
 
 const tracks = await getAll('tracks');
-const counts = async (track: string) => {
-  const [l, e, c] = await Promise.all([getAll('lessons'), getAll('exercises'), getAll('concepts')]);
-  return {
-    lessons: l.filter((x: any) => x.data.track === track).length,
-    exercises: e.filter((x: any) => x.data.track === track).length,
-    concepts: c.length,
-  };
+const [allLessons, allExercises] = await Promise.all([getAll('lessons'), getAll('exercises')]);
+// Concepts aren't tagged with a track directly — a track "covers" a concept when
+// one of its lessons/exercises references that concept id in prerequisites/related.
+const conceptRefs = (x: any): string[] =>
+  [...(x.data.prerequisites ?? []), ...(x.data.related ?? [])].filter((id: string) => id.startsWith('concept-'));
+const counts = (track: string) => {
+  const lessons = allLessons.filter((x: any) => x.data.track === track);
+  const exercises = allExercises.filter((x: any) => x.data.track === track);
+  const concepts = new Set([...lessons, ...exercises].flatMap(conceptRefs));
+  return { lessons: lessons.length, exercises: exercises.length, concepts: concepts.size };
 };
-const trackCards = await Promise.all(tracks.map(async (t: any) => ({ t, c: await counts(t.id) })));
+const trackCards = tracks.map((t: any) => ({ t, c: counts(t.id) }));
 
 const recent = (await Promise.all((['lessons', 'exercises', 'concepts', 'rubrics'] as const).map(getAll)))
   .flat().slice(0, 6);
