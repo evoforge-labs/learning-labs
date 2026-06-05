@@ -1,0 +1,85 @@
+---
+id: exercise-sales-005
+title: "Lớn lên từ 30 khách hiện tại"
+type: "exercise"
+track: founder-sales
+tags: [sales, customer-success, nrr, churn, upsell, referral, retention, founder-sales]
+estimatedMinutes: 30
+related: [lesson-sales-005, concept-net-revenue-retention, concept-upsell-cross-sell, concept-churn-diagnosis-and-winback, concept-referrals-and-word-of-mouth, rubric-founder-sales]
+status: published
+---
+import Callout from '../../../components/content/Callout.astro';
+
+## Tình huống
+
+Bạn đang vận hành một SaaS B2B nhỏ — công cụ quản lý hợp đồng cho các agency freelance. Hiện tại bạn có **30 khách đang trả tiền**, gói cố định 500k VND/tháng/user.
+
+Tổng MRR hiện tại: **15 triệu đồng** (trung bình 1 user/khách).
+
+Sau khi nhìn lại 3 tháng qua, bạn thấy:
+
+- **4 khách** không đăng nhập trong 3 tuần trở lại đây.
+- **2 khách** đã gửi email hỏi về tính năng export PDF (bạn chưa có).
+- **3 khách** vừa đạt 6 tháng dùng sản phẩm và hay khen sản phẩm trong email.
+- **1 khách** đã huỷ tháng trước, lý do tick: "Quá đắt."
+
+---
+
+## Nhiệm vụ 1 — Tính NRR thô của tháng vừa rồi
+
+Giả sử trong tháng trước:
+
+- MRR đầu tháng: 15 triệu đồng.
+- 1 khách nâng lên 2 user (thêm 500k).
+- 1 khách huỷ (mất 500k).
+- 1 khách hạ xuống dùng chung 1 tài khoản với 2 người (bạn không thu thêm, nhưng cũng không mất — hãy coi đây là contraction 0 đồng để đơn giản).
+
+**Tính NRR tháng đó.** Đưa ra nhận xét: con số này đang nói gì về sức khoẻ của business?
+
+<Callout title="Mẹo">
+Công thức: NRR = (MRR đầu kỳ + Expansion − Churned MRR − Contraction MRR) / MRR đầu kỳ x 100%. Với 30 khách, con số sẽ nhỏ nhưng pattern quan trọng hơn số tuyệt đối.
+</Callout>
+
+---
+
+## Nhiệm vụ 2 — Chẩn đoán 1 ca churn và lập kế hoạch win-back
+
+Khách đã huỷ tháng trước tick "Quá đắt" trong form huỷ.
+
+**Bước 1:** Viết ra 3 câu hỏi bạn sẽ hỏi trong exit interview (qua email hoặc gọi điện 15 phút) để tìm lý do thật. Nhớ: "quá đắt" thường là triệu chứng, không phải nguyên nhân.
+
+**Bước 2:** Giả sử sau exit interview, khách nói: "Tôi không thấy mình dùng đủ để xứng đáng 500k/tháng — chỉ dùng chức năng lưu hợp đồng, không dùng phần ký điện tử." Dựa vào thông tin này:
+- Đây là vấn đề gì: pricing? onboarding? product? Giải thích.
+- Bạn sẽ làm gì trong 30 ngày tới để có thể win-back khách này (và tránh tình huống tương tự với 4 khách đang không đăng nhập)?
+
+<Callout title="Mẹo">
+Với 4 khách không đăng nhập 3 tuần, bạn không cần chờ họ huỷ. Một email đơn giản: "Bạn đang ổn không? Có gì mình có thể giúp không?" thường đủ để mở cuộc trò chuyện.
+</Callout>
+
+---
+
+## Nhiệm vụ 3 — Tìm 1 cơ hội upsell và 1 cách xin referral
+
+**Phần A — Upsell:** Trong số 30 khách, bạn có 3 khách vừa đạt 6 tháng dùng sản phẩm và thường khen sản phẩm. Bạn đang chuẩn bị ra tính năng "Nhắc gia hạn hợp đồng tự động" (add-on 200k/tháng thêm).
+
+Viết một đoạn email ngắn (3-5 câu) gửi cho 3 khách đó. Đừng liệt kê tính năng — hãy nói đến kết quả cụ thể họ sẽ đạt được. Tại sao đây là đúng thời điểm để upsell?
+
+**Phần B — Referral:** Cũng với 3 khách trên, hãy viết một câu hỏi xin referral — tự nhiên, không áp lực — mà bạn có thể thêm vào cuối email hoặc cuộc gọi check-in.
+
+<Callout title="Nhớ nhé">
+Upsell và referral hoạt động tốt nhất khi gộp vào một touchpoint tự nhiên, không phải email riêng biệt chỉ để "bán thêm". Khách đang hạnh phúc không cần bị thuyết phục — chỉ cần được hỏi đúng cách.
+</Callout>
+
+---
+
+## Tiêu chí đánh giá
+
+Tham khảo [Founder Sales Rubric](/rubrics/founder-sales-rubric) để tự chấm.
+
+Tập trung vào:
+
+| Tiêu chí | Câu hỏi tự kiểm tra |
+|---|---|
+| Phân tích số liệu có căn cứ | NRR của bạn được tính đúng công thức chưa? Nhận xét có cụ thể không? |
+| Chẩn đoán churn đúng chiều sâu | Câu hỏi exit interview của bạn có đào được lý do thật, hay chỉ confirm lý do bề mặt? |
+| Upsell và referral đúng thời điểm | Email upsell tập trung vào kết quả khách nhận được chưa? Câu hỏi referral nghe tự nhiên không? |

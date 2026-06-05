@@ -1,0 +1,91 @@
+---
+id: exercise-sales-004
+title: "Thiết kế hệ thống onboarding & customer success cho khách hay bỏ"
+type: "exercise"
+track: founder-sales
+tags: [sales, customer-success, retention, onboarding, founder-sales, b2b, qbr, time-to-value]
+estimatedMinutes: 30
+related: [lesson-sales-004, concept-customer-onboarding, concept-time-to-value, concept-customer-success-vs-support, concept-qbr, rubric-founder-sales]
+status: published
+---
+import Callout from '../../../components/content/Callout.astro';
+
+## Tình huống
+
+Bạn vừa ký được 8 khách mới cho SaaS **quản lý hợp đồng dành cho SME** — công cụ giúp các doanh nghiệp nhỏ tạo, ký điện tử và theo dõi hợp đồng với đối tác, nhà cung cấp và khách hàng.
+
+Giá: 3 triệu/tháng, thanh toán theo tháng.
+
+Vấn đề: trong 3 tháng qua, **5 trong số 8 khách dừng thanh toán sau tuần thứ 2**. Không ai phàn nàn — họ đơn giản ngừng dùng rồi không gia hạn. Khi bạn hỏi lý do, câu trả lời phổ biến nhất là: *"Chưa kịp setup xong thì bận việc khác rồi."*
+
+Bạn cần thiết kế lại toàn bộ hành trình giữ khách — từ ngày đầu tiên đến tháng thứ 4.
+
+---
+
+## Nhiệm vụ 1 — Thiết kế luồng onboarding đến aha moment và rút ngắn TTV
+
+**Bước 1:** Xác định aha moment của sản phẩm.
+
+Với công cụ quản lý hợp đồng, aha moment là gì? Viết ra một câu cụ thể mô tả *kết quả* khách cảm nhận được — không phải tính năng, mà là kết quả thực tế trong công việc của họ.
+
+Ví dụ gợi ý (bạn có thể đồng ý, điều chỉnh, hoặc chọn khác): *"Gửi được hợp đồng đầu tiên cho đối tác và nhận chữ ký trong cùng ngày."*
+
+**Bước 2:** Liệt kê các bước hiện tại khách phải thực hiện từ khi đăng ký đến khi đạt aha moment. Ước lượng TTV hiện tại là bao nhiêu giờ/ngày.
+
+**Bước 3:** Thiết kế lại luồng onboarding rút ngắn TTV. Mục tiêu: khách đạt aha moment trong **vòng 2 giờ đầu tiên** sau khi đăng nhập lần đầu. Liệt kê:
+- Những bước nào bạn giữ lại (cần thiết trước aha moment)
+- Những bước nào bạn dời ra sau (không cần thiết trước aha moment)
+- Những bước nào bạn bỏ hẳn
+
+<Callout title="Mẹo">
+Tự hỏi với từng bước: "Nếu bỏ bước này, khách có vẫn đạt được aha moment không?" Nếu có — bỏ đi hoặc dời ra sau. Chỉ giữ những bước thật sự chặn cửa.
+</Callout>
+
+---
+
+## Nhiệm vụ 2 — Phân biệt việc nào là Customer Success, việc nào là Support
+
+Dưới đây là 6 tình huống xảy ra trong tháng đầu sau khi khách ký. Với mỗi tình huống, hãy phân loại: đây là việc của **Support** hay **Customer Success**? Giải thích ngắn tại sao.
+
+1. Khách gửi email: "Tôi không tìm thấy nút xuất PDF ở đâu?"
+2. Bạn nhận thấy khách chưa tạo hợp đồng nào sau 5 ngày đăng ký.
+3. Khách báo lỗi: hệ thống báo "expired session" khi họ đang ký hợp đồng.
+4. Bạn thấy khách dùng tính năng tạo hợp đồng nhưng chưa dùng tính năng nhắc nhở tự động — trong khi họ có 20 hợp đồng sắp hết hạn.
+5. Khách hỏi: "Có thể thêm nhiều người dùng trong cùng tài khoản không?"
+6. Sau tháng đầu, khách dùng đều đặn nhưng bạn chưa biết họ có đạt mục tiêu ban đầu không.
+
+Sau khi phân loại, trả lời: Với nguồn lực của một founder solo, bạn sẽ dành bao nhiêu thời gian mỗi tuần cho CS chủ động? Bạn sẽ làm điều đó vào lúc nào và theo cách nào?
+
+---
+
+## Nhiệm vụ 3 — Phác thảo một Light QBR cho khách lớn
+
+Bạn có một khách đặc biệt: công ty luật với 15 nhân viên, hợp đồng 6 triệu/tháng, đã dùng được 3 tháng. Họ dùng đều nhưng bạn chưa biết họ có hài lòng không, và hợp đồng 6 tháng sẽ hết hạn sau 90 ngày nữa.
+
+Thiết kế một **light QBR** cho khách này, gồm:
+
+**1. Email tóm tắt 1 trang** — viết nội dung email bạn sẽ gửi trước buổi gặp. Bao gồm:
+- Ít nhất 2 kết quả cụ thể (có số liệu) bạn sẽ trình bày — hãy sáng tạo và giả định con số hợp lý
+- 1 câu hỏi bạn muốn hỏi khách để chuẩn bị cho buổi gặp
+
+**2. Agenda cuộc gọi 20 phút** — liệt kê 3-4 điểm theo thứ tự, với thời gian ước lượng cho mỗi điểm.
+
+**3. Mục tiêu gia hạn** — bạn muốn kết thúc buổi QBR này với kết quả gì? Viết một câu cụ thể về "định nghĩa thành công" cho buổi gặp đó.
+
+<Callout title="Nhớ nhé">
+Light QBR hiệu quả không cần dài hay hoành tráng. Nó cần hai thứ: (1) số liệu cho thấy khách đang thắng nhờ sản phẩm của bạn, và (2) câu hỏi cho thấy bạn quan tâm đến mục tiêu của họ — không chỉ hóa đơn gia hạn.
+</Callout>
+
+---
+
+## Tiêu chí đánh giá
+
+Tham khảo [Founder Sales Rubric](/rubrics/founder-sales-rubric) để tự chấm.
+
+Với bài này, tập trung vào ba tiêu chí:
+
+| Tiêu chí | Câu hỏi để tự kiểm tra |
+|---|---|
+| Aha moment và TTV | Aha moment bạn xác định có phải là kết quả thật sự của khách không, hay chỉ là tính năng? Luồng rút ngắn TTV có thực tế không? |
+| Phân biệt CS vs Support | Bạn có hiểu rõ ranh giới chủ động/phản ứng không? Kế hoạch CS của bạn có khả thi với nguồn lực solo không? |
+| Light QBR | Email và agenda có tập trung vào kết quả của khách không, hay chỉ nói về sản phẩm của bạn? |

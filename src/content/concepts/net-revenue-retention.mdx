@@ -1,0 +1,60 @@
+---
+id: concept-net-revenue-retention
+title: "Net Revenue Retention (NRR)"
+type: "concept"
+aliases: ["NRR", "net revenue retention", "net dollar retention", "NDR", "chỉ số NRR SaaS", "giữ và mở rộng doanh thu"]
+tags: [sales, customer-success, retention, saas-metrics, revenue, upsell, churn, founder-sales]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Tưởng tượng bạn có một cái xô đựng nước. Đáy xô có lỗ thủng (khách bỏ đi, downgrade). Nhưng bạn cũng đang đổ thêm nước từ bên trong — khách cũ mua thêm, nâng gói. NRR đo xem sau một năm, cái xô của bạn còn nhiều hơn hay ít hơn — chỉ tính nước từ những khách *đã có* từ đầu năm.
+
+## Là gì
+
+**Net Revenue Retention (NRR)** — hay Net Dollar Retention (NDR) — đo phần trăm doanh thu định kỳ giữ lại được từ nhóm khách hiện tại sau một kỳ (thường 12 tháng), đã tính cả upsell, expansion, downgrade và churn.
+
+Công thức:
+
+```
+NRR = (MRR đầu kỳ + Expansion MRR − Churned MRR − Contraction MRR) / MRR đầu kỳ × 100%
+```
+
+- **Expansion MRR:** khách nâng gói, mua thêm seat, mua add-on.
+- **Churned MRR:** khách huỷ hoàn toàn.
+- **Contraction MRR:** khách hạ xuống gói thấp hơn.
+
+Nếu NRR **trên 100%**: doanh thu từ khách cũ *tự lớn lên* — bạn vẫn tăng trưởng dù không kiếm thêm khách mới nào. Đây là lý do NRR được gọi là chỉ số vàng của SaaS.
+
+## Ví dụ thật
+
+Đầu tháng 1, bạn có 10 khách, tổng MRR = 10 triệu đồng. Cuối tháng 12:
+
+- 2 khách nâng gói, đóng thêm 3 triệu.
+- 1 khách huỷ, mất 1 triệu.
+- 1 khách hạ gói, mất 0,5 triệu.
+
+NRR = (10 + 3 − 1 − 0,5) / 10 × 100% = **115%**
+
+Năm sau, không cần thêm một khách mới nào, doanh thu từ nhóm khách cũ này đã tăng 15%. Với SaaS B2B top-tier, NRR thường đạt 120–140%.
+
+<Callout title="Cẩn thận">
+Đừng nhầm NRR với **Gross Revenue Retention (GRR)**. GRR chỉ tính churn và contraction — không tính expansion, nên luôn bằng hoặc dưới 100%. NRR tính cả expansion nên có thể vượt 100%. Khi investor hỏi "retention của bạn thế nào?" họ thường muốn nghe cả hai.
+</Callout>
+
+<Callout title="Nhớ nhé">
+NRR trên 100% = doanh thu từ khách cũ tự lớn, không cần săn khách mới. Đây là lý do mọi SaaS đều theo dõi NRR như chỉ số sức khoẻ cốt lõi.
+</Callout>
+
+## Đọc thêm
+
+- [Net Revenue Retention (NRR) — ChartMogul](https://chartmogul.com/saas-metrics/nrr/) — Giải thích NRR rõ ràng, có ví dụ số liệu và so sánh với GRR; nguồn từ nền tảng phân tích SaaS chuyên dụng.
+- [Net Revenue Retention: Meaning, Formula & How to Calculate — CFI](https://corporatefinanceinstitute.com/resources/valuation/nrr-meaning-calculation-guide/) — Hướng dẫn tính toán chi tiết kèm ví dụ Excel; phù hợp nếu bạn cần nắm vững công thức.
+- [Net Revenue Retention Guide — Ordway](https://ordwaylabs.com/resources/guides/net-revenue-retention-guide/) — Hướng dẫn toàn diện: cách cải thiện NRR, các đòn bẩy cụ thể, và benchmark theo ngành.
+- [What is Net Revenue Retention — Zuora](https://www.zuora.com/glossary/net-revenue-retention/) — Giải thích NRR từ góc độ thực chiến, kèm các chiến lược tăng expansion revenue.
+
+## Tự kiểm tra
+
+1. Nếu đầu năm bạn có MRR = 50 triệu, cuối năm expansion = 10 triệu, churned = 8 triệu, contraction = 2 triệu — NRR của bạn là bao nhiêu? Công ty đang khoẻ hay không?
+2. Tại sao NRR trên 100% lại có giá trị đặc biệt với một SaaS startup đang tìm kiếm vốn đầu tư?
+3. Bạn có thể cải thiện NRR bằng cách nào mà không cần giảm giá hoặc thêm tính năng mới?

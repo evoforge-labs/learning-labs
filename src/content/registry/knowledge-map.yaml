@@ -1865,3 +1865,110 @@ edges:
   - source: rubric-thinking-and-learning
     target: exercise-mind-006
     rel: evaluates
+
+  # ============================================================
+  # Founder Sales & Customer Success (sales) — progression + drills
+  # ============================================================
+  - source: concept-founder-led-sales
+    target: concept-ideal-customer-profile
+    rel: leads-to
+  - source: concept-selling-is-helping
+    target: concept-discovery-call
+    rel: supports
+  - source: concept-ideal-customer-profile
+    target: concept-lead-generation
+    rel: leads-to
+  - source: concept-lead-generation
+    target: concept-prospecting
+    rel: supports
+  - source: concept-prospecting
+    target: concept-sales-qualification
+    rel: leads-to
+  - source: concept-cold-outreach
+    target: concept-prospecting
+    rel: supports
+  - source: concept-sales-qualification
+    target: concept-sales-pipeline
+    rel: supports
+  - source: concept-sales-pipeline
+    target: concept-discovery-call
+    rel: leads-to
+  - source: concept-discovery-call
+    target: concept-product-demo-that-sells
+    rel: leads-to
+  - source: concept-the-mom-test
+    target: concept-discovery-call
+    rel: supports
+  - source: concept-product-demo-that-sells
+    target: concept-handling-objections
+    rel: leads-to
+  - source: concept-handling-objections
+    target: concept-closing-techniques
+    rel: leads-to
+  - source: concept-closing-techniques
+    target: concept-customer-onboarding
+    rel: leads-to
+  - source: concept-customer-onboarding
+    target: concept-time-to-value
+    rel: supports
+  - source: concept-time-to-value
+    target: concept-customer-success-vs-support
+    rel: supports
+  - source: concept-customer-success-vs-support
+    target: concept-qbr
+    rel: leads-to
+  - source: concept-customer-onboarding
+    target: concept-retention
+    rel: leads-to
+  - source: concept-retention
+    target: concept-net-revenue-retention
+    rel: leads-to
+  - source: concept-churn
+    target: concept-churn-diagnosis-and-winback
+    rel: leads-to
+  - source: concept-net-revenue-retention
+    target: concept-upsell-cross-sell
+    rel: supports
+  - source: concept-cac-ltv
+    target: concept-net-revenue-retention
+    rel: related
+  - source: concept-qbr
+    target: concept-upsell-cross-sell
+    rel: supports
+  - source: concept-referrals-and-word-of-mouth
+    target: concept-lead-generation
+    rel: supports
+  # Drills: which concept each sales exercise trains
+  - source: concept-ideal-customer-profile
+    target: exercise-sales-001
+    rel: trains
+  - source: concept-selling-is-helping
+    target: exercise-sales-001
+    rel: trains
+  - source: concept-lead-generation
+    target: exercise-sales-002
+    rel: trains
+  - source: concept-sales-pipeline
+    target: exercise-sales-002
+    rel: trains
+  - source: concept-discovery-call
+    target: exercise-sales-003
+    rel: trains
+  - source: concept-handling-objections
+    target: exercise-sales-003
+    rel: trains
+  - source: concept-customer-onboarding
+    target: exercise-sales-004
+    rel: trains
+  - source: concept-time-to-value
+    target: exercise-sales-004
+    rel: trains
+  - source: concept-net-revenue-retention
+    target: exercise-sales-005
+    rel: trains
+  - source: concept-churn-diagnosis-and-winback
+    target: exercise-sales-005
+    rel: trains
+  - source: rubric-founder-sales
+    target: exercise-sales-006
+    rel: evaluates
