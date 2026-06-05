@@ -1,0 +1,58 @@
+---
+id: concept-mfa
+title: "Multi-Factor Authentication (MFA)"
+type: "concept"
+aliases: ["mfa", "multi-factor authentication", "xác thực đa yếu tố", "2FA two-factor auth", "thứ bạn biết thứ bạn có thứ bạn là"]
+tags: [security, authentication, mfa, 2fa, account-security, identity]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Khóa nhà bạn có thể bị làm chìa giả. Nhưng nếu cửa nhà bạn vừa cần chìa, vừa cần nhận diện vân tay — kẻ trộm có chìa giả vẫn không vào được. Phải phá được *cả hai* cùng lúc mới vào được.
+
+Đó là MFA: bắt buộc kẻ tấn công phải vượt qua nhiều lớp bảo vệ độc lập nhau.
+
+## Là gì
+
+**Multi-Factor Authentication (MFA)** yêu cầu người dùng xác minh danh tính bằng ít nhất **hai yếu tố độc lập** từ các nhóm khác nhau:
+
+- **Thứ bạn biết (Knowledge):** mật khẩu, PIN, câu hỏi bí mật.
+- **Thứ bạn có (Possession):** điện thoại nhận OTP, app authenticator, hardware key (YubiKey).
+- **Thứ bạn là (Inherence):** vân tay, nhận dạng khuôn mặt, giọng nói.
+
+"Two-Factor Authentication" (2FA) là trường hợp đặc biệt của MFA với đúng hai yếu tố. Hầu hết khi người ta nói MFA, họ thực sự dùng 2FA: mật khẩu + OTP điện thoại.
+
+## Ví dụ thật
+
+Tài khoản GitHub của bạn: mật khẩu bị lộ trong một data breach ở site khác (bạn dùng lại mật khẩu). Không có MFA → attacker đăng nhập ngay vào GitHub, push code độc hại, lấy secret trong repo.
+
+Có MFA (app authenticator): attacker có mật khẩu nhưng không có điện thoại của bạn → không vào được. Vụ breach đó vô hiệu.
+
+Microsoft báo cáo MFA chặn được **99.2% tấn công chiếm tài khoản**. Phần lớn các vụ hack tài khoản không phải từ attacker tinh vi — mà từ credential stuffing (thử mật khẩu đã bị lộ ở nơi khác). MFA làm cho kỹ thuật đó trở nên vô dụng.
+
+**Các hình thức MFA phổ biến (từ tiện lợi đến bảo mật nhất):**
+
+- **SMS OTP** — tiện nhưng yếu nhất (SIM swap attack).
+- **App authenticator (TOTP)** — Google Authenticator, Authy — cân bằng tốt giữa tiện lợi và bảo mật.
+- **Push notification** — app gửi thông báo để xác nhận — tiện, khá an toàn.
+- **Hardware key (FIDO2/WebAuthn)** — YubiKey — bảo mật nhất, chống phishing hoàn toàn.
+
+<Callout title="Cẩn thận">
+SMS OTP là MFA yếu nhất. SIM swap — attacker thuyết phục nhà mạng chuyển số điện thoại sang SIM của họ — là tấn công đã xảy ra nhiều lần với các tài khoản có giá trị cao. Nếu được chọn, dùng app authenticator thay vì SMS.
+</Callout>
+
+<Callout title="Nhớ nhé">
+MFA là lớp bảo vệ rẻ nhất, hiệu quả nhất bạn có thể thêm. Kích hoạt cho mọi tài khoản quan trọng của bạn — và yêu cầu user SaaS của bạn làm tương tự, ít nhất với tài khoản admin.
+</Callout>
+
+## Đọc thêm
+
+- [What is MFA? — AWS](https://aws.amazon.com/what-is/mfa/) — Giải thích MFA từ căn bản: các yếu tố, cách hoạt động, và tại sao cần thiết cho cả cá nhân lẫn tổ chức.
+- [Why MFA is Everywhere — Okta](https://www.okta.com/identity-101/why-mfa-is-everywhere/) — Phân tích tại sao MFA trở thành tiêu chuẩn bắt buộc, kèm số liệu thực tế về hiệu quả chặn tấn công chiếm tài khoản.
+- [More Than a Password — CISA](https://www.cisa.gov/MFA) — Hướng dẫn từ Cơ quan An ninh mạng Hoa Kỳ về MFA: loại nào mạnh hơn, cách triển khai, và ví dụ thực tế.
+
+## Tự kiểm tra
+
+1. Mật khẩu của bạn bị lộ trong một data breach. Bạn có bật MFA bằng app authenticator. Attacker có vào được tài khoản của bạn không? Giải thích.
+2. Tại sao SMS OTP được coi là hình thức MFA yếu hơn app authenticator?
+3. Với một SaaS B2B đang build, bạn nên yêu cầu MFA bắt buộc với role nào? Tại sao không bắt buộc cho tất cả ngay từ đầu?

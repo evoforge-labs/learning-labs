@@ -1,0 +1,78 @@
+---
+id: concept-broken-access-control
+title: "Broken Access Control"
+type: "concept"
+aliases: ["broken access control", "kiểm soát truy cập bị hỏng", "IDOR insecure direct object reference", "lỗ hổng phân quyền web", "OWASP A01 broken access", "đổi id URL truy cập trái phép"]
+tags: [security, owasp, access-control, authorization, idor, web-security, permissions]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Khách sạn cấp cho bạn chìa khóa phòng 101. Bạn tò mò thử chìa đó vào phòng 102 — và cửa mở. Không cần hack gì cả. Chỉ cần thử.
+
+Đó là Broken Access Control: **hệ thống không kiểm tra đúng xem người dùng có thực sự được phép làm điều họ đang cố làm không**.
+
+## Là gì
+
+**Broken Access Control** là khi ứng dụng không thực thi đúng các giới hạn quyền hạn — để người dùng truy cập, chỉnh sửa, hoặc xóa tài nguyên thuộc về người khác, hoặc thực hiện chức năng vượt quyền của họ.
+
+Đây là lỗ hổng **#1 trong OWASP Top 10:2025** vì cực kỳ phổ biến và dễ khai thác.
+
+Biến thể phổ biến nhất là **IDOR (Insecure Direct Object Reference)**: ứng dụng dùng ID từ URL/request để truy vấn database mà không kiểm tra quyền sở hữu.
+
+## Ví dụ thật
+
+Bạn đăng nhập và xem hóa đơn của mình tại:
+
+```
+GET /api/invoices/1042
+```
+
+Bạn đổi `1042` thành `1041` — và nhận được hóa đơn của người khác. Server trả về dữ liệu mà không hỏi "người đang gọi API này có quyền xem hóa đơn 1041 không?"
+
+Code bị lỗi:
+
+```python
+# NGUY HIỂM — chỉ lấy invoice theo id, không kiểm tra chủ sở hữu
+@app.get("/api/invoices/{invoice_id}")
+def get_invoice(invoice_id: int):
+    return db.query(Invoice).filter(Invoice.id == invoice_id).first()
+```
+
+Code đúng:
+
+```python
+# AN TOÀN — luôn lọc theo cả id lẫn user đang đăng nhập
+@app.get("/api/invoices/{invoice_id}")
+def get_invoice(invoice_id: int, current_user = Depends(get_current_user)):
+    invoice = db.query(Invoice).filter(
+        Invoice.id == invoice_id,
+        Invoice.owner_id == current_user.id  # kiểm tra quyền sở hữu
+    ).first()
+    if not invoice:
+        raise HTTPException(status_code=404)
+    return invoice
+```
+
+Ngoài IDOR, Broken Access Control còn bao gồm: truy cập trang admin khi không phải admin (vì server chỉ kiểm tra ở frontend), leo thang quyền (privilege escalation), hay truy cập endpoint theo phương thức HTTP khác không được bảo vệ.
+
+<Callout title="Cẩn thận">
+Dùng UUID thay vì số nguyên (`invoice_id = 1042` vs `invoice_id = uuid`) không giải quyết được IDOR — chỉ làm khó đoán hơn. Kẻ tấn công có thể lấy UUID từ nguồn khác. Kiểm tra quyền ở server mới là cách duy nhất đúng.
+</Callout>
+
+<Callout title="Nhớ nhé">
+Kiểm tra quyền phải ở **server**, không phải ở frontend. Mọi API endpoint chạm vào dữ liệu đều cần hỏi: "Người đang gọi endpoint này có được phép truy cập tài nguyên *cụ thể này* không?" — không chỉ "người này đã đăng nhập chưa?"
+</Callout>
+
+## Đọc thêm
+
+- [A01:2025 — Broken Access Control — OWASP](https://owasp.org/Top10/2025/A01_2025-Broken_Access_Control/) — Trang chính thức OWASP mô tả chi tiết các dạng lỗ hổng, kịch bản tấn công, và cách phòng chống; nguồn đáng tin nhất.
+- [IDOR Prevention Cheat Sheet — OWASP](https://cheatsheetseries.owasp.org/cheatsheets/Insecure_Direct_Object_Reference_Prevention_Cheat_Sheet.html) — Hướng dẫn thực tế phòng chống IDOR: kiểm tra quyền server-side, indirect reference maps, và các pattern an toàn.
+- [Broken Access Control — PortSwigger Web Security Academy](https://portswigger.net/web-security/access-control) — Giải thích sâu về vertical/horizontal access control với lab thực hành; phân tích nhiều kịch bản tấn công thực tế.
+- [Insecure Direct Object Reference (IDOR) — Authgear Blog](https://www.authgear.com/post/idor-insecure-direct-object-reference/) — Bài viết thực tế về IDOR với ví dụ API, cách phát hiện, và best practices phòng chống cho API-driven app.
+
+## Tự kiểm tra
+
+1. Bạn dùng UUID thay vì số nguyên cho `invoice_id`. Điều đó có giải quyết được IDOR không? Tại sao có hoặc không?
+2. Sự khác biệt giữa **authentication** (xác thực) và **authorization** (phân quyền) là gì? Loại nào liên quan đến Broken Access Control?
+3. Bạn có endpoint `DELETE /api/posts/{post_id}`. Hãy liệt kê tất cả các kiểm tra access control cần thực hiện ở server trước khi xóa bài viết.

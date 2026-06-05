@@ -1,0 +1,116 @@
+---
+id: exercise-sec-002
+title: "Thiết kế luồng đăng nhập an toàn cho SaaS"
+type: "exercise"
+track: security-for-builders
+tags: [security, authentication, authorization, password-hashing, session, jwt, oauth, mfa, least-privilege, saas]
+estimatedMinutes: 30
+related: [lesson-sec-002, concept-authentication-vs-authorization, concept-password-hashing, concept-sessions-vs-jwt, concept-oauth-and-sso, concept-mfa, rubric-security-for-builders]
+status: published
+---
+import Callout from '../../../components/content/Callout.astro';
+
+## Tình huống
+
+Bạn vừa nhận code review cho **Taskly** — một SaaS quản lý công việc nhỏ đang chuẩn bị ra mắt bản beta cho khách B2B đầu tiên.
+
+Đây là những gì bạn thấy trong codebase hiện tại:
+
+```
+// users table
+id, email, password (VARCHAR — stored as-is), role (admin | member)
+
+// login endpoint
+if (user.password === inputPassword) { ... }  // plain string compare
+
+// session: localStorage.setItem('user_id', user.id)
+
+// delete workspace endpoint  
+app.delete('/workspace/:id', (req, res) => {
+  // TODO: add auth check later
+  db.deleteWorkspace(req.params.id)
+})
+```
+
+Khách B2B đầu tiên vừa gửi câu hỏi: *"Các bạn xử lý bảo mật tài khoản thế nào? Có MFA không?"*
+
+---
+
+## Nhiệm vụ 1 — Sửa lưu trữ mật khẩu và chọn cơ chế session
+
+Có hai vấn đề nghiêm trọng cần sửa ngay trước khi ra mắt beta.
+
+**1a. Mật khẩu:**
+- Vấn đề hiện tại là gì? Rủi ro cụ thể khi database bị lộ?
+- Bạn sẽ thay bằng thuật toán gì? Argon2id hay bcrypt — với lý do cụ thể cho context của Taskly?
+- Viết pseudocode cho logic đăng ký và đăng nhập sau khi sửa.
+
+**1b. Session:**
+- `localStorage.setItem('user_id', ...)` tạo ra lỗ hổng gì?
+- Taskly là web app đơn giản, một server, không có mobile app. Session cookie httpOnly hay JWT — cái nào phù hợp hơn? Giải thích trade-off và lý do chọn.
+- Nếu chọn JWT, thời hạn token nên là bao lâu? Cần refresh token không?
+
+<Callout title="Mẹo">
+Với Nhiệm vụ 1b, không có đáp án duy nhất đúng — điều quan trọng là lý luận của bạn có nhất quán với đặc điểm của Taskly không.
+</Callout>
+
+---
+
+## Nhiệm vụ 2 — Thiết kế phân quyền least-privilege cho hai role
+
+Taskly có hai role: `admin` và `member`. Hiện tại endpoint `/workspace/:id` DELETE không có bất kỳ kiểm tra nào.
+
+**2a. Định nghĩa quyền:**
+Tạo một bảng quyền cho ít nhất 5 hành động trong Taskly (ví dụ: tạo task, xóa workspace, mời thành viên, xem báo cáo, thay đổi cài đặt billing). Với mỗi hành động, ai được làm: chỉ admin, member trở lên, hay tất cả?
+
+**2b. Enforce ở đâu:**
+Chỉ ra *ba nơi cụ thể* trong code/kiến trúc của Taskly mà bạn sẽ enforce authorization. Tại sao cả ba nơi đều cần — không phải chỉ một?
+
+**2c. Lỗi endpoint:**
+Sửa endpoint DELETE workspace để có authorization check đúng cách. Viết pseudocode, kể cả phần trả về error đúng HTTP status code khi user không có quyền.
+
+<Callout title="Mẹo">
+HTTP status code cho "đã đăng nhập nhưng không có quyền" là 403, không phải 401. 401 = chưa xác thực. 403 = đã xác thực, bị từ chối.
+</Callout>
+
+---
+
+## Nhiệm vụ 3 — Quyết định về MFA và OAuth
+
+Khách B2B hỏi về MFA. Bạn cần trả lời được — và làm cho câu trả lời là sự thật.
+
+**3a. MFA strategy:**
+- Taskly nên bắt buộc MFA cho role nào? Chỉ admin, tất cả user, hay tùy chọn?
+- Giữa SMS OTP và app authenticator (TOTP), bạn chọn gì để triển khai đầu tiên? Lý do?
+- Nếu dùng thư viện auth có sẵn (Auth0, Clerk, Supabase Auth), bạn cần cấu hình gì để bật MFA?
+
+**3b. OAuth trade-off:**
+Một người trong team đề xuất: *"Bỏ luôn email/password login, chỉ dùng 'Đăng nhập bằng Google'."*
+
+- Ưu điểm của đề xuất này là gì?
+- Nhược điểm hoặc rủi ro nào cần cân nhắc cho B2B SaaS?
+- Bạn sẽ quyết định thế nào, và tại sao?
+
+<Callout title="Mẹo">
+Khách B2B thường dùng Google Workspace hoặc Microsoft 365 — SSO với provider đó có thể là selling point. Nhưng không phải mọi khách đều dùng cùng một provider.
+</Callout>
+
+---
+
+## Tiêu chí đánh giá
+
+Tham khảo [Security & Privacy Rubric](/rubrics/security-for-builders-rubric) để tự chấm.
+
+Với bài này, tập trung vào tiêu chí **"Xác thực & phân quyền làm đúng"** (25% tổng rubric):
+
+| Tiêu chí | Câu hỏi để tự kiểm tra |
+|---|---|
+| Hash mật khẩu đúng thuật toán | Bạn chọn Argon2id hay bcrypt — và giải thích được tại sao cho context này? |
+| Session/JWT có căn cứ | Quyết định của bạn dựa trên đặc điểm của hệ thống, không phải vì "JWT đang trend"? |
+| Authz enforce server-side | Bạn kiểm tra quyền ở backend, không chỉ ẩn UI? |
+| Least-privilege rõ ràng | Mỗi role chỉ có đúng quyền cần thiết, không hơn? |
+| MFA có kế hoạch cụ thể | Bạn biết bật MFA ở đâu và cho ai, không chỉ nói "sẽ thêm sau"? |
+
+<Callout title="Nhớ nhé">
+Bài tập này mô phỏng tình huống code review thực tế trước khi ship cho khách B2B đầu tiên. Không có đáp án hoàn hảo — nhưng mọi quyết định cần có lý luận rõ ràng, không phải cảm tính.
+</Callout>

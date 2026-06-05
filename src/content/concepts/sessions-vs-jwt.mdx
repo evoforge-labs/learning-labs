@@ -1,0 +1,51 @@
+---
+id: concept-sessions-vs-jwt
+title: "Sessions vs JWT"
+type: "concept"
+aliases: ["sessions vs jwt", "session cookie vs token", "vé gửi xe vs dấu mộc tay", "stateful vs stateless auth", "lưu trạng thái đăng nhập"]
+tags: [security, authentication, session, jwt, token, cookie, stateless]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Ở bãi giữ xe, bạn có hai cách chứng minh xe là của mình. Cách 1: bạn giữ tờ vé số, nhân viên giữ cuống — mỗi lần ra bạn đưa vé, nhân viên tra cuống để xác nhận. Cách 2: nhân viên đóng một dấu mộc đặc biệt lên tay bạn — bất kỳ cửa nào trong bãi cũng nhận ra dấu đó mà không cần tra sổ.
+
+Vé gửi xe là **session**. Dấu mộc tay là **JWT**.
+
+## Là gì
+
+**Session-based auth:** Sau khi đăng nhập, server tạo một session ID ngẫu nhiên, lưu thông tin user vào server (database hoặc Redis), rồi gửi session ID về cho client dưới dạng cookie. Mỗi request, client gửi cookie, server tra database để biết đây là ai.
+
+**JWT (JSON Web Token):** Sau khi đăng nhập, server tạo một token chứa thông tin user (user ID, role, thời hạn...), *ký* bằng secret key, rồi gửi token về cho client. Mỗi request, client gửi token, server chỉ cần *xác minh chữ ký* — không cần tra database. Mọi thông tin đã nằm trong token.
+
+## Ví dụ thật
+
+App todo list nhỏ với 1 server: **session là đủ**. Server lưu session trong memory, đơn giản, dễ revoke (logout là xóa session).
+
+App có nhiều microservice, mobile app + web app, server phân tán ở nhiều vùng địa lý: **JWT phù hợp hơn**. Token tự chứa thông tin, mọi service đều xác minh được mà không cần gọi về một database trung tâm.
+
+**Đánh đổi quan trọng nhất — revocation:**
+
+Session: muốn đăng xuất cưỡng bức (force logout) khi phát hiện tài khoản bị xâm phạm → xóa session trong DB là xong. Ngay lập tức có hiệu lực.
+
+JWT: token đã phát ra không thể thu hồi trực tiếp. Nếu token bị đánh cắp, nó có hiệu lực cho đến khi hết hạn. Giải pháp là dùng token ngắn hạn (15-60 phút) kết hợp refresh token, hoặc duy trì một blocklist — nhưng blocklist lại làm mất lợi thế stateless.
+
+<Callout title="Cẩn thận">
+JWT không tự động an toàn hơn session. Sai lầm phổ biến: lưu JWT trong localStorage thay vì httpOnly cookie → dễ bị XSS đánh cắp. Và đừng để thời hạn token quá dài — một token 30 ngày bị lộ là thảm họa.
+</Callout>
+
+<Callout title="Nhớ nhé">
+Session = stateful, dễ revoke, phù hợp app web đơn giản. JWT = stateless, scalable, phù hợp hệ thống phân tán — nhưng revocation phức tạp hơn. Chọn theo bài toán, không theo hype.
+</Callout>
+
+## Đọc thêm
+
+- [JWTs vs. sessions: which is right for you? — Stytch](https://stytch.com/blog/jwts-vs-sessions-which-is-right-for-you/) — So sánh chi tiết trade-off giữa hai cách tiếp cận, với ngữ cảnh thực tế về khi nào nên chọn cái nào.
+- [Session vs Token Authentication — Authgear](https://www.authgear.com/post/session-vs-token-authentication/) — Giải thích cơ chế hoạt động của cả hai và hướng dẫn chọn lựa phù hợp với loại ứng dụng.
+- [JWT vs Session Authentication — DEV Community](https://dev.to/codeparrot/jwt-vs-session-authentication-1mol) — Bài viết ngắn gọn với ví dụ code, phù hợp cho developer muốn hiểu nhanh sự khác biệt.
+
+## Tự kiểm tra
+
+1. Khi phát hiện tài khoản user bị xâm phạm, việc thu hồi quyền truy cập ngay lập tức dễ hơn với session hay JWT? Tại sao?
+2. Một SaaS có web app và mobile app, với nhiều server ở các region khác nhau — session hay JWT phù hợp hơn? Lý do?
+3. Lưu JWT trong `localStorage` thay vì `httpOnly cookie` tạo ra lỗ hổng bảo mật gì?

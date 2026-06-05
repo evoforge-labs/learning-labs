@@ -1,0 +1,74 @@
+---
+id: concept-breach-response
+title: "Breach Response (Khi bị rò rỉ)"
+type: "concept"
+aliases: ["xử lý rò rỉ dữ liệu", "data breach response plan", "khi dữ liệu bị lộ phải làm gì", "72 giờ thông báo GDPR breach", "breach containment startup", "incident data breach"]
+tags: [security, privacy, gdpr, compliance, incident-response, data-breach, solo-builder]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Bạn biết về cháy nhà không phải khi nó bắt đầu, mà khi khói đã tràn ra. Lúc đó không có thời gian đọc sách hướng dẫn phòng cháy — bạn cần phải biết mình làm gì rồi.
+
+Breach dữ liệu cũng vậy. Phần lớn builder không chuẩn bị gì cho đến khi nhận email "We found your database for sale on a forum." Lúc đó, từng phút đều tính.
+
+## Là gì
+
+**Breach response** (ứng phó rò rỉ dữ liệu) là chuỗi hành động bạn thực hiện khi dữ liệu người dùng bị lộ ra ngoài — dù do tấn công bên ngoài, lỗi cấu hình, hay sự cố nội bộ.
+
+Breach không chỉ là "bị hack". Upload nhầm file chứa dữ liệu người dùng lên repository public, để database không có xác thực tiếp xúc với internet, hay contractor cũ vẫn có access — đều là breach.
+
+## Bốn giai đoạn
+
+**1. Ngăn chặn (Contain)** — Dừng "chảy máu" trước. Revoke credential bị lộ, tắt endpoint bị khai thác, cô lập hệ thống bị ảnh hưởng. Làm việc này *trước khi* điều tra hay thông báo.
+
+**2. Đánh giá (Assess)** — Dữ liệu nào bị lộ? Của bao nhiêu người? Từ bao giờ? Kẻ tấn công đã làm gì với dữ liệu đó? Câu trả lời quyết định bước tiếp theo.
+
+**3. Thông báo (Notify)** — Có hai nhóm cần thông báo:
+  - **Cơ quan giám sát (supervisory authority):** Nếu bạn xử lý dữ liệu EU và breach có nguy cơ ảnh hưởng quyền/tự do người dùng, GDPR Art. 33 yêu cầu thông báo trong **72 giờ** kể từ khi bạn *biết* về breach. Muộn hơn là vi phạm riêng, bị phạt riêng.
+  - **Người dùng bị ảnh hưởng:** Khi breach có nguy cơ cao (ví dụ: password, thẻ tín dụng, dữ liệu y tế), bạn phải thông báo trực tiếp cho từng người theo GDPR Art. 34.
+
+**4. Học lại (Learn)** — Sau khi ổn định: điều gì đã xảy ra, tại sao không phát hiện sớm hơn, cần thêm kiểm soát gì? Không có bước này, breach tương tự sẽ lặp lại.
+
+## Ví dụ thật
+
+Startup của bạn để S3 bucket chứa backup database ở chế độ public vì "tiện debug". Một bot tự động quét tìm public buckets — data của 3,000 user bị lộ: email, tên, địa chỉ.
+
+Bạn phát hiện lúc 9 giờ sáng thứ Hai.
+
+- 9:05: Set bucket về private ngay (Contain).
+- 10:00: Kiểm tra CloudTrail — bucket public từ thứ Sáu tuần trước, có IP lạ đã download. Dữ liệu bị lộ: email + tên, không có password hay payment (Assess).
+- Trước 9 giờ thứ Ba: Gửi báo cáo đến cơ quan giám sát dữ liệu (72 giờ từ 9:00 thứ Hai). Rủi ro thấp — không cần thông báo trực tiếp toàn bộ 3,000 user ngay, nhưng cân nhắc email thông báo chủ động (Notify).
+- Cuối tuần: Thêm policy cấm public buckets qua AWS SCPs, review toàn bộ bucket còn lại (Learn).
+
+<Callout title="Cẩn thận">
+**Đồng hồ 72 giờ chạy từ lúc bạn *biết*, không phải lúc breach xảy ra.** Điều tra kỹ trước khi thông báo là hợp lý — nhưng trì hoãn thông báo sau khi đã xác nhận breach là vi phạm. Phạt lên đến EUR 10 triệu hoặc 2% doanh thu toàn cầu — riêng cho vi phạm thông báo muộn.
+</Callout>
+
+## Chuẩn bị trước
+
+Breach tốt nhất là breach bạn đã nghĩ đến trước:
+
+1. **Runbook ngắn** — ai làm gì trong 1 giờ đầu. Kể cả app 1 người cũng cần file này.
+2. **Danh sách liên lạc** — email của cơ quan giám sát dữ liệu (ở Việt Nam: Bộ TT&TT; ở EU: DPA của từng nước).
+3. **Template thông báo** — email gửi user đã soạn sẵn, chỉ cần điền chi tiết.
+4. **Biết dữ liệu của mình** — không thể đánh giá breach nếu không biết mình đang lưu gì ở đâu.
+
+Xem thêm quy trình ứng phó sự cố hệ thống nói chung tại [concept-incident-response](/concepts/incident-response).
+
+<Callout title="Nhớ nhé">
+Không có hệ thống nào 100% an toàn. Sự khác biệt giữa breach nghiêm trọng và breach được xử lý tốt là: bạn phát hiện nhanh không, bạn ngăn chặn kịp không, và bạn có trung thực với người dùng không. Chuẩn bị trước giúp bạn làm được cả ba.
+</Callout>
+
+## Đọc thêm
+
+- [GDPR Breach Notification: The 72-Hour Rule — Thoropass](https://www.thoropass.com/blog/gdpr-breach-notification-timeline) — Hướng dẫn step-by-step về timeline thông báo GDPR, nội dung cần khai báo, và các trường hợp ngoại lệ; thực tế cho startup có người dùng EU.
+- [GDPR Article 33 — Personal Data Breach Notification](https://gdpr-info.eu/art-33-gdpr/) — Bản gốc điều khoản 33 GDPR về nghĩa vụ thông báo breach trong 72 giờ; chuẩn pháp lý.
+- [Data Breach Response: The 72-Hour Countdown — Pitch Law](https://www.pitch.law/knowledge-base/data-breach-response-the-72-hour-countdown) — Góc nhìn pháp lý thực tế về những gì xảy ra nếu bỏ lỡ deadline 72 giờ và cách xây dựng kế hoạch phản ứng.
+- [GDPR Data Breach Notifications — Cynet](https://www.cynet.com/cynet-for-compliance/gdpr-data-breach-notifications-everything-you-need-to-know/) — Tổng hợp toàn diện về quy trình thông báo breach theo GDPR, kèm checklist nội dung cần khai báo với cơ quan giám sát.
+
+## Tự kiểm tra
+
+1. Bạn phát hiện lúc 10 giờ sáng thứ Tư rằng database bị truy cập trái phép từ thứ Hai. Theo GDPR, deadline 72 giờ tính từ lúc nào và hết vào lúc nào?
+2. Breach lộ email và tên của 500 user — không có password, không có thông tin tài chính. Bạn có cần thông báo cho từng user không? Yếu tố nào quyết định điều đó?
+3. Tại sao bước "ngăn chặn" (contain) phải làm trước khi điều tra hay thông báo? Điều gì có thể xảy ra nếu bạn điều tra trước khi contain?

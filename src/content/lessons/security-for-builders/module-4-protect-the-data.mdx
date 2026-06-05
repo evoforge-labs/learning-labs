@@ -1,0 +1,68 @@
+---
+id: lesson-sec-004
+title: "Bảo vệ dữ liệu & bí mật của bạn"
+type: "lesson"
+track: security-for-builders
+module: "data"
+level: intermediate
+tags: [security, encryption, pii, data-protection, data-minimization, dependencies, secrets, compliance]
+prerequisites: [concept-encryption-at-rest-in-transit, concept-pii-and-data-protection, concept-data-minimization, concept-dependency-vulnerabilities, concept-config-and-secrets]
+related: [exercise-sec-004, rubric-security-for-builders]
+status: published
+---
+import Callout from '../../../components/content/Callout.astro';
+
+Bạn đã build app. Người dùng đã đăng ký. Trong database của bạn giờ có tên, email, số điện thoại — có thể cả địa chỉ, lịch sử giao dịch, thông tin sức khỏe. Đây là thời điểm câu hỏi bảo mật trở nên thật sự: *bạn đang bảo vệ dữ liệu đó ra sao?*
+
+Module này xâu chuỗi bốn lớp bảo vệ thành một quy trình mà bất kỳ builder nào cũng có thể thực thi.
+
+## Lớp 1 — Bí mật của bạn không nằm trong code
+
+Trước khi nói đến dữ liệu người dùng, hãy nói đến bí mật của chính bạn: API key, database password, private key. Đây là điều kiện tiên quyết của mọi thứ khác.
+
+[Config & Secrets Management](/concepts/config-and-secrets) là xuất phát điểm — không commit secret lên Git, inject qua platform, dùng secret manager khi cần chia sẻ trong team. Nếu bạn chưa làm điều này, làm trước. Mọi thứ khác xây trên nền móng này.
+
+## Lớp 2 — Dữ liệu được mã hóa cả lúc lưu lẫn lúc truyền
+
+Sau khi secrets an toàn, kiểm tra xem dữ liệu người dùng có được bảo vệ đúng hai lớp chưa.
+
+[Encryption at rest và in transit](/concepts/encryption-at-rest-in-transit) là hai việc độc lập — cả hai đều cần. HTTPS/TLS cho traffic, encryption at rest cho database và storage. Hầu hết managed platform ngày nay bật sẵn cả hai — nhưng bạn cần xác nhận, không phải giả định.
+
+Checklist nhanh:
+- `http://yourdomain.com` có tự redirect sang `https://` không?
+- Dashboard của database provider có dòng "encryption at rest: enabled" không?
+- Internal API giữa các service có dùng TLS không?
+
+## Lớp 3 — Biết mình đang giữ gì và tại sao
+
+Mã hóa tốt nhưng mã hóa *cái không cần thiết* vẫn là gánh nặng. [PII & Data Protection](/concepts/pii-and-data-protection) giúp bạn nhìn lại schema và tự hỏi: trường này thu thập vì mục đích gì? Ai có quyền đọc? Sẽ xóa khi nào?
+
+Từ đó, [Data Minimization](/concepts/data-minimization) là bước logic tiếp theo: với mỗi field trong database, nếu bạn không thể trả lời "feature cụ thể nào dùng cái này", đó là ứng viên để xóa. Dữ liệu không thu thập không thể bị rò rỉ.
+
+<Callout title="Nhớ nhé">
+Hai câu hỏi quan trọng nhất khi thiết kế schema: "Tại sao chúng ta cần field này?" và "Khi nào field này sẽ bị xóa?" Nếu không trả lời được, chưa nên thêm.
+</Callout>
+
+## Lớp 4 — Code của bạn sạch, nhưng dependency thì sao?
+
+Bạn có thể viết code cẩn thận đến đâu, nhưng 90% code đang chạy trong app là của người khác. [Dependency & Supply-Chain Vulnerabilities](/concepts/dependency-vulnerabilities) là lớp rủi ro mà nhiều builder bỏ qua hoàn toàn.
+
+Ba việc cần làm ngay:
+1. Chạy `npm audit` (hoặc tương đương) và đọc output.
+2. Bật Dependabot trên GitHub repo — tự động tạo PR khi có security update.
+3. Commit `package-lock.json` — đảm bảo mọi người dùng cùng exact version.
+
+## Kết nối lại: bốn lớp như một hệ thống
+
+Bốn lớp này không độc lập — chúng bổ trợ nhau:
+
+- Secrets leak → kẻ tấn công có quyền đọc database dù bạn đã mã hóa.
+- Database không mã hóa at rest → breach vật lý phá vỡ mọi logic bảo mật.
+- Giữ PII không cần thiết → breach nhỏ trở thành vấn đề pháp lý lớn.
+- Dependency có lỗ hổng → kẻ tấn công vào được server dù app logic không có bug.
+
+<Callout title="Nhớ nhé">
+Bảo mật dữ liệu không phải tính năng thêm vào cuối — nó là một lớp thiết kế bạn đưa vào từ khi bắt đầu. Bốn lớp trên không mất nhiều thời gian nếu làm đúng từ đầu; nhưng sẽ tốn rất nhiều thời gian nếu phải retrofitting sau khi có breach.
+</Callout>
+
+Thực hành ngay với [bài tập lên kế hoạch bảo vệ dữ liệu →](/exercises/security-for-builders/m4-data-protection-plan)

@@ -1,0 +1,65 @@
+---
+id: lesson-sec-003
+title: "Bịt những lỗ hổng web bị khai thác nhiều nhất"
+type: "lesson"
+track: security-for-builders
+module: web-vulns
+level: intermediate
+tags: [security, owasp, sql-injection, xss, csrf, broken-access-control, web-security]
+prerequisites: [concept-owasp-top-10, concept-sql-injection, concept-xss, concept-csrf, concept-broken-access-control]
+related: [exercise-sec-003, rubric-security-for-builders]
+status: published
+---
+import Callout from '../../../components/content/Callout.astro';
+
+Hầu hết các vụ hack không đến từ lỗ hổng zero-day hay kỹ thuật siêu phức tạp. Chúng đến từ bốn lỗ hổng cũ kỹ bị bỏ quên — những thứ đã có trong [OWASP Top 10](/concepts/owasp-top-10) từ hơn hai thập kỷ và vẫn xuất hiện trong code mới viết hôm nay.
+
+Lesson này xâu chuỗi bốn lỗ hổng đó thành một bức tranh chung: chúng có điểm gì giống nhau, và bạn phòng chống chúng theo thứ tự ưu tiên nào.
+
+## Tại sao bốn lỗ hổng này vẫn tồn tại
+
+Câu trả lời không phải "developer lười". Câu trả lời là: **mỗi lỗ hổng xuất phát từ một quyết định thiết kế nghe có vẻ hợp lý lúc đầu**.
+
+- **[SQL Injection](/concepts/sql-injection)**: ghép chuỗi vào SQL — nhanh, đơn giản, "chỉ là test". Rồi lên production.
+- **[XSS](/concepts/xss)**: render nội dung người dùng thẳng vào HTML — UI trông đẹp hơn, markdown được hỗ trợ. Rồi quên escape.
+- **[CSRF](/concepts/csrf)**: endpoint POST không cần token vì "chỉ dùng nội bộ". Rồi có form công khai.
+- **[Broken Access Control](/concepts/broken-access-control)**: endpoint trả dữ liệu theo ID — đơn giản, không cần kiểm tra thêm. Rồi user đổi số trên URL.
+
+Mỗi cái đều có pattern: **tiện lợi ngắn hạn, thiệt hại dài hạn**.
+
+## Pattern chung — đừng tin đầu vào, kiểm tra ở server
+
+Bốn lỗ hổng này có một điểm chung: **server tin tưởng những thứ đến từ client** mà không kiểm tra đủ.
+
+- SQLi: tin input là dữ liệu, không phải lệnh.
+- XSS: tin nội dung người dùng là text, không phải HTML/script.
+- CSRF: tin request đến là có chủ ý, không phải bị lừa.
+- Broken Access Control: tin user chỉ gửi ID của tài nguyên họ được phép.
+
+Nguyên tắc gốc: **validate và enforce ở server, không phải ở client**. Frontend là thứ kẻ tấn công kiểm soát hoàn toàn.
+
+## Thứ tự ưu tiên khi fix
+
+Không phải lúc nào bạn cũng có thời gian fix tất cả cùng lúc. Ưu tiên theo tác động:
+
+**Ưu tiên cao nhất — fix ngay:**
+1. Broken Access Control (IDOR) — dễ khai thác, lộ dữ liệu mọi user.
+2. SQL Injection — một query là đủ để dump toàn bộ database.
+
+**Ưu tiên tiếp theo:**
+3. XSS — ảnh hưởng đến từng user bị tấn công, nhưng cần nạn nhân tương tác.
+4. CSRF — cần nạn nhân click link/truy cập trang độc hại, nhiều framework đã bật sẵn.
+
+<Callout title="Mẹo">
+Khi review code (hoặc tự review), đặt bốn câu hỏi nhanh: (1) Input này có ghép vào SQL không? (2) Output này có được escape trước khi render HTML không? (3) Endpoint state-changing này có CSRF token không? (4) Trước khi trả dữ liệu, server có kiểm tra user hiện tại có quyền xem không?
+</Callout>
+
+## Bức tranh toàn cảnh — OWASP như checklist
+
+[OWASP Top 10](/concepts/owasp-top-10) không phải lý thuyết học để biết. Nó là checklist bạn chạy qua trước mỗi lần deploy quan trọng. Bốn lỗ hổng trong module này nằm trong top 5 của danh sách — tức là nếu bịt được chúng, bạn đã xử lý phần lớn rủi ro thực tế.
+
+<Callout title="Nhớ nhé">
+Bảo mật không phải thêm vào cuối. Bốn thói quen đơn giản — parameterized query, escape output, CSRF token, kiểm tra quyền ở server — áp dụng ngay từ khi viết code đầu tiên, không mất thêm bao nhiêu thời gian, nhưng tránh được phần lớn các vụ rò rỉ dữ liệu phổ biến nhất.
+</Callout>
+
+Thực hành ngay với [bài tập tìm và sửa lỗ hổng →](/exercises/security-for-builders/m3-find-the-vulns)

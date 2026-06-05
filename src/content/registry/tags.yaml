@@ -263,3 +263,32 @@ tags:
   - cost-economics
   - responsible-ai
   - ai-launch
+  # --- Security & Privacy for Builders ---
+  - security
+  - threat-modeling
+  - cia-triad
+  - least-privilege
+  - defense-in-depth
+  - authentication
+  - authorization
+  - password-hashing
+  - jwt
+  - oauth
+  - sso
+  - mfa
+  - owasp
+  - sql-injection
+  - xss
+  - csrf
+  - access-control
+  - encryption
+  - pii
+  - data-protection
+  - data-minimization
+  - dependency-security
+  - supply-chain
+  - gdpr
+  - compliance
+  - soc2
+  - security-logging
+  - breach-response

@@ -1,0 +1,67 @@
+---
+id: concept-sql-injection
+title: "SQL Injection"
+type: "concept"
+aliases: ["SQL injection", "tấn công SQL injection", "SQLi web security", "tiêm lệnh SQL", "parameterized query phòng SQLi", "câu lệnh SQL độc hại"]
+tags: [security, owasp, sql, injection, web-security, database, parameterized-query]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Hãy tưởng tượng bạn có tờ đơn điền sẵn: "Tôi muốn xem thông tin của người dùng **\_\_\_**." Bạn muốn người dùng điền tên vào chỗ trống. Nhưng một kẻ phá hoại điền vào: "tất cả mọi người, hãy xóa toàn bộ bảng". Nếu bạn đọc nguyên xi tờ đơn đó ra tòa — bạn vừa tự tay ra lệnh xóa dữ liệu.
+
+Đó là SQL injection: **đầu vào của người dùng bị nhúng thẳng vào câu lệnh SQL, biến dữ liệu thành mệnh lệnh**.
+
+## Là gì
+
+**SQL Injection (SQLi)** xảy ra khi ứng dụng nhận đầu vào từ người dùng và ghép trực tiếp vào câu lệnh SQL mà không lọc hay tách biệt. Kẻ tấn công lợi dụng điều này để đọc dữ liệu không được phép, sửa/xóa dữ liệu, hoặc thậm chí chiếm quyền điều khiển database.
+
+## Ví dụ thật
+
+Đây là đoạn code **dễ bị tấn công**:
+
+```python
+# NGUY HIỂM — đừng bao giờ làm thế này
+username = request.form['username']
+query = "SELECT * FROM users WHERE username = '" + username + "'"
+db.execute(query)
+```
+
+Nếu kẻ tấn công nhập `username` là `' OR '1'='1`, câu lệnh trở thành:
+
+```sql
+SELECT * FROM users WHERE username = '' OR '1'='1'
+```
+
+Điều kiện `'1'='1'` luôn đúng — kết quả: toàn bộ bảng `users` bị trả về. Tệ hơn nữa, nhập `'; DROP TABLE users; --` có thể xóa sạch dữ liệu.
+
+**Cách phòng — dùng parameterized query:**
+
+```python
+# AN TOÀN — dữ liệu và câu lệnh được tách biệt hoàn toàn
+username = request.form['username']
+query = "SELECT * FROM users WHERE username = ?"
+db.execute(query, (username,))
+```
+
+Với parameterized query, database nhận câu lệnh SQL và dữ liệu **tách biệt**. Dù người dùng nhập gì, nó cũng được xử lý như *dữ liệu thuần*, không bao giờ được diễn giải như câu lệnh SQL.
+
+<Callout title="Cẩn thận">
+Nhiều builder nghĩ "mình đã escape ký tự đặc biệt là an toàn rồi". Không đủ — escaping thủ công dễ bỏ sót trường hợp, đặc biệt với encoding nhiều lớp hoặc các database engine khác nhau. Parameterized query là cách duy nhất đáng tin cậy.
+</Callout>
+
+<Callout title="Nhớ nhé">
+Không bao giờ ghép chuỗi đầu vào người dùng vào câu lệnh SQL. Luôn dùng parameterized query (prepared statement) — mọi ngôn ngữ, mọi ORM đều hỗ trợ sẵn.
+</Callout>
+
+## Đọc thêm
+
+- [SQL Injection — OWASP Foundation](https://owasp.org/www-community/attacks/SQL_Injection) — Giải thích toàn diện về SQL injection từ OWASP: cách tấn công, các biến thể (blind SQLi, error-based), và nguyên tắc phòng chống.
+- [SQL Injection Prevention Cheat Sheet — OWASP](https://cheatsheetseries.owasp.org/cheatsheets/SQL_Injection_Prevention_Cheat_Sheet.html) — Cheat sheet thực tế với code mẫu parameterized query theo từng ngôn ngữ; tài liệu tham khảo khi code.
+- [SQL Injection — PortSwigger Web Security Academy](https://portswigger.net/web-security/sql-injection) — Hướng dẫn có lab thực hành tương tác; bạn có thể tự thử khai thác SQLi để hiểu cơ chế sâu hơn.
+
+## Tự kiểm tra
+
+1. Tại sao việc "escape dấu nháy đơn" không phải là cách phòng SQL injection đáng tin cậy? Parameterized query giải quyết vấn đề đó như thế nào?
+2. Kẻ tấn công có thể làm gì với SQL injection ngoài việc đọc dữ liệu? Liệt kê ít nhất 2 hành động nguy hiểm khác.
+3. Bạn đang dùng một ORM như SQLAlchemy hay Sequelize. Điều đó có đồng nghĩa với việc app của bạn tự động miễn nhiễm với SQL injection không? Tại sao?

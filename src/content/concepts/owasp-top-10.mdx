@@ -1,0 +1,55 @@
+---
+id: concept-owasp-top-10
+title: "OWASP Top 10"
+type: "concept"
+aliases: ["OWASP Top 10", "danh sách mười lỗ hổng web nguy hiểm nhất", "OWASP web vulnerabilities checklist", "mười rủi ro bảo mật web", "web security checklist OWASP"]
+tags: [security, owasp, web-security, vulnerabilities, checklist, broken-access-control, injection, xss]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Hãy tưởng tượng bạn vừa xây xong một ngôi nhà. Trước khi cho khách vào ở, bạn cầm danh sách kiểm tra: cửa có khóa không, ổ điện có che không, bình gas có an toàn không. Không cần là chuyên gia xây dựng — chỉ cần đánh dấu qua danh sách là xong 80% rủi ro phổ biến nhất.
+
+OWASP Top 10 là cái danh sách đó, nhưng cho ứng dụng web.
+
+## Là gì
+
+**OWASP Top 10** là danh sách mười loại lỗ hổng bảo mật web nguy hiểm và phổ biến nhất, do tổ chức phi lợi nhuận OWASP (Open Worldwide Application Security Project) tổng hợp từ dữ liệu thực tế của hàng nghìn ứng dụng. Danh sách cập nhật vài năm một lần — phiên bản hiện hành là **2025**.
+
+Đây không phải lý thuyết học thuật. Mỗi mục đến từ số liệu thật: loại lỗ hổng nào bị khai thác nhiều nhất, gây thiệt hại lớn nhất.
+
+## Ví dụ thật
+
+OWASP Top 10:2025 (phiên bản mới nhất) bao gồm:
+
+1. **A01 — Broken Access Control**: user truy cập tài nguyên không được phép (ví dụ đổi `id=123` thành `id=124` trên URL để xem dữ liệu người khác).
+2. **A02 — Security Misconfiguration**: cấu hình sai — để lộ trang admin, dùng mật khẩu mặc định, bật debug mode trên production.
+3. **A03 — Software Supply Chain Failures**: thư viện/dependency bị nhiễm độc hoặc có lỗ hổng chưa vá.
+4. **A04 — Cryptographic Failures**: mã hóa kém — lưu mật khẩu dạng plain text, dùng thuật toán MD5, không dùng HTTPS.
+5. **A05 — Injection**: nhập liệu độc hại biến thành câu lệnh — SQL injection, command injection.
+6. **A06 — Insecure Design**: thiết kế kiến trúc thiếu tư duy bảo mật ngay từ đầu.
+7. **A07 — Authentication Failures**: xác thực yếu — không có MFA, session không hết hạn, brute-force dễ dàng.
+8. **A08 — Software or Data Integrity Failures**: cập nhật/pipeline không được xác minh, deserialization không an toàn.
+9. **A09 — Security Logging and Alerting Failures**: không log sự kiện quan trọng, không phát hiện được tấn công đang xảy ra.
+10. **A10 — Mishandling of Exceptional Conditions**: xử lý lỗi kém — để lộ stack trace, crash khi nhận đầu vào bất thường.
+
+<Callout title="Cẩn thận">
+OWASP Top 10 là **danh sách rủi ro**, không phải danh sách đầy đủ mọi lỗ hổng. Bịt xong 10 mục này không có nghĩa là app bạn "an toàn hoàn toàn" — nhưng bạn đã loại đi phần lớn nguy cơ bị tấn công cơ bản.
+</Callout>
+
+<Callout title="Nhớ nhé">
+OWASP Top 10 là checklist tối thiểu cho mọi ứng dụng web. Trước khi ra mắt, chạy qua danh sách này — mỗi mục chỉ mất vài phút để kiểm tra sơ bộ, nhưng ngăn được hầu hết các vụ hack "ngớ ngẩn".
+</Callout>
+
+## Đọc thêm
+
+- [OWASP Top 10:2025 — Trang chính thức](https://owasp.org/Top10/2025/) — Danh sách đầy đủ phiên bản 2025 với mô tả, ví dụ tấn công và cách phòng chống cho từng mục; nguồn gốc và đáng tin cậy nhất.
+- [OWASP Top Ten — Tổng quan dự án](https://owasp.org/www-project-top-ten/) — Trang chủ dự án OWASP Top Ten, có lịch sử các phiên bản từ 2003 đến nay và tài liệu tham khảo thêm.
+- [OWASP Cheat Sheet — Index theo Top 10](https://cheatsheetseries.owasp.org/IndexTopTen.html) — Tập hợp các cheat sheet kỹ thuật cho từng mục OWASP Top 10; mỗi sheet là hướng dẫn phòng chống ngắn gọn, thực tế.
+- [OWASP Top 10 2025: What Changed — Fastly Blog](https://www.fastly.com/blog/new-2025-owasp-top-10-list-what-changed-what-you-need-to-know) — Phân tích những thay đổi từ 2021 sang 2025, giải thích tại sao mỗi hạng mục thay đổi vị trí; phù hợp nếu bạn đã quen phiên bản 2021.
+
+## Tự kiểm tra
+
+1. Tại sao Broken Access Control lại đứng đầu danh sách OWASP Top 10? Hãy mô tả một ví dụ tấn công cụ thể.
+2. Sự khác biệt giữa "Injection" (A05) và "Authentication Failures" (A07) là gì? Loại nào nguy hiểm hơn và tại sao?
+3. Bạn đang ra mắt một app web nhỏ một mình. Nếu chỉ có 2 giờ để kiểm tra bảo mật trước khi deploy, bạn sẽ ưu tiên kiểm tra những mục nào trong OWASP Top 10 và theo thứ tự nào?

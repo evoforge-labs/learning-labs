@@ -1,0 +1,71 @@
+---
+id: lesson-sec-005
+title: "Vận hành bảo mật & trả lời được khách B2B"
+type: "lesson"
+track: security-for-builders
+module: compliance
+level: intermediate
+tags: [security, compliance, gdpr, soc2, logging, breach-response, b2b, solo-builder]
+prerequisites: [concept-gdpr-basics, concept-security-questionnaire, concept-security-logging-monitoring, concept-breach-response, concept-incident-response, concept-observability]
+related: [exercise-sec-005, rubric-security-for-builders]
+status: published
+---
+import Callout from '../../../components/content/Callout.astro';
+
+Có một khoảnh khắc mọi builder B2B đều gặp: khách hàng đầu tiên hỏi "App của bạn có bảo mật không?" Câu trả lời đúng không phải "Có" — mà là bằng chứng cụ thể.
+
+Module này xâu chuỗi bốn lớp vận hành bảo mật thành một câu trả lời nhất quán: bạn biết mình đang lưu gì, bạn đang theo dõi điều gì, bạn làm gì khi có sự cố, và bạn có thể giải trình điều đó với khách B2B.
+
+## Lớp 1 — Biết dữ liệu của mình và nghĩa vụ pháp lý
+
+Trước khi trả lời bất kỳ câu hỏi bảo mật nào, bạn cần biết mình đang xử lý dữ liệu gì.
+
+[GDPR & Privacy Basics](/concepts/gdpr-basics) đặt nền: nếu bạn có người dùng EU, bạn có nghĩa vụ cụ thể — quyền truy cập, quyền xóa, và thông báo breach trong 72 giờ. Đây không phải tùy chọn.
+
+Thực tế cho builder nhỏ: bắt đầu bằng một bảng đơn giản — *dữ liệu gì, lưu ở đâu, giữ bao lâu, ai có quyền truy cập*. Bảng này vừa là nền tảng cho Privacy Policy, vừa là thứ bạn cần khi xảy ra breach.
+
+## Lớp 2 — Theo dõi sự kiện bảo mật
+
+Bạn không thể bảo vệ những gì bạn không nhìn thấy.
+
+[Security Logging & Monitoring](/concepts/security-logging-monitoring) là lớp khác với [observability](/concepts/observability) thông thường — không phải "tại sao app chậm" mà là "ai đang cố xâm nhập". Sự kiện cần theo dõi: đăng nhập thất bại liên tục, thay đổi quyền đột ngột, truy cập dữ liệu bất thường ngoài giờ làm việc.
+
+Điều này cũng là câu trả lời cho câu hỏi questionnaire "Do you have security monitoring in place?" — và câu trả lời cần kèm bằng chứng, không chỉ "Yes".
+
+<Callout title="Nhớ nhé">
+Security log và app log có thể dùng cùng hạ tầng (Cloudwatch, Logtail) — nhưng security events cần field riêng: `event_type`, `user_id`, `ip`, `result`. Đừng để chúng bị lẫn vào debug log.
+</Callout>
+
+## Lớp 3 — Biết làm gì khi sự cố xảy ra
+
+Bảng câu hỏi bảo mật của mọi khách B2B đều có câu: "Describe your incident response process." Không có kế hoạch thành văn bản → câu trả lời "We handle it case by case" → đỏ cờ với đội IT của họ.
+
+[Breach Response](/concepts/breach-response) bao gồm quy trình cụ thể cho sự cố rò rỉ dữ liệu: ngăn chặn → đánh giá → thông báo (kể cả nghĩa vụ 72 giờ GDPR) → học lại. Đây là extension của quy trình sự cố hệ thống tổng quát mà bạn đã biết từ [concept-incident-response](/concepts/incident-response) — áp dụng cụ thể vào bối cảnh dữ liệu người dùng bị lộ.
+
+Viết một runbook breach ngắn — một trang, ai làm gì trong 1 giờ đầu — là đủ cho early-stage. Có còn hơn không.
+
+## Lớp 4 — Trả lời questionnaire như người đã làm rồi
+
+[Security Questionnaires & SOC 2](/concepts/security-questionnaire) giải thích cấu trúc của bảng câu hỏi và cách SOC 2 liên quan. Nhưng điều quan trọng hơn: questionnaire kiểm tra *sự nhất quán* giữa những gì bạn nói và những gì bạn thật sự làm.
+
+Nếu ba lớp trên đã được thực hiện và ghi chép, bạn đã có nguyên liệu để trả lời 70-80% câu hỏi điển hình. Thành phần chính:
+
+- **Mã hóa:** HTTPS + mã hóa at rest (phần lớn managed DB đã làm sẵn).
+- **Truy cập:** MFA cho tài khoản admin, least privilege.
+- **Monitoring:** Security log với alerts.
+- **Incident response:** Runbook breach ngắn.
+- **GDPR/Privacy:** Privacy Policy phản ánh thực tế, cơ chế xóa tài khoản.
+
+<Callout title="Mẹo">
+Tạo một "Security Overview" document — 1-2 trang, mô tả kiến trúc bảo mật ở mức cao. Gửi kèm questionnaire thay vì chỉ điền bảng. Nó thể hiện bạn đã suy nghĩ hệ thống, không chỉ tick box.
+</Callout>
+
+## Kết nối lại
+
+Bốn lớp này không độc lập — chúng tạo thành một vòng:
+
+- Biết dữ liệu → biết phải log gì → biết phải thông báo gì khi breach → biết phải trả lời gì khi được hỏi.
+
+Startup ở giai đoạn đầu không cần SOC 2 ngay. Nhưng cần bốn lớp này ở mức tối thiểu: đủ để bảo vệ người dùng, đủ để điều tra khi có sự cố, và đủ để không mất deal vì thiếu câu trả lời rõ ràng.
+
+Thực hành ngay với [bài tập trả lời bảng câu hỏi bảo mật →](/exercises/security-for-builders/m5-answer-the-questionnaire)

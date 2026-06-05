@@ -1,0 +1,57 @@
+---
+id: concept-oauth-and-sso
+title: "OAuth & SSO"
+type: "concept"
+aliases: ["oauth and sso", "đăng nhập bằng Google", "oauth2 openid connect", "single sign on explained", "ủy quyền không chia sẻ mật khẩu"]
+tags: [security, authentication, oauth, sso, openid-connect, identity, authorization]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Khi bạn vào khách sạn lần đầu, lễ tân kiểm tra hộ chiếu và đưa cho bạn một thẻ từ. Từ đó trở đi, bạn dùng thẻ từ để vào phòng, lên gym, vào nhà hàng — không cần xuất trình hộ chiếu mỗi lần nữa. Nhà hàng trong khách sạn không cần biết tên bạn là gì, chỉ cần thẻ từ đó là hợp lệ.
+
+OAuth làm đúng điều đó cho phần mềm.
+
+## Là gì
+
+**OAuth 2.0** là giao thức *ủy quyền* (authorization): cho phép một ứng dụng truy cập tài nguyên của bạn ở một dịch vụ khác — *mà không cần biết mật khẩu của bạn*. Khi bạn nhấn "Đăng nhập bằng Google", app của bạn không nhận mật khẩu Google của bạn — nó nhận một *access token* có giới hạn thời gian và phạm vi.
+
+**OpenID Connect (OIDC)** là lớp xác thực (authentication) xây trên OAuth 2.0. OAuth nói "user này được làm gì", OIDC nói thêm "user này là ai". Hầu hết "đăng nhập bằng Google/GitHub" thực ra dùng OIDC.
+
+**SSO (Single Sign-On):** Đăng nhập một lần, dùng được nhiều app. Google Workspace là ví dụ điển hình: đăng nhập vào Gmail xong, vào Google Drive, Google Docs đều không cần đăng nhập lại.
+
+## Ví dụ thật
+
+Bạn build một SaaS và muốn thêm "Đăng nhập bằng GitHub":
+
+1. User nhấn nút → app redirect đến GitHub với `client_id` và `scope` (ví dụ: chỉ cần đọc email).
+2. GitHub hỏi user: "App X muốn đọc email của bạn, đồng ý không?"
+3. User đồng ý → GitHub redirect về app với một `authorization code`.
+4. App server đổi `code` lấy `access token` (và `id_token` nếu dùng OIDC).
+5. App dùng token để lấy thông tin user từ GitHub API — xong.
+
+Mật khẩu GitHub của user không bao giờ chạm vào server của bạn.
+
+**Khi nào solo builder nên dùng OAuth/SSO thay vì tự build auth?**
+
+Gần như luôn luôn. Tự build auth từ đầu = tự quản lý mật khẩu, session, MFA, account recovery. Dùng thư viện như Auth0, Clerk, Supabase Auth hay NextAuth giúp bạn có OAuth, SSO, MFA trong vài giờ.
+
+<Callout title="Góc kỹ thuật">
+OAuth 2.0 là *authorization* framework, không phải authentication. Nếu chỉ dùng OAuth thuần (không có OIDC), bạn biết user được làm gì nhưng không chính xác biết user là ai. OIDC thêm `id_token` (JWT) chứa thông tin danh tính. Khi build "Login with Google", bạn đang dùng OIDC trên nền OAuth 2.0.
+</Callout>
+
+<Callout title="Nhớ nhé">
+OAuth = ủy quyền không chia sẻ mật khẩu. OIDC = OAuth + biết user là ai. SSO = đăng nhập một lần dùng nhiều nơi. Solo builder nên dùng auth service có sẵn thay vì tự build từ đầu.
+</Callout>
+
+## Đọc thêm
+
+- [OAuth 2.0 — oauth.net](https://oauth.net/2/) — Tài liệu chính thức của đặc tả OAuth 2.0; giải thích các grant type, extension, và security specification theo chuẩn công nghiệp.
+- [How OAuth 2.0 Works: A Developer's Guide — Authgear](https://www.authgear.com/post/what-is-oauth-2-0-and-how-it-works/) — Hướng dẫn thực hành từng bước về OAuth 2.0: authorization code flow, access token, refresh token, và sự khác biệt với OIDC.
+- [Single Sign-On Using OAuth2: Developer Guide — WeWeb](https://www.weweb.io/blog/single-sign-on-using-oauth2-developer-guide) — Giải thích cách SSO được xây dựng trên nền OAuth2, kèm ví dụ triển khai thực tế cho developer.
+
+## Tự kiểm tra
+
+1. Khi người dùng nhấn "Đăng nhập bằng Google", app của bạn có nhận được mật khẩu Google của họ không? Giải thích tại sao.
+2. Sự khác biệt giữa OAuth 2.0 và OpenID Connect là gì? Khi nào bạn cần OIDC thay vì OAuth thuần?
+3. Trong luồng OAuth Authorization Code, tại sao cần bước đổi `authorization code` lấy `access token` ở phía server, thay vì dùng thẳng `code` từ redirect URL?

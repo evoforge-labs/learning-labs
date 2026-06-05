@@ -1,0 +1,130 @@
+---
+id: exercise-sec-003
+title: "Tìm và sửa lỗ hổng trong code thật"
+type: "exercise"
+track: security-for-builders
+tags: [security, owasp, sql-injection, xss, csrf, broken-access-control, web-security, code-review]
+estimatedMinutes: 35
+related: [lesson-sec-003, concept-sql-injection, concept-xss, concept-csrf, concept-broken-access-control, concept-owasp-top-10, rubric-security-for-builders]
+status: published
+---
+import Callout from '../../../components/content/Callout.astro';
+
+## Tình huống
+
+Bạn vừa được thuê review codebase của một startup SaaS nhỏ — app quản lý dự án cho team. App có tính năng: đăng nhập, xem/sửa task, bình luận, và xóa tài khoản.
+
+Dưới đây là bốn đoạn code từ codebase thật. Mỗi đoạn có **ít nhất một lỗ hổng bảo mật nghiêm trọng**.
+
+Nhiệm vụ của bạn: xác định loại lỗ hổng, mô tả cách kẻ tấn công khai thác, và viết code đã sửa.
+
+---
+
+## Nhiệm vụ 1 — Tìm lỗ hổng trong endpoint tìm kiếm task
+
+Đây là endpoint tìm kiếm task theo tên:
+
+```python
+@app.get("/api/tasks/search")
+def search_tasks(q: str, db: Session = Depends(get_db)):
+    query = f"SELECT * FROM tasks WHERE title LIKE '%{q}%'"
+    results = db.execute(query).fetchall()
+    return results
+```
+
+**Câu hỏi:**
+
+1. Đây là loại lỗ hổng nào? Giải thích cơ chế khai thác bằng một ví dụ payload cụ thể.
+2. Kẻ tấn công có thể làm gì với lỗ hổng này ngoài việc đọc task? (Gợi ý: nghĩ đến database schema.)
+3. Viết lại endpoint này theo cách an toàn.
+
+<Callout title="Mẹo">
+Thử nghĩ xem nếu `q` là `%' UNION SELECT id, email, password FROM users --` thì điều gì xảy ra.
+</Callout>
+
+---
+
+## Nhiệm vụ 2 — Tìm lỗ hổng trong tính năng bình luận
+
+Đây là code render bình luận trong template HTML (server-side):
+
+```html
+<!-- Template Jinja2 -->
+<div class="comment-list">
+  {% for comment in comments %}
+    <div class="comment">
+      <strong>{{ comment.author }}</strong>
+      <p>{{ comment.body | safe }}</p>
+    </div>
+  {% endfor %}
+</div>
+```
+
+Và đây là API lưu bình luận:
+
+```python
+@app.post("/api/tasks/{task_id}/comments")
+def add_comment(task_id: int, body: str, current_user = Depends(get_current_user)):
+    comment = Comment(task_id=task_id, author=current_user.name, body=body)
+    db.add(comment)
+    db.commit()
+    return {"ok": True}
+```
+
+**Câu hỏi:**
+
+1. Đây là loại lỗ hổng nào (và biến thể cụ thể nào)? Tại sao nó đặc biệt nguy hiểm trong tình huống này?
+2. Mô tả kịch bản tấn công: kẻ tấn công cần làm gì, và điều gì xảy ra với người dùng khác?
+3. Có ít nhất **hai** thứ cần sửa trong đoạn code này. Hãy chỉ ra cả hai và viết lại phần template.
+
+---
+
+## Nhiệm vụ 3 — Tìm lỗ hổng trong endpoint xóa tài khoản và truy cập task
+
+Đây là hai endpoint:
+
+```python
+# Endpoint 1: Xóa tài khoản
+@app.post("/api/account/delete")
+def delete_account(current_user = Depends(get_current_user)):
+    db.delete(current_user)
+    db.commit()
+    return {"deleted": True}
+
+# Endpoint 2: Lấy chi tiết task
+@app.get("/api/tasks/{task_id}")
+def get_task(task_id: int, current_user = Depends(get_current_user)):
+    task = db.query(Task).filter(Task.id == task_id).first()
+    if not task:
+        raise HTTPException(status_code=404)
+    return task
+```
+
+**Câu hỏi:**
+
+1. **Endpoint 1** có lỗ hổng gì? Mô tả kịch bản tấn công: kẻ tấn công cần chuẩn bị gì và tấn công như thế nào mà nạn nhân không biết?
+2. **Endpoint 2** có lỗ hổng gì? Đây là biến thể phổ biến nhất của lỗ hổng #1 OWASP Top 10 — tên kỹ thuật của nó là gì?
+3. Sửa **cả hai** endpoint. Với Endpoint 1, hãy thêm cơ chế phòng chống phù hợp. Với Endpoint 2, đảm bảo kiểm tra quyền đúng cách.
+
+<Callout title="Mẹo">
+Endpoint 1 và Endpoint 2 có hai loại lỗ hổng khác nhau. Đừng nhầm lẫn giữa chúng — hãy phân tích từng cái riêng.
+</Callout>
+
+---
+
+## Tiêu chí đánh giá
+
+Tham khảo [Security for Builders Rubric](/rubrics/security-for-builders-rubric) để tự chấm.
+
+Với bài này, tập trung vào:
+
+| Tiêu chí | Câu hỏi để tự kiểm tra |
+|---|---|
+| Xác định đúng loại lỗ hổng | Bạn có gọi đúng tên (SQLi, Stored XSS, CSRF, IDOR) không? |
+| Mô tả cơ chế khai thác | Payload/kịch bản của bạn có thực tế và cụ thể không? |
+| Code sửa đúng và đủ | Code đã sửa có thực sự loại bỏ lỗ hổng không, hay chỉ làm khó hơn? |
+| Phát hiện đủ lỗ hổng | Nhiệm vụ 3 có hai lỗ hổng khác nhau — bạn có nhận ra cả hai không? |
+
+<Callout title="Nhớ nhé">
+Mục tiêu không phải là tìm ra đáp án "đúng duy nhất" — mà là luyện phản xạ đọc code và ngay lập tức nhận ra dấu hiệu nguy hiểm: ghép chuỗi SQL, `| safe` trong template, POST không có token, query không lọc theo owner.
+</Callout>

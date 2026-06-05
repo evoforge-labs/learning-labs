@@ -1,0 +1,125 @@
+---
+id: exercise-sec-004
+title: "Lên kế hoạch bảo vệ dữ liệu cho app thật"
+type: "exercise"
+track: security-for-builders
+tags: [security, encryption, pii, data-minimization, dependencies, data-protection, compliance]
+estimatedMinutes: 30
+related: [lesson-sec-004, concept-encryption-at-rest-in-transit, concept-pii-and-data-protection, concept-data-minimization, concept-dependency-vulnerabilities, concept-config-and-secrets, rubric-security-for-builders]
+status: published
+---
+import Callout from '../../../components/content/Callout.astro';
+
+## Tình huống
+
+Bạn vừa nhận review từ một khách hàng B2B tiềm năng. Họ gửi bảng câu hỏi bảo mật với dòng đầu tiên: *"Bạn xử lý và bảo vệ dữ liệu cá nhân người dùng thế nào?"*
+
+App của bạn là **nền tảng quản lý lịch hẹn cho phòng khám nhỏ**. Schema hiện tại của bảng `appointments`:
+
+```
+appointments:
+  - id
+  - patient_name
+  - patient_email
+  - patient_phone
+  - patient_date_of_birth
+  - patient_gender
+  - patient_occupation       ← field mới thêm tuần trước
+  - reason_for_visit         ← ghi chú từ bệnh nhân
+  - doctor_id
+  - appointment_time
+  - status
+  - notes_internal           ← ghi chú nội bộ của bác sĩ
+  - created_at
+  - utm_source               ← từ marketing tracking
+  - utm_campaign             ← từ marketing tracking
+```
+
+Stack: Node.js, Postgres trên Railway, frontend trên Vercel, `npm` với 87 direct dependencies.
+
+---
+
+## Nhiệm vụ 1 — Phân loại PII và quyết định mã hóa
+
+Dựa vào schema trên, thực hiện ba bước:
+
+**Bước 1 — Phân loại từng field:**
+
+Với mỗi field, gán một trong ba nhãn:
+- **PII thông thường** — có thể nhận dạng cá nhân nhưng không đặc biệt nhạy cảm
+- **PII nhạy cảm** — thông tin y tế, tài chính, hoặc có thể gây hại khi lộ
+- **Không phải PII** — không liên quan đến cá nhân cụ thể
+
+**Bước 2 — Xác định lớp bảo vệ:**
+
+Với mỗi nhóm PII, trả lời:
+- Lưu ở đâu? Ai (service/role) cần đọc?
+- Cần mã hóa at-rest không? Nếu có, dùng cơ chế nào (platform-level hay application-level)?
+- Traffic chứa field này có đi qua HTTPS không? Kiểm tra thế nào?
+
+**Bước 3 — Một rủi ro cụ thể:**
+
+Nếu `reason_for_visit` và `notes_internal` bị leak ra ngoài (breach), hậu quả thực tế là gì? Điều đó ảnh hưởng thế nào đến quyết định thiết kế của bạn?
+
+<Callout title="Mẹo">
+Với dữ liệu y tế như `reason_for_visit` và `notes_internal`, hãy nghĩ đến cả khía cạnh pháp lý (GDPR, HIPAA nếu có user Mỹ) lẫn thiệt hại thực tế cho bệnh nhân. Cả hai đều quan trọng.
+</Callout>
+
+---
+
+## Nhiệm vụ 2 — Áp dụng Data Minimization
+
+Nhìn lại schema, xác định ít nhất **hai field** bạn sẽ xóa hoặc không thu thập nữa.
+
+Với mỗi field bạn chọn xóa, trả lời:
+1. Field này đang phục vụ mục đích gì? (Nếu không có mục đích rõ ràng — đó là lý do xóa.)
+2. Xóa field này ảnh hưởng gì đến chức năng hiện tại? Có feature nào phụ thuộc vào nó không?
+3. Migration plan thực tế là gì? (Xóa column trong database, cập nhật code, xóa data cũ.)
+
+Sau khi xác định field cần xóa, viết câu trả lời cho khách hàng B2B: *"Chúng tôi chỉ thu thập dữ liệu cần thiết cho..."* — cụ thể hóa với từng loại PII trong schema đã được làm sạch.
+
+<Callout title="Mẹo">
+`utm_source` và `utm_campaign` trong bảng `appointments` là dấu hiệu rõ ràng của data minimization vấn đề — chúng thuộc về analytics, không phải lịch hẹn. Nhưng đừng dừng ở đó.
+</Callout>
+
+---
+
+## Nhiệm vụ 3 — Kiểm tra dependency
+
+Chạy lệnh sau trong project của bạn (hoặc một project Node.js thật bạn đang có):
+
+```bash
+npm audit
+```
+
+Sau đó trả lời:
+
+1. Có bao nhiêu vulnerabilities? Phân loại theo severity (critical / high / medium / low).
+2. Chọn **một** vulnerability high hoặc critical trong output. Đọc advisory của nó:
+   - Lỗ hổng cho phép kẻ tấn công làm gì?
+   - Version nào bị ảnh hưởng, version nào đã fix?
+   - App của bạn có thực sự expose code path dẫn đến lỗ hổng này không?
+3. Lên kế hoạch fix: bạn sẽ `npm audit fix`, update thủ công, hay quyết định accept risk? Lý do?
+
+Nếu bạn chưa có project thật, chạy `npx create-react-app audit-test && cd audit-test && npm audit` để có output thực tế để phân tích.
+
+<Callout title="Nhớ nhé">
+`npm audit fix` không phải lúc nào cũng an toàn — nó có thể update major version và break API. Với production app, đọc changelog trước khi chạy `npm audit fix --force`. Tốt hơn là fix từng package thủ công sau khi đọc kỹ.
+</Callout>
+
+---
+
+## Tiêu chí đánh giá
+
+Tham khảo [Security & Privacy Rubric](/rubrics/security-for-builders-rubric) để tự chấm. Với bài tập này, tập trung vào tiêu chí thứ tư:
+
+| Tiêu chí | Câu hỏi để tự kiểm tra |
+|---|---|
+| Phân loại PII chính xác | Bạn có phân biệt được PII thông thường vs. PII nhạy cảm không? Có nhìn ra indirect PII không? |
+| Quyết định mã hóa có căn cứ | Quyết định của bạn dựa trên mức độ nhạy cảm của dữ liệu, hay chỉ là "mã hóa hết cho chắc"? |
+| Data minimization thực tế | Bạn có trả lời được "xóa field này ảnh hưởng gì" cụ thể không, hay chỉ nói chung chung? |
+| Phân tích vulnerability có chiều sâu | Bạn có đọc advisory và xác định được app của mình có thực sự bị ảnh hưởng không? |
+
+<Callout title="Nhớ nhé">
+Mục tiêu không phải là "bảo mật tối đa" — mà là "bảo mật phù hợp với rủi ro thực tế của bạn." Một phòng khám nhỏ cần bảo vệ dữ liệu y tế nghiêm ngặt hơn một app to-do list. Quyết định của bạn phải phản ánh điều đó.
+</Callout>

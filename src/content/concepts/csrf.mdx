@@ -1,0 +1,71 @@
+---
+id: concept-csrf
+title: "Cross-Site Request Forgery (CSRF)"
+type: "concept"
+aliases: ["CSRF", "cross-site request forgery", "tấn công CSRF", "giả mạo yêu cầu chéo trang", "CSRF token phòng chống", "SameSite cookie CSRF"]
+tags: [security, owasp, csrf, web-security, cookies, authentication]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Bạn đang ngồi trong ngân hàng, đã xác thực danh tính xong. Tôi đưa bạn một tờ giấy và nói "ký vào đây". Bạn không đọc kỹ, ký. Tờ giấy đó là lệnh chuyển tiền từ tài khoản của bạn sang tài khoản của tôi — và ngân hàng thấy chữ ký hợp lệ, thực hiện luôn.
+
+CSRF hoạt động y như vậy: **kẻ tấn công lừa trình duyệt của nạn nhân gửi request đến server mà nạn nhân đang đăng nhập**, và server không phân biệt được đó là request thật hay bị lừa.
+
+## Là gì
+
+**CSRF (Cross-Site Request Forgery)** xảy ra khi một trang web độc hại tạo ra request đến một trang web khác mà nạn nhân đang đăng nhập. Vì trình duyệt tự động gửi kèm cookie của trang web đích, server nhận được request có đầy đủ thông tin xác thực và thực thi lệnh — dù người dùng không hề chủ động thực hiện.
+
+CSRF không đánh cắp dữ liệu — nó *ra lệnh* thay mặt người dùng.
+
+## Ví dụ thật
+
+Bạn đang đăng nhập vào `bank.com`. Sau đó bạn mở một email có chứa link ảnh:
+
+```html
+<!-- Trang web độc hại nhúng ảnh này -->
+<img src="https://bank.com/transfer?to=attacker&amount=5000000" />
+```
+
+Trình duyệt cố tải "ảnh" đó — thực ra là gửi GET request đến `bank.com` kèm cookie phiên đăng nhập của bạn. Nếu `bank.com` xử lý chuyển tiền qua GET request mà không kiểm tra thêm, giao dịch được thực hiện.
+
+**Cách phòng — CSRF Token:**
+
+Server tạo ra một token ngẫu nhiên, bí mật, gắn vào form:
+
+```html
+<form method="POST" action="/transfer">
+  <input type="hidden" name="csrf_token" value="a9f3d2e1b7c8..." />
+  <!-- các trường khác -->
+</form>
+```
+
+Khi submit, server kiểm tra token. Trang web độc hại không thể biết token này (do same-origin policy), nên không thể giả mạo request hợp lệ.
+
+**Lớp phòng thứ hai — SameSite Cookie:**
+
+```
+Set-Cookie: session=abc123; SameSite=Lax; Secure; HttpOnly
+```
+
+Với `SameSite=Lax`, trình duyệt không gửi cookie kèm theo cross-site request (trừ navigation top-level). Đây là lớp bảo vệ thêm, không thay thế CSRF token.
+
+<Callout title="Cẩn thận">
+CSRF chỉ hiệu quả với các **state-changing action** (chuyển tiền, đổi email, xóa tài khoản). Nếu endpoint GET của bạn thực hiện hành động quan trọng — đó là lỗi thiết kế cần sửa ngay, bất kể CSRF.
+</Callout>
+
+<Callout title="Nhớ nhé">
+Phòng CSRF bằng hai lớp: CSRF token trên mọi form state-changing, và `SameSite=Lax` (hoặc `Strict`) cho session cookie. Framework hiện đại (Django, Rails, Laravel...) thường bật CSRF protection sẵn — đừng tắt nó đi.
+</Callout>
+
+## Đọc thêm
+
+- [CSRF — OWASP Foundation](https://owasp.org/www-community/attacks/csrf) — Giải thích cơ chế CSRF, điều kiện tấn công, và các kịch bản thực tế; nguồn chính thống từ OWASP.
+- [CSRF Prevention Cheat Sheet — OWASP](https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html) — Hướng dẫn phòng chống đầy đủ: synchronizer token, double-submit cookie, SameSite; kèm code mẫu.
+- [Cross-Site Request Forgery (CSRF) — MDN Web Docs](https://developer.mozilla.org/en-US/docs/Web/Security/Attacks/CSRF) — Tài liệu MDN về CSRF từ góc độ trình duyệt, giải thích tại sao cookie tự động gửi và cách SameSite thay đổi hành vi đó.
+
+## Tự kiểm tra
+
+1. Tại sao trình duyệt lại tự động gửi cookie khi có cross-site request? Đây là tính năng hay lỗi của trình duyệt?
+2. CSRF token và SameSite cookie đều phòng CSRF — nhưng tại sao cần cả hai thay vì chỉ một?
+3. Bạn có một REST API dùng JWT trong Authorization header (không dùng cookie). API đó có cần CSRF protection không? Tại sao?

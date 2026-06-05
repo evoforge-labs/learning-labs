@@ -1,0 +1,67 @@
+---
+id: concept-dependency-vulnerabilities
+title: "Dependency & Supply-Chain Vulnerabilities"
+type: "concept"
+aliases: ["dependency vulnerabilities supply chain", "lỗ hổng phụ thuộc thư viện", "npm audit SCA kiểm tra dependency", "supply chain attack bảo mật chuỗi cung ứng", "lockfile dependency security cập nhật thư viện"]
+tags: [security, dependencies, supply-chain, npm, sca, open-source]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Bạn xây nhà, nhưng 90% vật liệu là mua từ nhà cung cấp khác. Nếu một lô gạch bị nhiễm hóa chất độc, ngôi nhà của bạn cũng độc — dù bạn xây hoàn toàn đúng kỹ thuật. Bạn không kiểm soát được chất lượng bên trong từng viên gạch.
+
+Code của bạn cũng vậy. Một dự án Node.js trung bình có hàng trăm `node_modules`. Bạn viết vài nghìn dòng — nhưng đang chạy hàng triệu dòng code của người khác.
+
+## Là gì
+
+**Dependency vulnerability** là lỗ hổng bảo mật nằm trong một thư viện mà code của bạn phụ thuộc vào — trực tiếp (bạn `npm install`) hoặc gián tiếp (thư viện A dùng thư viện B, B có lỗ hổng).
+
+**Supply-chain attack** là khi kẻ tấn công không nhắm vào app của bạn trực tiếp, mà nhắm vào một thư viện bạn dùng — compromise maintainer account, publish phiên bản độc hại, và tất cả người dùng thư viện đó bị ảnh hưởng.
+
+Ví dụ nổi tiếng: sự kiện `event-stream` năm 2018 — một package npm phổ biến bị compromise để đánh cắp Bitcoin từ một ví crypto cụ thể. Hàng triệu project bị ảnh hưởng mà không hay biết.
+
+## Ví dụ thật
+
+App của bạn dùng `imagemagick-node` để resize ảnh upload. Version 2.1.0 của package đó có lỗ hổng cho phép Remote Code Execution — nghĩa là ai đó upload file ảnh đặc biệt có thể chạy code tùy ý trên server của bạn. Bạn không biết điều này vì bạn không viết code đó.
+
+Điều đáng sợ: lỗ hổng này đã có CVE (mã định danh lỗ hổng công khai) được đăng ký từ 6 tháng trước. Ai cũng biết — trừ bạn, vì bạn chưa bao giờ chạy `npm audit`.
+
+**Bốn thực hành cần làm:**
+
+**1. Chạy audit định kỳ**
+```bash
+npm audit
+# hoặc với pip:
+pip audit
+```
+Không cần fix mọi thứ ngay — nhưng cần biết mình đang có gì.
+
+**2. Dùng lockfile và commit nó**
+`package-lock.json` hoặc `yarn.lock` ghi lại exact version của mọi dependency. Không có lockfile, mỗi lần `npm install` có thể kéo version mới — version có thể chứa lỗ hổng mới.
+
+**3. Cập nhật dependency thường xuyên**
+Không phải update tất cả cùng lúc. Mỗi sprint, xem `npm outdated`, cập nhật patch và minor version của những package quan trọng. Đừng để dependency cũ 2 năm.
+
+**4. SCA trong CI/CD**
+SCA (Software Composition Analysis) là quét tự động dependency mỗi khi bạn push code. Các tool miễn phí: Dependabot (GitHub tích hợp sẵn), Snyk (có free tier), OWASP Dependency-Check.
+
+<Callout title="Cẩn thận">
+Cẩn thận với **typosquatting**: package tên gần giống package nổi tiếng — `lodahs` thay vì `lodash`, `cros-env` thay vì `cross-env`. Kẻ tấn công publish package tên gần giống, hy vọng bạn gõ nhầm. Luôn kiểm tra chính xác tên package trước khi install, đặc biệt khi copy từ tutorial.
+</Callout>
+
+<Callout title="Nhớ nhé">
+Bạn chịu trách nhiệm về mọi code chạy trong app của mình — kể cả code của thư viện. Chạy `npm audit` ngay hôm nay, bật Dependabot trên GitHub, và commit lockfile. Ba việc này mất 10 phút nhưng đóng một lớp rủi ro lớn.
+</Callout>
+
+## Đọc thêm
+
+- [Open Source Security — Snyk](https://snyk.io/learn/open-source-security/) — Giải thích toàn diện về rủi ro bảo mật trong open source dependency: CVE, CVSS score, cách đọc vulnerability report, và cách patch.
+- [OWASP Dependency-Check](https://owasp.org/www-project-dependency-check/) — Tool SCA mã nguồn mở của OWASP, tích hợp được vào CI/CD; phát hiện CVE trong dependency Java, .NET, JavaScript, Python, và nhiều ngôn ngữ khác.
+- [Software Supply Chain Security Vulnerabilities — Aikido Security](https://www.aikido.dev/blog/software-supply-chain-security-vulnerabilities) — Phân tích chín loại lỗ hổng supply chain phổ biến: typosquatting, dependency confusion, malicious maintainer takeover, v.v.; kèm chiến lược phòng thủ cụ thể.
+- [Defending Against npm Supply Chain Attacks — Splunk](https://www.splunk.com/en_us/blog/security/npm-supply-chain-attack-detection-analysis.html) — Hướng dẫn phát hiện và phân tích supply chain attack trong npm ecosystem; bao gồm cả cách dùng lockfile và audit scripts để tự bảo vệ.
+
+## Tự kiểm tra
+
+1. Sự khác biệt giữa **dependency vulnerability** và **supply-chain attack** là gì? Cho ví dụ mỗi loại.
+2. Tại sao commit `package-lock.json` lại quan trọng cho bảo mật — không chỉ cho reproducible builds?
+3. `npm audit` báo 3 vulnerabilities: 1 critical, 1 high, 1 low. Bạn nên ưu tiên fix theo thứ tự nào và dựa vào tiêu chí gì?

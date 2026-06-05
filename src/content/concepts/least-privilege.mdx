@@ -1,0 +1,49 @@
+---
+id: concept-least-privilege
+title: "Principle of Least Privilege"
+type: "concept"
+aliases: ["least privilege", "nguyên tắc đặc quyền tối thiểu", "principle of least privilege security", "cấp quyền tối thiểu đủ làm việc", "PoLP security", "minimum necessary access"]
+tags: [security, least-privilege, access-control, api-keys, permissions, security-for-builders]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Khách sạn không giao cho bạn chùm chìa khóa master mở được mọi phòng chỉ vì bạn đặt phòng 301. Bạn nhận đúng một thẻ từ — chỉ mở được phòng 301. Sáng mai trả xong, thẻ đó hết hiệu lực.
+
+Đó là least privilege: **chỉ cấp quyền tối thiểu vừa đủ để làm đúng việc cần làm, không thêm một quyền nào thừa.**
+
+## Là gì
+
+**Principle of Least Privilege (PoLP)** là nguyên tắc mỗi thực thể — user, service, process, API key — chỉ nhận được mức quyền truy cập thấp nhất cần thiết để hoàn thành nhiệm vụ của nó.
+
+Nghe đơn giản. Nhưng trong thực tế, developer thường làm ngược lại vì tiện: tạo API key full quyền, dùng user `root` cho cronjob, assign role `admin` cho service "vì nó cần đọc một bảng thôi".
+
+## Ví dụ thật
+
+**API key bị lộ:** App của bạn đọc danh sách subscriber từ Mailchimp để hiển thị thống kê. Bạn tạo key full access — đọc, ghi, xóa, quản lý billing. Key lọt vào GitHub qua file `.env`: kẻ tấn công xóa toàn bộ list, thay template, truy cập billing.
+
+Đúng ra: tạo key chỉ với quyền `read audience`. Key lộ — thiệt hại bằng không.
+
+**Database role:** Microservice order chỉ cần đọc `products` và ghi `orders`. Nếu dùng `SUPERUSER`, khi service bị compromise, kẻ tấn công có thể drop database, thực thi lệnh shell.
+
+Đúng ra: tạo role `app_order_service` chỉ với `SELECT` trên `products` và `INSERT, UPDATE` trên `orders`.
+
+<Callout title="Cẩn thận">
+Privilege creep — quyền tích lũy dần theo thời gian mà không ai dọn. Tháng 1 bạn cấp quyền admin cho developer A để debug production. Tháng 6 A nghỉ việc nhưng account vẫn còn nguyên. Audit quyền định kỳ — ít nhất mỗi quý.
+</Callout>
+
+<Callout title="Nhớ nhé">
+Mỗi khi tạo API key, service account, hay database role: hỏi "quyền tối thiểu để làm đúng việc này là gì?" Không phải "quyền nào tiện nhất". Nếu key bị lộ hôm nay, thiệt hại có thể kiểm soát được không?
+</Callout>
+
+## Đọc thêm
+
+- [The Principle of Least Privilege Explained — Splunk](https://www.splunk.com/en_us/blog/learn/least-privilege-principle.html) — Giải thích rõ PoLP kèm ví dụ thực tế về privilege creep và cách implement; phù hợp cho developer mới làm quen với access control.
+- [What is Least Privilege? — Cloud Security Alliance](https://cloudsecurityalliance.org/blog/2022/06/08/what-is-the-principle-of-least-privilege-and-why-do-you-need-it) — Góc nhìn cloud-first về PoLP, giải thích tại sao nguyên tắc này quan trọng hơn bao giờ hết trong môi trường microservices và cloud.
+- [What is Least Privilege? — CyberArk](https://www.cyberark.com/what-is/least-privilege/) — Tóm tắt ngắn gọn, dễ share với team; bao gồm ví dụ về just-in-time access và lý do PoLP là nền tảng của Zero Trust.
+
+## Tự kiểm tra
+
+1. Bạn có một Lambda function chỉ cần đọc file từ một S3 bucket cụ thể. Hãy mô tả IAM policy tối thiểu bạn sẽ tạo (không cần viết JSON — mô tả bằng lời).
+2. "Privilege creep" là gì? Tại sao nó nguy hiểm hơn một lần cấp quyền sai ngay từ đầu?
+3. Bạn đang tích hợp Stripe API. Tại sao không nên dùng Restricted Key thay vì Secret Key duy nhất cho toàn bộ app?

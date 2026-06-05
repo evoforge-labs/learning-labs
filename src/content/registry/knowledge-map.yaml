@@ -1563,3 +1563,101 @@ edges:
   - source: rubric-ai-product-management
     target: exercise-aipm-006
     rel: evaluates
+
+  # ============================================================
+  # Security & Privacy for Builders (sec) — progression + drills
+  # ============================================================
+  - source: concept-threat-modeling
+    target: concept-least-privilege
+    rel: leads-to
+  - source: concept-cia-triad
+    target: concept-defense-in-depth
+    rel: supports
+  - source: concept-least-privilege
+    target: concept-authentication-vs-authorization
+    rel: leads-to
+  - source: concept-authentication-vs-authorization
+    target: concept-password-hashing
+    rel: leads-to
+  - source: concept-password-hashing
+    target: concept-mfa
+    rel: supports
+  - source: concept-sessions-vs-jwt
+    target: concept-broken-access-control
+    rel: leads-to
+  - source: concept-authentication-vs-authorization
+    target: concept-broken-access-control
+    rel: supports
+  - source: concept-owasp-top-10
+    target: concept-sql-injection
+    rel: leads-to
+  - source: concept-owasp-top-10
+    target: concept-broken-access-control
+    rel: leads-to
+  - source: concept-defense-in-depth
+    target: concept-owasp-top-10
+    rel: leads-to
+  - source: concept-owasp-top-10
+    target: concept-encryption-at-rest-in-transit
+    rel: leads-to
+  - source: concept-pii-and-data-protection
+    target: concept-data-minimization
+    rel: leads-to
+  - source: concept-config-and-secrets
+    target: concept-encryption-at-rest-in-transit
+    rel: supports
+  - source: concept-pii-and-data-protection
+    target: concept-gdpr-basics
+    rel: leads-to
+  - source: concept-data-minimization
+    target: concept-gdpr-basics
+    rel: supports
+  - source: concept-gdpr-basics
+    target: concept-security-questionnaire
+    rel: leads-to
+  - source: concept-security-logging-monitoring
+    target: concept-breach-response
+    rel: leads-to
+  - source: concept-incident-response
+    target: concept-breach-response
+    rel: supports
+  - source: concept-observability
+    target: concept-security-logging-monitoring
+    rel: supports
+  - source: concept-prompt-injection
+    target: concept-owasp-top-10
+    rel: related
+  # Drills: which concept each sec exercise trains
+  - source: concept-threat-modeling
+    target: exercise-sec-001
+    rel: trains
+  - source: concept-least-privilege
+    target: exercise-sec-001
+    rel: trains
+  - source: concept-password-hashing
+    target: exercise-sec-002
+    rel: trains
+  - source: concept-mfa
+    target: exercise-sec-002
+    rel: trains
+  - source: concept-sql-injection
+    target: exercise-sec-003
+    rel: trains
+  - source: concept-broken-access-control
+    target: exercise-sec-003
+    rel: trains
+  - source: concept-pii-and-data-protection
+    target: exercise-sec-004
+    rel: trains
+  - source: concept-data-minimization
+    target: exercise-sec-004
+    rel: trains
+  - source: concept-security-questionnaire
+    target: exercise-sec-005
+    rel: trains
+  - source: concept-breach-response
+    target: exercise-sec-005
+    rel: trains
+  - source: rubric-security-for-builders
+    target: exercise-sec-006
+    rel: evaluates

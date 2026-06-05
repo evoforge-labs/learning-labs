@@ -1,0 +1,54 @@
+---
+id: concept-authentication-vs-authorization
+title: "Authentication vs Authorization"
+type: "concept"
+aliases: ["authn vs authz", "xác thực vs phân quyền", "authentication authorization difference", "bạn là ai vs bạn được làm gì"]
+tags: [security, authentication, authorization, identity, access-control]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Hộ chiếu và vé máy bay là hai thứ khác nhau. Hộ chiếu nói *bạn là ai* — cơ quan xuất nhập cảnh xác nhận danh tính. Vé máy bay nói *bạn được ngồi ở đâu* — hạng thương gia hay hạng phổ thông. Bạn có thể có hộ chiếu mà không có vé. Bạn có thể có vé mà chưa qua cửa kiểm tra hộ chiếu. Hai thứ này độc lập nhau.
+
+Đó chính là authn vs authz trong phần mềm.
+
+## Là gì
+
+**Authentication (Xác thực / authn):** Hệ thống xác nhận *bạn là ai*. Bạn cung cấp bằng chứng danh tính — mật khẩu, token, vân tay — và hệ thống nói "OK, mình biết đây là Minh rồi."
+
+**Authorization (Phân quyền / authz):** Sau khi đã biết bạn là ai, hệ thống quyết định *bạn được làm gì*. Minh có quyền đọc file này không? Được xóa bản ghi đó không? Vào trang admin không?
+
+Thứ tự luôn là: authn trước, authz sau. Không biết bạn là ai thì không thể quyết định bạn được làm gì.
+
+## Ví dụ thật
+
+Một SaaS quản lý dự án có hai role: `member` và `admin`.
+
+Khi bạn đăng nhập bằng email + mật khẩu → đó là **authentication**: hệ thống xác nhận danh tính bạn.
+
+Sau khi đăng nhập, bạn thử xóa workspace của người khác → hệ thống kiểm tra role của bạn. Bạn là `member`, không phải `admin` → từ chối → đó là **authorization**.
+
+Hai lỗi hay gặp nhất:
+
+- **Chỉ kiểm tra authn, bỏ qua authz:** User đăng nhập được rồi, nhưng mọi endpoint đều mở. Ai cũng đọc được dữ liệu của ai.
+- **Authz không nhất quán:** Frontend ẩn nút "Xóa" với member, nhưng API endpoint `/delete` không kiểm tra role. Attacker gọi thẳng API.
+
+<Callout title="Cẩn thận">
+Ẩn UI không phải phân quyền. Nút bị ẩn trên giao diện nhưng API endpoint vẫn không được bảo vệ là lỗ hổng rất phổ biến. Luôn kiểm tra quyền ở phía server, không phải chỉ ở phía client.
+</Callout>
+
+<Callout title="Nhớ nhé">
+Authentication = bạn là ai. Authorization = bạn được làm gì. Authn trước, authz sau — và luôn enforce authz ở phía server.
+</Callout>
+
+## Đọc thêm
+
+- [Authentication vs. authorization — Microsoft Learn](https://learn.microsoft.com/en-us/entra/identity-platform/authentication-vs-authorization) — Giải thích rõ ràng sự khác biệt giữa authn và authz trong ngữ cảnh xây dựng ứng dụng, kèm ví dụ về OAuth 2.0 và OpenID Connect.
+- [Authentication Vs Authorization — GeeksforGeeks](https://www.geeksforgeeks.org/computer-networks/difference-between-authentication-and-authorization/) — So sánh hai khái niệm theo dạng bảng và ví dụ thực tế, dễ tra cứu nhanh.
+- [Authentication vs Authorization Explained Simply — DEV Community](https://dev.to/njokimwai/authentication-vs-authorization-explained-in-the-simplest-way-possible-11n) — Bài viết ngắn, dùng analogy dễ hiểu, phù hợp để đọc lần đầu.
+
+## Tự kiểm tra
+
+1. Một user đã đăng nhập thành công nhưng bị từ chối khi truy cập trang `/admin`. Đây là lỗi ở bước authentication hay authorization? Tại sao?
+2. Tại sao ẩn một nút trên giao diện người dùng *không* được coi là biện pháp phân quyền hợp lệ?
+3. Nếu một hệ thống chỉ có authentication mà không có authorization, điều gì có thể xảy ra?
