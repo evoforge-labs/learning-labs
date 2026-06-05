@@ -1,0 +1,56 @@
+---
+id: concept-encryption-at-rest-in-transit
+title: "Encryption at Rest & in Transit"
+type: "concept"
+aliases: ["encryption at rest in transit", "mã hóa dữ liệu lưu trữ và truyền tải", "TLS HTTPS mã hóa", "két sắt và xe bọc thép dữ liệu", "at-rest in-transit encryption bảo vệ dữ liệu"]
+tags: [security, encryption, tls, https, data-protection, privacy]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Hãy tưởng tượng bạn có một tờ giấy ghi số tài khoản ngân hàng. Bạn cần bảo vệ nó theo hai cách hoàn toàn khác nhau: khi nó nằm trong két sắt ở nhà, và khi bạn nhờ xe tải chở nó từ nhà đến ngân hàng. Két sắt bảo vệ khi nghỉ ngơi. Xe bọc thép bảo vệ trên đường đi.
+
+Dữ liệu của người dùng trong app của bạn cũng vậy.
+
+## Là gì
+
+**Encryption at rest** (mã hóa lúc lưu trữ) — dữ liệu được mã hóa khi đang nằm trên đĩa cứng, database, hoặc object storage. Nếu ai đó lấy được ổ cứng, họ chỉ thấy rác.
+
+**Encryption in transit** (mã hóa lúc truyền tải) — dữ liệu được mã hóa khi di chuyển qua mạng, giữa browser và server, giữa các service. Giao thức phổ biến nhất là **TLS** (Transport Layer Security) — thứ biến `http://` thành `https://`.
+
+Hai loại này bảo vệ ở hai thời điểm khác nhau. Thiếu một trong hai là thiếu.
+
+## Ví dụ thật
+
+App của bạn lưu số điện thoại và địa chỉ người dùng vào Postgres. Bạn bật HTTPS cho website — tốt, dữ liệu truyền từ browser đến server đã được bảo vệ. Nhưng nếu database volume không được mã hóa, và server bị breach, kẻ tấn công dump được file database ra ngoài — họ đọc mọi thứ mà không cần crack gì cả.
+
+Ngược lại, nếu bạn mã hóa database nhưng dùng `http://` plain text, một kẻ ngồi cùng wifi quán cà phê có thể sniff dữ liệu người dùng đang submit form — mà form đó bao gồm mật khẩu họ vừa nhập.
+
+Cả hai lớp đều cần thiết.
+
+**Thực tế với builder:**
+
+- **In transit:** Hầu hết platform hiện đại (Vercel, Railway, Fly.io, Render) tự động bật HTTPS và cấp SSL certificate miễn phí. Bạn không cần làm gì ngoài việc đảm bảo redirect `http` sang `https`. Kiểm tra: truy cập `http://yourdomain.com` xem có redirect không.
+- **At rest:** Các managed database (Supabase, PlanetScale, Railway Postgres, AWS RDS) mặc định mã hóa storage. Kiểm tra trong dashboard — thường có dòng "encryption at rest: enabled". Nếu bạn tự quản lý server, hãy bật full-disk encryption (AWS EBS encryption, hoặc dm-crypt trên Linux).
+- **Internal traffic:** Nếu bạn có microservices hoặc gọi API nội bộ giữa các service, TLS vẫn cần thiết — không phải chỉ cho traffic ra ngoài.
+
+<Callout title="Cẩn thận">
+HTTPS bảo vệ dữ liệu **trên đường truyền** — không phải sau khi đến server. Nếu bạn nhận password qua HTTPS rồi lưu plain text vào database, HTTPS không giúp ích gì khi database bị breach. Mã hóa in-transit và xử lý đúng dữ liệu at-rest là hai việc độc lập, đều phải làm.
+</Callout>
+
+<Callout title="Nhớ nhé">
+HTTPS là điều kiện tối thiểu — mọi app production đều phải có. Encryption at rest là lớp thứ hai: kiểm tra managed database của bạn đã bật chưa, nếu chưa thì bật ngay. Két sắt + xe bọc thép, không phải một trong hai.
+</Callout>
+
+## Đọc thêm
+
+- [Transport Layer Security (TLS) — MDN Web Docs](https://developer.mozilla.org/en-US/docs/Web/Security/Defenses/Transport_Layer_Security) — Giải thích TLS là gì, hoạt động thế nào, và tại sao HTTPS là nền tảng bảo mật web; tài liệu chính thức của Mozilla, chuẩn xác và trung lập.
+- [Cryptographic Storage Cheat Sheet — OWASP](https://cheatsheetseries.owasp.org/cheatsheets/Cryptographic_Storage_Cheat_Sheet.html) — Hướng dẫn thực hành của OWASP về mã hóa dữ liệu lưu trữ: chọn thuật toán nào, quản lý key ra sao, tránh các lỗi phổ biến.
+- [Encryption at Rest vs. Encryption in Transit — Censinet](https://censinet.com/perspectives/encryption-at-rest-vs-encryption-in-transit-differences) — So sánh rõ ràng hai loại mã hóa, giải thích mối đe dọa mỗi loại ngăn chặn, và checklist triển khai thực tế.
+- [Encrypting Data at Rest and in Transit — AWS Whitepaper](https://docs.aws.amazon.com/whitepapers/latest/logical-separation/encrypting-data-at-rest-and--in-transit.html) — Tài liệu AWS giải thích chiến lược mã hóa toàn diện cả hai lớp; hữu ích kể cả khi bạn không dùng AWS vì trình bày rõ nguyên lý.
+
+## Tự kiểm tra
+
+1. App của bạn dùng HTTPS nhưng database không mã hóa at rest. Tình huống nào kẻ tấn công vẫn đọc được dữ liệu người dùng? Tình huống nào HTTPS giúp được?
+2. Bạn đang dùng Supabase và Vercel. Cần kiểm tra gì để xác nhận cả hai lớp mã hóa đang hoạt động?
+3. Traffic nội bộ giữa hai microservice trong cùng VPC có cần TLS không? Tại sao hoặc tại sao không?

@@ -1,0 +1,53 @@
+---
+id: lesson-sec-001
+title: "Trước khi viết code, nghĩ như kẻ tấn công"
+type: "lesson"
+track: security-for-builders
+module: foundations
+level: beginner
+tags: [security, threat-modeling, cia-triad, least-privilege, defense-in-depth, security-for-builders, solo-builder]
+prerequisites: [concept-threat-modeling, concept-cia-triad, concept-least-privilege, concept-defense-in-depth]
+related: [exercise-sec-001, rubric-security-for-builders]
+status: published
+---
+import Callout from '../../../components/content/Callout.astro';
+
+Hầu hết builder nghĩ về bảo mật như thêm tính năng: "sau khi xong MVP mình sẽ lo bảo mật". Vấn đề là khi đó, kiến trúc đã cứng, thói quen đã hình thành, và vá từng lỗ một tốn gấp mười lần so với nghĩ đúng từ đầu.
+
+Lesson này xâu chuỗi bốn nền tảng của Module 1 thành một tư duy bạn chạy *trước khi thiết kế*, không phải sau khi ship.
+
+## Bắt đầu từ kẻ tấn công, không phải từ tính năng
+
+Khi bạn ngồi xuống thiết kế một tính năng mới, câu hỏi thường là: *"Mình build cái này thế nào?"*
+
+Câu hỏi của kẻ tấn công là: *"Tính năng này để lộ cái gì? Mình lợi dụng được gì từ đó?"*
+
+[Threat modeling](/concepts/threat-modeling) giúp bạn đặt câu hỏi thứ hai trước khi viết dòng code đầu tiên. Không cần công cụ phức tạp — chỉ cần bốn câu: tài sản gì đáng giá, ai muốn lấy, vào bằng đường nào, thiệt hại nếu thành công là gì?
+
+Làm điều này trước khi thiết kế API, trước khi chọn cách lưu dữ liệu, trước khi quyết định ai có quyền làm gì.
+
+## Biết mình đang bảo vệ cái gì
+
+[CIA Triad](/concepts/cia-triad) cho bạn ngôn ngữ để phân loại thiệt hại: dữ liệu có thể bị đọc trái phép (Confidentiality), bị sửa (Integrity), hay hệ thống bị làm cho không dùng được (Availability)?
+
+Ba mục tiêu này đôi khi mâu thuẫn nhau — và builder thường vô tình hy sinh Integrity hay Availability trong khi tập trung vào Confidentiality. Biết ba thứ này giúp bạn đặt câu hỏi đúng: *"Tính năng này có thể bị lợi dụng để vi phạm cái nào trong ba?"*
+
+## Thu hẹp thiệt hại khi có lỗ hổng
+
+Không có hệ thống nào hoàn hảo. Lỗ hổng sẽ xuất hiện — do code của bạn, do dependency, do cấu hình sai.
+
+[Least privilege](/concepts/least-privilege) là cách bạn giới hạn thiệt hại trước khi lỗ hổng xuất hiện. Mỗi service, API key, database role chỉ có quyền tối thiểu vừa đủ — nên khi bị compromise, kẻ tấn công cũng chỉ làm được rất ít.
+
+Câu hỏi cần hỏi ở mỗi thành phần: *"Nếu thứ này bị lộ hôm nay, thiệt hại tối đa là gì? Mình có thể giảm thiệt hại đó xuống thấp hơn không?"*
+
+## Không đặt cược vào một lớp duy nhất
+
+[Defense in depth](/concepts/defense-in-depth) là kết luận logic của tư duy attacker: vì mọi lớp đều có thể bị vượt, bạn cần nhiều lớp độc lập, sao cho khi một lớp thất bại, các lớp khác vẫn cản được.
+
+Với solo builder, không cần nhiều lớp phức tạp. Ngay cả ba lớp đơn giản — auth bắt buộc, input validation, error không leak internal stack trace — đã cản được phần lớn tấn công tự động.
+
+<Callout title="Nhớ nhé">
+Tư duy attacker không phải hoang tưởng — là thực tế. Script tự động quét lỗ hổng không phân biệt app nhỏ hay lớn. Nghĩ như kẻ tấn công 15 phút trước khi thiết kế tính năng quan trọng tiết kiệm nhiều giờ vá lỗi sau.
+</Callout>
+
+Thực hành ngay với [bài tập threat model cho app SaaS →](/exercises/security-for-builders/m1-threat-model-your-app)

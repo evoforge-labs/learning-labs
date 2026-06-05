@@ -1,0 +1,67 @@
+---
+id: concept-gdpr-basics
+title: "GDPR & Privacy Basics"
+type: "concept"
+aliases: ["GDPR cơ bản cho builder", "quyền xóa dữ liệu người dùng", "right to erasure startup", "GDPR áp dụng cho ai", "tuân thủ GDPR tối thiểu", "data subject rights GDPR"]
+tags: [security, privacy, gdpr, compliance, data-protection, solo-builder]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Bạn gửi email cho một công ty Châu Âu yêu cầu xóa tài khoản. Hai ngày sau họ xác nhận đã xóa toàn bộ dữ liệu của bạn. Điều đó không phải vì họ tốt bụng — mà vì luật yêu cầu như vậy, kèm theo hình phạt nếu không làm.
+
+Đó là GDPR trong thực tế: một bộ quy tắc buộc các tổ chức xử lý dữ liệu cá nhân phải *tôn trọng quyền của người dùng*, không chỉ viết mấy chữ vào trang Privacy Policy.
+
+## Là gì
+
+**GDPR** (General Data Protection Regulation) là quy định bảo vệ dữ liệu của Liên minh Châu Âu, có hiệu lực từ tháng 5/2018. Nó trao cho người dùng tám quyền với dữ liệu cá nhân của họ, và bắt bên xử lý dữ liệu phải tuân theo.
+
+## Áp dụng cho ai
+
+GDPR áp dụng nếu bạn *xử lý dữ liệu cá nhân của người ở EU* — bất kể công ty bạn đặt ở đâu. Bạn đặt máy chủ ở Việt Nam, khách hàng có địa chỉ email ở Đức? GDPR vẫn áp dụng với dữ liệu đó.
+
+"Dữ liệu cá nhân" rộng hơn bạn nghĩ: email, địa chỉ IP, cookie ID, tên, số điện thoại đều tính.
+
+## Tám quyền cơ bản của người dùng
+
+Ba quyền builder hay gặp nhất:
+
+**Quyền truy cập (Art. 15):** Người dùng có thể hỏi "Bạn đang lưu dữ liệu gì về tôi?" Bạn phải trả lời trong vòng một tháng.
+
+**Quyền xóa / Right to be Forgotten (Art. 17):** Người dùng yêu cầu xóa — bạn phải xóa, trừ trường hợp luật bắt bạn giữ lại (ví dụ: hóa đơn thuế).
+
+**Quyền rút đồng ý (Art. 7):** Nếu bạn dùng consent làm căn cứ xử lý dữ liệu, người dùng có thể rút lại bất cứ lúc nào — và bạn phải ngừng xử lý dữ liệu đó.
+
+## Ví dụ thật
+
+Bạn build một SaaS gửi email marketing. Người dùng EU nhấn "Unsubscribe" và yêu cầu xóa tài khoản. Bạn phải: (1) xóa dữ liệu cá nhân khỏi database trong vòng hợp lý, (2) xóa khỏi danh sách email, (3) xác nhận bằng văn bản. Giữ lại dữ liệu thanh toán vì lý do thuế là được, nhưng phải tách riêng khỏi dữ liệu marketing.
+
+## Builder nhỏ cần làm gì tối thiểu
+
+Nếu bạn có người dùng EU, đây là danh sách ngắn:
+
+1. **Privacy Policy rõ ràng** — liệt kê dữ liệu bạn thu thập, lý do, và thời gian giữ.
+2. **Cơ chế xóa tài khoản** — người dùng phải tự xóa được, hoặc yêu cầu và nhận phản hồi trong 30 ngày.
+3. **Consent rõ ràng** cho email marketing — checkbox không được tích sẵn.
+4. **Kế hoạch ứng phó rò rỉ** — nếu bị breach, bạn có 72 giờ để thông báo cơ quan giám sát (xem [concept-breach-response](/concepts/breach-response)).
+
+<Callout title="Cẩn thận">
+Đừng copy Privacy Policy từ app khác rồi đổi tên. Nếu policy nói bạn không thu thập địa chỉ IP mà bạn thực sự có logs, đó là vi phạm. Policy phải mô tả *đúng* những gì bạn thật sự làm.
+</Callout>
+
+<Callout title="Nhớ nhé">
+GDPR không yêu cầu bạn zero-data — nó yêu cầu bạn *minh bạch* và *cho người dùng kiểm soát*. Thu thập ít, giữ đúng lý do, xóa khi được yêu cầu: ba nguyên tắc đó che được 80% rủi ro cho builder nhỏ.
+</Callout>
+
+## Đọc thêm
+
+- [GDPR Full Legal Text — gdpr-info.eu](https://gdpr-info.eu/) — Toàn bộ 99 điều khoản GDPR được trình bày rõ ràng theo chương; chuẩn nhất để tra cứu khi cần biết luật nói gì.
+- [GDPR Data Subject Rights Explained — RecordingLaw](https://www.recordinglaw.com/world-laws/world-data-privacy-laws/eu-data-privacy-laws/gdpr-data-subject-rights/) — Giải thích cả tám quyền người dùng kèm ngữ cảnh thực thi; được cập nhật năm 2026.
+- [GDPR Compliance Guide — Osano](https://www.osano.com/gdpr) — Hướng dẫn thực hành bảy bước cho tổ chức muốn đạt tuân thủ; phù hợp cho builder mới bắt đầu tìm hiểu.
+- [GDPR Compliance 2026 — Secure Privacy](https://secureprivacy.ai/blog/gdpr-compliance-2026) — Cập nhật những thay đổi và xu hướng thực thi gần nhất của cơ quan giám sát EU năm 2025-2026.
+
+## Tự kiểm tra
+
+1. Một người dùng ở Đức gửi email yêu cầu xuất toàn bộ dữ liệu cá nhân của họ. Bạn có bao nhiêu ngày để phản hồi? Dữ liệu nào cần cung cấp?
+2. App của bạn đặt server ở Singapore, nhưng có người dùng Pháp. GDPR có áp dụng không? Tại sao?
+3. Điều gì khác nhau giữa "xóa tài khoản" và "xóa dữ liệu cá nhân đúng nghĩa GDPR"? Cho ví dụ dữ liệu bạn được phép giữ lại.

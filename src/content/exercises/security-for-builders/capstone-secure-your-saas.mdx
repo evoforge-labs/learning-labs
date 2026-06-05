@@ -1,0 +1,59 @@
+---
+id: exercise-sec-006
+title: "Capstone: Làm cứng một SaaS từ A đến Z"
+type: "exercise"
+track: security-for-builders
+skill: security
+tags: [security, privacy, authentication, owasp, encryption, compliance, capstone, solo-builder]
+estimatedMinutes: 90
+related: [rubric-security-for-builders, concept-threat-modeling, concept-least-privilege, concept-authentication-vs-authorization, concept-password-hashing, concept-mfa, concept-owasp-top-10, concept-broken-access-control, concept-encryption-at-rest-in-transit, concept-pii-and-data-protection, concept-data-minimization, concept-gdpr-basics, concept-security-questionnaire, concept-breach-response]
+status: published
+---
+import Callout from '../../../components/content/Callout.astro';
+
+## Tình huống
+
+Bạn vận hành **"ClinicDesk"** — phần mềm đặt lịch cho phòng khám nhỏ. Nó lưu tên bệnh nhân, số điện thoại, lý do khám (dữ liệu sức khỏe — nhạy cảm), và lịch hẹn. Stack: web app + API + Postgres. 40 phòng khám trả tiền.
+
+Một phòng khám lớn muốn ký hợp đồng — nhưng gửi kèm **bảng câu hỏi bảo mật 60 dòng** và yêu cầu bạn chứng minh dữ liệu bệnh nhân được bảo vệ. Đây là deal lớn nhất từ trước tới nay. Bạn có một tuần.
+
+Capstone này yêu cầu bạn làm cứng ClinicDesk và trả lời được khách — gom mọi thứ đã học trong track.
+
+---
+
+## Nhiệm vụ 1 — Threat model & nền tảng
+
+1. [Threat-model](/concepts/threat-modeling) ClinicDesk: tài sản giá trị nhất là gì, kẻ tấn công là ai, vào bằng đường nào (liệt kê ≥3 bề mặt tấn công).
+2. Chỉ ra **một chỗ** hiện đang vi phạm [least privilege](/concepts/least-privilege) (giả định hợp lý) và cách sửa.
+
+---
+
+## Nhiệm vụ 2 — Auth & lỗ hổng web
+
+1. Thiết kế luồng auth đúng: [hash mật khẩu](/concepts/password-hashing) bằng gì, [MFA](/concepts/mfa) cho ai, phân quyền giữa "lễ tân" và "bác sĩ".
+2. Đi qua [OWASP Top 10](/concepts/owasp-top-10) như một checklist: chọn **3 rủi ro nguy hiểm nhất cho ClinicDesk** và nêu cách bạn đã/đang bịt mỗi cái. Bắt buộc có [broken access control](/concepts/broken-access-control) — phòng khám A không được xem bệnh nhân phòng khám B.
+
+---
+
+## Nhiệm vụ 3 — Dữ liệu & quyền riêng tư
+
+1. Phân loại dữ liệu ClinicDesk thành thường / PII / PII nhạy cảm, và quyết định [mã hóa at-rest & in-transit](/concepts/encryption-at-rest-in-transit) cho từng loại.
+2. Áp [data minimization](/concepts/data-minimization): có field nào đang thu mà không thật sự cần? Cắt một cái.
+3. Theo [GDPR cơ bản](/concepts/gdpr-basics): khi một bệnh nhân yêu cầu "xóa toàn bộ dữ liệu của tôi", hệ thống của bạn làm được không? Mô tả.
+
+---
+
+## Nhiệm vụ 4 — Trả lời khách & chuẩn bị sự cố
+
+1. Trả lời thành thật **5 câu** trong [bảng câu hỏi bảo mật](/concepts/security-questionnaire): mã hóa? MFA? quản lý truy cập? log? xử lý sự cố? Câu trả lời phải khớp với những gì bạn thiết kế ở trên.
+2. Phác [breach response plan](/concepts/breach-response): nếu database bệnh nhân bị lộ hôm nay, 72 giờ đầu bạn làm gì?
+
+---
+
+## Tiêu chí đánh giá
+
+Tự chấm theo [Security & Privacy Rubric](../../rubrics/security-for-builders-rubric). Capstone chạm cả 5 tiêu chí — bài tổng hợp của cả track.
+
+<Callout title="Nhớ nhé">
+Mục tiêu không phải đạt chuẩn nhà băng. Mục tiêu là: dữ liệu nhạy cảm được bảo vệ đúng mức rủi ro, bạn *biết* mình đang phòng thủ cái gì, và khi khách hỏi bạn trả lời được bằng sự thật — không phải bằng hy vọng. Đủ chắc, không hoang tưởng.
+</Callout>

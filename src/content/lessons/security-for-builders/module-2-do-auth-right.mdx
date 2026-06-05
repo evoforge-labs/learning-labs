@@ -1,0 +1,69 @@
+---
+id: lesson-sec-002
+title: "Làm đúng xác thực & phân quyền"
+type: "lesson"
+track: security-for-builders
+module: auth
+level: beginner
+tags: [security, authentication, authorization, password, session, jwt, oauth, mfa, identity]
+prerequisites: [concept-authentication-vs-authorization, concept-password-hashing, concept-sessions-vs-jwt, concept-oauth-and-sso, concept-mfa]
+related: [exercise-sec-002, rubric-security-for-builders]
+status: published
+---
+import Callout from '../../../components/content/Callout.astro';
+
+Hầu hết data breach không đến từ lỗ hổng tinh vi. Chúng đến từ những quyết định đơn giản bị bỏ qua: mật khẩu lưu dạng plaintext, session không hết hạn, admin panel không có MFA, phân quyền chỉ kiểm tra ở frontend.
+
+Module này xâu chuỗi năm khái niệm thành một quy trình cụ thể để bạn không phạm những lỗi đó.
+
+## Bước 1 — Phân biệt rõ authn và authz từ ngày đầu
+
+Trước khi viết bất kỳ dòng code auth nào, hãy tự hỏi hai câu riêng biệt:
+
+- *Ai được phép vào hệ thống này?* → Authentication
+- *Khi vào rồi, họ được làm gì?* → Authorization
+
+[Authentication vs Authorization](/concepts/authentication-vs-authorization) là hai lớp độc lập. Lỗi thường gặp nhất là build authn cẩn thận nhưng bỏ quên authz — kết quả là mọi user đã đăng nhập đều truy cập được mọi thứ.
+
+Quy tắc cứng: **enforce authorization ở phía server, không phải ở UI**. Ẩn nút trên giao diện là UX, không phải bảo mật.
+
+## Bước 2 — Lưu mật khẩu đúng cách
+
+Nếu bạn tự quản lý mật khẩu (không dùng OAuth/SSO hoàn toàn), đây là việc không thể thỏa hiệp:
+
+Dùng [password hashing](/concepts/password-hashing) với Argon2id cho hệ thống mới, bcrypt cho hệ thống hiện tại. Không bao giờ lưu plaintext. Không dùng MD5 hay SHA-256 cho mật khẩu — chúng quá nhanh.
+
+Thư viện tốt trong hầu hết ngôn ngữ đều xử lý salt tự động. Bạn không cần tự tạo salt — chỉ cần gọi đúng hàm.
+
+## Bước 3 — Chọn session hay JWT với lý do rõ ràng
+
+[Sessions vs JWT](/concepts/sessions-vs-jwt) không có cái nào "tốt hơn" tuyệt đối. Câu hỏi đúng là: *hệ thống của bạn cần gì?*
+
+- **App web đơn giản, một server:** Session + httpOnly cookie. Đơn giản, dễ revoke.
+- **API phục vụ mobile + web, nhiều service:** JWT ngắn hạn (15-60 phút) + refresh token. Chú ý: lưu token trong httpOnly cookie nếu dùng trên web — không lưu trong localStorage.
+
+Dù chọn cách nào, luôn có cơ chế logout thật sự: xóa session hoặc xóa refresh token.
+
+## Bước 4 — Dùng OAuth/SSO thay vì tự build khi có thể
+
+Tự build authentication từ đầu là rủi ro không cần thiết cho solo builder. [OAuth & SSO](/concepts/oauth-and-sso) thông qua các thư viện như Auth0, Clerk, Supabase Auth, hay NextAuth giúp bạn có:
+
+- Đăng nhập bằng Google/GitHub ngay lập tức
+- Session management, token refresh tự động
+- MFA có thể bật bằng một config
+
+Giữ tài nguyên cho core business của bạn — đừng reinvent auth.
+
+## Bước 5 — Bật MFA cho tài khoản có quyền cao
+
+[MFA](/concepts/mfa) là lớp bảo vệ rẻ và hiệu quả nhất. Tối thiểu:
+
+- Bắt buộc MFA với tất cả tài khoản **admin** của hệ thống.
+- Khuyến khích (hoặc bắt buộc theo policy) MFA cho user B2B.
+- Dùng app authenticator (TOTP) thay vì SMS khi có thể.
+
+<Callout title="Nhớ nhé">
+Thứ tự ưu tiên: (1) Phân biệt authn/authz và enforce server-side. (2) Hash mật khẩu đúng thuật toán. (3) Chọn session/JWT phù hợp bài toán. (4) Dùng OAuth/thư viện auth có sẵn. (5) Bật MFA cho tài khoản quan trọng. Năm bước này đủ chắn phần lớn các cuộc tấn công thực tế.
+</Callout>
+
+Áp dụng ngay với [bài tập thiết kế luồng đăng nhập an toàn →](/exercises/security-for-builders/m2-secure-the-login)

@@ -1,0 +1,59 @@
+---
+id: concept-security-questionnaire
+title: "Security Questionnaires & SOC 2 (lite)"
+type: "concept"
+aliases: ["bảng câu hỏi bảo mật B2B", "security questionnaire cho startup", "SOC 2 là gì", "vendor security assessment startup", "chuẩn bị SOC 2 không tốn tiền", "security review B2B deal"]
+tags: [security, compliance, soc2, b2b, startup, trust, solo-builder]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Bạn vừa ký được khách B2B đầu tiên. Trước khi hợp đồng được ký, đội IT của họ gửi một file Excel 80 dòng: "Vui lòng điền bảng câu hỏi bảo mật trước ngày thứ Sáu." Bạn mở ra và thấy những câu như "Describe your encryption at rest and in transit policy" hay "Do you have a SOC 2 Type II report?"
+
+Cảm giác đó — bị bất ngờ bởi một bài kiểm tra không báo trước — là lý do để hiểu security questionnaire *trước khi* deal đầu tiên đến.
+
+## Là gì
+
+**Security questionnaire** là bộ câu hỏi mà khách hàng B2B (đặc biệt doanh nghiệp lớn) gửi cho vendor để đánh giá rủi ro bảo mật trước khi dùng phần mềm. Mục đích: đội IT/legal của họ cần bằng chứng rằng dữ liệu công ty sẽ được bảo vệ đúng mức.
+
+**SOC 2** (System and Organization Controls 2) là một framework kiểm toán độc lập do AICPA định nghĩa. Khi một công ty "có SOC 2", nghĩa là một kiểm toán viên bên ngoài đã xác nhận rằng các kiểm soát bảo mật của họ *hoạt động đúng thực tế*. Nó là câu trả lời ngắn nhất cho 40% câu hỏi trong bảng questionnaire.
+
+SOC 2 có hai loại: **Type 1** (kiểm tra tại một thời điểm — "controls được thiết kế đúng không?") và **Type 2** (theo dõi 6-12 tháng — "controls thực sự hoạt động không?"). Type 2 đáng tin hơn và được yêu cầu nhiều hơn trong B2B enterprise.
+
+## Ví dụ thật
+
+Một startup SaaS HR với 3 người, có khách B2B đầu tiên là công ty 500 nhân viên. Bảng questionnaire hỏi: có MFA không, dữ liệu mã hóa thế nào, quy trình vulnerability disclosure ra sao, backup policy là gì. Startup trả lời được hết vì họ đã dùng MFA, HTTPS, backup tự động qua provider, và có một file runbook đơn giản. Không cần SOC 2. Deal closed.
+
+SOC 2 thật sự cần khi deal lớn hơn, hoặc khi câu hỏi "Do you have a SOC 2 report?" xuất hiện ở mọi questionnaire.
+
+## Startup nhỏ chuẩn bị thế nào
+
+**Không cần SOC 2 ngay lập tức.** Chi phí audit SOC 2 Type 2 thật sự ($20,000-50,000) và thời gian chuẩn bị (6-12 tháng) là quá lớn cho early-stage startup.
+
+Thứ bạn cần làm *ngay*:
+
+1. **Document những gì bạn đã làm** — MFA, HTTPS, mã hóa database, backup. Chỉ cần viết ra thành văn bản ngắn.
+2. **Tạo một "Security Overview" page** — 1-2 trang mô tả kiến trúc bảo mật; chia sẻ khi được hỏi.
+3. **Có câu trả lời cho 10 câu hỏi phổ biến nhất** — mã hóa, MFA, backup, vulnerability disclosure, incident response, data retention, access control, penetration testing, subprocessors, GDPR.
+4. **Khi bị hỏi SOC 2:** "We're currently working toward SOC 2 Type 2. In the meantime, here's our security overview..." — trung thực và chủ động hơn là im lặng.
+
+<Callout title="Mẹo">
+Các công cụ như Vanta, Drata, Secureframe giúp tự động hóa việc thu thập bằng chứng cho SOC 2. Nếu bạn nhắm đến SOC 2 trong 12 tháng tới, dùng một trong số đó từ sớm — chi phí thấp hơn nhiều so với audit thủ công.
+</Callout>
+
+<Callout title="Nhớ nhé">
+Questionnaire không kiểm tra bạn có perfect security không — nó kiểm tra bạn có *nghĩ đến bảo mật* không. Trả lời trung thực, kèm bằng chứng cụ thể (screenshot, link config), tốt hơn nhiều câu trả lời "Yes" không có gì đứng sau.
+</Callout>
+
+## Đọc thêm
+
+- [Security Questionnaires: Everything You Need to Know — Vanta](https://www.vanta.com/collection/trust/security-questionnaires) — Giải thích bốn chuẩn questionnaire phổ biến (CAIQ, VSAQ, SIG, CIS) và cách trả lời hiệu quả; thực tế cho startup B2B.
+- [Security Questionnaire Guide — Secureframe](https://secureframe.com/blog/security-questionnaire) — Hướng dẫn cả hai phía: cách trả lời và cách tạo questionnaire; kèm template và ví dụ câu hỏi thật.
+- [SOC 2 for Startups — Vanta](https://www.vanta.com/collection/soc-2/soc-2-for-startups) — Giải thích SOC 2 Type 1 vs Type 2, năm bước triển khai, và tại sao SOC 2 là lợi thế cạnh tranh trong B2B deals.
+- [The Path to SOC 2 Compliance for Startups — Cloud Security Alliance](https://cloudsecurityalliance.org/blog/2024/05/30/the-path-to-soc-2-compliance-for-startups) — Góc nhìn từ CSA về cách startup chứng minh "lộ trình đến SOC 2" thông qua STAR Registry như một bước trung gian thực tế.
+
+## Tự kiểm tra
+
+1. Sự khác biệt giữa SOC 2 Type 1 và Type 2 là gì? Loại nào thuyết phục hơn với khách doanh nghiệp lớn và tại sao?
+2. Bạn là startup 2 người, chưa có SOC 2, nhận được questionnaire 60 câu. Ba việc cụ thể bạn có thể làm *tuần này* để có câu trả lời tốt hơn?
+3. Câu hỏi "Do you conduct annual penetration testing?" xuất hiện trong questionnaire. Bạn chưa thuê pentest bao giờ. Bạn nên trả lời thế nào một cách trung thực nhưng không làm mất deal?

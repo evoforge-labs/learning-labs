@@ -1,0 +1,59 @@
+---
+id: concept-cia-triad
+title: "CIA Triad (Confidentiality, Integrity, Availability)"
+type: "concept"
+aliases: ["CIA triad", "tam giác bảo mật CIA", "confidentiality integrity availability", "bí mật toàn vẹn sẵn sàng", "ba trụ cột bảo mật thông tin", "infosec CIA model"]
+tags: [security, cia-triad, confidentiality, integrity, availability, security-for-builders]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Thử nghĩ về hồ sơ y tế của bạn. Bạn muốn ba thứ: chỉ bác sĩ của bạn mới đọc được (không phải hàng xóm), kết quả xét nghiệm không ai sửa được, và khi bạn cần đọc thì hệ thống không bị sập. Ba mong muốn đó — bí mật, toàn vẹn, sẵn sàng — chính là CIA Triad.
+
+## Là gì
+
+**CIA Triad** là ba mục tiêu cốt lõi của mọi hệ thống bảo mật thông tin:
+
+- **Confidentiality (Bí mật):** Chỉ người được phép mới truy cập được thông tin.
+- **Integrity (Toàn vẹn):** Thông tin không bị sửa đổi trái phép — bởi kẻ ngoài hay lỗi hệ thống.
+- **Availability (Sẵn sàng):** Hệ thống phục vụ được người dùng hợp lệ khi họ cần.
+
+Mỗi quyết định bảo mật đều xoay quanh một trong ba thứ này — hoặc cân bằng giữa chúng.
+
+## Ví dụ thật
+
+Bạn build app quản lý chi tiêu cá nhân:
+
+**Confidentiality bị vi phạm:** API endpoint `/api/transactions` không kiểm tra auth — ai biết URL cũng đọc được lịch sử chi tiêu của user khác. Dữ liệu không bí mật nữa.
+
+**Integrity bị vi phạm:** App cho phép user sửa số tiền giao dịch đã xác nhận bằng cách gửi request thẳng đến API mà không kiểm tra ràng buộc. Dữ liệu không còn đáng tin nữa.
+
+**Availability bị vi phạm:** Kẻ tấn công spam endpoint export-PDF khiến server CPU 100%, app không phản hồi được. User hợp lệ không vào được.
+
+## Ba thứ này đôi khi mâu thuẫn nhau
+
+Muốn tăng **Availability** (cache mọi thứ, replica nhiều nơi) → dễ vi phạm **Confidentiality** nếu cache không được phân quyền đúng.
+
+Muốn tăng **Confidentiality** (mã hóa mạnh, nhiều lớp xác thực) → có thể giảm **Availability** nếu key rotation không cẩn thận làm hệ thống không decrypt được.
+
+Không có cách nào tối ưu cả ba cùng lúc — bạn phải biết rủi ro nào quan trọng nhất với sản phẩm của mình.
+
+<Callout title="Cẩn thận">
+Nhiều builder tập trung toàn bộ vào **Confidentiality** (mã hóa, auth) mà quên **Integrity** và **Availability**. Một app có auth tốt nhưng cho phép user sửa dữ liệu người khác qua API, hoặc không có rate limiting, vẫn là app kém bảo mật.
+</Callout>
+
+<Callout title="Nhớ nhé">
+Mỗi khi thiết kế tính năng mới, hỏi nhanh: *"Tính năng này ảnh hưởng đến Bí mật, Toàn vẹn, hay Sẵn sàng của dữ liệu không? Ai có thể lợi dụng nó để vi phạm một trong ba?"*
+</Callout>
+
+## Đọc thêm
+
+- [What's The CIA Triad? — Splunk](https://www.splunk.com/en_us/blog/learn/cia-triad-confidentiality-integrity-availability.html) — Giải thích rõ ràng ba thành phần kèm ví dụ tấn công thực tế cho từng loại; phù hợp đọc lần đầu.
+- [What is the CIA Triad? — TechTarget](https://www.techtarget.com/whatis/definition/Confidentiality-integrity-and-availability-CIA) — Định nghĩa chuẩn, cập nhật, kèm mối liên hệ giữa CIA Triad và các framework bảo mật khác (NIST, ISO 27001).
+- [CIA Triad — SentinelOne Cybersecurity 101](https://www.sentinelone.com/cybersecurity-101/cybersecurity/cia-triad/) — Góc nhìn thực chiến: khi nào cần ưu tiên cái nào, và cách tấn công thực tế nhắm vào từng thành phần.
+
+## Tự kiểm tra
+
+1. Cho ví dụ một tình huống thực tế mà cả ba yếu tố CIA đều bị vi phạm cùng lúc trong một cuộc tấn công duy nhất.
+2. Nếu bạn phải chọn ưu tiên một trong ba cho app thanh toán tài chính, bạn chọn gì và tại sao?
+3. Tại sao Integrity thường bị builder bỏ qua hơn so với Confidentiality?

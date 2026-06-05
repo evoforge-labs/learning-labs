@@ -1,0 +1,73 @@
+---
+id: concept-security-logging-monitoring
+title: "Security Logging & Monitoring"
+type: "concept"
+aliases: ["log bảo mật", "security logging cho builder", "phát hiện tấn công qua log", "failed login monitoring", "audit log bảo mật", "SIEM cơ bản startup"]
+tags: [security, logging, monitoring, incident-detection, devops, compliance, solo-builder]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Kẻ trộm vào nhà bạn, lấy chìa khóa dự phòng, rồi đi ra. Không có camera, không có nhật ký ra vào — bạn chỉ biết chìa khóa đã biến mất. Nhưng không biết khi nào, ai, và họ đã vào phòng nào.
+
+App không có security logging cũng vậy: bạn chỉ biết *hậu quả*, không biết *diễn biến*. Kẻ tấn công đã thử đăng nhập bao nhiêu lần? Họ đã truy cập dữ liệu nào? Bao giờ? Không có log, bạn không thể trả lời.
+
+## Là gì
+
+**Security logging** là việc ghi lại các *sự kiện bảo mật quan trọng* — đăng nhập thất bại, thay đổi quyền, truy cập dữ liệu nhạy cảm, xuất dữ liệu bất thường — để phát hiện và điều tra tấn công.
+
+**Security monitoring** là việc *xem xét những log đó* liên tục, phát cảnh báo khi có pattern bất thường: 50 lần đăng nhập thất bại trong 5 phút từ một IP, hoặc tài khoản admin truy cập lúc 3 giờ sáng.
+
+## Khác observability thường ở điểm nào
+
+[Observability](/concepts/observability) tổng quát hỏi: "Tại sao hệ thống chậm? Tại sao request này lỗi?" — mục đích là hiệu năng và debug.
+
+Security logging hỏi: "Ai đang cố xâm nhập? Có điều bất thường nào không?" — mục đích là phát hiện *ý định xấu* và để lại *audit trail*.
+
+Cùng một công nghệ (structured logs, alerts), nhưng câu hỏi và ngưỡng cảnh báo hoàn toàn khác.
+
+## Ví dụ thật
+
+App của bạn có tính năng login bằng email/password. Không có security logging: kẻ tấn công thử credential stuffing — chạy 10,000 combo email/password từ data breach khác vào form login của bạn. Một số tài khoản bị chiếm. Bạn không biết cho đến khi user phàn nàn.
+
+Với security logging: hệ thống ghi mỗi lần login thất bại kèm IP, user agent, timestamp. Sau 10 lần thất bại từ cùng IP trong 2 phút, hệ thống tự block IP đó và gửi alert. Bạn thấy trong dashboard và điều tra ngay.
+
+## Những gì cần log
+
+Danh sách tối thiểu cho builder:
+
+- Đăng nhập thành công / thất bại (kèm IP, user agent)
+- Đăng nhập bằng tài khoản admin hoặc đặc quyền cao
+- Thay đổi quyền người dùng (ai thay đổi, thay đổi gì)
+- Xóa dữ liệu số lượng lớn
+- Xuất dữ liệu (export, download report)
+- Thay đổi cấu hình bảo mật
+- Lỗi xác thực token/API key
+
+<Callout title="Cẩn thận">
+**Đừng log dữ liệu nhạy cảm vào security log.** Password, token, thẻ tín dụng, PII không nên xuất hiện trong log dù là dạng plaintext hay trong URL. Kẻ tấn công đánh vào log pipeline là chiến thuật thật. Log phải đủ để điều tra — không phải là bản copy của database.
+</Callout>
+
+## Bắt đầu thực tế
+
+1. **Structured log có trường chuẩn** — `event_type`, `user_id`, `ip`, `timestamp`, `result` (success/failure). Đủ để query sau này.
+2. **Alert cho threshold đơn giản** — 5 failed login cùng IP trong 1 phút → alert hoặc tự block.
+3. **Tập trung log vào một chỗ** — cùng nơi với app log của bạn (Cloudwatch, Logtail, Datadog). Không cần hệ thống riêng.
+4. **Retention tối thiểu 90 ngày** — nhiều incident chỉ bị phát hiện sau vài tuần; log phải còn đó để điều tra.
+
+<Callout title="Nhớ nhé">
+Security log là bằng chứng pháp lý. Khi xảy ra breach, câu đầu tiên mọi người hỏi là "Bạn có log không?" Không có log = không có cách điều tra = không biết thiệt hại thật sự là gì.
+</Callout>
+
+## Đọc thêm
+
+- [Logging Cheat Sheet — OWASP](https://cheatsheetseries.owasp.org/cheatsheets/Logging_Cheat_Sheet.html) — Hướng dẫn chi tiết của OWASP về những gì nên log, không nên log, và cách bảo vệ log pipeline; chuẩn công nghiệp được cập nhật thường xuyên.
+- [SIEM Logging Best Practices — Coralogix](https://coralogix.com/guides/siem/siem-logging/) — Giải thích cấu trúc log chuẩn, nguồn log cần tích hợp, và cách phát hiện tấn công qua tương quan sự kiện; phù hợp khi muốn nâng cao hơn alert đơn giản.
+- [OWASP Top 10 A09 — Security Logging and Monitoring Failures](https://owasp.org/Top10/A09_2021-Security_Logging_and_Monitoring_Failures/) — Đây là một trong 10 lỗi bảo mật phổ biến nhất theo OWASP; giải thích tại sao thiếu logging là rủi ro nghiêm trọng kèm ví dụ tấn công thật.
+- [Security Logging and Monitoring — MDToolsOne](https://mdtools.one/articles/security-logging-siem-detecting-attacks) — Tổng quan thực hành về cách dùng security log để phát hiện các loại tấn công phổ biến; dễ đọc cho builder không có nền tảng security chuyên sâu.
+
+## Tự kiểm tra
+
+1. Tại sao security logging khác với observability thông thường? Cho ví dụ một event bạn log cho security mà không cần thiết cho observability.
+2. Bạn thấy trong log: 200 lần đăng nhập thất bại vào cùng tài khoản admin trong 10 phút, từ 50 IP khác nhau. Đây là loại tấn công gì? Bước tiếp theo bạn làm gì?
+3. Tại sao log cần được giữ ít nhất 90 ngày? Điều gì xảy ra nếu log chỉ giữ 7 ngày?

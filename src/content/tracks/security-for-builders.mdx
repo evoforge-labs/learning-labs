@@ -1,0 +1,46 @@
+---
+id: track-security-for-builders
+title: "Security & Privacy for Builders"
+type: "track"
+summary: "Bảo mật & quyền riêng tư cho người tự build: tư duy kẻ tấn công, làm đúng auth, bịt các lỗ hổng web phổ biến, bảo vệ dữ liệu người dùng, và trả lời được câu hỏi bảo mật của khách B2B — đủ chắc, không hoang tưởng."
+tags: [security, privacy, authentication, owasp, compliance, solo-builder]
+status: published
+---
+
+# Security & Privacy for Builders
+
+Khoảnh khắc bạn có khách hàng B2B đầu tiên, một bảng câu hỏi bảo mật dài 80 dòng sẽ rơi vào hộp thư. "Bạn mã hóa dữ liệu thế nào? Có MFA không? Xử lý lỗ hổng ra sao?" Track này giúp bạn *trả lời được* — và quan trọng hơn, làm cho câu trả lời là sự thật.
+
+Đây là bảo mật cho **builder một mình**: không phải để bạn thành pentester, mà để sản phẩm của bạn không bị hack vì một lỗi ngớ ngẩn, và dữ liệu người dùng được bảo vệ đúng mức.
+
+## Outcome
+
+Sau track này, bạn chuyển từ:
+
+> Mình lưu mật khẩu dạng text và hy vọng không ai để ý.
+
+sang:
+
+> Mình hash mật khẩu đúng cách, có MFA, đã bịt OWASP Top 10, mã hóa dữ liệu nhạy cảm, và có quy trình khi phát hiện lỗ hổng.
+
+## Track này luyện gì?
+
+- Tư duy như kẻ tấn công: mô hình hóa mối đe dọa, bề mặt tấn công, đặc quyền tối thiểu.
+- Làm đúng xác thực & phân quyền: hash mật khẩu, session/JWT, OAuth, MFA.
+- Bịt các lỗ hổng web phổ biến nhất (OWASP Top 10): injection, XSS, CSRF, broken access control.
+- Bảo vệ dữ liệu: mã hóa, PII, thu thập tối thiểu, lỗ hổng phụ thuộc.
+- Tuân thủ & vận hành: GDPR cơ bản, bảng câu hỏi bảo mật, log bảo mật, xử lý sự cố rò rỉ.
+
+## Năm chặng từ cơ bản đến nâng cao
+
+1. **Nền tảng bảo mật** — threat modeling, CIA triad, least privilege, defense in depth.
+2. **Xác thực & phân quyền** — authn vs authz, hash mật khẩu, session/JWT, OAuth/SSO, MFA.
+3. **Lỗ hổng web phổ biến** — OWASP Top 10, SQL injection, XSS, CSRF, broken access control.
+4. **Dữ liệu & secrets** — mã hóa, PII, thu thập tối thiểu, lỗ hổng phụ thuộc.
+5. **Tuân thủ & vận hành** — GDPR, bảng câu hỏi bảo mật, log bảo mật, breach response.
+
+Tra cứu nhanh mọi thuật ngữ ở trang [Glossary](/glossary).
+
+## First principle
+
+Bảo mật không phải một tính năng bạn thêm vào cuối — nó là cách bạn ra mọi quyết định. Giả định bạn *sẽ* bị tấn công, và thiết kế để khi đó thiệt hại là nhỏ nhất. Đủ chắc cho rủi ro thật của bạn, không hoang tưởng theo chuẩn nhà băng.

@@ -1,0 +1,54 @@
+---
+id: concept-defense-in-depth
+title: "Defense in Depth"
+type: "concept"
+aliases: ["defense in depth", "phòng thủ theo chiều sâu", "layered security strategy", "nhiều lớp bảo vệ bảo mật", "defense-in-depth cybersecurity", "bảo mật đa lớp"]
+tags: [security, defense-in-depth, layered-security, resilience, security-for-builders]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Lâu đài thời trung cổ không chỉ có một bức tường. Có hào nước trước, rồi cổng gỗ, rồi tường ngoài, rồi sân giữa với lính canh, rồi tường trong, rồi tháp pháo. Kẻ tấn công phá được lớp này vẫn phải đối mặt với lớp tiếp theo.
+
+Không ai đặt cược toàn bộ vào một bức tường — dù nó dày đến đâu.
+
+## Là gì
+
+**Defense in Depth** là chiến lược bảo mật dùng nhiều lớp kiểm soát độc lập, xếp chồng lên nhau, sao cho nếu một lớp bị phá vỡ, các lớp còn lại vẫn bảo vệ được hệ thống.
+
+Ý tưởng cốt lõi: **không có lớp nào là hoàn hảo**. Thay vì tìm một giải pháp "bullet-proof", bạn chấp nhận mọi lớp đều có thể bị vượt qua — và thiết kế để khi điều đó xảy ra, thiệt hại vẫn giới hạn được.
+
+## Ví dụ thật
+
+Một app SaaS xử lý thanh toán. Không có defense in depth: tất cả đặt cược vào firewall. Firewall bị bypass một lần — toàn bộ database lộ.
+
+Với nhiều lớp:
+
+1. **Mạng:** Firewall chặn traffic không hợp lệ. WAF lọc request độc hại.
+2. **Xác thực:** Auth token bắt buộc, MFA cho admin. Dù firewall bị bypass, không có token thì không vào được.
+3. **Phân quyền:** Mỗi service chỉ đọc/ghi đúng phần dữ liệu của nó — theo [least privilege](/concepts/least-privilege). Dù auth bị vượt, service bị compromise không thấy được toàn bộ database.
+4. **Mã hóa:** Dữ liệu nhạy cảm mã hóa at-rest. Dù database dump bị lấy, plaintext không đọc được ngay.
+5. **Phát hiện:** Alerting khi có login bất thường, rate limiting khi có brute force. Dù tất cả trên bị vượt, bạn biết ngay và phản ứng kịp.
+6. **Phục hồi:** Backup định kỳ, tested. Dù mọi thứ thất bại, bạn restore được.
+
+Mỗi lớp bù đắp cho điểm yếu của lớp kia. Không lớp nào cần hoàn hảo.
+
+<Callout title="Cẩn thận">
+Defense in depth không có nghĩa là mua càng nhiều tool bảo mật càng tốt. Năm lớp mỏng không được cấu hình đúng còn nguy hiểm hơn hai lớp vững chắc. Bắt đầu với ít lớp nhưng làm kỹ từng lớp — rồi mở rộng dần theo rủi ro thực tế.
+</Callout>
+
+<Callout title="Nhớ nhé">
+Hỏi với mỗi lớp bảo mật: "Nếu lớp này bị phá hôm nay, lớp tiếp theo có kịp cản không?" Nếu câu trả lời là không — hoặc không có lớp tiếp theo — thì đó là điểm yếu cần vá trước.
+</Callout>
+
+## Đọc thêm
+
+- [What Is Defense In Depth? — Fortinet](https://www.fortinet.com/resources/cyberglossary/defense-in-depth) — Định nghĩa rõ ràng, giải thích các lớp phổ biến (physical, network, application, data) và cách kết hợp chúng; tốt để đọc lần đầu.
+- [What Is Defense-in-Depth? — Palo Alto Networks](https://www.paloaltonetworks.com/cyberpedia/what-is-defense-in-depth) — Phân tích sâu hơn về cách các lớp bù đắp cho nhau, kèm ví dụ về people, process, và technology controls.
+- [Defense in Depth: Cybersecurity Layers — Huntress](https://www.huntress.com/cybersecurity-101/topic/what-is-defense-in-depth) — Góc nhìn thực chiến từ team threat hunting; có ví dụ về attack path bị chặn ở từng lớp.
+
+## Tự kiểm tra
+
+1. Giải thích tại sao defense in depth hiệu quả hơn việc chỉ có một lớp bảo mật rất mạnh. Cho ví dụ thực tế.
+2. Kể tên 3 lớp phòng thủ cụ thể cho một REST API công khai và giải thích mỗi lớp bảo vệ chống lại loại tấn công nào.
+3. "Defense in depth" và "security theater" (bảo mật hình thức) khác nhau ở chỗ nào? Khi nào thêm lớp bảo mật lại phản tác dụng?

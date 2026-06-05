@@ -1,0 +1,58 @@
+---
+id: concept-data-minimization
+title: "Data Minimization"
+type: "concept"
+aliases: ["data minimization", "nguyên tắc tối thiểu hóa dữ liệu", "đừng thu thập thứ bạn không cần", "data minimisation GDPR nguyên tắc", "ít dữ liệu ít rủi ro privacy by default"]
+tags: [security, privacy, gdpr, data-protection, compliance, data-minimization]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Bạn có bao giờ dọn nhà và tự hỏi "Cái này mua lúc nào vậy?" rồi vẫn để lại vì "biết đâu mai cần"? Một năm sau, cái nhà vẫn đầy đống thứ bạn chưa bao giờ dùng — nhưng giờ thêm rủi ro bị mất trộm.
+
+Dữ liệu người dùng trong database của bạn cũng vậy. Mỗi field bạn thu thập mà không dùng là một rủi ro không cần thiết.
+
+## Là gì
+
+**Data minimization** (thu thập dữ liệu tối thiểu) là nguyên tắc: chỉ thu thập và lưu trữ đúng lượng dữ liệu cần thiết để hoàn thành mục đích cụ thể — không hơn.
+
+GDPR gọi đây là điều khoản bắt buộc (Điều 5.1.c): dữ liệu phải "adequate, relevant and limited to what is necessary." Nhưng đây không chỉ là yêu cầu pháp lý — đây là tư duy thiết kế tốt.
+
+Quy tắc đơn giản: **dữ liệu không thu thập = dữ liệu không thể bị rò rỉ.**
+
+## Ví dụ thật
+
+Bạn build app đặt lịch cắt tóc. Form đăng ký xin: tên, email, số điện thoại, ngày sinh, giới tính, địa chỉ nhà, nghề nghiệp.
+
+Thực ra cần gì? Tên, email (để xác nhận lịch), số điện thoại (để nhắc lịch). Xong. Ngày sinh, giới tính, địa chỉ, nghề nghiệp — không ai ở tiệm tóc cần những thứ đó.
+
+Bốn field thừa đó không giúp ích gì. Nhưng chúng tạo ra rủi ro thật: nếu database bị breach, bạn đã leak dữ liệu nhạy cảm không cần thiết của hàng nghìn người.
+
+**Áp dụng data minimization trong code:**
+
+- **Schema:** Trước khi thêm một column mới, hỏi "feature nào cụ thể cần field này?" Nếu không trả lời được ngay, chưa thêm.
+- **Logs:** Đừng log body của request mặc định — body có thể chứa password, token, số thẻ. Log đủ để debug, không log mọi thứ.
+- **Analytics:** Bạn có thực sự cần biết exact timestamp của từng click, hay chỉ cần biết "feature X có được dùng không?"
+- **Third-party:** Mỗi SDK bạn nhúng vào (analytics, chat, ads) đều có thể thu thập dữ liệu người dùng. Đọc privacy policy của họ trước khi nhúng.
+- **Retention:** Dữ liệu không cần giữ mãi mãi. Xóa account inactive sau N tháng. Xóa log cũ. Xóa draft không hoàn thành.
+
+<Callout title="Mẹo">
+Thực hiện "data audit" định kỳ: liệt kê mọi thứ bạn đang thu thập, đánh dấu mỗi field với "feature/mục đích cụ thể nào dùng cái này?" Bất kỳ field nào không trả lời được là ứng viên để xóa.
+</Callout>
+
+<Callout title="Nhớ nhé">
+Ít dữ liệu hơn = ít rủi ro breach, dễ comply GDPR hơn, app đơn giản hơn, query nhanh hơn. Thu thập dữ liệu mới khi bạn đã biết rõ sẽ dùng vào việc gì — không phải "để mai cần."
+</Callout>
+
+## Đọc thêm
+
+- [Principle (c): Data minimisation — ICO UK GDPR Guidance](https://ico.org.uk/for-organisations/uk-gdpr-guidance-and-resources/data-protection-principles/a-guide-to-the-data-protection-principles/data-minimisation/) — Hướng dẫn chính thức của Cơ quan Bảo vệ Thông tin Anh về nguyên tắc data minimisation: định nghĩa, cách kiểm tra sự tuân thủ, và ví dụ thực tế.
+- [Art. 5 GDPR — Principles relating to processing of personal data](https://gdpr-info.eu/art-5-gdpr/) — Văn bản gốc của GDPR; điều 5.1.c là nền tảng pháp lý của data minimization.
+- [Data Minimization for GDPR Compliance — Usercentrics](https://usercentrics.com/knowledge-hub/data-minimization/) — Giải thích ba thành phần của data minimization (adequate, relevant, limited), kèm hướng dẫn triển khai thực tế cho developer.
+- [GDPR Data Minimization: Implementation Guide — ComplyDog](https://complydog.com/blog/gdpr-data-minimization-implementation-guide) — Hướng dẫn từng bước: data mapping, purpose limitation, retention schedule — phù hợp cho team kỹ thuật nhỏ.
+
+## Tự kiểm tra
+
+1. App thương mại điện tử của bạn có form checkout xin: tên, email, địa chỉ giao hàng, số điện thoại, ngày sinh, giới tính. Field nào vi phạm data minimization? Tại sao?
+2. Bạn đang log toàn bộ HTTP request body để debug. Vấn đề data minimization ở đây là gì? Nên làm thế nào thay thế?
+3. Khác nhau giữa data minimization và data deletion là gì? Cả hai có cần thiết không?

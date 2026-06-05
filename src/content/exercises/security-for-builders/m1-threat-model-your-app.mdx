@@ -1,0 +1,95 @@
+---
+id: exercise-sec-001
+title: "Threat Model cho một app SaaS nhỏ"
+type: "exercise"
+track: security-for-builders
+tags: [security, threat-modeling, least-privilege, defense-in-depth, cia-triad, security-for-builders, solo-builder]
+estimatedMinutes: 25
+related: [lesson-sec-001, concept-threat-modeling, concept-cia-triad, concept-least-privilege, concept-defense-in-depth, rubric-security-for-builders]
+status: published
+---
+import Callout from '../../../components/content/Callout.astro';
+
+## Tình huống
+
+Bạn vừa ra mắt **NoteSync** — app SaaS cho phép team nhỏ (2-10 người) cùng viết và chia sẻ note nội bộ. Người dùng đăng ký bằng email, tạo workspace, mời đồng nghiệp, và viết note dạng markdown.
+
+Stack hiện tại: Next.js frontend, Node.js API, PostgreSQL, lưu file đính kèm trên S3, gửi email qua SendGrid. Bạn đang chuẩn bị ra mắt beta có trả phí cho khách B2B đầu tiên.
+
+Khách hàng B2B vừa hỏi: *"Bạn xử lý bảo mật dữ liệu thế nào?"*
+
+---
+
+## Nhiệm vụ 1 — Liệt kê tài sản, kẻ tấn công, và bề mặt tấn công
+
+Trước khi trả lời khách, hãy làm threat model nhanh cho NoteSync.
+
+**Phần A — Tài sản cần bảo vệ:**
+Liệt kê ít nhất **5 tài sản** của NoteSync cần bảo vệ. Với mỗi tài sản, ghi thêm: nếu bị mất/lộ, thiệt hại lớn nhất là gì?
+
+Gợi ý các loại tài sản cần nghĩ đến: dữ liệu người dùng, thông tin xác thực, tài nguyên hạ tầng, dữ liệu kinh doanh.
+
+**Phần B — Kẻ tấn công tiềm năng:**
+Liệt kê ít nhất **3 loại kẻ tấn công** khác nhau (không phải tên riêng — là vai trò/mục tiêu). Với mỗi loại, ghi: họ muốn gì và động lực là gì?
+
+<Callout title="Mẹo">
+Kẻ tấn công không chỉ là hacker bên ngoài. Đừng quên: user nội bộ không trung thực, đối thủ cạnh tranh, script tự động quét lỗ hổng, hay chính developer vô tình commit secret lên GitHub.
+</Callout>
+
+**Phần C — Bề mặt tấn công:**
+Với stack đã mô tả (Next.js, Node.js API, PostgreSQL, S3, SendGrid), liệt kê ít nhất **4 điểm vào** mà kẻ tấn công có thể lợi dụng. Với mỗi điểm, nêu một ví dụ tấn công cụ thể.
+
+---
+
+## Nhiệm vụ 2 — Áp least privilege cho một thành phần
+
+Chọn **một** trong hai thành phần sau và thiết kế quyền truy cập theo nguyên tắc least privilege:
+
+**Lựa chọn A — S3 bucket cho file đính kèm:**
+App cần: user upload file lên bucket của workspace họ, user tải file của workspace họ về, app server xóa file khi note bị xóa. Không ai được đọc file của workspace khác.
+
+Mô tả IAM policy bạn sẽ tạo (bằng lời, không cần viết JSON): ai có quyền gì, phạm vi nào, có điều kiện gì không?
+
+**Lựa chọn B — Database role cho API service:**
+API service cần: đọc và ghi bảng `users`, `workspaces`, `notes`; đọc bảng `plans` (gói dịch vụ, chỉ đọc); không bao giờ cần xóa `users` hay `workspaces` (chỉ soft-delete qua flag `deleted_at`).
+
+Mô tả các database role bạn sẽ tạo: tên role, quyền trên từng bảng, lý do không cấp quyền nào đó.
+
+<Callout title="Mẹo">
+Đừng tối ưu sớm bằng cách tạo một role duy nhất "cho tiện". Hỏi: "Nếu API service bị compromise hoàn toàn hôm nay, kẻ tấn công làm được gì với quyền này?"
+</Callout>
+
+---
+
+## Nhiệm vụ 3 — Thiết kế 2 lớp defense in depth
+
+Từ danh sách tài sản và bề mặt tấn công ở Nhiệm vụ 1, chọn **2 mối đe dọa cụ thể** mà bạn thấy nghiêm trọng nhất.
+
+Với mỗi mối đe dọa, nêu **ít nhất 2 lớp phòng thủ độc lập** để đối phó. Mỗi lớp cần:
+- Tên cụ thể (không phải "bảo mật tốt hơn")
+- Lớp đó cản lại điều gì
+- Nếu lớp đó bị vượt qua, lớp tiếp theo cản gì
+
+Ví dụ cấu trúc câu trả lời:
+
+> **Mối đe dọa:** Kẻ tấn công brute-force mật khẩu user
+>
+> Lớp 1: Rate limiting trên endpoint `/api/auth/login` (tối đa 5 lần sai/phút/IP) → cản brute force tự động.
+>
+> Lớp 2: Bcrypt với cost factor 12 → dù database bị dump, crack mật khẩu mất nhiều tháng.
+
+<Callout title="Nhớ nhé">
+Defense in depth không yêu cầu 10 lớp. Hai lớp đúng chỗ, làm kỹ, còn tốt hơn năm lớp hình thức. Tập trung vào: lớp này cản được gì, và khi nó thất bại thì sao?
+</Callout>
+
+---
+
+## Tiêu chí đánh giá
+
+Tham khảo [Security Rubric](/rubrics/security-for-builders-rubric) để tự chấm. Với bài này, tập trung vào:
+
+| Tiêu chí | Câu hỏi để tự kiểm tra |
+|---|---|
+| Tư duy mối đe dọa | Tài sản của bạn có cụ thể không? Kẻ tấn công có đa dạng hơn "hacker bên ngoài" không? |
+| Least privilege | Quyền bạn thiết kế có thực sự tối thiểu không, hay vẫn có quyền thừa "cho tiện"? |
+| Defense in depth | Hai lớp của bạn có thực sự độc lập không? Nếu lớp 1 thất bại, lớp 2 có vẫn cản được không? |

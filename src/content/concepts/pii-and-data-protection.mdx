@@ -1,0 +1,63 @@
+---
+id: concept-pii-and-data-protection
+title: "PII & Data Protection"
+type: "concept"
+aliases: ["PII data protection", "dữ liệu cá nhân bảo vệ", "personally identifiable information xử lý", "PII là tài sản độc hại liability", "dữ liệu người dùng nhạy cảm lưu trữ xóa"]
+tags: [security, privacy, pii, gdpr, data-protection, compliance]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Uranium có thể tạo ra điện — nhưng nó cũng là chất thải hạt nhân. Bạn phải lưu trữ nó đúng cách, không thể vứt ra ngoài, và càng ít thì càng an toàn. Dữ liệu cá nhân của người dùng cũng có bản chất tương tự.
+
+Bạn thu thập email, số điện thoại, địa chỉ, lịch sử mua hàng — tất cả đều *có ích* cho app. Nhưng mỗi thứ đó cũng là **trách nhiệm pháp lý** nếu bị rò rỉ, bị dùng sai, hoặc bạn không có cơ sở pháp lý để giữ chúng.
+
+## Là gì
+
+**PII** (Personally Identifiable Information) là bất kỳ dữ liệu nào có thể dùng để xác định một người cụ thể, trực tiếp hay gián tiếp.
+
+Trực tiếp: họ tên, email, số điện thoại, CMND/CCCD, địa chỉ nhà, ảnh khuôn mặt.
+
+Gián tiếp: ngày sinh + mã bưu điện + giới tính kết hợp với nhau — ba trường tưởng như vô hại này có thể xác định danh tính đa số dân số. Dữ liệu "ẩn danh" chưa chắc đã thực sự ẩn danh.
+
+**Dữ liệu đặc biệt nhạy cảm** (cần bảo vệ nghiêm ngặt hơn): thông tin y tế, tôn giáo, xu hướng tình dục, hồ sơ tội phạm, dữ liệu tài chính.
+
+## Ví dụ thật
+
+App của bạn cho phép người dùng đặt lịch hẹn tư vấn sức khỏe. Bạn lưu: tên, email, số điện thoại, lý do đặt lịch ("tư vấn về trầm cảm"), lịch sử cuộc hẹn.
+
+Phần "lý do đặt lịch" là dữ liệu y tế — nhạy cảm nhất. Nếu database bị breach và dữ liệu này lộ ra, không chỉ là "rò rỉ thông tin" — nó có thể ảnh hưởng đến công việc, gia đình, hay cuộc sống của người dùng. Và bạn có thể bị kiện.
+
+**Bốn câu hỏi cần hỏi với mỗi trường dữ liệu:**
+
+1. **Thu thập vì sao?** Có mục đích rõ ràng, hợp lệ không?
+2. **Lưu ở đâu và bảo vệ thế nào?** Có mã hóa không? Ai có quyền truy cập?
+3. **Giữ bao lâu?** Khi nào sẽ xóa? Có retention policy không?
+4. **Nếu user yêu cầu xóa, bạn xóa được không?** Không chỉ database chính — backup, log, third-party cũng cần xóa.
+
+**Khi lưu PII:**
+- Dùng mã hóa at rest (xem [Encryption at Rest and in Transit](/concepts/encryption-at-rest-in-transit))
+- Giới hạn quyền truy cập: chỉ service nào cần thì mới đọc được
+- Tách dữ liệu nhạy cảm ra bảng riêng nếu cần — không phải mọi query đều phải kéo tất cả fields
+- Log truy cập vào dữ liệu nhạy cảm (audit log)
+
+<Callout title="Cẩn thận">
+Nhiều builder nghĩ GDPR chỉ áp dụng cho công ty châu Âu. Sai. GDPR áp dụng với **bất kỳ ai xử lý dữ liệu của công dân EU**, bất kể bạn ở đâu. Nếu app của bạn có người dùng EU, bạn thuộc phạm vi GDPR. Phạt tối đa là 4% doanh thu toàn cầu hoặc 20 triệu euro — tùy cái nào cao hơn.
+</Callout>
+
+<Callout title="Nhớ nhé">
+PII không chỉ là vấn đề tuân thủ — nó là rủi ro thực sự cho người dùng của bạn. Xử lý dữ liệu cá nhân như thể nó có thể bị lộ bất cứ lúc nào, và thiết kế hệ thống để thiệt hại là nhỏ nhất khi điều đó xảy ra.
+</Callout>
+
+## Đọc thêm
+
+- [What is PII, non-PII, and personal data? — Piwik Pro](https://piwik.pro/blog/what-is-pii-personal-data/) — Phân biệt rõ ràng giữa PII (khái niệm Mỹ) và personal data (khái niệm GDPR), giải thích tại sao dữ liệu "ẩn danh" vẫn có thể là PII.
+- [PII Data Protection Guide — ComplyDog](https://complydog.com/blog/pii-data-protection-guide-personally-identifiable-information-management) — Hướng dẫn thực hành về thu thập, lưu trữ, bảo vệ và xóa PII; phù hợp cho developer xây dựng app có dữ liệu người dùng.
+- [Art. 5 GDPR — Nguyên tắc xử lý dữ liệu cá nhân](https://gdpr-info.eu/art-5-gdpr/) — Điều khoản gốc của GDPR về sáu nguyên tắc: lawfulness, purpose limitation, data minimisation, accuracy, storage limitation, integrity and confidentiality.
+- [How to Protect PII Under GDPR — Hoop.dev](https://hoop.dev/blog/how-to-protect-pii-under-gdpr-a-guide-for-tech-managers) — Hướng dẫn thực tế cho tech team về access control, mã hóa, và quy trình xử lý dữ liệu cá nhân theo GDPR.
+
+## Tự kiểm tra
+
+1. Bạn đang build app giao đồ ăn. Liệt kê 5 trường dữ liệu thuộc PII và 2 trường **không** phải PII trong hệ thống đó.
+2. Tại sao dữ liệu đã "ẩn danh" (anonymized) vẫn có thể là PII? Cho một ví dụ cụ thể.
+3. User yêu cầu "xóa tài khoản" của họ. Ngoài bảng `users`, còn những nơi nào trong hệ thống bạn cần kiểm tra và xóa dữ liệu của họ?

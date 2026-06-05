@@ -1,0 +1,68 @@
+---
+id: concept-threat-modeling
+title: "Threat Modeling"
+type: "concept"
+aliases: ["threat modeling", "mô hình hóa mối đe dọa", "STRIDE threat model", "nghĩ như kẻ tấn công bảo mật", "security threat analysis", "phân tích mối đe dọa bảo mật"]
+tags: [security, threat-modeling, stride, attack-surface, solo-builder, security-for-builders]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Trước khi xây nhà, kiến trúc sư giỏi hỏi: *"Cái gì trong nhà này đáng giá? Kẻ trộm sẽ vào bằng đường nào?"* Rồi mới quyết định đặt khóa ở đâu, cửa sổ nào cần song sắt, có cần camera không.
+
+Đó chính là threat modeling: thay vì đợi bị hack rồi mới vá, bạn chủ động ngồi xuống và hỏi *"ai muốn tấn công mình, họ muốn lấy gì, và họ vào bằng đường nào?"* — trước khi viết một dòng code.
+
+## Là gì
+
+**Threat modeling** là quy trình có cấu trúc để xác định tài sản cần bảo vệ, kẻ tấn công tiềm năng, và các vector tấn công có thể xảy ra — từ đó quyết định nên đầu tư bảo vệ ở đâu.
+
+Không cần phức tạp. Với solo builder, bốn câu hỏi này là đủ để bắt đầu:
+
+1. **Bạn đang bảo vệ cái gì?** — dữ liệu user, API key, tiền trong ví, logic nghiệp vụ.
+2. **Ai muốn lấy/phá hoại?** — script kiddies quét tự động, đối thủ, user nội bộ không trung thực, hay bản thân bạn vô tình.
+3. **Họ vào bằng đường nào?** — form đăng ký, API endpoint, dependency bên thứ ba, credential bị lộ.
+4. **Nếu họ thành công, thiệt hại là gì?** — điều đó có thể giết chết sản phẩm của bạn không?
+
+## STRIDE nhẹ nhàng
+
+Microsoft từng dùng mnemonic **STRIDE** để phân loại mối đe dọa. Bạn không cần thuộc lòng — nhưng biết sáu loại này giúp bạn không bỏ sót góc tấn công:
+
+| Loại | Hỏi bản thân |
+|---|---|
+| **S**poofing (giả mạo) | Ai đó có thể giả làm user khác không? |
+| **T**ampering (giả mạo dữ liệu) | Dữ liệu có thể bị sửa trái phép không? |
+| **R**epudiation (chối bỏ) | Ai đó làm xong rồi chối không? Bạn có log không? |
+| **I**nformation Disclosure (lộ thông tin) | Thông tin nhạy cảm có bị rò rỉ không? |
+| **D**enial of Service (từ chối dịch vụ) | App có thể bị làm cho sập không? |
+| **E**levation of Privilege (leo thang đặc quyền) | User thường có thể làm việc của admin không? |
+
+## Ví dụ thật
+
+Bạn build app SaaS có form upload file. Threat modeling nhanh:
+
+- **Tài sản:** file của user, storage quota, server resource.
+- **Kẻ tấn công:** user ác ý muốn upload malware, hoặc dùng app làm CDN lậu, hoặc làm cạn storage của người khác.
+- **Vector:** không giới hạn file type → upload shell script; không giới hạn kích thước → DoS bằng file 10GB; không validate MIME type → bypass filter đơn giản.
+- **Biện pháp:** giới hạn file type + size, scan virus, lưu file ngoài web root.
+
+Mười lăm phút ngồi nghĩ trước = tránh được lỗ hổng nghiêm trọng.
+
+<Callout title="Cẩn thận">
+Threat modeling không phải việc làm một lần rồi xong. Mỗi khi bạn thêm tính năng mới, mở thêm API, hoặc tích hợp service bên thứ ba — bề mặt tấn công thay đổi. Lên lịch threat modeling nhỏ mỗi khi có thay đổi kiến trúc đáng kể.
+</Callout>
+
+<Callout title="Nhớ nhé">
+Bắt đầu từ câu hỏi đơn giản: *"Cái gì đáng giá? Ai muốn lấy? Vào bằng đường nào? Thiệt hại nếu bị lấy?"* Viết ra — dù chỉ 10 dòng bullet — trước khi thiết kế hệ thống.
+</Callout>
+
+## Đọc thêm
+
+- [Threat Modeling Cheat Sheet — OWASP](https://cheatsheetseries.owasp.org/cheatsheets/Threat_Modeling_Cheat_Sheet.html) — Hướng dẫn thực hành đầy đủ từ OWASP: cách xác định tài sản, vẽ data-flow diagram, áp STRIDE, và ưu tiên rủi ro; tài liệu chuẩn ngành, cập nhật liên tục.
+- [Threat Modeling Process — OWASP Foundation](https://owasp.org/www-community/Threat_Modeling_Process) — Phiên bản lịch sử nhưng vẫn rất hữu ích, trình bày quy trình bốn bước và giải thích STRIDE chi tiết với ví dụ từng loại mối đe dọa.
+- [Threat Modeling in OWASP Security Culture](https://owasp.org/www-project-security-culture/v10/6-Threat_Modelling/) — Góc nhìn thực tế về cách tích hợp threat modeling vào văn hóa làm việc của team, kèm công cụ như OWASP Threat Dragon để vẽ diagram.
+
+## Tự kiểm tra
+
+1. Bạn đang build tính năng "đặt lịch hẹn" cho app SaaS. Hãy liệt kê ít nhất 3 tài sản cần bảo vệ và 2 vector tấn công tiềm năng.
+2. STRIDE là gì? Hãy giải thích bằng lời của bạn hai chữ cái bất kỳ trong STRIDE với một ví dụ cụ thể.
+3. Tại sao threat modeling nên làm *trước* khi code, thay vì sau khi đã xây xong hệ thống?
