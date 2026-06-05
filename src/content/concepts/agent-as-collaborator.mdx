@@ -1,0 +1,55 @@
+---
+id: concept-agent-as-collaborator
+title: "Agent như cộng sự"
+type: "concept"
+aliases: ["agent as collaborator", "agent như cộng sự", "on the loop", "AI-augmented engineering", "human on the loop"]
+tags: [agentic-coding, dev-workflow, ai-assisted-development, mindset, collaboration]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Khi nhạc viện có nhạc trưởng và dàn nhạc — nhạc trưởng không tự chơi từng nhạc cụ, cũng không đứng ngoài cửa nghe. Họ đứng *trên vòng lặp*: dựng cấu trúc buổi diễn, điều phối ai chơi gì, nghe kết quả, và điều chỉnh. Đó là vị trí đúng của bạn khi làm việc với coding agent.
+
+## Là gì
+
+Năm 2026, mô hình đúng là **"AI-augmented engineering"** — không phải tự động hoá thay thế developer, mà là developer làm việc *cùng* agent như một cộng sự thực thi.
+
+Có ba vị trí bạn có thể đứng trong vòng lặp agent:
+
+| Vị trí | Mô tả | Vấn đề |
+|---|---|---|
+| **In the loop** | Duyệt từng bước agent làm | Chậm, tốn sức, agent không phát huy được |
+| **Outside the loop** | Giao xong, nhận kết quả, không quan tâm | "Vibe coding" — nợ kỹ thuật tích lũy nhanh |
+| **On the loop** | Dựng harness, đặt check, review bằng chứng | Vị trí đúng: bạn là kiến trúc sư + chủ sở hữu |
+
+**"On the loop"** có nghĩa: bạn quyết định *giao gì*, thiết kế *check để verify*, review *kết quả chứ không phải từng bước* — và chịu trách nhiệm toàn bộ những gì agent ship.
+
+## Ví dụ thật
+
+Developer A (in the loop): ngồi nhìn agent gõ từng dòng, duyệt từng file edit. Mỗi giờ hoàn thành ít hơn nếu tự code.
+
+Developer B (outside the loop): giao task mơ hồ, nhận code, merge không đọc. Hai tuần sau phát hiện cả đống edge case không được xử lý.
+
+Developer C (on the loop): viết spec rõ → giao agent với check tự chạy (test suite) → review diff và test output → merge khi thỏa mãn. Agent làm nhanh hơn, C giữ chất lượng.
+
+Developer C là **senior engineer trong kỷ nguyên agentic** — không phải người viết nhiều code nhất, mà là người thiết kế quy trình tốt nhất.
+
+<Callout title="Cẩn thận">
+"On the loop" không có nghĩa bạn lười biếng hay không cần kỹ năng. Ngược lại — kỹ năng cần cao hơn: thiết kế spec tốt, nhận ra khi nào agent đi sai hướng, biết tại sao output đúng hay sai. Developer giỏi dùng agent hiệu quả hơn developer kém không phải vì model của họ tốt hơn.
+</Callout>
+
+<Callout title="Nhớ nhé">
+Vị trí đúng: *on the loop* — dựng harness và check, review bằng chứng, chịu trách nhiệm. Không phải in the loop (duyệt từng bước) hay outside the loop (giao vô trách nhiệm).
+</Callout>
+
+## Đọc thêm
+
+- [Humans and Agents in Software Engineering Loops — Martin Fowler](https://martinfowler.com/articles/exploring-gen-ai/humans-and-agents.html) — Bài March 2026: phân tích "humans on the loop" — tại sao đây là vị trí tối ưu và cách dựng vòng lặp "why loop" (con người) + "how loop" (agent).
+- [The role of developer skills in agentic coding — Martin Fowler](https://martinfowler.com/articles/exploring-gen-ai/13-role-of-developer-skills.html) — Bằng chứng từ Thoughtworks: developer kinh nghiệm dùng agent tốt hơn vì biết *khi nào* agent sai và *tại sao* — kỹ năng không bớt đi, chỉ chuyển hướng.
+- [My LLM coding workflow going into 2026 — Addy Osmani](https://addyosmani.com/blog/ai-coding-workflow/) — "Developer remains the director": workflow thực chiến của một kỹ sư senior — agent như "over-confident pair programmer" cần bạn định hướng và verify.
+
+## Tự kiểm tra
+
+1. Mô tả sự khác biệt giữa "in the loop", "on the loop", và "outside the loop" bằng ví dụ cụ thể từ công việc hàng ngày của bạn.
+2. Tại sao developer có kỹ năng cao lại dùng coding agent *hiệu quả hơn* developer ít kinh nghiệm, dù cả hai dùng cùng model?
+3. Bạn đang "on the loop" nghĩa là bạn làm những việc gì cụ thể trong một ngày? Kể ít nhất 3 hành động.

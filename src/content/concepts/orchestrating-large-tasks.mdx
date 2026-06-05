@@ -1,0 +1,56 @@
+---
+id: concept-orchestrating-large-tasks
+title: "Orchestrating Large Tasks"
+type: "concept"
+aliases: ["orchestrating large tasks", "điều phối task lớn", "large task orchestration", "dynamic workflows", "agent teams", "migration at scale"]
+tags: [building-with-ai-agents, claude-code, orchestration, multi-agent, agent-teams, dynamic-workflows, scale, migration]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Một người có thể sơn một căn phòng trong 4 tiếng. Nhưng để sơn cả tòa nhà 50 tầng trong 2 ngày trước khi khách đến? Bạn cần đội — và cần ai đó phân công ai sơn tầng nào, ai mua thêm sơn khi hết, và ai kiểm tra chất lượng.
+
+Khi task vượt quá một cuộc hội thoại — migration 500 file, audit toàn repo, kiểm tra security hàng nghìn endpoint — bạn cần "đội" agent và cơ chế điều phối phù hợp.
+
+## Là gì
+
+Claude Code 2026 cung cấp ba cơ chế để xử lý task lớn. Chọn đúng cơ chế theo quy mô:
+
+**1. Subagent (vài task điều phối bởi Claude)** — agent chính spawn một vài worker agent để làm task con, mỗi agent báo cáo tóm tắt về. Phù hợp cho: điều tra song song 2-5 hướng, delegate research để giữ context chính sạch. Xem thêm [concept-subagents-for-dev](/concepts/subagents-for-dev).
+
+**2. Agent Teams (vài peer agent phối hợp)** — nhiều phiên Claude Code ngang hàng, có shared task list, có thể nhắn tin trực tiếp cho nhau. Phù hợp cho: feature mới chia theo module, code review nhiều góc độ song song, debug với nhiều giả thuyết cạnh tranh. Xem thêm [concept-multi-agent](/concepts/multi-agent) và [concept-agentic-workflows](/concepts/agentic-workflows).
+
+**3. Dynamic Workflows (script điều phối, tới 16 đồng thời / 1000 tổng)** — Claude viết một script JavaScript điều phối hàng chục đến hàng trăm subagent, chạy nền trong khi phiên của bạn vẫn responsive. Phù hợp cho: migration hàng trăm file, audit toàn repo, research cần cross-check nhiều nguồn. Kích hoạt bằng từ khóa `ultracode` trong prompt.
+
+**Quy tắc quan trọng:** nếu task có nhiều bước tuần tự phụ thuộc nhau — một phiên hội thoại là đủ, không cần phức tạp hơn. Chỉ leo thang khi thực sự cần song song.
+
+## Ví dụ thật
+
+Task: đổi tên pattern API cũ (`getUserById`) sang pattern mới (`fetchUser`) trong 500 file.
+
+- **Một phiên?** Không — quá nhiều file, một context window không đủ, và lặp lại đơn điệu.
+- **Agent teams?** Có thể, nhưng experimental và cần coordination overhead.
+- **Dynamic workflow?** Phù hợp nhất: Claude viết script chia 500 file thành batches, spawn agent cho từng batch song song (tối đa 16 cùng lúc), cross-check kết quả, báo cáo exception.
+
+Kích hoạt: gõ `ultracode: rename getUserById to fetchUser across all files in src/` — Claude hiểu đây là tín hiệu để viết workflow script thay vì làm turn by turn.
+
+<Callout title="Cẩn thận">
+Dynamic workflows tiêu thụ token nhiều hơn đáng kể — một run có thể tốn bằng hàng chục phiên thông thường. Thử trên một subset nhỏ trước (một thư mục thay vì toàn repo) để ước tính chi phí trước khi chạy toàn bộ.
+</Callout>
+
+<Callout title="Nhớ nhé">
+Chọn cơ chế theo quy mô thực sự của task — không phải vì nghe "advanced" hơn. Task tuần tự → một phiên. Vài task song song → subagent. Nhiều peer cần phối hợp → agent teams. Hàng trăm task lặp lại → dynamic workflow.
+</Callout>
+
+## Đọc thêm
+
+- [Orchestrate subagents at scale with dynamic workflows — Claude Code Docs](https://code.claude.com/docs/en/workflows) — Tài liệu chính thức: khi nào dùng workflow thay vì subagent/agent teams, cách kích hoạt với `ultracode`, giới hạn 16 đồng thời / 1000 tổng, cách xem progress với `/workflows`.
+- [Orchestrate teams of Claude Code sessions — Claude Code Docs](https://code.claude.com/docs/en/agent-teams) — Tài liệu agent teams: shared task list, inter-agent messaging, khi nào teams phù hợp hơn subagent.
+- [Dynamic Workflows in Claude Code — InfoQ (June 2026)](https://www.infoq.com/news/2026/06/dynamic-workflows-claude-code/) — Phân tích độc lập: use case thực tế (migration, audit, security review), cách workflow tạo ra "repeatable quality pattern" thay vì chỉ chạy nhiều agent hơn.
+- [Multi-Agent Systems](/concepts/multi-agent) — Khái niệm nền tảng: khi nào multi-agent xứng đáng với overhead, orchestrator-worker pattern, và tại sao token budget giải thích ~80% chênh lệch hiệu năng.
+
+## Tự kiểm tra
+
+1. Phân biệt subagent, agent teams, và dynamic workflows — cơ chế nào phù hợp cho: (a) điều tra 3 hướng debug song song, (b) migration 800 file, (c) feature mới chia thành frontend/backend/test cần phối hợp?
+2. Tại sao task có nhiều bước tuần tự phụ thuộc nhau không cần dynamic workflow?
+3. Trước khi chạy dynamic workflow trên toàn repo (500 file), bạn nên làm gì để tránh tốn token quá nhiều vào một lần chạy có thể fail?

@@ -1,0 +1,57 @@
+---
+id: concept-breaking-down-tasks
+title: "Breaking Down Tasks"
+type: "concept"
+aliases: ["chia nhỏ task", "task breakdown", "decompose task", "phân rã nhiệm vụ", "chia task cho agent"]
+tags: [ai-assisted-development, agentic-coding, dev-workflow, planning, coding-agents, context-management]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Bạn không đặt một nhà thầu xây cả tòa nhà trong một lần nghiệm thu. Bạn chia thành: móng → khung → điện nước → hoàn thiện — và kiểm tra từng giai đoạn trước khi đi tiếp. Lý do không phải nhà thầu kém, mà vì lỗi phát hiện muộn thì sửa tốn gấp mười.
+
+Agent AI cũng vậy. Càng giao việc to một lúc, càng khó biết chỗ nào sai — và context window càng nhanh đầy.
+
+## Là gì
+
+**Chia nhỏ task** là tách một yêu cầu lớn thành các mẩu nhỏ, mỗi mẩu:
+- Là một phần chức năng **test được độc lập**
+- **Kết thúc bằng kết quả tự kiểm** (test pass, build xanh, output agent có thể đọc)
+- Đủ nhỏ để agent giữ context trong một phiên làm việc
+
+Quy trình được khuyến nghị cho mỗi mẩu: **Explore → Plan → Implement → Commit**. Bước Explore dùng để đọc codebase mà không thay đổi gì — giữ cho bước Implement sạch context.
+
+## Ví dụ thật
+
+Feature "tích hợp thanh toán Stripe". Thay vì giao hết một lần:
+
+| Mẩu | Kết quả tự kiểm |
+|-----|-----------------|
+| 1. Tạo Stripe customer khi user đăng ký | Test: user mới có `stripe_customer_id` trong DB |
+| 2. Lưu payment method từ checkout form | Test: method lưu được, không lưu raw card number |
+| 3. Tạo subscription khi chọn plan | Test: subscription active, webhook nhận được event |
+| 4. Xử lý webhook `invoice.payment_failed` | Test: user nhận email, subscription tạm dừng đúng |
+
+Mỗi mẩu commit ngay khi pass. Nếu mẩu 3 lỗi, bạn biết chính xác chỗ nào — không cần debug cả feature.
+
+Khi cần điều tra codebase trước khi implement (ví dụ: "đọc pattern auth hiện tại để hiểu trước khi thêm OAuth"), dùng [subagent](/concepts/subagents-for-dev) để tách việc explore ra — giữ context của phiên implement sạch.
+
+<Callout title="Cẩn thận">
+Mẩu quá nhỏ cũng tệ — nếu mỗi mẩu chỉ là một function mà không test được độc lập, bạn đang thêm overhead mà không thêm kiểm soát. Nguyên tắc: mỗi mẩu phải có một "điều kiện done" rõ ràng mà agent tự kiểm được mà không cần bạn ngồi chờ.
+</Callout>
+
+<Callout title="Nhớ nhé">
+Mỗi mẩu = một phần chức năng test được + kết thúc bằng commit. Đừng tích lũy nhiều mẩu chưa commit — mất context và khó rollback.
+</Callout>
+
+## Đọc thêm
+
+- [Explore first, then plan, then code — Claude Code Best Practices](https://code.claude.com/docs/en/best-practices) — Anthropic mô tả rõ 4 bước Explore → Plan → Implement → Commit, và khi nào nên skip bước Plan (task rõ ràng, nhỏ). Thực tiễn nhất cho Claude Code.
+- [Agent Best Practices — Cursor Blog](https://cursor.com/blog/agent-best-practices) — Cursor giải thích tại sao bắt đầu session mới khi chuyển task, cách dùng TDD để task chia nhỏ có verifiable goal, và khi nào context dài gây hại.
+- [Best Practices for Using Copilot to Work on Tasks — GitHub Docs](https://docs.github.com/en/copilot/how-tos/agents/copilot-coding-agent/best-practices-for-using-copilot-to-work-on-tasks) — GitHub phân loại task nào nên giao agent (bug fix, thêm test) và task nào giữ lại cho người (critical path, cross-repo, security).
+
+## Tự kiểm tra
+
+1. Feature "cho phép user thay đổi email": chia thành 3 mẩu có thứ tự, mỗi mẩu có điều kiện done rõ ràng.
+2. Tại sao nên dùng subagent cho bước Explore thay vì để agent chính tự đọc codebase?
+3. Khi nào thì một mẩu "quá nhỏ" và không đáng để tách thành task riêng?

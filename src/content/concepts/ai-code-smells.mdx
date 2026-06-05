@@ -1,0 +1,49 @@
+---
+id: concept-ai-code-smells
+title: "AI Code Smells"
+type: "concept"
+aliases: ["code smell AI", "mùi code AI", "AI-generated code smells", "lỗi code agent"]
+tags: [ai-engineering, code-review, agents, agentic-coding, quality, hallucination, refactoring]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Code người viết có "mùi" — những dấu hiệu cảnh báo vấn đề thiết kế. Code AI có mùi riêng: khó phát hiện hơn vì nó *trông* sạch, nhưng ẩn những lỗi chỉ AI mới tạo ra theo cách đó. Học nhận mùi thì bạn sẽ biết nhìn vào đâu, thay vì đọc từng dòng một.
+
+## Là gì
+
+**AI Code Smells** là 5 dấu hiệu đặc trưng cho thấy đoạn code có thể do AI sinh ra và cần kiểm tra kỹ hơn:
+
+**1. Hallucinated API** — Gọi hàm, method, hoặc import package không tồn tại. Tên nghe hợp lý, cú pháp đúng, nhưng API không có thật.
+
+**2. Scope creep âm thầm** — Agent tự thêm import, tự đổi file ngoài yêu cầu, tự "tiện tay refactor" những chỗ không được giao. Nhìn diff kỹ: có gì thay đổi mà bạn không yêu cầu không?
+
+**3. Over-abstraction** — Thêm tầng interface, class wrapper, factory "phòng xa" cho trường hợp không bao giờ xảy ra. Agent không biết *hệ thống của bạn sẽ đi đâu* — nó đoán theo hướng "generic" thường thấy trong training data.
+
+**4. Plausible-but-wrong** — Code đọc *có vẻ* đúng nhưng sai ở edge case hoặc race condition. Ví dụ: check null ở chỗ đúng nhưng thiếu check ở chỗ quan trọng hơn; logic concurrent tưởng thread-safe nhưng không phải.
+
+**5. Cognitive debt** — Bạn merge code mình không thực sự hiểu. Khi bug xảy ra 3 tháng sau, bạn không thể debug vì không nắm được logic agent đã viết. Đây là mùi *dài hạn* nguy hiểm nhất.
+
+## Ví dụ thật
+
+Agent viết `await db.findOneOrCreate({ userId })` — nghe hợp lý với tên Prisma-style, nhưng Prisma không có method đó. Đây là hallucinated API (mùi 1). Cùng lúc, agent thêm một `UserRepository` interface không ai yêu cầu (mùi 3), và sửa file `auth.service.ts` dù task chỉ nói đến `user.service.ts` (mùi 2).
+
+<Callout title="Cẩn thận">
+Cognitive debt tích lũy theo từng PR. Bạn có thể merge 10 PR "có vẻ đúng" mà không hiểu system mình đang sở hữu. Khi production hỏng, không ai debug được — kể cả agent.
+</Callout>
+
+<Callout title="Nhớ nhé">
+Biện pháp chống cognitive debt thực tế nhất: **tự thiết kế kiến trúc, để agent chỉ implement**. Bạn biết tại sao mỗi thứ ở đó, agent chỉ điền code vào chỗ bạn đã hiểu.
+</Callout>
+
+## Đọc thêm
+
+- [Simon Willison — Agentic Engineering](https://simonwillison.net/tags/agentic-engineering/) — Nhiều bài thực chiến 2025-2026 về cognitive debt, scope creep từ agent, và kỹ thuật giữ chất lượng code khi dùng AI.
+- [How to Write a Good Spec for AI Agents — Addy Osmani](https://addyosmani.com/blog/good-spec/) — Giải thích cách spec rõ ràng ngăn agent scope creep và over-abstraction; bao gồm hệ thống 3 tầng: Always do / Ask first / Never do.
+- [ML Code Smells — arXiv 2509.20491](https://arxiv.org/abs/2509.20491) — Nghiên cứu học thuật phân loại code smell đặc trưng cho ML/AI systems và phương pháp phát hiện tự động.
+
+## Tự kiểm tra
+
+1. Mô tả "plausible-but-wrong" bằng ví dụ cụ thể. Tại sao loại lỗi này khó bắt hơn lỗi syntax?
+2. "Cognitive debt" khác gì "technical debt" thông thường? Tại sao nó nguy hiểm hơn khi làm việc với agent?
+3. Bạn xem diff của agent và thấy có 3 file bị thay đổi nhưng task chỉ yêu cầu sửa 1 file. Đây là "mùi" gì và bạn làm gì?

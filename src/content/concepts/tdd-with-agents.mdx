@@ -1,0 +1,50 @@
+---
+id: concept-tdd-with-agents
+title: "TDD with AI Agents"
+type: "concept"
+aliases: ["TDD với agent", "test-driven agent", "TDAD", "viết test trước agent"]
+tags: [ai-engineering, tdd, testing, agents, agentic-coding, regression, quality]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Nghĩ đến test như một **hợp đồng**: bạn ký trước những gì "đúng" có nghĩa là gì — rồi mới thuê thợ làm. Nếu thợ làm xong mà hợp đồng không xác nhận được, bạn biết ngay. Viết test *sau* khi agent đã code thì hợp đồng ký sau khi thợ xong việc — không còn ràng buộc được gì nữa.
+
+## Là gì
+
+**TDD với agent** (Test-Driven Agentic Development — TDAD) là quy trình viết test *trước* khi cho agent implement, dùng test như ràng buộc để agent không đi lạc. Điểm khác với TDD truyền thống: thứ quan trọng nhất không phải *quy trình* (write test → red → green → refactor), mà là **ngữ cảnh** bạn cấp cho agent.
+
+Nghiên cứu TDAD 2026 cho thấy: cấp cho agent thông tin về *test nào bị ảnh hưởng* bởi thay đổi giảm regression **70%** (từ 6,08% xuống 1,82%). Nhưng nếu chỉ nhồi *chỉ dẫn quy trình* TDD dài dòng vào prompt mà không kèm ngữ cảnh test cụ thể, kết quả *tệ hơn* (lên 9,94%).
+
+Tóm lại: **context hơn instruction**.
+
+## Ví dụ thật
+
+Bạn cần agent thêm chức năng reset mật khẩu. Thay vì prompt "hãy implement reset password", hãy làm thế này:
+
+1. Mở terminal ở thư mục `tests/auth/` — file implementation chưa nằm trong scope của phiên này.
+2. Viết test fail: `test_reset_password_sends_email_to_registered_user`.
+3. Cấp cho agent: test mới vừa viết + danh sách test hiện có có thể bị ảnh hưởng (`test_login`, `test_token_expiry`).
+4. Prompt: "implement để test này pass, không được làm fail các test kia".
+
+Agent có bản đồ rõ ràng về "đúng" và "không được phá". Nó không cần đoán scope.
+
+<Callout title="Mẹo">
+Bắt đầu phiên từ thư mục `tests/` để viết test khi file implementation chưa có trong context. Điều này ngăn agent "đọc implementation rồi viết test khớp" — kiểu test vô nghĩa nhất.
+</Callout>
+
+<Callout title="Nhớ nhé">
+Cấp ngữ cảnh test cụ thể (test nào bị ảnh hưởng) quan trọng hơn ra lệnh agent "hãy theo TDD". Hợp đồng phải rõ trước khi thuê thợ.
+</Callout>
+
+## Đọc thêm
+
+- [TDAD: Test-Driven Agentic Development — arXiv 2603.17973](https://arxiv.org/abs/2603.17973) — Nghiên cứu 2026 chứng minh cấp impact analysis (test nào bị ảnh hưởng) giảm regression 70%; và tại sao nhồi instruction TDD không kèm context lại tệ hơn.
+- [Best Practices — Claude Code Docs](https://code.claude.com/docs/en/best-practices) — Phần "Give Claude a way to verify its work": cách dùng test suite như verification loop để agent tự lặp đến khi pass.
+- [Simon Willison — Agentic Engineering](https://simonwillison.net/tags/agentic-engineering/) — Tổng hợp bài thực chiến từ 2025-2026 về viết agent-friendly test, context management, và các bài học từ việc dùng AI viết code thực tế.
+
+## Tự kiểm tra
+
+1. Tại sao viết test *sau* khi agent đã implement lại vô nghĩa hơn viết trước?
+2. Theo nghiên cứu TDAD 2026, cái gì hiệu quả hơn: (a) ra lệnh agent "hãy theo TDD" hay (b) cấp danh sách test bị ảnh hưởng? Tại sao?
+3. Bạn làm gì trước khi bắt phiên viết test để đảm bảo agent không "đọc implementation rồi viết test khớp"?

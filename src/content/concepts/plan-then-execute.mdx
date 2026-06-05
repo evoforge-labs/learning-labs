@@ -1,0 +1,65 @@
+---
+id: concept-plan-then-execute
+title: "Plan-then-Execute (Plan Mode)"
+type: "concept"
+aliases: ["plan mode", "plan-then-execute", "plan before coding", "chế độ lập kế hoạch", "explore plan implement commit"]
+tags: [building-with-ai-agents, claude-code, plan-mode, workflow, permission-modes, agentic-coding]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Bạn thuê thợ sơn nhà. Thợ giỏi sẽ nhìn khắp phòng, hỏi vài câu, rồi nói: "Tôi cần 3 lít sơn màu này, trét tường chỗ kia trước, che đồ đạc lại." Thợ vội sẽ mở sơn ra và bắt đầu quét ngay. Cái nào ít tốn tiền sơn thêm và ít đau đầu hơn?
+
+Đó là lý do Plan Mode tồn tại trong Claude Code.
+
+## Là gì
+
+**Plan Mode** (hay plan-then-execute) là chế độ mà agent chỉ được phép *đọc* — không sửa file, không chạy lệnh phá hoại — cho đến khi bạn xem và duyệt kế hoạch của nó.
+
+Claude khám phá codebase, đặt câu hỏi, rồi viết ra một kế hoạch cụ thể: sẽ sửa file nào, theo thứ tự nào, lý do là gì. Bạn đọc kế hoạch đó, chỉnh sửa nếu cần (nhấn `Ctrl+G` để mở trong editor), rồi mới cho phép Claude bắt tay vào code.
+
+Quy trình 4 pha chuẩn:
+
+1. **Explore** — Claude đọc file, tìm hiểu kiến trúc (plan mode)
+2. **Plan** — Claude đề xuất kế hoạch chi tiết (plan mode)
+3. **Implement** — Claude sửa code theo kế hoạch (thoát plan mode)
+4. **Commit** — Claude commit với message mô tả rõ ràng
+
+Để bật plan mode: `claude --permission-mode plan`. Hoặc nhấn `Shift+Tab` để chuyển qua lại giữa các mode. Muốn mặc định luôn bắt đầu bằng plan mode, thêm vào `.claude/settings.json`:
+
+```json
+{
+  "permissions": {
+    "defaultMode": "plan"
+  }
+}
+```
+
+## Ví dụ thật
+
+Bạn cần thêm Google OAuth vào app. Thay vì nói "thêm Google OAuth đi", bạn vào plan mode và hỏi: "Đọc `/src/auth` và hiểu cách chúng ta xử lý session. Tôi muốn thêm Google OAuth — cần sửa những file nào?"
+
+Claude đọc toàn bộ flow xác thực, rồi viết ra: "Cần sửa 4 file: `auth.ts`, `routes/oauth.ts`, `db/schema.ts`, và `CLAUDE.md`. Thứ tự: schema trước để có bảng users mới, rồi route callback, rồi middleware..."
+
+Bạn đọc, thấy Claude quên mất file `.env.example`, thêm vào kế hoạch, rồi mới gõ "thực hiện". Claude triển khai đúng kế hoạch đã được duyệt — không có bất ngờ.
+
+<Callout title="Cẩn thận">
+Plan mode hữu ích nhất khi bạn chưa chắc về cách tiếp cận, hoặc thay đổi ảnh hưởng nhiều file. Với task nhỏ rõ ràng — sửa một typo, đổi tên biến — plan mode chỉ thêm overhead không cần thiết. Biết khi nào nên bỏ qua plan cũng là kỹ năng quan trọng.
+</Callout>
+
+<Callout title="Nhớ nhé">
+Kế hoạch không phải bản thiết kế cứng nhắc — đó là "hợp đồng sống". Bạn có thể chỉnh sửa nó trước khi duyệt, và Claude sẽ follow kế hoạch đã được duyệt, không phải kế hoạch ban đầu của nó.
+</Callout>
+
+## Đọc thêm
+
+- [Plan mode — Claude Code Docs](https://code.claude.com/docs/en/permission-modes#analyze-before-you-edit-with-plan-mode) — Tài liệu chính thức: cách bật plan mode, quy trình duyệt kế hoạch, phím tắt `Ctrl+G` để edit plan trong editor, và `defaultMode` setting.
+- [Best Practices: Explore first, then plan, then code — Claude Code Docs](https://code.claude.com/docs/en/best-practices#explore-first-then-plan-then-code) — Giải thích chi tiết 4 pha Explore → Plan → Implement → Commit kèm ví dụ prompt thực tế.
+- [Common Workflows: Plan before editing — Claude Code Docs](https://code.claude.com/docs/en/common-workflows#plan-before-editing) — Recipe ngắn gọn: cách dùng `claude --permission-mode plan` và `Shift+Tab` để toggle plan mode trong session.
+- [My LLM coding workflow going into 2026 — Addy Osmani](https://addyosmani.com/blog/ai-coding-workflow/) — Bài thực chiến từ kỹ sư Google: tại sao planning trước khi code với AI là nguyên tắc số 1, và cách áp dụng trong công việc hàng ngày.
+
+## Tự kiểm tra
+
+1. Plan mode khác default mode ở điểm nào? Agent có thể làm gì và không thể làm gì trong plan mode?
+2. Bạn cần refactor một module auth ảnh hưởng 8 file. Tại sao plan mode phù hợp hơn là yêu cầu agent thực hiện thẳng?
+3. Khi nào bạn nên *bỏ qua* plan mode và để agent code thẳng?

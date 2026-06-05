@@ -1,0 +1,56 @@
+---
+id: concept-verification-before-completion
+title: "Verification Before Completion"
+type: "concept"
+aliases: ["verify trước khi xong", "agent verification", "bằng chứng agent", "verification loop"]
+tags: [ai-engineering, verification, agents, agentic-coding, testing, quality, trust]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Tưởng tượng bạn giao thợ xây tường rồi về. Hôm sau thợ báo "xong rồi anh". Bạn có chạy ra kiểm tra không — hay tin vào lời thợ? Với agent cũng vậy: "đã xong" không phải bằng chứng. **Bằng chứng** là output của một lệnh chạy được, không phải tuyên bố của agent.
+
+## Là gì
+
+**Verification before completion** là thói quen cho agent một *check chạy được* để tự xác nhận công việc trước khi tuyên bố hoàn thành. Agent chạy check đó, đọc kết quả, lặp cho đến khi pass — rồi show bằng chứng (test output, build log, screenshot) thay vì chỉ nói "done".
+
+Không có check này, agent dừng khi "trông xong" — và bạn trở thành vòng lặp verification: mọi lỗi chờ đến khi bạn để ý.
+
+Liên quan chặt với [concept-trust-but-verify](/concepts/trust-but-verify): trust nhưng phải verify bằng thứ gì đó chạy được, không phải bằng đọc code lướt.
+
+## Ví dụ thật
+
+Bạn giao agent: "thêm validation email cho form đăng ký".
+
+**Không có verification:** Agent sửa code, nói "đã thêm validation". Bạn phải tự chạy app kiểm tra.
+
+**Có verification:** Bạn prompt: *"thêm validation email, sau đó chạy `npm test -- --grep 'email validation'` và paste kết quả"*. Agent viết code, chạy test, nếu fail thì tự sửa, đến khi pass mới report — kèm output test thật.
+
+Bốn cách thiết lập cổng verification, từ đơn giản đến chắc chắn nhất:
+
+| Cổng | Cách dùng | Phù hợp khi |
+|------|-----------|-------------|
+| In-prompt | Hỏi agent chạy test trong cùng prompt | Task nhỏ, nhanh |
+| `/goal` | Set điều kiện pass, re-check sau mỗi turn | Session dài |
+| Stop hook | Script block agent dừng đến khi check pass | Chạy không giám sát |
+| Verification subagent | Phiên mới review kết quả — không bias | Task quan trọng |
+
+<Callout title="Mẹo">
+Với reviewer adversarial (verification subagent), ràng buộc rõ: *"chỉ flag lỗi ảnh hưởng đến đúng đắn hoặc yêu cầu"*. Reviewer không bị ràng buộc thường báo hàng loạt "vấn đề" style, dẫn đến over-engineering.
+</Callout>
+
+<Callout title="Nhớ nhé">
+Yêu cầu agent show **bằng chứng** — output của lệnh chạy được — không phải lời khẳng định. "Đã xong" không phải bằng chứng.
+</Callout>
+
+## Đọc thêm
+
+- [Best Practices — Claude Code Docs](https://code.claude.com/docs/en/best-practices) — Phần "Give Claude a way to verify its work" giải thích đầy đủ 4 cổng: in-prompt, /goal, Stop hook, verification subagent — và khi nào dùng cái nào.
+- [Self-Improving Coding Agents — Addy Osmani](https://addyosmani.com/blog/self-improving-agents/) — Bài 2026 về validation loop trong agentic workflow: automated test, headless browser check, git audit trail, và acceptance criteria để agent biết khi nào "thực sự xong".
+- [Building Effective Agents — Anthropic Research](https://www.anthropic.com/research/building-effective-agents) — Bối cảnh về tại sao verifiable output quan trọng trong agent design, bao gồm code solution verification qua automated test.
+
+## Tự kiểm tra
+
+1. Tại sao "nhìn code thấy đúng" không thay thế được một check chạy được?
+2. Bạn đang chạy agent không giám sát qua đêm để refactor module lớn. Cổng verification nào phù hợp nhất và tại sao?
+3. Bạn prompt verification subagent nhưng nó báo 12 vấn đề, chủ yếu về naming và style. Bạn phản ứng thế nào?

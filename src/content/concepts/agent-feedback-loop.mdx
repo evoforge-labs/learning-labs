@@ -1,0 +1,56 @@
+---
+id: concept-agent-feedback-loop
+title: "Agent Feedback Loop"
+type: "concept"
+aliases: ["vòng lặp feedback", "feedback loop", "agent feedback", "hướng dẫn lại agent", "sửa hướng agent"]
+tags: [ai-assisted-development, agentic-coding, dev-workflow, coding-agents, human-in-the-loop, iteration]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Tưởng tượng bạn đang lái xe với GPS. Nếu GPS rẽ nhầm mà bạn không nói gì — sau 10 phút bạn đang ở hướng ngược lại. Nói sớm hơn thì sửa ít hơn.
+
+Làm việc với agent cũng y như vậy. Mỗi lần agent làm sai mà bạn không bắt — nó tiếp tục xây sai trên nền sai.
+
+## Là gì
+
+**Vòng lặp feedback** là thói quen **sửa hướng agent sớm** — ngay khi thấy output đi lệch, không phải sau khi agent đã làm xong.
+
+Ba dấu hiệu cần can thiệp ngay:
+
+1. **Agent hiểu sai scope** — đang sửa file không liên quan, hoặc đề xuất refactor khi bạn chỉ muốn thêm một điều kiện
+2. **Output trông đúng nhưng bạn không hiểu** — đây là lúc nguy hiểm nhất; dừng lại, đọc kỹ trước khi cho tiếp tục
+3. **Bạn đã sửa cùng một lỗi 2 lần** — dấu hiệu context đang nhiễu; không sửa lần 3, hãy `/clear` và viết lại prompt tốt hơn
+
+Pattern mạnh: **Writer/Reviewer** — một session để implement, một session độc lập để review với context sạch. Reviewer không bị "thiên kiến" bởi code mình vừa viết, nên tìm được lỗi tốt hơn.
+
+## Ví dụ thật
+
+Bạn nhờ agent thêm rate limiting cho API. Agent implement xong, test pass. Nhưng khi review, bạn thấy nó dùng in-memory counter — sẽ reset khi server restart và không work với multiple instances.
+
+Thay vì tiếp tục chỉnh trong cùng session đó:
+1. Note lại bài học: "rate limiting cần persistent storage (Redis), không in-memory"
+2. Clear context, bắt đầu session mới với prompt đã bổ sung constraint này
+3. Thêm ghi chú vào CLAUDE.md để lần sau agent biết luôn từ đầu
+
+Bài học cụ thể từ lần này trở thành kiến thức vĩnh viễn của project — không phải bạn phải nhắc lại mỗi session.
+
+<Callout title="Cẩn thận">
+Nhiều người cứ tiếp tục sửa trong cùng một session dài, hi vọng lần sau agent sẽ đúng. Thực tế thì ngược lại: context đầy càng khiến agent "quên" chỉ dẫn cũ. Sau 2 lần sửa cùng một lỗi, hành động hiệu quả nhất là reset — không phải nhắc thêm.
+</Callout>
+
+<Callout title="Nhớ nhé">
+Sửa sớm tốt hơn sửa nhiều. Và mỗi lần sửa: hỏi "bài học này có cần vào CLAUDE.md không?" — để session sau không lặp lại.
+</Callout>
+
+## Đọc thêm
+
+- [Course-correct early and often — Claude Code Best Practices](https://code.claude.com/docs/en/best-practices) — Anthropic giải thích khi nào dùng `Esc`, `/rewind`, `/clear`, và quy tắc "sau 2 lần sửa cùng lỗi thì reset" — kèm ví dụ writer/reviewer pattern với multiple sessions.
+- [Effective Harnesses for Long-Running Agents — Anthropic Engineering](https://www.anthropic.com/engineering/effective-harnesses-for-long-running-agents) — Pattern initializer/coder agent, cách dùng progress.md và git commit để carry context qua sessions, và cơ chế tự kiểm (e2e test, browser verification) để agent tự phát hiện lỗi trước khi bạn review.
+- [Reducing Friction in AI Development — Martin Fowler](https://martinfowler.com/articles/reduce-friction-ai/) — Phân tích "Frustration Loop" (vòng lặp tạo ra, review, sửa lại vô tận) và "Feedback Flywheel" — cách harvest bài học từ mỗi vòng lặp để cải thiện quy trình dài hạn.
+
+## Tự kiểm tra
+
+1. Agent đã sửa 3 lần cùng một lỗi trong session. Bước tiếp theo bạn nên làm gì — và tại sao không phải tiếp tục sửa trong session đó?
+2. Pattern Writer/Reviewer hoạt động như thế nào? Tại sao reviewer cần context sạch (session riêng)?
+3. Bạn phát hiện agent hay tạo SQL query không có index. Làm sao để biến bài học này thành kiến thức vĩnh viễn của project?

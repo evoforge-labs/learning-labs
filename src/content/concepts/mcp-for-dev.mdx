@@ -1,0 +1,55 @@
+---
+id: concept-mcp-for-dev
+title: "MCP cho dev workflow"
+type: "concept"
+aliases: ["MCP cho dev", "MCP coding workflow", "tool integration", "progressive disclosure"]
+tags: [building-with-ai-agents, mcp, tools, integration, token-budget, progressive-disclosure, claude-code]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Hãy nghĩ về MCP như ổ cắm USB-C cho AI: thay vì mỗi thiết bị (Figma, GitHub, database) cần dây riêng cho mỗi AI agent — có một chuẩn chung, cắm một lần, dùng được khắp nơi. Build server một lần, mọi client hỗ trợ MCP đều dùng được.
+
+## Là gì
+
+**MCP (Model Context Protocol)** là chuẩn mở để kết nối coding agent với tool và data bên ngoài. Bạn chạy một MCP server (Figma, Notion, Postgres, internal API của bạn…) và coding agent kết nối vào qua chuẩn đó.
+
+Giá trị chính cho dev workflow có 2 phần:
+
+**1. Code execution + tool integration:** Agent không còn bị giới hạn ở filesystem và shell. Bạn cắm MCP server của Figma → agent đọc design, implement thành code, so sánh screenshot. Cắm MCP của database → agent truy vấn trực tiếp thay vì bạn copy-paste dữ liệu vào chat.
+
+**2. Progressive disclosure — tiết kiệm token đáng kể:** Thay vì nạp toàn bộ tool definition lên context từ đầu, agent chỉ load tool nào thực sự cần cho bước tiếp theo. Anthropic đo được: với agent đọc tài liệu lớn, progressive disclosure qua MCP giảm token từ 150.000 xuống 2.000 — tiết kiệm ~98%.
+
+Liên hệ: [MCP (khái niệm gốc)](/concepts/mcp) giải thích kiến trúc client-server. Bài này tập trung vào cách áp dụng trong dev workflow hằng ngày.
+
+## Ví dụ thật
+
+Bạn đang build feature lấy data từ Postgres. Không có MCP: bạn query database → copy kết quả → paste vào chat → agent xử lý → bạn lại copy kết quả. Có MCP postgres server: agent tự query, tự đọc schema, tự iterate — bạn chỉ xem kết quả cuối.
+
+Setup trong Claude Code:
+
+```bash
+claude mcp add postgres postgres://localhost:5432/mydb
+```
+
+Từ đó trong session: `Use the postgres MCP to query the orders table and find all failed transactions from last week` — agent tự làm, không cần bạn trung gian.
+
+<Callout title="Cẩn thận">
+MCP server lạ từ marketplace = tin tưởng code của người khác chạy trong môi trường của bạn. Đọc source hoặc dùng tool từ nhà cung cấp đáng tin trước khi install server không quen.
+</Callout>
+
+<Callout title="Nhớ nhé">
+Build MCP server một lần, dùng ở Cursor, Claude Code, VS Code Copilot — bất kỳ client nào hỗ trợ chuẩn MCP. Đây là lý do đầu tư vào server cho internal tools của team rất xứng đáng.
+</Callout>
+
+## Đọc thêm
+
+- [What is MCP? — modelcontextprotocol.io](https://modelcontextprotocol.io/docs/getting-started/intro) — Giới thiệu chuẩn MCP, kiến trúc client-server, use cases — tài liệu chính thức, điểm khởi đầu tốt nhất.
+- [Code Execution with MCP — Anthropic Engineering](https://www.anthropic.com/engineering/code-execution-with-mcp) — Giải thích tại sao progressive disclosure qua MCP tiết kiệm token lớn: ví dụ cụ thể giảm từ 150k xuống 2k token — đọc để hiểu cơ chế thực sự.
+- [MCP Roadmap 2026 — MCP Blog](https://blog.modelcontextprotocol.io/posts/2026-mcp-roadmap/) — Ưu tiên phát triển MCP năm 2026: transport scalability, agent communication, enterprise readiness — hiểu roadmap để biết đầu tư vào đâu bền vững.
+
+## Tự kiểm tra
+
+1. Bạn có một internal API tracking bug severity. Thay vì copy-paste data vào chat, bạn muốn agent tự query. MCP giúp gì ở đây, và bạn cần làm gì để setup?
+2. Progressive disclosure nghĩa là gì trong ngữ cảnh MCP? Tại sao nó tiết kiệm token so với cách cũ?
+3. Nếu bạn build một MCP server cho internal API của team, team dùng cả Cursor lẫn Claude Code có dùng được không? Tại sao?

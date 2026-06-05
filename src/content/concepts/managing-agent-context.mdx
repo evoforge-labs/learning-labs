@@ -1,0 +1,59 @@
+---
+id: concept-managing-agent-context
+title: "Managing Agent Context"
+type: "concept"
+aliases: ["managing agent context", "quản lý context agent", "clear compact subagent", "agent context hygiene"]
+tags: [building-with-ai-agents, claude-code, context-management, context-window, workflow, performance]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Bạn đang làm việc cả ngày, liên tục mở tab mới, không đóng cái nào. Sau 8 tiếng, máy tính chậm hẳn — không phải vì task mới khó hơn, mà vì RAM đầy. Giải pháp không phải là mua máy mạnh hơn — mà là đóng tab không cần thiết.
+
+Context window của agent cũng vậy.
+
+## Là gì
+
+**Context window** là "bộ nhớ làm việc" của agent — nơi chứa toàn bộ cuộc hội thoại, file đã đọc, lệnh đã chạy, và output. Xem thêm tại [concept-context-window](/concepts/context-window) và [concept-context-engineering](/concepts/context-engineering).
+
+Khi context đầy, **hiệu năng tụt rõ rệt**: agent bắt đầu "quên" instruction ở đầu phiên, đưa ra quyết định kém hơn, và đôi khi lặp lại công việc đã làm. Đây là ràng buộc số 1 trong thực tế.
+
+Ba công cụ chính để quản lý context:
+
+| Tình huống | Công cụ | Khi nào dùng |
+|---|---|---|
+| Xong một task, chuyển sang task khác không liên quan | `/clear` | Reset hoàn toàn — bắt đầu phiên mới sạch |
+| Context đang đầy nhưng muốn giữ một số thông tin | `/compact [chỉ dẫn]` | Tóm tắt thông minh, ví dụ: `/compact Giữ lại danh sách file đã sửa và lệnh test` |
+| Cần điều tra sâu mà không muốn đầy context chính | Subagent | Agent con khám phá, báo cáo tóm tắt về |
+
+Ngoài ba công cụ đó, hãy **viết state ra ngoài** — kế hoạch, quyết định kiến trúc, lệnh test — vào file (ví dụ `PLAN.md`, `progress.md`). Agent phiên sau đọc file đó thay vì phải nhớ hết trong context.
+
+## Ví dụ thật
+
+Bạn đang debug một service phức tạp. Claude đã đọc 20 file, chạy 10 lệnh, và context đang gần đầy. Bạn nhận ra vấn đề nằm ở service khác hoàn toàn.
+
+Sai: tiếp tục trong cùng phiên — agent sẽ bị "nhiễm" bởi toàn bộ context cũ khi nhìn vào service mới.
+
+Đúng: chạy `/clear`, rồi bắt đầu phiên mới với prompt tập trung: "Nhìn vào `payment-service/src/webhook.ts` — tại sao event không được process?"
+
+Hoặc nếu muốn giữ tiến trình: `"use a subagent to investigate how payment-service handles webhook retry logic"` — subagent điều tra trong context riêng, báo cáo tóm tắt về, context chính của bạn vẫn sạch.
+
+<Callout title="Mẹo">
+Compact chủ động ở khoảng 70-75% context đầy — đừng chờ đến khi Claude tự compact. Compact theo chỉ dẫn cụ thể cho kết quả tốt hơn: `/compact Giữ lại: danh sách file đã sửa, quyết định thiết kế chính, và lệnh để chạy test`.
+</Callout>
+
+<Callout title="Nhớ nhé">
+Context là tài nguyên, không phải lịch sử. Đừng giữ mọi thứ trong context vì sợ "mất thông tin" — hãy ghi state quan trọng ra file. Agent phiên sau đọc file nhanh hơn nhiều so với phải xử lý context đầy ắp.
+</Callout>
+
+## Đọc thêm
+
+- [Best Practices: Manage context aggressively — Claude Code Docs](https://code.claude.com/docs/en/best-practices#manage-context-aggressively) — Tài liệu chính thức: khi nào dùng `/clear`, `/compact`, subagent cho điều tra; cách compact theo chỉ dẫn cụ thể.
+- [Common Workflows: Delegate research to subagents — Claude Code Docs](https://code.claude.com/docs/en/common-workflows#delegate-research-to-subagents) — Recipe cụ thể: cách dùng subagent để điều tra codebase mà không làm đầy context chính.
+- [Context Engineering — Learning Lab](/concepts/context-engineering) — Khái niệm nền tảng: tại sao context rot xảy ra, kỹ thuật just-in-time retrieval và compaction ở mức kiến trúc agent.
+
+## Tự kiểm tra
+
+1. Tại sao hiệu năng agent tụt khi context window gần đầy? Cơ chế nào gây ra điều này?
+2. Bạn vừa xong debug một bug phức tạp (agent đã đọc 30 file). Bây giờ cần thêm một feature mới hoàn toàn không liên quan. Bạn làm gì và tại sao?
+3. Phân biệt khi nào nên dùng `/compact` thay vì `/clear`. Câu lệnh nào phù hợp hơn nếu bạn muốn agent tiếp tục từ giữa chừng nhưng context đang quá đầy?

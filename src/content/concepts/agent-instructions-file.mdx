@@ -1,0 +1,67 @@
+---
+id: concept-agent-instructions-file
+title: "Agent Instructions File"
+type: "concept"
+aliases: ["CLAUDE.md", "AGENTS.md", "file chỉ dẫn agent", "agent instructions", "memory file", "claude md", "agents md", "cursor rules"]
+tags: [ai-assisted-development, agentic-coding, claude-md, agents-md, dev-workflow, coding-agents, context-engineering]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Mỗi buổi sáng bạn phải giải thích lại cho cộng sự mới cùng một thứ: cách chạy dev server, convention đặt tên, những chỗ đừng bao giờ đụng vào. Tốn thì giờ — và rồi họ vẫn quên.
+
+File chỉ dẫn giải quyết đúng vấn đề đó cho agent: thông tin nào cần biết ngay từ đầu mỗi phiên, viết một lần, dùng mãi.
+
+## Là gì
+
+**File chỉ dẫn** (CLAUDE.md, AGENTS.md, .cursor/rules) là file văn bản được version-control và nạp tự động vào đầu mỗi phiên làm việc của agent. Nó cho agent biết những gì không thể tự suy ra từ code: lệnh build đặc thù, convention của project, những ràng buộc cần giữ.
+
+Chuẩn phổ biến năm 2026:
+- **CLAUDE.md** — Claude Code đọc ở mỗi session
+- **.cursor/rules/** — Cursor Agent đọc khi làm việc với matching files
+- **AGENTS.md** — chuẩn chung cho nhiều tool; CLAUDE.md có thể import bằng `@AGENTS.md`
+
+Nguyên tắc viết: **ngắn và phổ quát**. Chỉ viết những thứ agent sẽ làm sai nếu thiếu thông tin đó. File dài thì agent bỏ qua quy tắc quan trọng vì bị chôn vùi.
+
+## Ví dụ thật
+
+Một CLAUDE.md thực tế, 8 dòng, đủ dùng:
+
+```markdown
+# Build & Test
+- Run: `pnpm dev` (not npm or yarn)
+- Test: `pnpm test --watch=false` before committing
+
+# Conventions
+- API handlers live in `src/api/handlers/`, one file per resource
+- Database queries go through `src/db/`, never raw SQL in handlers
+- Use `logger.info()`, not `console.log()`
+
+# Boundaries
+- Never commit directly to main — always branch + PR
+- Never edit files in `src/generated/` — they are auto-generated
+```
+
+Không cần "viết code sạch" hay "dùng TypeScript" — agent đã biết điều đó. Chỉ cần những thứ đặc thù của *project này*.
+
+Khi nào thêm: lần thứ hai bạn phải nhắc agent cùng một chuyện. Khi nào xóa: dùng `/memory` để review định kỳ, pruning những dòng agent đã tự biết qua code.
+
+<Callout title="Cẩn thận">
+File chỉ dẫn quá dài nguy hiểm hơn file quá ngắn. Claude Code nói rõ: dưới 200 dòng mỗi file — file dài khiến agent bỏ qua quy tắc bạn quan trọng nhất vì bị lẫn vào noise. Dùng skills hoặc path-scoped rules cho những gì chỉ liên quan đến một phần codebase.
+</Callout>
+
+<Callout title="Nhớ nhé">
+File chỉ dẫn là code — commit vào git, review khi agent làm sai, prune định kỳ. Chạy `/init` để có file khởi đầu; chạy `/memory` để xem những gì agent đang đọc.
+</Callout>
+
+## Đọc thêm
+
+- [How Claude Remembers Your Project — Claude Code](https://code.claude.com/docs/en/memory) — Tài liệu đầy đủ về CLAUDE.md vs auto memory, cách đặt file ở đâu (project/user/org level), viết instruction hiệu quả, và khi nào dùng rules hay skills thay vì CLAUDE.md.
+- [Write an effective CLAUDE.md — Claude Code Best Practices](https://code.claude.com/docs/en/best-practices) — Bảng rõ ràng: những gì nên và không nên đưa vào CLAUDE.md, kèm ví dụ cụ thể — thực tiễn nhất cho người mới bắt đầu.
+- [Spec-Driven Development with AI — GitHub Blog](https://github.blog/ai-and-ml/generative-ai/spec-driven-development-with-ai-get-started-with-a-new-open-source-toolkit/) — Giải thích tại sao file chỉ dẫn là artifact của team (không phải cá nhân), nên commit vào git và cập nhật cùng spec khi project phát triển.
+
+## Tự kiểm tra
+
+1. Bạn có project dùng `yarn` nhưng agent cứ chạy `npm install`. Viết đúng một dòng cho CLAUDE.md để sửa vấn đề này — không viết thêm gì khác.
+2. Tại sao file chỉ dẫn nên ở dưới 200 dòng? Điều gì xảy ra khi file quá dài?
+3. Sự khác nhau giữa CLAUDE.md và skills là gì? Khi nào thì thông tin nên ở skill thay vì CLAUDE.md?

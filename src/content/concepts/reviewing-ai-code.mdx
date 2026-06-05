@@ -1,0 +1,46 @@
+---
+id: concept-reviewing-ai-code
+title: "Reviewing AI-Generated Code"
+type: "concept"
+aliases: ["review code AI", "kiểm tra code AI", "AI code review", "review agent code"]
+tags: [ai-engineering, code-review, agents, agentic-coding, hallucination, quality]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Hãy hình dung bạn nhận một bản dịch từ cộng tác viên giỏi nhưng đôi khi tự bịa từ chuyên ngành nghe rất đúng. Nếu bạn chỉ đọc lướt xem "có vẻ trơn tru không", bạn sẽ bỏ qua những chỗ họ tự chế. Với code AI cũng vậy — vấn đề không phải code *có vẻ đúng*, mà là bạn cần cách đọc khác đi để bắt chỗ AI **bịa**.
+
+## Là gì
+
+Review code do AI sinh là quá trình kiểm tra *có chủ đích* nhắm vào các lỗi đặc trưng của AI — khác với review code người viết thông thường. Lỗi nguy hiểm nhất: **hallucinated API** — agent gọi hàm hoặc import package không tồn tại, đôi khi package nghe-có-vẻ-thật nhưng thực ra là giả mạo độc hại (typosquatting).
+
+## Ví dụ thật
+
+Agent thêm dòng `from stripe import create_payment_intent` — nhìn đúng hoàn toàn. Nhưng API thật của Stripe là `stripe.PaymentIntent.create(...)`. Nếu bạn không verify, lỗi chỉ xuất hiện lúc chạy production, không phải khi đọc code.
+
+Ngoài hallucinated API, bốn điểm review đặc trưng khác:
+
+1. **Test có thật sự fail không?** — Chạy thử xem test có bắt được lỗi thực nếu tính năng hỏng không, hay test luôn pass bất kể kết quả.
+2. **Abstraction thừa** — Agent thường thêm lớp interface, class wrapper "phòng xa" cho trường hợp không bao giờ xảy ra. Hỏi: *cái này giải quyết vấn đề gì ngay bây giờ?*
+3. **Scope creep âm thầm** — Agent tự đổi file ngoài yêu cầu, tự thêm import, tự "tiện tay refactor". Từ chối mọi thay đổi không nằm trong task.
+4. **Reviewer subagent ở context mới** — Dùng một phiên Claude mới (không có context của phiên viết code) để review. Reviewer không bị bias bởi lý do tại sao code được viết vậy.
+
+<Callout title="Cẩn thận">
+Đừng review bằng cách hỏi agent đã viết code: "code này đúng không?" — nó sẽ tự xác nhận. Reviewer phải là context mới, hoặc chính bạn với checklist, không phải phiên đang viết.
+</Callout>
+
+<Callout title="Nhớ nhé">
+Code AI đọc trơn tru ≠ đúng. Verify từng import, từng API call — đừng tin "nhìn đúng".
+</Callout>
+
+## Đọc thêm
+
+- [Reviewing AI-Generated Code — Sentry Dev Playbook](https://develop.sentry.dev/sdk/getting-started/playbooks/development/reviewing-ai-generated-code/) — Checklist thực chiến từ đội SDK của Sentry (2026): 6 điểm AI-specific cần kiểm tra ngoài review thường, bao gồm hallucinated imports, test không thực sự fail, và over-engineering.
+- [Best Practices — Claude Code Docs](https://code.claude.com/docs/en/best-practices) — Hướng dẫn chính thức từ Anthropic về cách làm việc với Claude Code hiệu quả: verification loop, reviewer subagent ở context mới, và pattern Writer/Reviewer.
+- [Building Effective Agents — Anthropic Research](https://www.anthropic.com/research/building-effective-agents) — Bài gốc của Anthropic về agent pattern: giải thích tại sao code từ agent cần vòng kiểm tra chặt hơn và cách thiết kế verification loop.
+
+## Tự kiểm tra
+
+1. Tại sao "hallucinated API" lại nguy hiểm hơn lỗi logic thông thường, và bạn kiểm tra nó như thế nào trong một PR?
+2. Agent vừa thêm một class `PaymentProcessor` với interface `IProcessor` vào code xử lý payment. Không có yêu cầu nào về interface này. Bạn phản ứng thế nào?
+3. Tại sao dùng một phiên Claude *mới* để review lại tốt hơn hỏi chính phiên đã viết code?

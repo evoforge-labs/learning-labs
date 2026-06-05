@@ -1,0 +1,57 @@
+---
+id: concept-dev-cost-token-budget
+title: "Dev Cost & Token Budget"
+type: "concept"
+aliases: ["dev cost token budget", "cost token budget", "chi phí token agent", "token budget dev", "session hygiene"]
+tags: [dev-cost, token-budget, model-routing, cost-optimization, session-hygiene, building-with-ai-agents]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Hãy nghĩ đến hóa đơn điện thoại: không phải số cuộc gọi đắt — mà là *thời lượng*. Với agentic coding, không phải số lần gọi API đắt — mà là số token đã tích lũy trong toàn bộ cuộc hội thoại. Mỗi lượt tiếp theo, agent đọc lại toàn bộ context từ đầu. Bạn đang trả cho phần đó mỗi lần.
+
+## Là gì
+
+**Dev Cost & Token Budget** là cách kiểm soát chi phí AI trong quy trình phát triển — hiểu đúng token đi đâu, chọn model phù hợp với từng việc, và dọn dẹp session đúng lúc.
+
+Ba điểm cốt lõi cần nắm:
+
+**Input token là phần đắt nhất.** Tỷ lệ input:output của agentic coding khoảng 25:1 — agent đọc file, đọc lại lịch sử, đọc tool result gấp nhiều lần so với text nó sinh ra. Một session debug dài 50 lượt có thể ngốn lượng input token tương đương hàng trăm câu hỏi đơn lẻ.
+
+**Chọn sai model = lãng phí lớn.** Chênh lệch giá giữa model frontier (Opus) và model nhỏ có thể tới ~10x cùng task. Ở quy mô team, áp dụng **model routing**: việc đơn giản (generate boilerplate, format code, trả lời câu hỏi nhanh) dùng model rẻ; việc phức tạp (thiết kế kiến trúc, debug khó, security review) mới dùng model mạnh. Đừng để Opus xử lý rename variable.
+
+**Cùng một task có thể chênh ~30x token** giữa các lần chạy khác nhau — phụ thuộc vào cách agent khám phá context, số file nó đọc. Số này không đoán được từ lý thuyết. Phải đo thực nghiệm với task thật của team bạn.
+
+## Ví dụ thật
+
+Team 5 người chạy Claude Code. Mỗi người trung bình 8 task/ngày. Nếu không có model routing và session hygiene:
+
+- Dev A để session chạy suốt ngày, debug một bug khó cùng Opus — context tích lũy đến 200K token, chủ yếu là input.
+- Dev B dùng Opus để generate CRUD boilerplate — task mà model rẻ hơn 8x làm tốt không kém.
+
+Với routing đơn giản (task classification → chọn model) và `/clear` sau mỗi task lớn, team thường giảm được 40–60% chi phí mà không mất chất lượng.
+
+**Session hygiene** gồm:
+- Chạy `/clear` hoặc bắt đầu session mới sau mỗi task hoàn chỉnh
+- Không để một session "drift" qua nhiều task không liên quan
+- Dùng subagent để khám phá code thay vì nhét vào main session
+
+<Callout title="Cẩn thận">
+Đừng optimize quá sớm. Đo trước: dùng observability (token usage log) để biết task nào ngốn nhiều nhất, team member nào có session pattern bất thường. Rồi mới routing và hygiene. Optimize mù sẽ cắt nhầm vào chỗ không đáng.
+</Callout>
+
+<Callout title="Nhớ nhé">
+Input token tích lũy qua các lượt là phần đắt — không phải output. Session dài = đắt theo cấp số nhân. Model routing (việc dễ → model rẻ) là đòn bẩy lớn nhất. Đo thực nghiệm, đừng đoán.
+</Callout>
+
+## Đọc thêm
+
+- [How Do AI Agents Spend Your Money? — Microsoft Research](https://www.microsoft.com/en-us/research/publication/how-do-ai-agents-spend-your-money-analyzing-and-predicting-token-consumption-in-agentic-coding-tasks/) — Nghiên cứu thực nghiệm: agentic coding ngốn token nhiều hơn code reasoning đơn lẻ ~1000 lần, và "token cao hơn không đồng nghĩa kết quả tốt hơn". Dữ liệu nền quan trọng cho mọi quyết định về budget.
+- [The Hidden Cost Driver in Agentic Coding — Vantage](https://www.vantage.sh/blog/agentic-coding-costs) — Phân tích thực tế: input token tích lũy qua multi-turn conversation là driver chi phí chính, không phải giá per-token. Có hướng dẫn đo và kiểm soát chi phí theo team.
+- [Best practices — Claude Code Docs](https://code.claude.com/docs/en/best-practices) — Phần "Manage context aggressively": kỹ thuật `/clear`, `/compact`, subagent để giữ context sạch — trực tiếp ảnh hưởng đến chi phí.
+
+## Tự kiểm tra
+
+1. Tại sao input token trong agentic coding lại đắt hơn bạn nghĩ, dù tỷ lệ input:output chỉ là 25:1?
+2. Model routing nghĩa là gì trong thực tế? Cho một ví dụ về task nên dùng model rẻ và task nên dùng model mạnh.
+3. "Session hygiene" giúp giảm chi phí theo cơ chế nào?

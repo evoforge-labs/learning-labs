@@ -1,0 +1,75 @@
+---
+id: exercise-bswa-001
+title: "Khi nào giao cho agent, khi nào tự code"
+type: "exercise"
+track: building-with-ai-agents
+tags: [ai-assisted-development, agentic-coding, dev-workflow, mindset, verification]
+estimatedMinutes: 20
+related: [lesson-bswa-001, concept-when-to-use-agents, concept-trust-but-verify, concept-agent-as-collaborator, rubric-building-with-ai-agents]
+status: published
+---
+import Callout from '../../../components/content/Callout.astro';
+
+## Tình huống
+
+Bạn là developer trong một team 4 người. Hôm nay backlog có 6 task sau. Không phải task nào cũng nên giao cho agent — và ngay cả những task nên giao, bạn vẫn cần quyết định *giao như thế nào*.
+
+Đây là danh sách:
+
+1. **Rename API**: đổi tên field `userId` thành `user_id` theo convention mới, trong toàn bộ codebase (~80 file TypeScript).
+2. **Logic tính thuế**: viết hàm tính thuế VAT cho B2B invoicing — nhiều ngoại lệ theo ngành, tỉnh/thành, loại hàng hoá; spec chưa đầy đủ.
+3. **Thêm test coverage**: viết unit test cho module `OrderProcessor` hiện tại, đặt mục tiêu 80% coverage.
+4. **Sửa bug mơ hồ**: ticket mô tả "đôi khi nút thanh toán bị disable mà không rõ lý do, chủ yếu trên Safari mobile".
+5. **Prototyping UI**: thử 3 cách layout khác nhau cho trang dashboard — bạn chưa biết cách nào phù hợp.
+6. **Fix lỗi security auth**: token JWT không expire đúng hạn trong một edge case — đang trong code path xác thực người dùng.
+
+<Callout title="Nhớ nhé">
+Tiêu chí phân loại: **verify được không** (có check tự chạy) + **có đòi hỏi phán đoán agent thiếu context không**. Không phải "to hay nhỏ".
+</Callout>
+
+## Nhiệm vụ
+
+### Task 1 — Phân loại 6 task
+
+Với mỗi task trong danh sách, điền vào template:
+
+```
+Task: [tên task]
+Phân loại: Giao agent / Tự làm / Cùng làm
+Verify được không? [Có / Không / Một phần] — giải thích ngắn
+Cần phán đoán gì? [mô tả nếu có]
+Lý do phân loại:
+```
+
+Sau khi điền xong 6 task, nhìn lại toàn bộ và trả lời: pattern nào xuất hiện? Những task bạn phân loại "Giao agent" có điểm chung gì?
+
+### Task 2 — Viết "check tự chạy" cho một task giao agent
+
+Chọn **một** trong những task bạn phân loại "Giao agent". Viết câu lệnh hoặc mô tả check cụ thể bạn sẽ đưa vào prompt để agent có thể tự verify output trước khi dừng.
+
+Ví dụ format:
+
+```
+Task được chọn: [tên]
+Check tự chạy: [lệnh / test cụ thể / tiêu chí pass/fail]
+Tại sao check này đủ để xác nhận task hoàn thành?
+Điều gì check này KHÔNG bắt được? (review nào bạn vẫn cần làm thêm?)
+```
+
+<Callout title="Mẹo">
+Check tốt nhất là thứ *máy có thể chạy* và trả về pass/fail rõ ràng. "Xem code có đúng không" không phải check — đó là review. Phân biệt hai thứ này.
+</Callout>
+
+### Task 3 — Xác định vị trí của bạn trong vòng lặp
+
+Với task bạn chọn ở Task 2, trả lời:
+
+**Vị trí trong vòng lặp:**
+- Bạn đang "in the loop", "on the loop", hay "outside the loop" với task này?
+- Bạn làm gì *trước* khi giao cho agent? (Spec? Context? Giới hạn gì?)
+- Bạn làm gì *sau* khi agent xong? (Review gì? Bằng chứng nào bạn xem?)
+- Nếu agent làm sai, bạn biết ở bước nào?
+
+## Tiêu chí đánh giá
+
+Xem [Building with AI Agents Rubric](../../rubrics/building-with-ai-agents-rubric) để biết cách bài này được chấm. Đặc biệt chú ý tiêu chí **"Có cơ chế verify agent tự chạy được"** — grader kiểm tra xem check bạn viết có thực sự là *máy chạy được* không, và tiêu chí **"Spec/intent rõ ràng trước khi để agent code"** — quyết định phân loại của bạn có căn cứ rõ ràng theo hai tiêu chí (verify-được + phán đoán) không phải theo cảm tính.

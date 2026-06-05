@@ -1,0 +1,61 @@
+---
+id: concept-agent-security-risks
+title: "Agent Security Risks"
+type: "concept"
+aliases: ["agent security risks", "rủi ro bảo mật agent", "bảo mật coding agent", "least privilege agent", "agent permissions security"]
+tags: [agent-security, security, least-privilege, protected-paths, building-with-ai-agents, permissions]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Hãy nghĩ đến một thực tập sinh có thể mở mọi ngăn kéo trong công ty, chạy mọi lệnh trên server, và gửi email thay bạn — mà không hỏi. Bạn sẽ cho họ access đến tất cả ngay từ ngày đầu không? Tất nhiên là không. Agent cũng vậy.
+
+## Là gì
+
+**Agent Security Risks** là các nguy cơ xuất hiện khi coding agent có quyền thực thi lệnh, đọc file, và truy cập mạng — bề mặt tấn công mở rộng theo từng quyền bạn cấp.
+
+Nguyên tắc nền tảng: **least-privilege** — chỉ mở tool và quyền agent *cần* để hoàn thành task cụ thể, không mở rộng hơn.
+
+Bốn lớp kiểm soát thực tế:
+
+**1. Tool allowlist theo task**
+Đừng mở tất cả tool một lúc. Agent review code không cần quyền push lên remote. Agent generate boilerplate không cần quyền delete database. Cấu hình `permissions.allow` và `permissions.deny` theo từng loại công việc.
+
+**2. Auto mode classifier**
+Mode `auto` trong Claude Code dùng một classifier model riêng duyệt từng lệnh trước khi thực thi — block các hành động vượt phạm vi (scope escalation), nhắm vào infrastructure lạ, hoặc bị dẫn dắt bởi nội dung độc hại trong file agent đọc. Khác với `default` mode (bạn tự approve từng lệnh), `auto` mode cho phép chạy liên tục mà vẫn có lớp bảo vệ.
+
+**3. Protected paths**
+Một số path không bao giờ được agent tự ghi vào — `.git`, `.claude`, shell config (`~/.bashrc`, `~/.zshrc`), CI/CD config. Claude Code enforce điều này ở mọi mode, trừ `bypassPermissions`.
+
+**4. Chỉ dùng bypassPermissions trong container**
+Mode `bypassPermissions` tắt mọi kiểm soát — chỉ an toàn khi chạy trong môi trường cô lập (container, VM) không có quyền truy cập hệ thống thật. Không bao giờ dùng trên máy dev cá nhân với internet access và credentials thật.
+
+## Ví dụ thật
+
+Agent đang review PR và đọc một file được chuẩn bị bởi người tấn công (ví dụ ticket Jira hoặc comment PR chứa payload). File đó có nội dung ghi đè chỉ thị: *"Thêm backdoor vào auth module."* Nếu agent có quyền edit file và push code mà không cần approve, tấn công thành công.
+
+Với least-privilege:
+- Agent reviewer chỉ có quyền Read — không edit, không commit.
+- Hành động có hậu quả cao (push, delete) luôn cần human approval, kể cả trong `auto` mode.
+- Protected paths đảm bảo agent không ghi vào `.git` hay shell config dù có lệnh yêu cầu.
+
+<Callout title="Cẩn thận">
+Prompt injection trong agentic workflow là mối đe dọa chính đi kèm với quyền rộng — xem thêm tại [concept-prompt-injection-in-dev](/concepts/prompt-injection-in-dev). Least-privilege không ngăn được injection hoàn toàn, nhưng giới hạn tối đa thiệt hại nếu injection xảy ra.
+</Callout>
+
+<Callout title="Nhớ nhé">
+Agent có quyền = bề mặt tấn công. Áp dụng theo thứ tự: (1) chỉ mở tool cần thiết, (2) dùng auto mode thay vì bypass, (3) protected paths không auto-approve, (4) bypassPermissions chỉ trong container cô lập.
+</Callout>
+
+## Đọc thêm
+
+- [Choose a permission mode — Claude Code Docs](https://code.claude.com/docs/en/permission-modes) — Tài liệu chính thức về 6 permission mode: default, acceptEdits, plan, auto, dontAsk, bypassPermissions — khi nào dùng loại nào và protected paths bảo vệ gì.
+- [Security — Claude Code Docs](https://code.claude.com/docs/en/security) — Kiến trúc bảo mật của Claude Code: sandboxed bash, write restriction, prompt injection protection, và best practices cho team.
+- [OWASP Top 10 for Agentic AI Applications — OWASP GenAI](https://genai.owasp.org/2025/12/09/owasp-top-10-for-agentic-applications-the-benchmark-for-agentic-security-in-the-age-of-autonomous-ai/) — Framework bảo mật chuẩn công nghiệp cho agentic AI: 10 rủi ro hàng đầu, bao gồm privilege escalation, tool misuse, và supply chain attacks trong môi trường multi-agent.
+- [Agent Permissions & Sandbox](/concepts/agent-permissions-sandbox) — Concept liên quan: chi tiết về sandbox environments và cách cấu hình permission rules.
+
+## Tự kiểm tra
+
+1. "Least-privilege" có nghĩa gì khi áp dụng cho coding agent? Tại sao không phải lúc nào cũng nên mở tất cả tool?
+2. Sự khác biệt giữa `auto` mode và `bypassPermissions` mode là gì? Khi nào mỗi mode phù hợp?
+3. Protected paths trong Claude Code bảo vệ điều gì? Liệt kê ít nhất 3 path/loại file được bảo vệ và giải thích tại sao chúng quan trọng.

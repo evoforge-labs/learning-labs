@@ -1,0 +1,58 @@
+---
+id: concept-spec-driven-development
+title: "Spec-Driven Development"
+type: "concept"
+aliases: ["spec driven development", "spec trước", "viết spec trước khi code", "SDD", "specification-driven"]
+tags: [ai-assisted-development, agentic-coding, spec-driven, dev-workflow, coding-agents]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Hình dung bạn thuê thợ xây nhà. Nếu bạn chỉ nói *"xây cho tôi cái nhà đẹp"* rồi bỏ đi — khi quay lại bạn sẽ thấy thứ gì đó. Chắc chắn là nhà. Có thể không phải nhà bạn muốn.
+
+Với agent AI cũng vậy. Prompt tạm thời = chỉ thị bằng miệng cho thợ. **Spec** = bản vẽ kỹ thuật bạn ký tên vào.
+
+## Là gì
+
+**Spec-driven development** là thực hành viết mô tả hành vi mong muốn *trước* khi code — rồi dùng nó như artifact kiểm soát toàn bộ quá trình thực thi.
+
+Spec tốt có ba tính chất:
+- **Mô tả hành vi, không phải cách làm** (what, không how)
+- **Test được** — có thể viết test case từ nó
+- **Có scope** — nói rõ cả những thứ *không* nằm trong phạm vi
+
+Khác với prompt tạm: spec được commit vào git, sống lâu dài, và cả team đọc được.
+
+## Ví dụ thật
+
+Feature "export báo cáo PDF". Prompt tạm:
+> *"Thêm nút export PDF vào trang báo cáo."*
+
+Spec tốt hơn (3 câu):
+> **Mục tiêu:** Người dùng có thể tải báo cáo tháng hiện tại dưới dạng PDF từ trang `/reports`.
+> **Hành vi:** Nhấn nút "Export PDF" → file tải về trong vòng 3 giây, tên file là `report-YYYY-MM.pdf`, chứa đúng dữ liệu đang hiển thị trên màn hình.
+> **Ngoài scope:** Lập lịch gửi email, export dạng khác (CSV, Excel).
+
+Từ spec này, bạn có thể viết test ngay — và agent biết chính xác phải dừng ở đâu.
+
+GitHub Spec Kit (2025) formalize quy trình thành 4 bước: `/specify → /plan → /tasks → /implement`. Bước đầu tiên luôn là viết spec, không phải code.
+
+<Callout title="Cẩn thận">
+Spec quá chi tiết về cách làm ("dùng thư viện X, viết theo pattern Y") sẽ giới hạn agent và thường phản tác dụng. Mô tả *kết quả* bạn muốn, để agent chọn cách tốt nhất. Nếu có ràng buộc kỹ thuật thật (framework bắt buộc, API đã fix), liệt kê chúng trong phần "Constraints", không trộn vào phần hành vi.
+</Callout>
+
+<Callout title="Nhớ nhé">
+Spec là artifact sống — commit vào git, cập nhật khi hiểu biết thay đổi. Một spec tốt làm giảm đáng kể số lần agent đi sai hướng, vì nó phân biệt rõ "done" với "trông có vẻ done".
+</Callout>
+
+## Đọc thêm
+
+- [Spec-Driven Development with AI: Get Started with a New Open Source Toolkit — GitHub Blog](https://github.blog/ai-and-ml/generative-ai/spec-driven-development-with-ai-get-started-with-a-new-open-source-toolkit/) — GitHub giới thiệu Spec Kit (mã nguồn mở): quy trình 4 bước Specify → Plan → Tasks → Implement, và lý do tách bước spec khỏi bước code giúp agent tạo ra code đáng tin hơn.
+- [Writing Good Specs for AI Agents — Addy Osmani](https://addyosmani.com/blog/good-spec/) — Hướng dẫn thực hành của Addy Osmani (Google Chrome): cách chia nhỏ spec, hệ thống 3 tầng Always/Ask/Never, và tại sao spec quá dài khiến model bỏ qua chỉ dẫn.
+- [Best Practices — Claude Code](https://code.claude.com/docs/en/best-practices) — Phần "Let Claude interview you": dùng agent phỏng vấn bạn để ra spec, rồi mở session mới chỉ để implement — tài liệu chính thức của Anthropic.
+
+## Tự kiểm tra
+
+1. Bạn được yêu cầu thêm tính năng "tìm kiếm sản phẩm theo giá". Viết 2-3 câu spec mô tả hành vi test được — không đề cập tới công nghệ hay cách implement.
+2. Tại sao spec nên commit vào git thay vì chỉ gõ vào chat với agent?
+3. Đâu là dấu hiệu cho thấy một spec quá mơ hồ để agent làm việc hiệu quả?

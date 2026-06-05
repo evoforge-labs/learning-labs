@@ -1,0 +1,61 @@
+---
+id: lesson-bswa-002
+title: "Hướng dẫn agent: spec trước, prompt sau"
+type: "lesson"
+track: building-with-ai-agents
+module: instructing
+level: beginner
+tags: [ai-assisted-development, agentic-coding, spec-driven, dev-workflow, coding-agents, claude-md]
+prerequisites: [concept-spec-driven-development, concept-prompting-for-code, concept-breaking-down-tasks, concept-agent-feedback-loop, concept-agent-instructions-file]
+related: [exercise-bswa-002, rubric-building-with-ai-agents]
+status: published
+---
+import Callout from '../../../components/content/Callout.astro';
+
+Module 1 xây dựng tư duy: agent là cộng sự thực thi, bạn là kỹ sư chịu trách nhiệm. Module này cho bạn hệ thống *để sống với điều đó mỗi ngày* — từ lúc nhận task đến lúc merge PR.
+
+Năm thực hành trong module kết nối với nhau theo một luồng. Học từng phần rời rạc không đủ — chỉ khi kết hợp đủ cả năm, chất lượng output mới thực sự khác biệt.
+
+## Luồng đầy đủ
+
+### 1. Viết spec trước — artifact, không phải prompt tạm
+
+Thay vì gõ thẳng yêu cầu vào chat, dừng lại 5 phút để viết [spec](/concepts/spec-driven-development): mô tả hành vi test được, scope rõ ràng, và danh sách "không làm gì". Commit spec vào git.
+
+Lợi ích không nằm ở chỗ agent đọc spec — mà ở chỗ *bạn buộc phải làm rõ* những gì bạn thật sự muốn trước khi đưa cho agent. Spec trả lời câu hỏi "done trông như thế nào?" — câu hỏi mà nhiều người bỏ qua cho đến khi agent đã làm sai.
+
+### 2. Prompt cụ thể có context — scope + nguồn + triệu chứng
+
+Từ spec, viết [prompt](/concepts/prompting-for-code) trỏ thẳng vào thực tế: file nào (`@src/api/orders.ts`), pattern nào (xem `UserHandler.ts`), triệu chứng gì (log error cụ thể). Không dùng nhãn mơ hồ như "fix bug" hay "improve performance".
+
+Prompt tốt = spec ngắn gọn + context cụ thể + tiêu chí verify. Agent hiểu đúng ngay từ đầu, bạn không mất vòng sửa.
+
+### 3. Chia nhỏ thành mẩu test được — mỗi mẩu commit ngay
+
+Feature lớn = nhiều [mẩu nhỏ](/concepts/breaking-down-tasks), mỗi mẩu có điều kiện "done" agent tự kiểm được (test pass, build xanh, output đo được). Quy trình: Explore → Plan → Implement → Commit.
+
+Bước Explore nên dùng subagent riêng để tách khỏi context của phiên implement. Mỗi mẩu commit ngay khi xong — không tích lũy nhiều mẩu chưa commit, không để context dài quá.
+
+### 4. Vòng lặp feedback — sửa sớm, học từ lỗi
+
+Sửa hướng agent ngay khi thấy output lệch, không chờ đến cuối. Nếu đã sửa cùng một lỗi 2 lần trong một session — dừng lại, `/clear`, viết lại prompt tốt hơn với điều đã học.
+
+[Vòng lặp feedback](/concepts/agent-feedback-loop) hoạt động tốt nhất theo pattern Writer/Reviewer: một session implement, một session độc lập review với context sạch. Bài học cụ thể từ mỗi lỗi → ghi vào CLAUDE.md.
+
+### 5. Đóng băng convention vào file chỉ dẫn của project
+
+Những gì agent thường làm sai trong project của bạn — constraint kỹ thuật đặc thù, convention team — thuộc về [CLAUDE.md](/concepts/agent-instructions-file). Viết một lần, agent biết ngay từ đầu mỗi session, không cần nhắc lại.
+
+Commit CLAUDE.md vào git cùng code. Prune định kỳ: nếu dòng đó xóa đi mà agent vẫn làm đúng, xóa nó.
+
+<Callout title="Nhớ nhé">
+Luồng đầy đủ: spec (artifact commit được) → prompt cụ thể có context → chia mẩu test được → feedback sớm → convention vào file chỉ dẫn. Bỏ bất kỳ bước nào, phần còn lại yếu hơn đáng kể.
+</Callout>
+
+## Dấu hiệu bạn đang làm đúng
+
+- Trước khi gõ prompt, bạn đã biết "done trông như thế nào" và có cách verify
+- Khi nhận output của agent, bạn có bằng chứng (test output, build log) để review, không phải code thô
+- Khi agent làm sai, bạn biết nên thêm gì vào CLAUDE.md — không phải chỉ sửa và tiếp tục
+
+Thực hành ngay với [bài viết spec và file chỉ dẫn →](/exercises/building-with-ai-agents/m2-write-a-spec)

@@ -1,0 +1,79 @@
+---
+id: exercise-bswa-006
+title: "Đưa agent vào team an toàn & đo được"
+type: "exercise"
+track: building-with-ai-agents
+tags: [building-with-ai-agents, team, claude-md, security, metrics, code-churn, cost, prompt-injection]
+estimatedMinutes: 30
+related: [lesson-bswa-006, concept-agents-in-teams, concept-agent-security-risks, concept-evaluating-agent-workflows, rubric-building-with-ai-agents]
+status: published
+---
+import Callout from '../../../components/content/Callout.astro';
+
+## Tình huống
+
+Team bạn gồm 5 developer, đang dùng Claude Code theo kiểu mạnh ai nấy làm — mỗi người một style, không có quy ước chung, không ai biết người kia đang cấp cho agent những quyền gì. Tech lead quyết định: tháng tới chuẩn hóa lại.
+
+Bạn được giao nhiệm vụ thiết kế khung triển khai: từ quy ước chung đến bảo mật, đến cách đo xem việc chuẩn hóa có thực sự hiệu quả không.
+
+---
+
+## Task 1 — Phác thảo CLAUDE.md cấp team
+
+Thiết kế cấu trúc CLAUDE.md cho team. Bạn không cần viết full nội dung — hãy trả lời:
+
+1. **Phân tầng**: Nếu repo là monorepo gồm `apps/backend` và `apps/web`, bạn đặt những gì ở root CLAUDE.md và những gì ở sub-CLAUDE.md của từng app? Cho ví dụ cụ thể với 2–3 mục mỗi loại.
+
+2. **Nội dung cốt lõi**: Liệt kê 5 loại thông tin *nhất thiết* phải có trong CLAUDE.md cấp team — những thứ agent không tự suy được từ code. Giải thích tại sao mỗi loại quan trọng.
+
+3. **Duy trì**: Ai chịu trách nhiệm cập nhật CLAUDE.md khi convention thay đổi? Quy trình review file này trông như thế nào (PR, ai approve, khi nào cập nhật)?
+
+<Callout title="Gợi ý">
+Dùng `/init` trong Claude Code để có bản nháp, rồi review xem mục nào thực sự cần thiết. Hỏi: "Nếu xóa dòng này, agent có làm sai không?" Nếu không, xóa.
+</Callout>
+
+---
+
+## Task 2 — Thiết lập bảo mật cho team
+
+Team chưa có quy tắc bảo mật cho agent. Thiết kế bộ quy tắc tối thiểu:
+
+1. **Ba quy tắc least-privilege**: Mô tả 3 quy tắc cụ thể về quyền agent trong context của team 5 người. Cho biết quy tắc nào enforce được trong CLAUDE.md, quy tắc nào cần config trong `settings.json`, và quy tắc nào cần team convention (không enforce tự động được).
+
+   Ví dụ format: *"Agent trong task review-only không được có quyền git push — enforce bằng permission deny rule."*
+
+2. **Protected paths cho codebase cụ thể**: Ngoài protected paths mặc định của Claude Code, repo của bạn có thêm paths nào cần bảo vệ? (Nghĩ đến: file secrets, migration scripts, production config, CI/CD pipeline config.) Giải thích tại sao mỗi path đáng bảo vệ.
+
+3. **Một rủi ro prompt injection thực tế**: Mô tả một tình huống cụ thể trong dev workflow của team (không phải ví dụ email trong bài lý thuyết) mà indirect injection có thể xảy ra. Bề mặt tấn công là gì? Bạn giảm thiểu bằng cách nào?
+
+<Callout title="Gợi ý">
+Nghĩ đến những nơi agent đọc input không phải từ bạn: ticket description, PR comment, kết quả MCP tool, file trong repo do contributor bên ngoài tạo.
+</Callout>
+
+---
+
+## Task 3 — Chọn metrics đo hiệu quả
+
+Sau một tháng chuẩn hóa, bạn cần báo cáo với tech lead: "AI agent có thực sự giúp team không?" Thiết kế bộ metrics:
+
+1. **Ba metrics cụ thể**: Chọn 3 metrics bạn sẽ theo dõi. Với mỗi metric:
+   - Tên và cách tính cụ thể (không phải định nghĩa mơ hồ)
+   - Dữ liệu lấy từ đâu (git history, CI, token usage log, etc.)
+   - "Good" trông như thế nào và "concerning" trông như thế nào
+
+2. **Ít nhất một metric độ bền**: Trong 3 metrics trên, phải có ít nhất một metric đo *chất lượng dài hạn* chứ không chỉ tốc độ. Giải thích tại sao bạn chọn metric đó và nó cảnh báo điều gì nếu tăng.
+
+3. **Chống lại metrics gây hiểu lầm**: Tech lead đề xuất thêm "số dòng code mỗi sprint" vào dashboard để theo dõi năng suất. Bạn đồng ý hay không? Giải thích và đề xuất thay thế nếu không đồng ý.
+
+---
+
+## Đánh giá
+
+Xem [Building with AI Agents Rubric](../../rubrics/building-with-ai-agents-rubric) để biết tiêu chí đánh giá chi tiết.
+
+Bài làm tốt sẽ:
+- Phân tầng CLAUDE.md hợp lý với lý do rõ ràng — không phải chỉ liệt kê thông tin.
+- Quy tắc bảo mật đủ cụ thể để enforce được — không phải chỉ nguyên tắc chung chung.
+- Tình huống prompt injection thực tế trong dev workflow, không phải ví dụ generic từ sách.
+- Metrics có cách tính cụ thể, nguồn dữ liệu rõ, và threshold meaningful.
+- Lập luận rõ tại sao số dòng code là metric gây hiểu lầm khi có agent, và đề xuất thay thế tốt hơn.

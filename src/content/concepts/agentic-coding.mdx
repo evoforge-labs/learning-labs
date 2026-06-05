@@ -1,0 +1,54 @@
+---
+id: concept-agentic-coding
+title: "Agentic Coding"
+type: "concept"
+aliases: ["agentic coding", "lập trình agentic", "agent coding", "coding agent loop"]
+tags: [agentic-coding, coding-agents, dev-workflow, ai-assisted-development, agents]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Autocomplete đoán từ tiếp theo bạn gõ — như bàn phím điện thoại. Agentic coding thì khác: bạn nói "fix cái lỗi này", agent *tự đọc file*, *chạy test*, *sửa code*, *chạy lại test* — và báo cáo kết quả. Hai thứ trông giống nhau nhưng bản chất hoàn toàn khác.
+
+## Là gì
+
+**Agentic coding** là cách lập trình trong đó agent AI tự chạy qua một vòng lặp nhiều bước: thu thập context → hành động (đọc file, sửa code, chạy lệnh) → xem kết quả → lặp lại — cho đến khi xong việc.
+
+Ba thứ tạo nên một coding agent:
+- **Model**: LLM suy luận và quyết định bước tiếp theo
+- **Harness**: bộ khung cung cấp tool, quản lý context, chạy vòng lặp (xem [concept-agent-harness](/concepts/agent-harness))
+- **Vòng lặp**: agent *chạy code nó viết* — đây là điểm khác biệt cốt lõi với autocomplete
+
+## Ví dụ thật
+
+Bạn gõ trong Claude Code: *"Thêm pagination cho API `/users`, dùng cursor-based, viết test luôn."*
+
+Agent không dừng lại chờ bạn chỉ từng bước. Nó:
+1. Đọc file router hiện tại để hiểu cấu trúc
+2. Xem schema database để biết field nào dùng làm cursor
+3. Viết code pagination
+4. Viết test
+5. Chạy test — nếu fail, đọc lỗi và tự sửa
+6. Báo lại khi pass
+
+Bạn không chỉ định nó đọc file nào. Nó tự quyết định cần biết gì.
+
+<Callout title="Góc kỹ thuật">
+Claude Code mô tả vòng lặp gồm ba giai đoạn liền nhau: **gather context** (đọc file, search code, hiểu codebase) → **take action** (sửa file, chạy lệnh, gọi tool) → **verify results** (chạy test, đọc output, điều chỉnh). Ba giai đoạn này lặp liên tục, không phải một lần — agent tự quyết định khi nào đủ.
+</Callout>
+
+<Callout title="Nhớ nhé">
+Agent chạy code nó viết — đây không phải autocomplete. Đó là lý do tại sao bạn cần *verify*, không chỉ đọc.
+</Callout>
+
+## Đọc thêm
+
+- [How Claude Code works — Anthropic](https://code.claude.com/docs/en/how-claude-code-works) — Tài liệu chính thức giải thích vòng lặp agentic của Claude Code: ba giai đoạn, các built-in tool, và cách harness biến LLM thành coding agent thực sự.
+- [How coding agents work — Simon Willison](https://simonwillison.net/guides/agentic-engineering-patterns/how-coding-agents-work/) — Giải thích cơ chế ở mức kỹ thuật: tool calling, system prompt, reasoning — và tại sao production agent đòi hỏi nhiều hơn một vòng lặp đơn giản.
+- [Cursor Agent — Cursor Docs](https://cursor.com/docs/agent/overview) — Góc nhìn thực tế từ Cursor: cách agent chọn tool, xử lý lệnh terminal, và quản lý checkpoint để thử nghiệm an toàn.
+
+## Tự kiểm tra
+
+1. Kể tên 3 bước trong vòng lặp agentic. Bước nào khiến agentic coding *khác về chất* so với autocomplete hay chatbot?
+2. Nếu agent viết code nhưng không bao giờ chạy nó, điều gì sẽ xảy ra? Tại sao "chạy code nó viết" là đặc điểm quan trọng?
+3. Harness đóng vai trò gì trong agentic coding? Không có harness, agent có thể hoạt động được không?

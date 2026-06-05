@@ -1,0 +1,77 @@
+---
+id: lesson-bswa-003
+title: "Dựng harness: công cụ, quyền hạn, skill, subagent"
+type: "lesson"
+track: building-with-ai-agents
+module: tools
+level: intermediate
+tags: [building-with-ai-agents, harness, tools, permissions, skills, subagents, mcp, claude-code, hybrid-stack]
+prerequisites: [concept-coding-agents-landscape, concept-agent-permissions-sandbox, concept-slash-commands-and-skills, concept-subagents-for-dev, concept-mcp-for-dev]
+related: [exercise-bswa-003, rubric-building-with-ai-agents]
+status: published
+---
+import Callout from '../../../components/content/Callout.astro';
+
+Một agent giỏi không đủ để làm việc hiệu quả — quan trọng hơn là **harness** quanh nó: bộ công cụ, quy tắc quyền hạn, workflow đóng gói sẵn, và cách quản lý context. Module này thread qua 5 thứ đó thành một hệ thống hoàn chỉnh.
+
+## 1 — Chọn công cụ: hybrid stack thực tế
+
+Năm 2026 có hơn 30 coding agent. Bạn không cần dùng tất cả — nhưng cần biết mỗi nhóm giỏi gì để chọn đúng cho đúng việc.
+
+[Landscape công cụ coding agent](/concepts/coding-agents-landscape) chia thành 4 nhóm: CLI agent, AI IDE, IDE extension, cloud agent. Pattern phổ biến ở team thực tế là **hybrid stack**: AI IDE (Cursor, Windsurf) cho việc hằng ngày cần thấy UI trực tiếp — CLI agent (Claude Code) khi task đa-file phức tạp, cần agentic loop dài hơi và permission system chặt chẽ hơn.
+
+Điểm quyết định khi chọn: **BYOM (Bring Your Own Model)** — bạn có kiểm soát được model đang dùng không? Với team có yêu cầu bảo mật cao, đây thường là tiêu chí đầu tiên.
+
+## 2 — Permission & Sandbox: agent chạy lệnh an toàn
+
+Trước khi để agent chạy tự động, phải trả lời: "Agent được làm gì, và làm không cần hỏi?"
+
+[Permission & Sandbox](/concepts/agent-permissions-sandbox) có 3 lớp: permission rules (allow/ask/deny cụ thể từng lệnh), permission modes (chế độ vận hành toàn session), và OS sandbox (cách ly ở cấp hệ điều hành).
+
+Thứ tự thiết lập thực tế:
+1. **Deny tuyệt đối** những gì không bao giờ muốn agent làm: `git push`, `rm -rf`, đọc `.env`
+2. **Allow** những gì agent làm thường xuyên và an toàn: `npm run test`, `git commit`
+3. Chọn **permission mode**: `default` cho session có giám sát, `auto` khi muốn agent chạy dài không cần click liên tục
+4. Bật **sandbox** nếu chạy task có độ rủi ro cao hoặc agent chạy không giám sát
+
+Deny rule ưu tiên tuyệt đối — không scope nào override được. Và `bypassPermissions` chỉ dùng trong container/VM cô lập.
+
+## 3 — Skill & Slash Command: đóng gói workflow lặp lại
+
+Mỗi workflow bạn hay phải mô tả lại cho agent là một ứng viên để trở thành skill.
+
+[Slash Commands & Skills](/concepts/slash-commands-and-skills): tạo file `SKILL.md` trong `.claude/skills/<tên>/`, gõ `/tên` để kích hoạt. Skill nạp theo nhu cầu — không chiếm token khi không dùng — khác với CLAUDE.md nạp mỗi session.
+
+Quy tắc phân loại:
+- **CLAUDE.md**: thứ áp dụng *mọi lúc* (code style, build command, branching convention)
+- **Skill**: workflow lặp lại nhưng *chỉ thỉnh thoảng* (PR review, deploy staging, debug pattern cụ thể)
+- **Subagent**: task cần *context riêng* để không làm ô nhiễm session chính
+
+## 4 — Subagent: giữ context sạch
+
+Context window đầy = agent bắt đầu mắc lỗi. Subagent là giải pháp chính cho vấn đề này.
+
+[Subagents cho dev](/concepts/subagents-for-dev): agent con chạy trong context window riêng, làm việc điều tra/đọc nhiều file, trả về *tóm tắt* — không phải toàn bộ nội dung. Định nghĩa trong `.claude/agents/<tên>.md`.
+
+Hai pattern quan trọng nhất:
+- **Writer/Reviewer**: session A implement, subagent B review với context sạch (không bị bias)
+- **Fan-out**: nhiều subagent điều tra song song các phần khác nhau của codebase, mỗi cái báo về tóm tắt
+
+Câu hỏi để biết có nên dùng subagent: "Khi task này xong, tôi có cần nhìn lại chi tiết nó đã làm không?" Nếu không — đó là task cho subagent.
+
+## 5 — MCP: cắm tool và data vào agent
+
+Cuối cùng, harness cần biết agent làm việc với *data từ đâu* và *tool nào*.
+
+[MCP cho dev workflow](/concepts/mcp-for-dev) là chuẩn mở để kết nối agent với bất kỳ tool hoặc data source nào. Build server một lần — dùng được ở Cursor, Claude Code, VS Code Copilot. Hai giá trị chính: agent tự query trực tiếp (không cần bạn trung gian copy-paste), và *progressive disclosure* chỉ nạp tool definition khi cần — tiết kiệm token đáng kể trong session dài.
+
+```
+claude mcp add postgres postgres://localhost:5432/mydb
+claude mcp add figma <figma-server-url>
+```
+
+<Callout title="Nhớ nhé">
+Harness = tổng hợp của 5 thứ này: **công cụ đúng chỗ + permission an toàn + skill gọn gàng + subagent quản lý context + MCP cắm data**. Bạn không cần hoàn hảo ngay từ đầu — bắt đầu với permission rules cơ bản và một skill cho workflow hay dùng nhất. Iterate từ đó.
+</Callout>
+
+Thực hành ngay với [bài cấu hình harness →](/exercises/building-with-ai-agents/m3-set-up-your-harness)

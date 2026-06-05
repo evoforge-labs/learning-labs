@@ -1,0 +1,67 @@
+---
+id: concept-subagents-for-dev
+title: "Subagents cho dev"
+type: "concept"
+aliases: ["subagent", "sub-agent", "agent delegation", "context isolation", "fan-out", "writer reviewer pattern"]
+tags: [building-with-ai-agents, subagents, context-management, multi-agent, claude-code, fan-out, token-budget]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Hãy nghĩ về subagent như một thực tập sinh đến điều tra một vấn đề và báo cáo lại cho bạn bản tóm tắt — thay vì mang toàn bộ đống tài liệu về đổ lên bàn bạn. Context window của bạn là không gian làm việc: giữ nó sạch là giữ hiệu suất.
+
+## Là gì
+
+Subagent là một agent con chạy trong **context window riêng biệt**, thực hiện một nhiệm vụ cụ thể rồi trả về *tóm tắt kết quả* — không phải toàn bộ nội dung đã đọc. Đây là công cụ chính để quản lý **token budget** trong session dài hơi.
+
+Bạn định nghĩa subagent trong `.claude/agents/<tên>.md`:
+
+```markdown
+<!-- .claude/agents/security-reviewer.md -->
+---
+name: security-reviewer
+description: Reviews code for injection vulnerabilities and hardcoded secrets
+tools: Read, Grep, Glob, Bash
+---
+You are a senior security engineer. Review code for SQL injection,
+hardcoded credentials, and unsafe input handling. Return specific
+line references and suggested fixes — no full file contents.
+```
+
+Hai pattern phổ biến nhất:
+- **Writer/Reviewer**: session A viết code, session B (subagent) review với context sạch — không bị bias bởi code mình vừa viết
+- **Fan-out**: giao cho nhiều subagent đọc các phần khác nhau của codebase song song, mỗi subagent trả về tóm tắt
+
+Liên hệ: [Agent Harness](/concepts/agent-harness) là khung điều phối các subagent. [Multi-agent](/concepts/multi-agent) là kiến trúc rộng hơn khi có nhiều agent phối hợp.
+
+## Ví dụ thật
+
+Bạn cần hiểu cách authentication hoạt động trong một repo 50 file trước khi thêm OAuth. Thay vì để session chính đọc tất cả:
+
+```
+Use a subagent to investigate how our authentication system handles
+token refresh, and whether we have any existing OAuth utilities.
+Return a summary — don't dump file contents.
+```
+
+Subagent đọc 15 file, chạy grep, phân tích — rồi báo lại 3 đoạn ngắn: "Token refresh ở `src/auth/refresh.ts` dòng 42, có utility `oauthBase` nhưng chưa hoàn chỉnh, suggest reuse theo pattern X." Context chính của bạn chỉ nhận 3 đoạn đó, không phải 15 file.
+
+<Callout title="Cẩn thận">
+Subagent chạy trong context riêng nghĩa là nó không biết bạn đang làm gì ở session chính. Viết description và system prompt đủ rõ để subagent hiểu nhiệm vụ mà không cần context của bạn.
+</Callout>
+
+<Callout title="Nhớ nhé">
+Dùng subagent khi task đòi hỏi đọc nhiều file hoặc chạy nhiều lệnh mà kết quả trung gian không cần ở trong context chính. Câu hỏi đơn giản để tự hỏi: "Nếu task này xong, tôi có cần đọc lại chi tiết nó đã làm không?" — nếu không, đó là task cho subagent.
+</Callout>
+
+## Đọc thêm
+
+- [Create custom subagents — Claude Code Docs](https://code.claude.com/docs/en/sub-agents) — Tài liệu chính thức: cú pháp file `.md`, frontmatter, tool restrictions, model selection — bắt đầu ở đây để tạo subagent đầu tiên.
+- [Best practices for Claude Code](https://code.claude.com/docs/en/best-practices) — Phần "Use subagents for investigation" và "Add an adversarial review step" — ví dụ thực tế về Writer/Reviewer pattern và fan-out.
+- [Building agents with the Claude Agent SDK — Anthropic](https://claude.com/blog/building-agents-with-the-claude-agent-sdk) — Giải thích tại sao subagent giải quyết context budget: ví dụ email agent fan-out nhiều subagent search song song, mỗi subagent trả về excerpt ngắn thay vì toàn bộ email.
+
+## Tự kiểm tra
+
+1. Session chính của bạn đang ở 80% context. Bạn cần tìm hiểu xem có bug nào liên quan đến cache invalidation trong 30 file. Bạn nên làm gì?
+2. Tại sao Writer/Reviewer pattern dùng subagent cho reviewer lại tốt hơn hỏi cùng session vừa viết code review lại code của mình?
+3. Subagent có "biết" những gì session chính đang làm không? Điều này ảnh hưởng đến cách bạn viết description cho subagent như thế nào?

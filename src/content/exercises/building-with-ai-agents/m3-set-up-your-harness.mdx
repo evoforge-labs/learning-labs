@@ -1,0 +1,70 @@
+---
+id: exercise-bswa-003
+title: "Cấu hình harness cho dự án của bạn"
+type: "exercise"
+track: building-with-ai-agents
+tags: [building-with-ai-agents, harness, permissions, skills, subagents, claude-code, practical]
+estimatedMinutes: 30
+related: [lesson-bswa-003, concept-agent-permissions-sandbox, concept-slash-commands-and-skills, concept-subagents-for-dev, rubric-building-with-ai-agents]
+status: published
+---
+import Callout from '../../../components/content/Callout.astro';
+
+## Tình huống
+
+Bạn vừa nhận một repo thực tế — có thể là project cá nhân, side project, hoặc repo ở công ty. Bạn muốn setup Claude Code để làm việc hiệu quả trên repo đó mà không lo agent làm gì sai ngoài ý muốn.
+
+Bài này không có đáp án đúng duy nhất — câu trả lời phụ thuộc vào repo của bạn. Điều quan trọng là lý luận đứng sau mỗi quyết định.
+
+<Callout title="Nhớ nhé">
+Dùng repo thật của bạn nếu có. Nếu không, hãy tưởng tượng một web app Node.js với PostgreSQL: có `npm run test`, `npm run build`, `npm run lint`, deploy lên Vercel qua `vercel deploy`.
+</Callout>
+
+## Task 1 — Thiết kế permission rules
+
+Nhìn vào repo của bạn và viết bộ permission rules thực tế. Điền vào template:
+
+**Phần A — Deny (tuyệt đối không):**
+Liệt kê 3-5 lệnh hoặc tool bạn không bao giờ muốn agent chạy tự động. Với mỗi cái, giải thích *tại sao* nó nguy hiểm hoặc không thể đảo ngược.
+
+**Phần B — Allow (tự làm không cần hỏi):**
+Liệt kê 3-5 lệnh agent có thể tự chạy an toàn. Với mỗi cái, giải thích vì sao bạn tin tưởng nó không cần xác nhận.
+
+**Phần C — Chọn permission mode:**
+Bạn dùng `default` hay `auto` mode cho repo này? Và trong tình huống nào bạn sẽ *chuyển sang* mode kia? Ví dụ: "Dùng `default` khi review PR, chuyển `auto` khi giao task refactor 20 file."
+
+**Phần D — Sandbox:**
+Bạn có cần bật sandbox không? Mô tả một rủi ro cụ thể trong repo của bạn mà sandbox giúp giảm thiểu — hoặc lý do bạn thấy permission rules đã đủ.
+
+## Task 2 — Phác thảo một skill
+
+Nghĩ về workflow bạn hay phải mô tả lại cho agent — hoặc hay copy-paste vào chat.
+
+Chọn một workflow đó và phác thảo thành skill. Trả lời các câu sau:
+
+1. **Tên skill** (ngắn, dùng làm slash command): `/___`
+2. **Mô tả trigger**: Bạn dùng skill này *khi nào*? Viết như description trong frontmatter — đủ rõ để Claude tự hiểu khi nào nên đề xuất dùng nó.
+3. **Các bước chính**: Liệt kê 3-6 bước cụ thể skill sẽ thực hiện. Cụ thể đến mức: nếu bạn đưa cho người mới vào team, họ có hiểu phải làm gì không?
+4. **Thuộc CLAUDE.md hay skill?**: Giải thích vì sao workflow này phù hợp là skill thay vì đặt thẳng vào CLAUDE.md.
+
+<Callout title="Gợi ý nếu chưa có ý tưởng">
+Thử các workflow phổ biến: kiểm tra trước khi commit (lint + test + typecheck), review diff trước khi mở PR, debug một loại lỗi cụ thể hay gặp, hoặc chuẩn bị release notes từ git log.
+</Callout>
+
+## Task 3 — Xác định task cho subagent
+
+Nhìn vào repo của bạn và chỉ ra một nhiệm vụ cụ thể nên giao cho subagent thay vì làm trong session chính.
+
+Trả lời 3 câu:
+
+1. **Nhiệm vụ là gì?** Mô tả cụ thể (ví dụ: "Đọc toàn bộ module auth để hiểu flow token refresh trước khi tôi thêm OAuth").
+2. **Vì sao nên dùng subagent?** Giải thích theo góc độ *context budget*: task này sẽ đọc bao nhiêu file / chạy bao nhiêu lệnh, và kết quả trung gian đó có cần ở lại trong session chính không?
+3. **Subagent nên trả về gì?** Mô tả định dạng tóm tắt bạn muốn nhận — không phải toàn bộ nội dung đã đọc, mà là thứ bạn thực sự cần để tiếp tục làm việc.
+
+## Tiêu chí đánh giá
+
+Xem [Building with AI Agents Rubric](../../rubrics/building-with-ai-agents-rubric) để biết cách bài này được đánh giá.
+
+Đặc biệt chú ý hai tiêu chí:
+- **"Quyết định có căn cứ"**: deny rule và mode bạn chọn có lý do rõ ràng dựa trên đặc thù repo — không phải copy template chung chung.
+- **"Context awareness"**: lý do dùng subagent trong Task 3 có liên hệ rõ đến token budget và context window — không chỉ nói "để nhanh hơn".

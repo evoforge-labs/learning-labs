@@ -1,0 +1,101 @@
+---
+id: exercise-bswa-002
+title: "Viết spec & file chỉ dẫn cho agent"
+type: "exercise"
+track: building-with-ai-agents
+tags: [ai-assisted-development, agentic-coding, spec-driven, dev-workflow, coding-agents, claude-md]
+estimatedMinutes: 30
+related: [lesson-bswa-002, concept-spec-driven-development, concept-agent-instructions-file, concept-breaking-down-tasks, rubric-building-with-ai-agents]
+status: published
+---
+import Callout from '../../../components/content/Callout.astro';
+
+## Tình huống
+
+Bạn làm developer trong một app quản lý nội bộ cho công ty vừa (~50 người). App đang có sẵn: trang dashboard, danh sách nhân viên, module chấm công. Tech stack: Next.js 15, TypeScript, PostgreSQL, Tailwind.
+
+PM vừa giao cho bạn feature mới: **"Export báo cáo chấm công ra PDF"**. Mô tả gốc từ PM chỉ có vậy — ngắn, mơ hồ, nhưng đủ để bắt đầu.
+
+Bạn sắp nhờ agent (Claude Code hoặc Cursor) implement feature này. Nhưng trước khi gõ prompt, bạn cần chuẩn bị đủ 3 thứ.
+
+## Nhiệm vụ
+
+### Task 1 — Viết spec.md
+
+Tạo một file `spec.md` ngắn cho feature "export báo cáo PDF". Spec phải bao gồm:
+
+**Mục tiêu** (1-2 câu): Ai cần gì và để làm gì?
+
+**Hành vi test được** (3-5 bullet): Mô tả những gì người dùng thấy/làm được — không phải cách implement. Mỗi bullet phải đủ cụ thể để viết test case.
+
+Ví dụ format:
+```
+- Nhấn "Export PDF" trên trang /reports/attendance → file tải về
+- Tên file: attendance-YYYY-MM.pdf (tháng hiện tại)
+- File chứa đúng dữ liệu đang hiển thị trên màn hình (cùng filter, cùng khoảng thời gian)
+```
+
+**Scope** (Always / Ask / Never):
+- Always: những hành vi agent nên implement mà không hỏi
+- Ask: những quyết định cần hỏi bạn trước khi làm
+- Never: những thứ nằm ngoài scope của ticket này
+
+**Constraints kỹ thuật** (nếu có): ví dụ thư viện được phép dùng, performance requirement, giới hạn size file.
+
+<Callout title="Nhớ nhé">
+Spec mô tả *kết quả*, không phải *cách làm*. "File tải về trong vòng 3 giây" là spec tốt. "Dùng puppeteer để generate PDF" là implementation detail — bỏ vào Constraints nếu thật sự bắt buộc, không bỏ vào hành vi.
+</Callout>
+
+### Task 2 — Chia thành 3-4 mẩu task test được
+
+Từ spec vừa viết, chia feature thành **3-4 mẩu** có thứ tự thực hiện. Mỗi mẩu dùng format:
+
+```
+Mẩu N: [tên ngắn]
+Mô tả: [một câu]
+Điều kiện done: [cách agent tự verify — test cụ thể, build output, hoặc behavior đo được]
+Phụ thuộc: Mẩu [số] phải xong trước
+```
+
+Yêu cầu:
+- Mỗi mẩu phải có điều kiện done mà *máy có thể check* (không phải "trông đúng")
+- Mẩu sau không bắt đầu khi mẩu trước chưa có điều kiện done thỏa
+- Mẩu đầu tiên thường là bước Explore/Research (dùng subagent để không tốn context chính)
+
+<Callout title="Mẹo">
+Đặt câu hỏi: "Nếu mẩu này xong nhưng mẩu tiếp theo chưa làm, app vẫn chạy được không?" Nếu có — bạn đã chia đúng. Nếu không — mẩu của bạn đang phụ thuộc lẫn nhau quá chặt.
+</Callout>
+
+### Task 3 — Viết 8-12 dòng cho CLAUDE.md của project
+
+Dựa trên tech stack và project đã mô tả, viết phần bổ sung CLAUDE.md. Chỉ viết những thứ agent sẽ làm sai nếu thiếu thông tin này.
+
+Format gợi ý:
+```markdown
+# [Tên section]
+- [Dòng chỉ dẫn cụ thể]
+```
+
+Phải bao gồm ít nhất:
+- Lệnh build/test của project này (agent không tự đoán được)
+- Ít nhất 1 convention kỹ thuật đặc thù (không phải "viết code sạch")
+- Ít nhất 1 boundary rõ ràng (thứ agent không được làm tự do)
+
+Không được viết:
+- Những thứ agent đã biết từ TypeScript/Next.js convention chung
+- Giải thích dài hơn 1 dòng cho mỗi rule
+- Thông tin thay đổi theo task (đó là spec, không phải CLAUDE.md)
+
+<Callout title="Cẩn thận">
+CLAUDE.md là shared knowledge của cả team — ai cũng đọc được, agent của mọi developer đều đọc. Đừng để thông tin cá nhân ("tôi thích dùng vim") hay thông tin tạm ("bỏ qua auth trong lúc test") vào đây.
+</Callout>
+
+## Tiêu chí đánh giá
+
+Xem [Building with AI Agents Rubric](../../rubrics/building-with-ai-agents-rubric) để biết cách bài này được chấm.
+
+Đặc biệt chú ý hai tiêu chí:
+
+**Spec/intent rõ ràng trước khi để agent code** — grader kiểm tra xem spec của bạn có mô tả hành vi test được không, hay chỉ là paraphrase yêu cầu gốc mơ hồ hơn một chút.
+
+**Có cơ chế verify agent tự chạy được** — điều kiện done trong mỗi mẩu task phải là thứ máy check được, không phải "xem output có hợp lý không".

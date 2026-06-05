@@ -1,0 +1,70 @@
+---
+id: exercise-bswa-005
+title: "Chạy một refactor lớn qua nhiều agent"
+type: "exercise"
+track: building-with-ai-agents
+tags: [building-with-ai-agents, workflow, plan-mode, context-management, worktrees, orchestration, refactoring]
+estimatedMinutes: 30
+related: [lesson-bswa-005, concept-plan-then-execute, concept-managing-agent-context, concept-orchestrating-large-tasks, rubric-building-with-ai-agents]
+status: published
+---
+import Callout from '../../../components/content/Callout.astro';
+
+## Tình huống
+
+Bạn là developer trong một team backend đang maintain một REST API Node.js. PM vừa xác nhận: toàn bộ codebase cần đổi tên pattern cũ sang pattern mới trước khi ra mắt v2.
+
+**Pattern cũ:** `getUserById(id)`, `createUserRecord(data)`, `deleteUserById(id)`
+**Pattern mới:** `fetchUser(id)`, `saveUser(data)`, `removeUser(id)`
+
+Scan sơ bộ cho thấy pattern cũ xuất hiện trong khoảng **120 file** — controllers, services, tests, và một vài file migration. Deadline: hết tuần.
+
+<Callout title="Nhớ nhé">
+Bài này không yêu cầu bạn thực sự viết code hoàn chỉnh — mà là thiết kế *cách bạn dùng agent* để làm task này một cách có hệ thống và kiểm soát được.
+</Callout>
+
+## Nhiệm vụ
+
+### Task 1 — Phác kế hoạch Plan Mode
+
+Trước khi để agent đụng vào một file nào, bạn cần một kế hoạch rõ ràng. Viết prompt bạn sẽ dùng trong **plan mode** để agent:
+
+- Khám phá codebase và xác định chính xác những gì cần thay đổi (không phải chỉ grep string — cần hiểu context: chỗ nào rename trực tiếp được, chỗ nào rename cần điều chỉnh thêm vì logic phụ thuộc)
+- Đề xuất thứ tự xử lý có lý: file nào đổi trước, file nào đổi sau, và tại sao
+
+Trả lời 2 câu hỏi:
+- Trong phase **Explore**, agent cần đọc và kiểm tra những gì để có đủ thông tin lập kế hoạch?
+- Kế hoạch của agent cần có những mục nào để bạn *duyệt được* thay vì chỉ gật đầu vì không biết phản đối gì?
+
+### Task 2 — Chọn cơ chế orchestrate
+
+120 file là nhiều, nhưng không phải vô hạn. Phân tích và chọn một trong các phương án sau — đưa ra lý do cụ thể:
+
+**Phương án A:** Một phiên hội thoại duy nhất, làm từng file theo batch  
+**Phương án B:** Subagent — agent chính điều phối, spawn subagent xử lý từng nhóm file  
+**Phương án C:** Dynamic workflow (`ultracode`) — script tự động chia 120 file, chạy song song  
+**Phương án D:** Git worktrees — mở nhiều phiên song song thủ công
+
+Với mỗi phương án bạn *loại*, giải thích tại sao nó không phù hợp ở đây. Với phương án bạn *chọn*, mô tả cụ thể cách bạn sẽ khởi động nó.
+
+<Callout title="Mẹo">
+Câu hỏi quan trọng nhất: các file cần đổi có phụ thuộc vào nhau theo thứ tự không, hay hầu hết độc lập? Câu trả lời đó ảnh hưởng trực tiếp đến cơ chế phù hợp.
+</Callout>
+
+### Task 3 — Quản context và verify kết quả
+
+Refactor 120 file sẽ kéo dài — có thể nhiều phiên agent. Mô tả kế hoạch của bạn cho 3 vấn đề sau:
+
+**Quản context:** Làm thế nào để agent phiên thứ 2, 3 biết đã làm đến đâu mà không cần bạn giải thích lại từ đầu? Bạn sẽ ghi state ra file như thế nào?
+
+**Worktree:** Giả sử giữa chừng xuất hiện bug production cần fix gấp. Bạn dùng worktree như thế nào để xử lý song song mà không phá vỡ công việc đang dở?
+
+**Verify:** Sau khi agent xong, làm sao bạn biết chắc nó đã đổi *đúng và đủ* — không bỏ sót file nào, không tạo ra syntax error, không đổi nhầm string trong comment hay string literal?
+
+## Tiêu chí đánh giá
+
+Xem [Building with AI Agents Rubric](../../rubrics/building-with-ai-agents-rubric) để biết cách bài này được chấm. Đặc biệt chú ý:
+
+- **Quyết định có căn cứ**: lý do chọn cơ chế orchestrate phải dựa trên đặc điểm thực tế của task (120 file, mức độ phụ thuộc, deadline) — không phải "nghe có vẻ tốt"
+- **Kế hoạch Plan Mode có thể duyệt**: kế hoạch tốt là kế hoạch bạn có thể *chỉnh sửa cụ thể* trước khi duyệt, không phải chỉ approve blindly
+- **Verify thực chất**: describe cách verify phải phát hiện được lỗi thực tế (file bị miss, syntax error, đổi nhầm) — không chỉ "chạy test và xem"

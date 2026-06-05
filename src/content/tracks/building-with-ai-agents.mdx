@@ -1,0 +1,65 @@
+---
+id: track-building-with-ai-agents
+title: "Building Software with AI Agents"
+type: "track"
+summary: "Build phần mềm CÙNG agent AI (Claude Code, Cursor…): spec-driven, hướng dẫn agent, harness, review output, quy trình & vận hành ở quy mô — theo best practice 2026."
+tags: [ai-assisted-development, agentic-coding, coding-agents, dev-workflow, agents]
+status: published
+---
+
+# Building Software with AI Agents
+
+Không phải *build sản phẩm AI* (đó là track [AI Engineering A-Z](/tracks/ai-engineering)) — mà là **dùng agent AI để build phần mềm**: cách bạn đang làm việc hằng ngày với Claude Code, Cursor, Copilot. Đây là **meta-skill** quyết định bạn ship code tốt hơn hay tệ hơn khi có agent.
+
+> "Shipping worse code with agents is a choice. We can choose to ship code that is better instead." — Addy Osmani
+
+## Outcome
+
+Sau track này, bạn chuyển từ:
+
+> Tôi gõ prompt rồi copy code agent trả về.
+
+sang:
+
+> Tôi là kỹ sư *"on the loop"*: viết spec, dựng harness & kiểm chứng, hướng dẫn agent làm việc lớn, review output có kỷ luật — và chịu trách nhiệm cho mọi thứ agent ship.
+
+## Track này luyện gì?
+
+- Tư duy đúng: agent là *cộng sự thực thi*, bạn là *kiến trúc sư / chủ sở hữu*.
+- Hướng dẫn agent: spec-driven, prompt cho code, chia nhỏ task, file chỉ dẫn (CLAUDE.md/AGENTS.md).
+- Công cụ & harness: landscape, permission/sandbox, skills, subagents, MCP.
+- Chất lượng với output AI: review, TDD, "AI code smells", verify trước khi xong, debug.
+- Quy trình: plan-then-execute, lặp tinh chỉnh, quản lý context, git worktree, orchestrate việc lớn.
+- Team & scale: convention chung, văn hóa review, cost/token, security & prompt injection, đo lường.
+
+## Sáu chặng
+
+1. **Tư duy làm việc với agent** — agentic coding, khi nào dùng, trust-but-verify.
+2. **Hướng dẫn agent** — spec, prompt, chia nhỏ, feedback loop, file chỉ dẫn.
+3. **Công cụ & Harness** — landscape, permission/sandbox, skills, subagents, MCP.
+4. **Chất lượng với output AI** — review, TDD, code smells, verification, debug.
+5. **Quy trình & nâng cao** — plan mode, lặp, context, worktree, việc lớn.
+6. **Team & Scale** — convention, review culture, cost, security, đo lường.
+
+Tra cứu nhanh mọi thuật ngữ ở trang [Glossary](/glossary).
+
+## Liên kết với AI Engineering
+
+Track này tái dùng nền tảng từ AI Engineering: [AI Agent](/concepts/ai-agent), [Agent Harness](/concepts/agent-harness), [MCP](/concepts/mcp), [Context Engineering](/concepts/context-engineering), [Tool Calling](/concepts/tool-calling), [Multi-Agent](/concepts/multi-agent), [Prompt Injection](/concepts/prompt-injection) — đừng học lại, chỉ áp vào ngữ cảnh *viết phần mềm*.
+
+## Vài "shift" 2026 mà track dạy đúng
+
+- **Spec trước prompt**: spec là artifact commit vào git, không phải câu lệnh tạm.
+- **Verify nằm trong vòng lặp**: cho agent một check tự chạy (test/build), bạn review *bằng chứng* chứ không phải code thô.
+- **CLAUDE.md/AGENTS.md là artifact của team**, chuẩn chung 15+ tool.
+- **Plan mode** tách research khỏi implement; **subagent/worktree** để chạy song song.
+- **Dừng debug sau 2-3 lần thất bại** (Debugging Decay Index) — reset, đừng nhồi context.
+- **Đo cả tốc độ lẫn độ bền** (churn), không chỉ số dòng code.
+
+## Capstone
+
+Dùng agent build **một feature thật end-to-end**: spec → plan → TDD → implement → review → verify → ship — áp dụng cả 6 module.
+
+## First principle
+
+Bạn vẫn là kỹ sư chịu trách nhiệm. Agent tăng tốc *thực thi*; chất lượng đến từ *quy trình* bạn dựng quanh nó, không phải từ model.

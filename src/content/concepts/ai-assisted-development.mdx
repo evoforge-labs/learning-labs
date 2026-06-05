@@ -1,0 +1,45 @@
+---
+id: concept-ai-assisted-development
+title: "AI-assisted Development"
+type: "concept"
+aliases: ["lập trình với AI", "AI coding", "phát triển phần mềm có trợ lý AI"]
+tags: [ai-assisted-development, dev-workflow, agentic-coding, coding-agents, sdlc]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Hãy tưởng tượng bạn đang xây nhà. Trước đây bạn tự đục từng viên gạch — nay bạn có một đội thợ phụ làm việc đó. Nhưng nếu bạn không biết xây nhà, họ vẫn sẽ xây sai. Kiến thức của bạn không bớt đi — nó chuyển từ "tự làm" sang "chỉ huy đúng".
+
+Lập trình với AI cũng vậy.
+
+## Là gì
+
+**AI-assisted development** là cách làm việc trong đó bạn dùng AI — từ autocomplete đơn giản đến agent chạy code nhiều bước — để tăng tốc toàn bộ vòng đời phần mềm: từ hiểu yêu cầu, viết code, đến test, review, và deploy.
+
+Điểm mấu chốt: AI không thay bạn. Nó thay đổi *bạn làm gì* trong một ngày làm việc.
+
+## Ví dụ thật
+
+Năm 2026, một developer trung bình dùng AI cho khoảng 60% công việc hàng ngày — nhưng phần lớn là những việc lặp đi lặp lại: viết boilerplate, tìm lỗi syntax, tra cứu API, tạo test cơ bản. Những quyết định quan trọng — thiết kế kiến trúc, logic nghiệp vụ phức tạp, lựa chọn trade-off — vẫn nằm trong tay người.
+
+Addy Osmani, kỹ sư của Google, mô tả thẳng: *"Shipping worse code with agents is a choice. We can choose to ship code that is better instead."* AI không tự chọn chất lượng — bạn chọn, thông qua quy trình bạn dựng.
+
+<Callout title="Cẩn thận">
+Nhiều dev bắt đầu dùng AI như máy copy-paste: agent viết code, bạn chấp nhận mà không đọc. Đây là "vibe coding" — và nó để lại nợ kỹ thuật rất nhanh. AI-assisted development đúng nghĩa đòi hỏi bạn *hiểu* những gì agent tạo ra, không chỉ dán vào codebase.
+</Callout>
+
+<Callout title="Nhớ nhé">
+AI trải khắp vòng đời phần mềm, nhưng chất lượng vẫn là *lựa chọn của bạn*, không phải trần của model.
+</Callout>
+
+## Đọc thêm
+
+- [My LLM coding workflow going into 2026 — Addy Osmani](https://addyosmani.com/blog/ai-coding-workflow/) — Workflow chi tiết của một kỹ sư Google: spec trước, lặp nhỏ, giữ human-in-the-loop, AI như "pair programmer quá tự tin" cần giám sát.
+- [Exploring Generative AI — Martin Fowler](https://martinfowler.com/articles/exploring-gen-ai.html) — Chuỗi bài của Thoughtworks từ 2024-2026: cách AI ảnh hưởng thực tế đến quy trình phát triển phần mềm, với nhiều góc nhìn từ thực chiến.
+- [How Claude Code works — Anthropic](https://code.claude.com/docs/en/how-claude-code-works) — Giải thích vòng lặp agentic (gather context → act → verify), cách agent thực sự hoạt động và tại sao nó khác với autocomplete thông thường.
+
+## Tự kiểm tra
+
+1. Bạn đang dùng AI cho tác vụ nào trong ngày làm việc? Trong số đó, việc nào thực sự phù hợp để giao AI, và việc nào bạn nên giữ quyền kiểm soát?
+2. Tại sao cùng một model AI nhưng developer A ship code tốt còn developer B tạo ra đống nợ kỹ thuật?
+3. "AI-assisted development" khác "vibe coding" ở điểm gì? Mô tả bằng một ví dụ cụ thể.

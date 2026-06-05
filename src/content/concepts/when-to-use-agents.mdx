@@ -1,0 +1,52 @@
+---
+id: concept-when-to-use-agents
+title: "Khi nào dùng agent (vs tự code)"
+type: "concept"
+aliases: ["when to use agents", "khi nào dùng agent", "agent vs manual coding", "task delegation to agent"]
+tags: [agentic-coding, dev-workflow, ai-assisted-development, coding-agents, decision-making]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Bạn có một người trợ lý giỏi. Nhưng không phải việc gì cũng nên giao cho họ — giao việc sai người còn tệ hơn tự làm. Vậy ranh giới là ở đâu?
+
+Với agent AI, câu trả lời không phải "bao nhiêu file" hay "việc lớn hay nhỏ". Câu hỏi đúng là: **việc này có verify được không, và nó có đòi hỏi phán đoán phức tạp không?**
+
+## Là gì
+
+Bộ lọc để quyết định giao cho agent hay tự làm gồm hai tiêu chí:
+
+**Giao agent khi:** việc *verify được* (có test chạy tự động, có build pass/fail rõ ràng, có output so sánh được) VÀ việc *không đòi hỏi phán đoán nghiệp vụ phức tạp* mà agent không có đủ context.
+
+**Tự làm / giữ trong vòng lặp khi:** logic nghiệp vụ phức tạp, yêu cầu mơ hồ chưa rõ, security-critical, hoặc khi *mục tiêu là bạn học* (để agent làm hết thì bạn không tiến bộ).
+
+## Ví dụ thật
+
+| Việc | Giao agent? | Lý do |
+|---|---|---|
+| Rename một field API khắp 40 file | Giao | Rõ ràng, verify bằng build + grep |
+| Thêm unit test cho module đã có | Giao | Test chạy = verify tự động |
+| Prototyping 3 cách implement UI | Giao | Khám phá nhanh, bạn chọn sau |
+| Viết logic tính thuế VAT phức tạp | Tự làm | Phán đoán nghiệp vụ, sai rất khó thấy |
+| Sửa bug auth mơ hồ "đôi khi lỗi" | Cùng làm | Cần debug + phán đoán, agent hỗ trợ |
+| Refactor architecture lớn | Cùng làm | Agent làm cơ học, bạn quyết định hướng |
+
+<Callout title="Cẩn thận">
+"Việc lớn nhiều file" không tự động là lý do dùng agent — đó là lý do cũ. Lý do đúng là: **verify được**. Một script rename 40 file đơn giản hơn một hàm tính thuế 30 dòng nhưng logic phức tạp. Agent giỏi ở cơ học, kém ở phán đoán ngầm.
+</Callout>
+
+<Callout title="Nhớ nhé">
+Hai câu hỏi cần hỏi trước khi giao cho agent: (1) Tôi có thể verify output tự động không? (2) Việc này đòi hỏi phán đoán mà agent không có context không? Nếu verify được và không cần phán đoán phức tạp — giao đi.
+</Callout>
+
+## Đọc thêm
+
+- [Best practices for using Copilot to work on tasks — GitHub Docs](https://docs.github.com/en/copilot/how-tos/agents/copilot-coding-agent/best-practices-for-using-copilot-to-work-on-tasks) — Hướng dẫn chính thức từ GitHub: loại task nào phù hợp với coding agent, cách scope rõ ràng để agent làm tốt.
+- [How far can we push AI autonomy? — Martin Fowler](https://martinfowler.com/articles/pushing-ai-autonomy.html) — Thực nghiệm của Thoughtworks: giới hạn thực tế của AI autonomy — AI vẫn cần con người verify, đặc biệt với logic nghiệp vụ phức tạp.
+- [AI should help us produce better code — Simon Willison](https://simonwillison.net/guides/agentic-engineering-patterns/better-code/) — Agent giỏi nhất ở đâu: refactoring cơ học, prototyping nhanh, và việc "đúng nhưng tốn thời gian" — không phải ở thiết kế hệ thống.
+
+## Tự kiểm tra
+
+1. Bạn cần migrate tất cả `console.log` sang logger có cấu trúc trong một codebase 200 file. Đây có phải việc tốt để giao agent không? Giải thích theo tiêu chí verify-được.
+2. Tại sao "mục tiêu là bạn học" lại là lý do *không* giao cho agent, dù việc đó verify được?
+3. Một bug được mô tả là "đôi khi login bị lỗi trên mobile". Bạn sẽ xử lý như thế nào — giao agent, tự làm, hay cùng làm? Lý do?
