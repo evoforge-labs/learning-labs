@@ -1,0 +1,51 @@
+---
+id: concept-hybrid-search
+title: "Hybrid Search"
+type: "concept"
+aliases: ["hybrid retrieval", "BM25", "sparse retrieval", "RRF", "reciprocal rank fusion", "keyword search", "tìm kiếm kết hợp"]
+tags: [ai-engineering, hybrid-search, semantic-search, rag, retrieval, embeddings]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Bác sĩ giỏi không chỉ nghe triệu chứng mô tả bằng lời (semantic) — họ còn nhìn xét nghiệm với con số cụ thể (exact match). Chỉ nghe lời: bỏ qua chi tiết quan trọng. Chỉ nhìn số: bỏ qua bức tranh tổng thể. Cả hai cùng lúc mới tốt.
+
+Retrieval trong RAG cũng vậy. Hybrid search không phải kỹ thuật nâng cao — đó là **baseline đúng đắn**.
+
+## Là gì
+
+**Hybrid search** kết hợp hai loại retrieval:
+
+- **Dense retrieval** (semantic/vector): embed query và document, tìm theo nghĩa. Giỏi nắm intent, dở với exact match.
+- **Sparse retrieval** (BM25/keyword): tìm theo từ khóa xuất hiện thực sự. Giỏi với mã lỗi, tên riêng, ID — dở với paraphrase.
+
+Hai luồng kết quả được gộp bằng **RRF (Reciprocal Rank Fusion)**: thay vì cộng điểm trực tiếp (khó normalize), RRF dùng thứ hạng — document nào rank cao ở cả hai danh sách sẽ nổi lên đầu. Đây là baseline fusion algorithm, không cần tune nhiều.
+
+## Ví dụ thật
+
+Người dùng hỏi: *"lỗi ERR_CHECKOUT_503 khi thanh toán Apple Pay"*. Dense retrieval tìm tài liệu về thanh toán chung. BM25 tìm chính xác document có "ERR_CHECKOUT_503". RRF kết hợp: document vừa liên quan về payment vừa chứa mã lỗi đúng → lên đầu.
+
+**Tune trọng số:** Một số hệ thống cho phép điều chỉnh `embedding_weight` vs `text_weight` trong RRF. Nếu corpus có nhiều mã kỹ thuật, ID, tên riêng → tăng weight cho BM25. Bắt đầu với 0.5/0.5 rồi đo bằng retrieval metrics.
+
+**HyDE (Hypothetical Document Embeddings):** Khi query quá ngắn hoặc mơ hồ, LLM sinh ra một "document giả" phù hợp với query, rồi embed document giả đó thay vì query gốc. Tìm được nhiều document liên quan hơn. Dùng làm fallback khi retrieval trả về ít kết quả.
+
+<Callout title="Cẩn thận">
+Đừng dùng semantic search đơn thuần rồi gọi là "RAG production-ready". Mọi corpus thực tế đều có mã sản phẩm, tên riêng, số phiên bản — semantic search sẽ miss những thứ này. Hybrid search là chuẩn tối thiểu cho production.
+</Callout>
+
+<Callout title="Nhớ nhé">
+Dense + BM25 + RRF = baseline không thể thiếu. HyDE và query rewriting là kỹ thuật bổ trợ khi retrieval cơ bản không đủ. Luôn đo retrieval recall trước khi thêm complexity.
+</Callout>
+
+## Đọc thêm
+
+- [OpenAI Retrieval Guide](https://developers.openai.com/api/docs/guides/retrieval) — Hybrid search với RRF trong OpenAI platform: cách tune `hybrid_search.embedding_weight` và `hybrid_search.text_weight` thực tế.
+- [Contextual Retrieval — Anthropic](https://www.anthropic.com/news/contextual-retrieval) — Kết hợp contextual embedding + BM25 giảm 49% lỗi retrieval. Bằng chứng thực nghiệm rõ ràng nhất về tác động của hybrid search.
+- [HyDE: Precise Zero-Shot Dense Retrieval — arXiv](https://arxiv.org/abs/2212.10496) — Paper gốc của HyDE (Gao et al., 2022): sinh hypothetical document từ query để cải thiện dense retrieval khi không có dữ liệu huấn luyện.
+- [Qdrant: Vector Search in Production](https://qdrant.tech/articles/vector-search-production/) — Triển khai hybrid search trên Qdrant: payload index, sparse vector support và các tradeoff thực tế trong production.
+
+## Tự kiểm tra
+
+1. Tại sao RRF tốt hơn cộng trực tiếp điểm từ hai hệ thống? Vấn đề gì khi normalize score từ cosine similarity và BM25?
+2. Corpus tài liệu y tế của bạn có tên thuốc và mã ICD-10 đặc thù. Bạn nên điều chỉnh embedding_weight hay text_weight cao hơn? Tại sao?
+3. HyDE giải quyết vấn đề gì mà hybrid search cơ bản không giải được? Khi nào bạn không nên dùng HyDE?

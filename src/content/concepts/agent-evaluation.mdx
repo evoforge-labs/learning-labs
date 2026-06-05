@@ -1,0 +1,60 @@
+---
+id: concept-agent-evaluation
+title: "Agent Evaluation"
+type: "concept"
+aliases: ["agent eval", "evaluating agents", "đánh giá agent", "eval agent", "agentic eval"]
+tags: [agent-evaluation, agents, evals, ai-engineering, agentic-workflows]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Bạn không đánh giá một phẫu thuật viên bằng cách hỏi "anh nghĩ ca mổ thế nào?" Bạn xem bệnh nhân có khỏi không. Eval agent cũng vậy: đừng chấm những gì agent *nói* — chấm những gì agent *làm được*.
+
+## Là gì
+
+**Agent Evaluation** đo chất lượng của AI agent bằng cách kiểm tra **trạng thái cuối của môi trường** (outcome), không phải lời agent nói trong quá trình thực hiện.
+
+Eval agent phức tạp hơn eval chatbot vì:
+1. Agent non-deterministic — cùng task, lần chạy khác nhau có thể có đường đi khác.
+2. Task dài — nhiều bước, mỗi bước có thể sai theo cách khác nhau.
+3. Môi trường thật — file system, API, database bị thay đổi thật.
+
+## Ví dụ thật
+
+Agent quản lý email: "Tìm tất cả email chưa đọc từ khách hàng VIP, tóm tắt, và tạo draft reply."
+
+**Cách chấm sai:** Đọc transcript agent, thấy agent nói "Tôi đã tìm thấy 5 email và tạo draft." — đánh dấu pass.
+
+**Cách chấm đúng:** Sau khi agent chạy xong, kiểm tra:
+- Số draft trong mailbox = đúng số email VIP chưa đọc? (code-based grader)
+- Draft có đúng subject và recipient không? (code-based)
+- Tóm tắt có faithful với nội dung email gốc không? (LLM-judge)
+
+**pass@k và pass^k — hai metric quan trọng:**
+
+- **pass@k**: Trong k lần chạy, *ít nhất một lần* thành công. Đo khả năng tốt nhất của agent.
+- **pass^k**: Trong k lần chạy, *tất cả* đều thành công. Đo độ tin cậy trong production.
+
+Ví dụ: pass@3 = 100% nhưng pass^3 = 33% — agent có thể làm được nhưng không nhất quán. Không nên ship vào production tự động.
+
+**Cấu trúc eval agent:** Mỗi task → chạy k trial → grader chấm outcome → tổng hợp pass@k và pass^k.
+
+<Callout title="Cẩn thận">
+Đừng chỉ báo cáo pass@k. Một agent pass@5 = 80% trông đẹp, nhưng pass^5 = 0% — tức là không bao giờ hoàn thành 5 task liên tiếp không lỗi. Với workflow tự động, pass^k mới là số quan trọng.
+</Callout>
+
+<Callout title="Nhớ nhé">
+Chấm **outcome** (trạng thái môi trường sau khi chạy), không phải **lời nói** của agent. Chạy nhiều trial (k ≥ 3) vì agent non-deterministic. Báo cáo cả pass@k và pass^k.
+</Callout>
+
+## Đọc thêm
+
+- [Anthropic Engineering – Demystifying evals for AI agents (Jan 2026)](https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents) — Bài thực chiến nhất về agent eval: cấu trúc task/trial/grader, tại sao đọc transcript để verify grader, và tại sao nên bắt đầu với 20–50 task thật từ failure.
+- [RAGAS – Available metrics](https://docs.ragas.io/en/stable/concepts/metrics/available_metrics/) — Metrics cho agentic workflow trong RAGAS: tool call accuracy, agent goal accuracy — áp dụng được cho agent multi-step.
+- [OpenAI – Evaluation best practices](https://developers.openai.com/api/docs/guides/evaluation-best-practices) — Phần multi-agent evaluation: cách đánh giá agent handoff precision, tool selection accuracy, và xử lý non-determinism.
+
+## Tự kiểm tra
+
+1. Tại sao nên chấm "outcome" (trạng thái môi trường) thay vì đọc lời agent nói trong transcript?
+2. pass@k và pass^k khác nhau như thế nào? Trường hợp nào bạn nên ưu tiên pass^k?
+3. Tại sao agent cần chạy nhiều trial (k lần) thay vì chỉ 1 lần như chatbot thông thường?

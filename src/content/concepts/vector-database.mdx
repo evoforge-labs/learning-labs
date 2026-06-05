@@ -1,0 +1,52 @@
+---
+id: concept-vector-database
+title: "Vector Database"
+type: "concept"
+aliases: ["vector store", "vector DB", "HNSW", "ANN search", "approximate nearest neighbor", "Pinecone", "Qdrant", "Weaviate", "Milvus"]
+tags: [ai-engineering, vector-database, embeddings, rag, retrieval, database]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Bạn có 10 triệu vector mỗi cái 1536 chiều. Câu hỏi là: vector nào gần nhất với query của tôi? Tìm kiếm thô (so sánh lần lượt từng cái) mất vài phút. Không ai chờ được. Vấn đề cần giải là: *tìm "gần đúng" cực nhanh thay vì "chính xác tuyệt đối" cực chậm*.
+
+Vector database sinh ra để giải chính bài toán đó.
+
+## Là gì
+
+**Vector database** là hệ thống lưu trữ và tìm kiếm được tối ưu cho vector — nó index vector bằng các thuật toán ANN (Approximate Nearest Neighbor) như HNSW để tìm vector gần nhất trong milliseconds thay vì minutes.
+
+Ngoài tìm kiếm nhanh, vector DB còn cung cấp: CRUD đầy đủ, filter theo metadata, backup/HA, multi-tenancy — tất cả thứ mà FAISS (thư viện tìm kiếm vector thuần) không có.
+
+## Ví dụ thật
+
+**HNSW (Hierarchical Navigable Small World)** là thuật toán index phổ biến nhất. Hãy hình dung một mạng lưới cầu đường nhiều tầng: tầng cao đi xa nhanh (bỏ qua nhiều điểm), tầng thấp đi gần cẩn thận. Query đi từ tầng cao xuống tầng thấp, thu hẹp vùng tìm kiếm dần. Kết quả: 95%+ chính xác với tốc độ gần realtime.
+
+**Tham số quan trọng cần tune:**
+- `ef` (search time): càng cao → chính xác hơn nhưng chậm hơn. Bắt đầu với 100, tăng nếu recall không đủ.
+- `m` (build time): số kết nối mỗi node. Tăng → index lớn hơn nhưng recall tốt hơn.
+
+**Quantization:** Nén vector từ float32 (4 bytes/chiều) xuống int8 hoặc binary — giảm 4-32x bộ nhớ với mất mát chất lượng nhỏ. Quan trọng khi bạn có hàng chục triệu vector.
+
+**Managed options:** Pinecone, Qdrant Cloud, Weaviate Cloud, Zilliz (managed Milvus) — dùng khi không muốn tự quản lý infra.
+
+<Callout title="Cẩn thận">
+**Đừng dùng FAISS thô trong production.** FAISS là thư viện tuyệt vời để nghiên cứu và prototype, nhưng nó thiếu CRUD (không update/delete vector riêng lẻ), không có HA, không có filter metadata tích hợp, không có backup. Khi cần scale hoặc update dữ liệu thường xuyên, bạn sẽ phải tự build tất cả những thứ đó.
+</Callout>
+
+<Callout title="Nhớ nhé">
+Index payload (metadata) ngay từ đầu — nếu bạn cần filter theo `department`, `date`, hay `product_id` khi query, field đó phải được index. Filter sau ANN search nhanh hơn nhiều so với filter toàn bộ collection.
+</Callout>
+
+## Đọc thêm
+
+- [Vector Search in Production — Qdrant](https://qdrant.tech/articles/vector-search-production/) — Hướng dẫn toàn diện về HNSW tuning, quantization, sharding, backup và các vấn đề thực tế khi chạy vector search ở quy mô lớn (cập nhật 4/2025).
+- [Production Checklist — Pinecone](https://docs.pinecone.io/guides/production/production-checklist) — Checklist từ Pinecone: security, index design, metadata modeling, rate limit, monitoring và error handling cho prod environment.
+- [Weaviate Documentation](https://docs.weaviate.io/weaviate) — Tài liệu chính thức của Weaviate: semantic search, hybrid search, RAG và agent-driven workflows trên vector database open-source.
+- [LLM Patterns — Eugene Yan](https://eugeneyan.com/writing/llm-patterns/) — Đặt vector database trong bức tranh lớn hơn: RAG pattern và cách retrieval kết nối với toàn bộ hệ thống LLM.
+
+## Tự kiểm tra
+
+1. Tại sao FAISS không phù hợp cho production? Liệt kê ít nhất 3 thứ vector database managed cung cấp mà FAISS không có.
+2. `ef` trong HNSW ảnh hưởng gì đến query? Bạn sẽ tăng hay giảm `ef` nếu recall đang ở 80% và bạn cần 95%?
+3. Bạn có 50 triệu vector, RAM không đủ. Quantization giúp gì? Đánh đổi gì?

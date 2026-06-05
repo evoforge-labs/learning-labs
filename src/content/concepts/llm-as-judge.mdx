@@ -1,0 +1,63 @@
+---
+id: concept-llm-as-judge
+title: "LLM-as-a-Judge"
+type: "concept"
+aliases: ["llm judge", "model-based grader", "llm grader", "chấm bằng LLM"]
+tags: [evals, llm-as-judge, ai-engineering, llm]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Bạn nhờ một đồng nghiệp chấm 500 bài tóm tắt. Họ bảo: "Bài này 7/10, bài kia 4/10" — nhưng không giải thích tại sao. Tuần sau chấm lại, bài hôm qua 7 nay thành 5. Không tin được. Đó là vấn đề của LLM-judge dùng thang điểm 1–5.
+
+Có một cách chấm đáng tin hơn: **pass/fail + critique**.
+
+## Là gì
+
+**LLM-as-a-Judge** là kỹ thuật dùng một LLM để chấm output của LLM khác. Thay vì human phải đọc từng output, model judge đọc rubric → đọc output → ra verdict.
+
+Kỹ thuật này mạnh vì nhanh và có thể mở rộng. Nhưng nếu thiết kế sai, nó chỉ tạo ra ảo giác đo lường.
+
+## Ví dụ thật
+
+Feature tóm tắt hồ sơ bệnh nhân. Rubric: "Tóm tắt phải đề cập đầy đủ chẩn đoán chính, không được bịa thông tin không có trong hồ sơ."
+
+**Prompt judge đúng cách:**
+
+```
+Đây là hồ sơ gốc: <source>...</source>
+Đây là tóm tắt cần chấm: <summary>...</summary>
+
+Hãy lý luận từng bước xem tóm tắt có bịa thông tin không.
+Sau đó kết luận: PASS hoặc FAIL.
+Nếu FAIL, giải thích ngắn gọn lý do.
+```
+
+Judge lý luận → bạn lấy verdict + critique, bỏ phần lý luận trước verdict.
+
+**Bốn nguyên tắc làm LLM-judge đáng tin:**
+
+1. **Binary pass/fail**, không dùng thang 1–5 (quá mơ hồ, không nhất quán).
+2. **Calibrate với chuyên gia** — đạt >90% agreement với domain expert trên 50–100 case mẫu trước khi scale.
+3. **Dùng model khác để chấm** — không dùng Claude chấm output của chính Claude khi có thể.
+4. **Bắt judge lý luận trước** — chain-of-thought giúp verdict chính xác hơn; bỏ reasoning khi đọc kết quả cuối.
+
+<Callout title="Cẩn thận">
+Đừng dùng thang điểm 1–5 hay 1–10. Judge LLM thiếu "neo điểm" — cùng một output hôm nay 7, hôm sau 5. Binary pass/fail buộc judge phải có lập trường rõ ràng và critique cụ thể hơn nhiều.
+</Callout>
+
+<Callout title="Nhớ nhé">
+LLM-judge chỉ đáng tin khi đã calibrate với domain expert. Nếu bạn chưa kiểm tra agreement rate, bạn chưa có eval — bạn chỉ có ảo giác eval.
+</Callout>
+
+## Đọc thêm
+
+- [Hamel Husain – Your AI Product Needs Evals (LLM Judge Guide)](https://hamel.dev/blog/posts/llm-judge/) — Bài thực chiến nhất về LLM-judge: tại sao binary pass/fail tốt hơn thang điểm, cách tìm "domain expert benevolent dictator", và quy trình calibrate từng bước.
+- [Anthropic – Develop tests and evaluate](https://platform.claude.com/docs/en/docs/test-and-evaluate/develop-tests) — Hướng dẫn chính thức từ Anthropic về LLM-based grading: rubric chi tiết, bắt model lý luận trước, và ví dụ code Python thực tế.
+- [OpenAI – Evaluation best practices](https://developers.openai.com/api/docs/guides/evaluation-best-practices) — Phần về LLM-as-judge trong framework OpenAI: khi nào dùng gpt-5.5 làm judge, kết hợp với metric-based eval như thế nào.
+
+## Tự kiểm tra
+
+1. Tại sao binary pass/fail đáng tin hơn thang điểm 1–5 khi dùng LLM-judge?
+2. "Calibrate với chuyên gia" nghĩa là gì trong thực tế? Bạn cần đạt agreement rate bao nhiêu trước khi scale?
+3. Tại sao nên dùng model khác để chấm thay vì cùng một model sinh output?

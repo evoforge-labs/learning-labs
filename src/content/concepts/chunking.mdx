@@ -1,0 +1,54 @@
+---
+id: concept-chunking
+title: "Chunking"
+type: "concept"
+aliases: ["text chunking", "document chunking", "chunk size", "chunk overlap", "recursive chunking", "structure-aware chunking", "cắt đoạn"]
+tags: [ai-engineering, chunking, rag, retrieval, embeddings]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Bạn đang học một cuốn sách dày 500 trang và ai đó hỏi: "Chương 7 nói gì?" Bạn không thể đưa cả cuốn sách vào câu trả lời — bạn cần tìm đúng vài đoạn liên quan. Nhưng nếu cắt sách thành từng trang riêng lẻ, một ý tưởng trải qua nhiều trang sẽ bị xé rời. Nếu cắt từng câu, mỗi câu không đủ ngữ cảnh để hiểu.
+
+Chunking — cắt tài liệu thành mẩu để embed — chính là nghệ thuật tìm đơn vị phù hợp.
+
+## Là gì
+
+**Chunking** là quá trình chia tài liệu lớn thành những đoạn nhỏ hơn (chunk) để embed và lưu vào vector database. Mỗi chunk là một đơn vị tìm kiếm độc lập.
+
+Không có chunk size "tối ưu" chung — nguyên tắc là: **chunk size phải khớp với độ chi tiết của câu hỏi**. Câu hỏi ngắn, cụ thể → chunk nhỏ. Câu hỏi cần tổng hợp nhiều thông tin → chunk lớn hơn (hoặc dùng parent-child chunking).
+
+## Ví dụ thật
+
+**Fixed-size chunking** — cắt đúng N token: đơn giản nhưng hay cắt giữa câu, giữa đoạn → mất ngữ cảnh. Dùng làm baseline, không phải production default.
+
+**Recursive chunking** — cắt theo thứ tự ưu tiên: paragraph → sentence → word. Nếu đoạn văn vừa với limit, giữ nguyên; nếu quá dài mới cắt nhỏ hơn. Đây là default tốt nhất cho văn bản tự nhiên.
+
+**Structure-aware chunking** — cắt theo cấu trúc tài liệu: markdown header, HTML section, code block, table. Với tài liệu có cấu trúc rõ (docs kỹ thuật, wiki, PDF có heading), đây là lựa chọn tốt nhất — mỗi section là một chunk tự nhiên.
+
+**Chunk overlap:** Thêm 10-20% overlap giữa các chunk liền kề để ý tưởng trải qua ranh giới không bị mất hoàn toàn. OpenAI mặc định: 800 token, overlap 400 token.
+
+<Callout title="Góc kỹ thuật">
+**Parent-child chunking:** Lưu chunk nhỏ để tìm kiếm chính xác, nhưng khi retrieved thì trả về chunk lớn hơn (parent) để LLM có đủ ngữ cảnh. Tăng chất lượng câu trả lời mà không làm hại recall.
+</Callout>
+
+<Callout title="Cẩn thận">
+**Metadata là bắt buộc, không phải optional.** Mỗi chunk phải biết nó từ đâu: tên tài liệu, section, ngày cập nhật, ID nguồn. Không có metadata, bạn không thể filter, không thể cite nguồn, không thể debug khi retrieval sai.
+</Callout>
+
+<Callout title="Nhớ nhé">
+Recursive > Fixed. Gắn metadata vào mọi chunk. Kiểm tra chất lượng chunking bằng cách đọc thủ công 20-30 chunk ngẫu nhiên — nếu chunk nào đọc không hiểu ngữ cảnh, strategy cần điều chỉnh.
+</Callout>
+
+## Đọc thêm
+
+- [OpenAI Retrieval Guide](https://developers.openai.com/api/docs/guides/retrieval) — Giải thích chunking strategy mặc định (800 token/400 overlap), cách điều chỉnh `max_chunk_size_tokens`, và tác động lên chất lượng retrieval.
+- [LlamaIndex: Basic RAG Strategies](https://developers.llamaindex.ai/python/framework/optimizing/basic_strategies/basic_strategies/) — Hướng dẫn thực chiến: chọn chunk size, điều chỉnh `similarity_top_k` khi thay đổi chunk size, và kết hợp với metadata filter.
+- [Contextual Retrieval — Anthropic](https://www.anthropic.com/news/contextual-retrieval) — Nâng cấp chunking: thay vì cắt đơn thuần, thêm 50-100 token context vào mỗi chunk trước khi embed → giảm lỗi retrieval 35%. Đây là baseline mới.
+- [LLM Patterns — Eugene Yan](https://eugeneyan.com/writing/llm-patterns/) — Chunking trong bức tranh toàn cảnh RAG: những tradeoff thực tế giữa chunk size, retrieval quality và latency.
+
+## Tự kiểm tra
+
+1. Bạn đang build chatbot cho tài liệu pháp lý — mỗi điều khoản thường trải dài 2-3 trang. Bạn sẽ chọn chunking strategy nào và tại sao?
+2. Tại sao chunk overlap (chồng lấn) lại cần thiết? Nếu không có overlap, vấn đề gì xảy ra?
+3. Một chunk bị retrieve nhưng câu trả lời vẫn sai vì thiếu ngữ cảnh. Đây là dấu hiệu của vấn đề gì? Bạn sẽ fix thế nào?

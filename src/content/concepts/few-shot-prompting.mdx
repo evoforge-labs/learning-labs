@@ -1,0 +1,63 @@
+---
+id: concept-few-shot-prompting
+title: "Few-shot / In-context Learning"
+type: "concept"
+aliases: ["few-shot", "in-context learning", "one-shot", "zero-shot", "ví dụ mẫu trong prompt"]
+tags: [ai-engineering, prompt, llm, few-shot, in-context-learning, reasoning-models]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Bạn học viết báo cáo không phải bằng cách đọc lý thuyết — mà bằng cách đọc 3 báo cáo mẫu rồi viết theo. Não bạn "bắt pattern" từ ví dụ cụ thể.
+
+LLM hoạt động y hệt. Đưa ví dụ vào prompt, model sẽ bắt chước format, giọng văn, và cách suy luận của ví dụ đó.
+
+## Là gì
+
+**Few-shot prompting** (hay in-context learning) là kỹ thuật đưa một vài cặp input–output mẫu vào prompt để "dạy" model làm theo pattern đó — mà không cần fine-tune.
+
+- **Zero-shot**: không có ví dụ, chỉ có lệnh.
+- **One-shot**: 1 ví dụ mẫu.
+- **Few-shot**: 2–10 ví dụ mẫu (thường 3–5 là đủ).
+
+Ví dụ bổ sung thông tin mà lời giải thích khó diễn đạt: format cụ thể, ngữ điệu, cách xử lý edge case.
+
+## Ví dụ thật
+
+Bạn muốn model phân tích cảm xúc đánh giá sản phẩm:
+
+```
+Đánh giá: "Giao hàng chậm nhưng sản phẩm xịn lắm"
+Cảm xúc: mixed
+
+Đánh giá: "Nhận được hàng lỗi, shop không phản hồi"
+Cảm xúc: negative
+
+Đánh giá: "Đóng gói cẩn thận, đúng mô tả, sẽ mua lại"
+Cảm xúc: positive
+
+Đánh giá: "Mua lần 2 rồi, lần này ship nhanh hơn"
+Cảm xúc:
+```
+
+Ba ví dụ trên đủ để model hiểu: nhãn là `positive`/`negative`/`mixed`, format ngắn gọn, và cách phân loại khi đánh giá có cả khen lẫn chê.
+
+<Callout title="Cẩn thận">
+Chọn ví dụ đa dạng và canonical — không phải chỉ những trường hợp dễ. Nếu tất cả ví dụ đều là `positive`, model sẽ thiên vị về `positive`. Và với **reasoning models** (Claude extended thinking, GPT o-series): thử zero-shot trước — chúng thường không cần few-shot và ví dụ đôi khi làm giảm hiệu quả suy luận nội bộ của chúng.
+</Callout>
+
+<Callout title="Nhớ nhé">
+Few-shot là đòn bẩy mạnh nhất để kiểm soát format và style. Chọn 3–5 ví dụ đa dạng, đại diện cho các trường hợp khác nhau. Với reasoning models, thử zero-shot trước rồi mới thêm ví dụ nếu cần.
+</Callout>
+
+## Đọc thêm
+
+- [Prompting Best Practices — Anthropic](https://platform.claude.com/docs/en/docs/build-with-claude/prompt-engineering/claude-prompting-best-practices) — Hướng dẫn chi tiết về cách sử dụng examples trong prompt cho Claude 4.x: khi nào few-shot giúp ích và cách cấu trúc ví dụ hiệu quả.
+- [Prompt Engineering Guide — OpenAI](https://developers.openai.com/api/docs/guides/prompt-engineering) — Giải thích few-shot learning, cách đặt ví dụ trong message history, và khi nào zero-shot đủ tốt.
+- [Reasoning Best Practices — OpenAI](https://developers.openai.com/api/docs/guides/reasoning-best-practices) — Tại sao reasoning models như o3/o4 thường hoạt động tốt hơn với zero-shot, và cách quyết định có nên thêm ví dụ không.
+
+## Tự kiểm tra
+
+1. Bạn có 10 ví dụ để thêm vào prompt nhưng context window hạn chế. Bạn sẽ chọn 3 ví dụ theo tiêu chí nào?
+2. Few-shot prompting giúp kiểm soát điều gì mà lệnh bằng lời khó diễn đạt được?
+3. Tại sao với reasoning models, bạn nên thử zero-shot trước thay vì mặc định thêm ví dụ?

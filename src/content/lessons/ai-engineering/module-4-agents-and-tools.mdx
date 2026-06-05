@@ -1,0 +1,64 @@
+---
+id: lesson-aieng-004
+title: "Agent: khi nào cần, và cái harness quanh nó"
+type: "lesson"
+track: ai-engineering
+module: agents
+level: intermediate
+tags: [ai-engineering, agents, tool-calling, react-pattern, mcp, multi-agent, harness, memory, agentic-workflows]
+prerequisites: [concept-ai-agent, concept-tool-calling, concept-react-pattern, concept-mcp, concept-multi-agent, concept-agent-memory, concept-agentic-workflows, concept-agent-harness]
+related: [exercise-aieng-004, rubric-ai-engineering]
+status: published
+---
+import Callout from '../../../components/content/Callout.astro';
+
+Đa số code AI bạn viết trong 6 tháng tới *không cần agent*. Hiểu điều này trước — rồi module này sẽ dạy bạn khi nào agent thực sự đáng, và làm gì để nó sống nổi ở production.
+
+## 1 — Workflow trước, agent sau
+
+[AI Agent](/concepts/ai-agent) là khi LLM tự điều hướng tiến trình. Nghe hấp dẫn — nhưng Anthropic nói thẳng: phần lớn task thực tế, **workflow với vài bước cố định** chạy tốt hơn, rẻ hơn, và dễ debug hơn.
+
+Câu hỏi nên hỏi đầu tiên: *"Input của tôi có đủ biến thiên để cần LLM tự quyết định bước tiếp theo?"* Nếu không — dùng [agentic workflows](/concepts/agentic-workflows) pattern đơn giản: prompt chaining, routing, parallelization. Chỉ leo lên agent thật sự khi đã thử hết.
+
+## 2 — Tool calling: thiết kế kỹ từ đầu
+
+Khi quyết định dùng agent, [tool calling](/concepts/tool-calling) là thứ agent "có tay" để làm việc. Nhưng tool tệ = agent tệ, dù model tốt đến đâu.
+
+Ba nguyên tắc không được bỏ qua:
+- **Ít tool rộng** hơn nhiều tool hẹp — giảm nhầm lẫn khi chọn tool
+- **Mô tả = prompt** — dùng "intern test": intern chưa biết codebase có hiểu mô tả này không?
+- **Trả ngữ nghĩa** — tên thay vì UUID, trạng thái readable thay vì code số
+
+## 3 — ReAct là sàn, reasoning model nâng lên
+
+[ReAct pattern](/concepts/react-pattern) (Thought → Action → Observation) là cái làm agent thực sự *suy luận* chứ không đoán mò. Mỗi tool call phải có Thought trước — tại sao cần gọi tool này, với input này.
+
+2026: với reasoning model (Claude 3.7+ extended thinking, o-series), bước Thought được internalize — bạn không thấy trong output nhưng model vẫn "suy nghĩ". Điều này không có nghĩa bỏ ReAct loop — vẫn cần Observation sau mỗi tool call để agent điều chỉnh kế hoạch.
+
+## 4 — MCP để tái sử dụng tool
+
+[MCP](/concepts/mcp) giải quyết vấn đề DRY cho tool: thay vì viết integration với Slack, GitHub, Postgres riêng cho mỗi agent — build một lần thành MCP server, dùng được ở mọi client hỗ trợ MCP. Năm 2026 đã có ~2000 server sẵn có trong ecosystem.
+
+Lưu ý bảo mật: MCP server lạ = đừng tin mô tả tool như tin code của mình.
+
+## 5 — Multi-agent: chỉ khi đáng
+
+[Multi-agent](/concepts/multi-agent) đắt hơn, khó debug hơn, và latency cao hơn. Ba điều kiện để nó xứng đáng: task quá dài cho một context window, task có thể xử lý song song thực sự, subtask cần context chuyên biệt hoàn toàn khác nhau.
+
+Token budget giải thích ~80% chênh lệch hiệu năng. Thường xuyên, single-agent + context dài hơn thắng.
+
+## 6 — Memory + Harness: thứ giữ agent sống
+
+Đây là thứ hầu hết tutorial bỏ qua.
+
+[Agent memory](/concepts/agent-memory) không phải tự nhiên có — phải thiết kế: in-context (bộ nhớ làm việc), episodic (progress file, history), semantic (knowledge base), procedural (system prompt). Chỉ đưa vào context những gì *cần thiết cho bước tiếp theo*.
+
+[Agent harness](/concepts/agent-harness) là khung đỡ: môi trường, vòng lặp, error recovery, và circuit breaker. Không có circuit breaker, một agent lạc có thể tốn tiền vô hạn hoặc gây side effect khó đảo ngược.
+
+Pattern Anthropic: `initializer agent` session đầu tạo `progress.md` + git commit → `coding agent` session tiếp theo đọc git history + progress file → tiếp tục đúng chỗ.
+
+<Callout title="Nhớ nhé">
+Thứ tự đầu tư đúng: **workflow đơn giản → tool design tốt → ReAct loop → memory → harness với circuit breaker → multi-agent (nếu cần)**. Đừng nhảy thẳng vào multi-agent vì nghe "advanced" hơn.
+</Callout>
+
+Thực hành ngay với [bài thiết kế agent →](/exercises/ai-engineering/m4-design-an-agent)

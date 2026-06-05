@@ -1,0 +1,56 @@
+---
+id: concept-llm-evals
+title: "LLM Evals (Evaluation)"
+type: "concept"
+aliases: ["evals", "llm evaluation", "model evaluation", "đánh giá LLM", "kiểm thử LLM"]
+tags: [evals, ai-engineering, llm, llm-as-judge, eval-dataset]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Bạn vừa sửa prompt, chạy thử 3 lần, thấy output "trông có vẻ tốt hơn" — rồi ship. Một tuần sau, khách hàng báo model bịa số liệu. Bạn không biết từ bao giờ. Đó là kỹ sư AI không có eval.
+
+Eval không phải pha QA cuối cùng. Eval là **kỷ luật phát triển** — chạy mỗi lần bạn thay đổi prompt, model, hay pipeline.
+
+## Là gì
+
+**LLM Eval (Evaluation)** là quy trình đo lường định lượng chất lượng output của một LLM hoặc pipeline AI. Thay vì nhìn bằng mắt, bạn chạy một bộ test tự động và nhận về con số — pass rate, error breakdown, regression so với phiên bản trước.
+
+Năm 2026, các team AI engineering hàng đầu dồn **60–80% thời gian** vào hiểu lỗi qua eval — không phải vào tinh chỉnh prompt bằng cảm tính.
+
+## Ví dụ thật
+
+Bạn xây feature "tóm tắt hợp đồng". Bạn có 50 hợp đồng mẫu với tóm tắt chuẩn (golden set). Mỗi khi sửa prompt:
+
+1. Chạy 50 case qua pipeline.
+2. Grader tự động chấm: câu nào đúng điều khoản, câu nào bịa.
+3. So sánh pass rate với phiên bản trước.
+
+Nếu pass rate giảm → prompt mới tệ hơn, dù trông "hay hơn" khi đọc.
+
+**Ba loại grader, theo thứ tự ưu tiên:**
+
+- **Code-based** — nhanh nhất, đáng tin nhất. Dùng khi output có cấu trúc: exact match, regex, JSON schema validation.
+- **LLM-as-judge** — dùng khi output tự do (văn xuôi, tóm tắt). Cần calibrate với chuyên gia.
+- **Human** — chậm và đắt, chỉ dùng để calibrate LLM-judge hoặc với case quan trọng.
+
+<Callout title="Cẩn thận">
+Đừng dùng BLEU score hay cosine similarity để đánh giá output sinh ngôn ngữ tự nhiên. Chúng đo độ giống từ vựng, không đo chất lượng ý nghĩa. Một câu trả lời hoàn toàn khác từ nhưng đúng nghĩa sẽ bị chấm thấp — và ngược lại.
+</Callout>
+
+<Callout title="Nhớ nhé">
+Eval chạy trong CI mỗi PR — không phải sau khi ship. Một bộ 50 case chạy tự động có giá trị hơn nghìn lần xem output thủ công.
+</Callout>
+
+## Đọc thêm
+
+- [Anthropic – Develop tests and evaluate](https://platform.claude.com/docs/en/docs/test-and-evaluate/develop-tests) — Hướng dẫn thực tế từ Anthropic: cách định nghĩa success criteria, thiết kế grader (code-based, LLM-based), và viết rubric rõ ràng. Có code mẫu Python.
+- [Hamel Husain – LLM Evals FAQ (Jan 2026)](https://hamel.dev/blog/posts/evals-faq/) — FAQ từ Hamel Husain & Shreya Shankar: tại sao error analysis quan trọng hơn infrastructure, cách dùng "benevolent dictator" domain expert, và bẫy phổ biến khi mới bắt đầu.
+- [OpenAI – Evaluation best practices](https://developers.openai.com/api/docs/guides/evaluation-best-practices) — Framework 5 bước từ OpenAI: define → collect → metric → compare → iterate. Hữu ích khi bạn cần bản đồ tổng thể quy trình eval.
+- [Anthropic – Demystifying evals for AI agents (Jan 2026)](https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents) — Bài từ team Anthropic Engineering về cách cấu trúc eval cho agent: task/trial/grader, đọc transcript để kiểm grader, và tại sao nên bắt đầu với 20–50 case thật.
+
+## Tự kiểm tra
+
+1. Tại sao eval được gọi là "kỷ luật phát triển" thay vì "pha QA cuối"? Điều gì xảy ra nếu bạn chỉ eval sau khi ship?
+2. Trong ba loại grader (code-based, LLM-judge, human), bạn nên chọn loại nào trước? Khi nào mới cần LLM-judge?
+3. Tại sao BLEU score không phù hợp để đánh giá output sinh văn bản tự do từ LLM?

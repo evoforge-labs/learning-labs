@@ -1,0 +1,56 @@
+---
+id: concept-hallucination
+title: "Hallucination (LLM)"
+type: "concept"
+aliases: ["hallucination", "model hallucination", "ảo giác LLM", "model bịa", "confabulation"]
+tags: [evals, hallucination, groundedness, ai-engineering, llm, rag]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Một thám tử tốt không bao giờ nói "Tôi không biết" — họ suy luận từ manh mối và đưa ra kết luận tự tin. Vấn đề là LLM cũng "tự tin" như vậy — kể cả khi không có manh mối nào, nó vẫn suy luận và đưa ra kết luận. Và kết luận đó nghe rất thuyết phục.
+
+Đó là hallucination.
+
+## Là gì
+
+**Hallucination** xảy ra khi LLM sinh ra thông tin không có căn cứ — số liệu bịa, trích dẫn không tồn tại, tên người sai, ngày tháng không khớp. Model không "biết" nó đang bịa; nó chỉ đang tối ưu token tiếp theo có xác suất cao nhất.
+
+Hai dạng hallucination phổ biến:
+
+- **Intrinsic**: Mâu thuẫn với tài liệu nguồn đã cung cấp (RAG trả về đúng, nhưng model vẫn tóm tắt sai).
+- **Extrinsic**: Thêm thông tin không có trong nguồn nào (bịa thuần).
+
+## Ví dụ thật
+
+Feature hỏi đáp chính sách nội bộ. Tài liệu nói: "Nhân viên có 12 ngày phép năm." Model trả lời: "Bạn có 15 ngày phép, bao gồm 3 ngày phép ốm." — không có trong tài liệu. Đây là hallucination intrinsic (model có nguồn, nhưng vẫn bịa thêm).
+
+**Cách test hallucination hiệu quả:**
+
+Xây golden set **cân bằng** hai loại:
+1. Câu hỏi *có thể trả lời được* từ tài liệu — model phải trả lời đúng.
+2. Câu hỏi *không thể trả lời được* — model phải nói "Tôi không tìm thấy thông tin này", không được bịa.
+
+Nếu chỉ test loại 1, bạn không phát hiện được khi model bịa câu hỏi loại 2.
+
+Với RAG pipeline, **faithfulness/groundedness** là metric chính để phát hiện hallucination — xem thêm [concept-groundedness](/concepts/groundedness).
+
+<Callout title="Cẩn thận">
+Hallucination không phải lỗi "đôi khi xảy ra" — nó là đặc tính cơ bản của cách LLM hoạt động. Mọi pipeline production đều phải có grader chuyên kiểm hallucination, không thể chỉ dựa vào prompt "hãy trung thực".
+</Callout>
+
+<Callout title="Nhớ nhé">
+Test hallucination bằng bộ cân bằng: câu nên-trả-lời + câu nên-từ-chối. Thiếu loại thứ hai, bạn không biết model có đang bịa hay không.
+</Callout>
+
+## Đọc thêm
+
+- [Hamel Husain – LLM Evals FAQ (Jan 2026)](https://hamel.dev/blog/posts/evals-faq/) — Giải thích tại sao "case nên-từ-chối" là loại test quan trọng nhất để phát hiện hallucination, và cách error analysis giúp phân loại dạng hallucination.
+- [RAGAS – Available metrics](https://docs.ragas.io/en/stable/concepts/metrics/available_metrics/) — Tài liệu chính thức về faithfulness metric trong RAGAS: cách tính ở mức claim, cách dùng LLM-judge để phát hiện hallucination intrinsic trong RAG pipeline.
+- [Anthropic – Constitutional Classifiers](https://www.anthropic.com/research/constitutional-classifiers) — Nghiên cứu của Anthropic về classifier phát hiện output nguy hại: minh họa cách dùng adversarial testing để tìm điểm yếu của model, áp dụng được cho việc test hallucination.
+
+## Tự kiểm tra
+
+1. Phân biệt hallucination intrinsic và extrinsic. Loại nào nguy hiểm hơn trong RAG pipeline và tại sao?
+2. Tại sao một golden set chỉ gồm "câu hỏi có thể trả lời được" lại không đủ để test hallucination?
+3. Nếu model trả lời đúng 100% câu hỏi loại 1 nhưng bịa 100% câu hỏi loại 2 — pass rate tổng thể là bao nhiêu nếu bộ test có 50/50? Điều đó cho bạn thấy gì?

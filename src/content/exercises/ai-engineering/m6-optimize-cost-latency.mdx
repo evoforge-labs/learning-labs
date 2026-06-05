@@ -1,0 +1,79 @@
+---
+id: exercise-aieng-006
+title: "Tối ưu cost & latency cho một app LLM"
+type: "exercise"
+track: ai-engineering
+tags: [ai-engineering, llmops, prompt-caching, cost-optimization, latency, fine-tuning, rag]
+estimatedMinutes: 30
+related: [lesson-aieng-006, concept-prompt-caching, concept-latency-cost-optimization, concept-fine-tuning-vs-rag, rubric-ai-engineering]
+status: published
+---
+import Callout from '../../../components/content/Callout.astro';
+
+## Tình huống
+
+Bạn vừa join một team đang vận hành chatbot hỗ trợ tài liệu nội bộ. Hệ thống hoạt động được nhưng đang gặp hai vấn đề nghiêm trọng: **cost cao và latency chậm**. Sếp yêu cầu cải thiện trong sprint tới.
+
+**Kiến trúc hiện tại:**
+
+- Mỗi request gửi kèm toàn bộ system prompt (~2.000 token) + 15 chunk tài liệu retrieved (~500 token/chunk = 7.500 token) + lịch sử hội thoại (~500 token).
+- Tổng ~10.000 token input mỗi request. Dùng GPT-4o cho mọi loại câu hỏi.
+- Không streaming. Không caching. Không batching.
+- Khoảng 5.000 request/ngày. Chi phí hiện tại: ~$120/ngày.
+- Median latency: 8 giây (user phải ngồi nhìn spinner).
+
+---
+
+## Task 1 — Prompt caching: áp ở đâu, tiết kiệm bao nhiêu?
+
+Phân tích kiến trúc trên:
+
+1. Xác định phần nào của prompt **nên được cache** và phần nào **không thể cache**. Giải thích tại sao.
+2. Giả sử bạn cache được system prompt + 10 trong số 15 chunk tài liệu (vì chúng ổn định, chỉ 5 chunk là dynamic theo query). Ước tính % giảm chi phí cho phần input tokens — dùng thông số: cache read = 0.1x giá thông thường, cache write = 1.25x (TTL 5 phút).
+3. Mô tả thứ tự sắp xếp prompt đúng để cache hoạt động hiệu quả.
+
+<Callout title="Gợi ý">
+Tính tổng token bị cache (system prompt + static chunks) và so với tổng 10.000 token. Cache read tốn 0.1x, cache write tốn 1.25x lần đầu. Sau lần đầu (cache hit), bạn chỉ trả 0.1x cho phần đó.
+</Callout>
+
+---
+
+## Task 2 — Ba cách giảm latency/cost, ưu tiên cái nào trước?
+
+Ngoài prompt caching, đề xuất **ba cải thiện cụ thể** từ danh sách sau, và giải thích rõ:
+
+- Streaming
+- Model routing (dùng model nhỏ hơn cho một số loại câu hỏi)
+- Giảm số chunk retrieved (từ 15 xuống top-3 với reranker)
+- Parallelization (các bước độc lập chạy song song)
+- Batch API (cho một phần workload cụ thể)
+
+Với mỗi cải thiện bạn chọn:
+1. Giải thích tác động cụ thể (giảm latency hay cost? bao nhiêu % ước tính?).
+2. Trade-off hoặc rủi ro nếu có.
+
+Sau đó: **xếp thứ tự ưu tiên** (cái nào implement trước?) và giải thích logic.
+
+---
+
+## Task 3 — Có nên fine-tune không?
+
+Team đang cân nhắc fine-tune model để "cải thiện chất lượng trả lời". Bạn được hỏi ý kiến.
+
+Dựa trên tình huống đã mô tả:
+
+1. **Diagnose trước**: Vấn đề hiện tại (cost cao, latency chậm) có phải là vấn đề mà fine-tuning giải quyết không? Giải thích.
+2. **Khi nào** fine-tuning sẽ hợp lý cho app chatbot tài liệu này? Liệt kê điều kiện cụ thể (eval kết quả như thế nào, dữ liệu cần gì).
+3. **Thứ tự đúng**: Với tất cả cải thiện đã đề xuất ở Task 1 và 2, fine-tuning nằm ở đâu trong roadmap? Trước hay sau khi áp dụng prompt caching + routing + giảm token?
+
+---
+
+## Đánh giá
+
+Xem [AI Engineering Rubric](../../rubrics/ai-engineering-rubric) để biết tiêu chí đánh giá chi tiết.
+
+Bài làm tốt sẽ:
+- Ước tính % tiết kiệm dựa trên số cụ thể (không chỉ "giảm nhiều").
+- Giải thích rõ *tại sao* mỗi quyết định, không chỉ liệt kê.
+- Phân biệt rõ "vấn đề tri thức" (→ RAG) vs "vấn đề hành vi" (→ fine-tune) vs "vấn đề infrastructure" (→ caching/routing/streaming).
+- Không đề xuất fine-tuning như bước đầu tiên khi chưa có eval và chưa tối ưu các đòn bẩy rẻ hơn.

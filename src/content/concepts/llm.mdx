@@ -1,0 +1,49 @@
+---
+id: concept-llm
+title: "LLM (Large Language Model)"
+type: "concept"
+aliases: ["large language model", "mô hình ngôn ngữ lớn", "assistant model"]
+tags: [llm, ai-engineering, foundation-model, tokens]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Bạn đang nhắn tin với một người bạn. Bạn gõ "Hôm nay trời..." — và não người bạn đó lập tức gợi ý: "đẹp lắm", hoặc "mưa to quá". Não đó đã đọc hàng triệu câu văn, nên nó *đoán* được từ tiếp theo hợp lý nhất.
+
+LLM làm đúng điều đó — nhưng ở quy mô hàng tỷ tham số và hàng nghìn tỷ từ.
+
+## Là gì
+
+**LLM (Large Language Model)** là mạng nơ-ron khổng lồ được huấn luyện để **dự đoán token tiếp theo** trong một chuỗi văn bản. Từ nhiệm vụ đơn giản đó — đoán từ tiếp theo — model học được ngữ pháp, lý luận, lập trình, kiến thức thế giới, và cả phong cách viết.
+
+"Large" ở đây chỉ kích thước: hàng tỷ đến hàng nghìn tỷ tham số, được huấn luyện trên lượng văn bản khổng lồ từ internet, sách, code.
+
+## Ví dụ thật
+
+Gọi API Claude Sonnet 4.6 với câu "Giải thích recursion bằng tiếng Việt đơn giản" — model không "tra cứu" câu trả lời. Nó *sinh* từng token một, mỗi token dựa trên toàn bộ context trước đó, cho đến khi câu trả lời hoàn chỉnh.
+
+**Hai loại model bạn sẽ gặp:**
+
+- **Base model (pretrained)**: Chỉ học dự đoán token, chưa được tinh chỉnh để theo lệnh. Giao tiếp khó, phản hồi không nhất quán. Dùng để fine-tune, không phải gọi thẳng API.
+- **Assistant/Instruction-tuned model**: Base model + SFT (supervised fine-tuning) + RLHF (reinforcement learning from human feedback). Biết nói chuyện, theo lệnh, và từ chối yêu cầu nguy hại. Đây là thứ bạn gọi qua API — Claude, GPT-5.5, Gemini 2.5.
+
+<Callout title="Nhớ nhé">
+Năm 2026, mọi frontier LLM đều nhận văn bản *và* hình ảnh mặc định. "LLM" và "multimodal model" gần như đồng nghĩa ở tầng flagship. Xem thêm [concept-multimodal-llm](/concepts/multimodal-llm).
+</Callout>
+
+<Callout title="Cẩn thận">
+LLM không "biết" — nó *tổng hợp token có xác suất cao nhất*. Khi nó sai, nó vẫn tự tin. Đó là lý do evals (đánh giá định lượng) là kỹ năng quan trọng nhất của AI engineer — đừng tin mù model.
+</Callout>
+
+## Đọc thêm
+
+- [Anthropic Glossary – LLM & key terms](https://platform.claude.com/docs/en/docs/resources/glossary) — Định nghĩa súc tích các khái niệm cốt lõi (LLM, token, RLHF, RAG) từ Anthropic, nguồn tham khảo nhanh khi gặp thuật ngữ lạ.
+- [OpenAI API – Key concepts](https://developers.openai.com/api/docs/concepts) — Giới thiệu nền tảng: text generation, embeddings, tokens, context length — từ góc nhìn của OpenAI, giúp bạn so sánh cách hai nhà cung cấp định nghĩa cùng khái niệm.
+- [Google AI – Gemini API Models](https://ai.google.dev/gemini-api/docs/models) — Catalog các model Gemini 2.5/3.x, context window, và khả năng của từng model — hữu ích khi bạn cần chọn model phù hợp dự án.
+- [Anthropic – Models overview](https://platform.claude.com/docs/en/about-claude/models/overview) — Bảng so sánh đầy đủ Claude Opus 4.8 / Sonnet 4.6 / Haiku 4.5: giá, context window, max output, knowledge cutoff.
+
+## Tự kiểm tra
+
+1. Base model và assistant model khác nhau ở điểm nào? Tại sao builder không nên gọi thẳng base model qua API?
+2. LLM "dự đoán token tiếp theo" — điều đó có nghĩa gì trong thực tế khi bạn gửi một câu hỏi và nhận được câu trả lời dài?
+3. Kể tên 3 family model frontier năm 2026 và nhà cung cấp tương ứng.

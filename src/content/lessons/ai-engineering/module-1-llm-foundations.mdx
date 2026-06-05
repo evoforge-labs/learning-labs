@@ -1,0 +1,64 @@
+---
+id: lesson-aieng-001
+title: "Hiểu LLM ở mức kỹ sư"
+type: "lesson"
+track: ai-engineering
+module: foundations
+level: beginner
+tags: [llm, ai-engineering, tokens, context-window, sampling, foundation-model, reasoning-models, multimodal]
+prerequisites: [concept-llm, concept-tokens-tokenization, concept-context-window, concept-temperature-sampling, concept-foundation-model, concept-multimodal-llm, concept-reasoning-models]
+related: [exercise-aieng-001, rubric-ai-engineering]
+status: published
+---
+import Callout from '../../../components/content/Callout.astro';
+
+Hầu hết builder bắt đầu với LLM theo cách này: mở playground, gõ thử, thấy hay → gọi API → ship. Không có vấn đề gì — cho đến khi hóa đơn lên cao bất thường, hoặc app trả lời kỳ lạ lúc context dài, hoặc người dùng phàn nàn kết quả không nhất quán.
+
+Bài học này không dạy lý thuyết — nó đặt nền để bạn đưa ra **quyết định kỹ thuật đúng** trước khi viết dòng code đầu tiên.
+
+## Bước 1: Token = tiền
+
+Trước khi làm bất cứ thứ gì, hiểu [concept-tokens-tokenization](/concepts/tokens-tokenization). Không phải vì nó thú vị — mà vì mọi thứ khác (context window, chi phí, tốc độ) đều tính theo token.
+
+Quy tắc thực chiến: với app tiếng Việt, nhân đôi ước lượng token so với tiếng Anh. Chạy token-counting API với sample input thật *trước* khi estimate budget.
+
+## Bước 2: Context window = bộ nhớ làm việc, có giới hạn thật
+
+[concept-context-window](/concepts/context-window) giải thích cơ chế. Điều builder cần nhớ:
+
+- 1M token không có nghĩa bạn nên nhồi 1M token vào. **Context rot** xảy ra trước khi đầy: recall giảm, latency tăng, cost tăng.
+- Câu hỏi đúng không phải "context window có đủ không?" — mà là **"tôi có thực sự cần thứ đó trong context không?"**
+- Với agent chạy dài: dùng compaction, đừng để context phình tự do.
+
+## Bước 3: Sampling — và tại sao reasoning models đổi luật chơi
+
+[concept-temperature-sampling](/concepts/temperature-sampling) là tham số bạn chỉnh thường xuyên nhất với standard models.
+
+Nhưng năm 2026, **reasoning models** ([concept-reasoning-models](/concepts/reasoning-models)) đang trở thành lựa chọn mặc định cho tác vụ phức tạp — và chúng không chơi theo luật cũ:
+
+- Không cần chain-of-thought prompt
+- Không chỉnh temperature
+- Điều khiển bằng `budget_tokens` / `effort` / `reasoning_effort`
+
+<Callout title="Mẹo">
+Khi gặp bài toán mới: thử standard model + zero-shot trước. Nếu chất lượng chưa đủ → thêm few-shot. Vẫn chưa đủ → thử reasoning model. Thứ tự này giữ chi phí thấp nhất có thể.
+</Callout>
+
+## Bước 4: Chọn model — không phải mặc định là "mạnh nhất"
+
+[concept-foundation-model](/concepts/foundation-model) và [concept-multimodal-llm](/concepts/multimodal-llm) cho bạn bức tranh toàn cảnh.
+
+Framework chọn model 2026:
+
+1. **Task type**: cần lý luận sâu (reasoning model) hay tốc độ/cost (standard)?
+2. **Modal**: text only hay cần vision/audio?
+3. **Context**: bao nhiêu token thực sự cần?
+4. **Provider**: lock-in có chấp nhận được không?
+
+Với hầu hết app production, **Sonnet 4.6 / GPT-5.4 / Gemini 2.5 Flash** là điểm ngọt đầu tiên cần thử — không phải flagship.
+
+<Callout title="Nhớ nhé">
+LLM là thành phần không tất định. Hiểu nó ở mức kỹ sư không có nghĩa là kiểm soát được hoàn toàn — mà là **đặt đủ kỷ luật xung quanh nó** (eval, context curation, cost monitoring) để kết quả đủ tin cậy cho production.
+</Callout>
+
+Thực hành ngay với: [exercise-aieng-001](/exercises/ai-engineering/m1-pick-model-and-budget).

@@ -1,0 +1,61 @@
+---
+id: lesson-aieng-003
+title: "RAG đúng cách: tìm đúng ngữ cảnh"
+type: "lesson"
+track: ai-engineering
+module: rag
+level: intermediate
+tags: [ai-engineering, rag, retrieval, embeddings, chunking, hybrid-search, reranking, contextual-retrieval]
+prerequisites:
+  - concept-embeddings
+  - concept-vector-database
+  - concept-semantic-search
+  - concept-rag
+  - concept-chunking
+  - concept-reranking
+  - concept-hybrid-search
+  - concept-contextual-retrieval
+related:
+  - exercise-aieng-003
+  - rubric-ai-engineering
+status: published
+---
+import Callout from '../../../components/content/Callout.astro';
+
+"Tôi đã build RAG rồi, nhưng câu trả lời vẫn sai." Đây là câu phàn nàn phổ biến nhất. Và gần như lúc nào cũng có một chẩn đoán: *retrieval sai, không phải LLM sai*. LLM rất giỏi trả lời — nếu bạn cho nó đúng ngữ cảnh. Bài học này là về cách tìm đúng ngữ cảnh đó.
+
+## Từ embedding đến câu trả lời — sợi chỉ xuyên suốt
+
+**Bước 1 — Chọn và giữ nhất quán embedding model.**
+
+Bạn chọn model nào không quan trọng bằng việc bạn dùng *cùng model* lúc index và lúc query. Đây là lỗi cơ bản nhất ([concept-embeddings](/concepts/embeddings)). Tham khảo MTEB Leaderboard để chọn model phù hợp với task — search, classification, multilingual đều có model tối ưu riêng.
+
+**Bước 2 — Lưu vector vào database được thiết kế cho production.**
+
+FAISS là tốt cho lab. Production cần CRUD, HA, metadata filter, backup — tức là managed vector DB ([concept-vector-database](/concepts/vector-database)). Index payload (metadata) từ đầu: `department`, `doc_date`, `product_id`. Filter trước ANN nhanh hơn filter sau nhiều lần.
+
+**Bước 3 — Đừng chunk ngây thơ.**
+
+Fixed-size chunking cắt giữa câu, mất ngữ cảnh. Dùng recursive chunking làm default. Gắn metadata vào mọi chunk. Và từ 2024 trở đi: áp dụng **contextual retrieval** ([concept-contextual-retrieval](/concepts/contextual-retrieval)) — prepend 50-100 token context vào mỗi chunk trước khi embed. Giảm 35% lỗi retrieval ngay bước này.
+
+**Bước 4 — Tìm kiếm bằng hybrid, không phải semantic đơn thuần.**
+
+Semantic search giỏi nắm intent nhưng miss mã lỗi, ID, tên riêng. Kết hợp dense (semantic) + BM25 + RRF là baseline production ([concept-hybrid-search](/concepts/hybrid-search)). Thêm contextual embedding + BM25: giảm 49% lỗi. Đây không phải "optimization" — đây là chuẩn tối thiểu.
+
+**Bước 5 — Rerank trước khi đưa vào LLM.**
+
+Embedding search lấy 100-150 ứng viên (nhanh). Cross-encoder reranker chọn top 5-20 (chính xác). Thêm reranking: giảm tổng cộng 67% lỗi retrieval ([concept-reranking](/concepts/reranking)). Đây là cú nhảy chất lượng lớn nhất, thường dễ integrate nhất.
+
+## Câu hỏi bạn phải tự hỏi trước khi build
+
+**RAG hay long context?** Model 1M token context có thể nhét cả corpus vào — nên dùng khi nào? Câu trả lời: corpus nhỏ (dưới 200 doc), câu hỏi cần tổng hợp toàn bộ, cost không phải vấn đề → long context. Corpus lớn, cần realtime update, cần tối ưu cost → RAG. "Context rot" (model kém chú ý giữa context dài) là lý do RAG vẫn thắng ở quy mô lớn ([concept-rag](/concepts/rag)).
+
+**Retrieval fail hay LLM fail?** Trước khi đổ lỗi cho LLM, kiểm tra: chunk được retrieve có đúng không? Dùng retrieval metrics (recall@k, MRR) để đo trước khi tối ưu generation ([concept-rag-evaluation](/concepts/rag-evaluation)).
+
+<Callout title="Nhớ nhé">
+Pipeline chuẩn 2026: Contextual Retrieval (chunk + context prepend) → Hybrid Search (dense + BM25 + RRF) → Reranking (cross-encoder) → LLM. Bất kỳ step nào bị bỏ qua đều là điểm yếu rõ ràng trong production.
+</Callout>
+
+## Bước tiếp theo
+
+Áp dụng ngay vào thực tế với [exercise-aieng-003](/exercises/ai-engineering/m3-build-a-rag-pipeline): thiết kế pipeline RAG cho hệ thống hỏi-đáp tài liệu nội bộ với 10.000 documents — bao gồm mã sản phẩm và mã lỗi.

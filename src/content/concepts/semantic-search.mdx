@@ -1,0 +1,44 @@
+---
+id: concept-semantic-search
+title: "Semantic Search"
+type: "concept"
+aliases: ["tìm kiếm ngữ nghĩa", "dense retrieval", "vector search", "similarity search", "cosine similarity"]
+tags: [ai-engineering, semantic-search, embeddings, retrieval, rag, hybrid-search]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Google cũ tìm theo từ khóa: gõ "apple" ra quả táo và công ty công nghệ lẫn lộn. Google mới hiểu *ý bạn muốn gì*: gõ "điện thoại quả táo" → ra iPhone, dù không có từ "iPhone" nào trong query. Khả năng đó gọi là semantic search.
+
+## Là gì
+
+**Semantic search** (tìm kiếm ngữ nghĩa) là tìm kiếm dựa trên *nghĩa* thay vì *từ*. Cả query lẫn tài liệu đều được chuyển thành vector (embedding), rồi so sánh độ gần (thường dùng cosine similarity). Kết quả gần nhất về ý nghĩa được trả về — dù không khớp từ nào.
+
+**Cosine similarity** đo góc giữa hai vector: bằng 1 nghĩa là giống hệt, 0 là không liên quan, -1 là đối lập hoàn toàn. Đặt ngưỡng điểm (score threshold) ở đây quan trọng — đừng trả về kết quả dưới 0.7 nếu bạn muốn kết quả có chất lượng.
+
+## Ví dụ thật
+
+Người dùng gõ: *"laptop bị nóng khi dùng"*. Tài liệu troubleshooting viết: *"overheating issue during intensive use"*. Không từ nào khớp — nhưng semantic search tìm được vì embedding của hai câu gần nhau.
+
+Ngược lại: người dùng gõ mã lỗi *"ERR_PAYMENT_4021"*. Semantic search sẽ... tìm mấy tài liệu về payment chung chung, vì không có embedding nào gần với một mã lỗi cụ thể. Đây là điểm mù lớn nhất của semantic search.
+
+<Callout title="Cẩn thận">
+**Semantic search dở với thứ cần khớp chính xác:** mã lỗi, ID sản phẩm, số phiên bản, tên riêng lạ. Nếu hệ thống của bạn có nhiều trường hợp như vậy mà chỉ dùng semantic search, tỉ lệ retrieval fail sẽ cao. Đây là lý do **hybrid search** (kết hợp semantic + keyword) là chuẩn production — xem [concept-hybrid-search](/concepts/hybrid-search).
+</Callout>
+
+<Callout title="Nhớ nhé">
+Semantic search giỏi nắm intent, dở với exact match. Trong production: luôn kết hợp với BM25/keyword search. Đặt score threshold rõ ràng — đừng trả tất cả kết quả dù điểm thấp đến đâu.
+</Callout>
+
+## Đọc thêm
+
+- [OpenAI Retrieval Guide](https://developers.openai.com/api/docs/guides/retrieval) — Tài liệu chính thức về semantic search, chunking, hybrid search với RRF và cách cân bằng embedding weight vs keyword weight trong OpenAI platform.
+- [LLM Patterns — Eugene Yan](https://eugeneyan.com/writing/llm-patterns/) — Phân tích RAG pattern trong đó semantic search đóng vai trò retrieval core — kèm các tradeoff thực tế.
+- [LlamaIndex: Basic RAG Strategies](https://developers.llamaindex.ai/python/framework/optimizing/basic_strategies/basic_strategies/) — Hướng dẫn thực chiến: kết hợp semantic search với metadata filter và hybrid retrieval trong LlamaIndex.
+- [Qdrant: Vector Search in Production](https://qdrant.tech/articles/vector-search-production/) — Cách thiết kế payload index để filter before/after ANN search, giúp semantic search vừa nhanh vừa chính xác hơn trong môi trường thực.
+
+## Tự kiểm tra
+
+1. Hệ thống hỗ trợ khách hàng của bạn có nhiều câu hỏi về mã đơn hàng như "ORD-2024-88291". Tại sao semantic search đơn thuần sẽ thất bại ở đây?
+2. Score threshold là gì và tại sao quan trọng? Điều gì xảy ra nếu bạn không đặt ngưỡng?
+3. Cosine similarity trả về 0.45 cho một cặp query-document. Bạn có nên trả kết quả này cho LLM không? Tại sao?

@@ -1,0 +1,62 @@
+---
+id: concept-context-engineering
+title: "Context Engineering"
+type: "concept"
+aliases: ["context engineering", "context management", "token budget", "context window management", "quản trị context"]
+tags: [ai-engineering, context-engineering, llm, agent, token, compaction, retrieval]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Bạn chuẩn bị brief cho một cuộc họp quan trọng. Không phải dump toàn bộ email 6 tháng qua vào folder — mà là chọn lọc: 3 quyết định chính, 2 số liệu quan trọng, 1 rủi ro cần lưu ý. Người nhận đọc 1 trang, hiểu đủ để quyết định.
+
+Đó là context engineering — nhưng người nhận ở đây là LLM, và "brief" là mọi token bạn đẩy vào model.
+
+## Là gì
+
+**Context engineering** là kỷ luật thiết kế và quản lý *toàn bộ thông tin* đưa vào model trong một request: system prompt, tools definition, memory, ví dụ few-shot, dữ liệu retrieved, lịch sử hội thoại, và output schema.
+
+Mục tiêu: **tập token tín-hiệu-cao nhỏ nhất** — không phải nhiều nhất. Context window lớn không tự động tốt hơn: khi token tăng, model "loãng" sự chú ý, hiện tượng này gọi là *context rot*.
+
+Đây là khung tư duy 2026 cho agent — rộng hơn [concept-prompt-engineering](/concepts/prompt-engineering), bao gồm cả [concept-prompt-engineering](/concepts/prompt-engineering) nhưng thêm chiều quản trị và architecture.
+
+**Các kỹ thuật chính:**
+
+- **Just-in-time retrieval**: không pre-load tất cả tài liệu vào context — chỉ retrieve đúng thông tin cần thiết cho bước hiện tại.
+- **Compaction**: khi hội thoại dài, tóm tắt các turn cũ thay vì giữ nguyên toàn bộ.
+- **Token budget**: biết trước mỗi thành phần tốn bao nhiêu token (tools: X, memory: Y, ví dụ: Z) để tối ưu allocation.
+- **Structured note-taking**: agent ghi chú có cấu trúc thay vì giữ raw conversation — compact hơn nhiều.
+
+## Ví dụ thật
+
+Một agent xử lý ticket support có context window 200k token. Naive approach: nhồi toàn bộ knowledge base (150k token), toàn bộ lịch sử ticket (30k token), và để lại 20k cho tools + output.
+
+Context engineering approach:
+- System prompt súc tích: 500 token
+- Tools definition (chỉ tools cần cho task hiện tại): 2.000 token
+- Memory ngắn gọn về user: 200 token
+- Retrieved knowledge (chỉ top-3 relevant article): 3.000 token
+- Ticket history được compacted: 1.000 token
+- Còn lại 193.000 token cho xử lý thực sự
+
+Hiệu suất tốt hơn, chi phí thấp hơn, và model tập trung hơn.
+
+<Callout title="Góc kỹ thuật">
+Anthropic's context window API cho phép dùng server-side compaction (beta, 2025–2026) để tự động tóm tắt hội thoại khi gần đầy. Kết hợp với token counting API để estimate trước khi gửi request, bạn tránh được lỗi overflow và tối ưu cost hiệu quả.
+</Callout>
+
+<Callout title="Nhớ nhé">
+Context engineering không phải "viết prompt dài hơn" — mà là chọn lọc thông tin chặt chẽ hơn. Với agent, mọi quyết định về *cái gì được đưa vào context* quan trọng hơn cách bạn viết câu lệnh.
+</Callout>
+
+## Đọc thêm
+
+- [Effective Context Engineering — Anthropic Engineering](https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents) — Bài viết kỹ thuật gốc (9/2025): định nghĩa context engineering, tại sao context rot xảy ra, và các kỹ thuật thực tế (just-in-time retrieval, compaction, structured notes).
+- [Context Windows — Anthropic Docs](https://platform.claude.com/docs/en/docs/build-with-claude/context-windows) — Tài liệu chính thức: cách context window tích lũy token, context rot, server-side compaction, và context awareness trong Claude Sonnet/Haiku 4.5+.
+- [Building Effective Agents — Anthropic Research](https://www.anthropic.com/research/building-effective-agents) — Bài nghiên cứu (12/2024): nguyên tắc thiết kế agent đơn giản và hiệu quả — bối cảnh tại sao context engineering quan trọng hơn prompt phức tạp.
+
+## Tự kiểm tra
+
+1. "Context rot" là gì? Tại sao context window lớn hơn không tự động cho kết quả tốt hơn?
+2. Phân biệt "just-in-time retrieval" và "pre-loading" trong context management — khi nào mỗi cách phù hợp?
+3. Bạn xây một agent đọc email cả ngày (multi-turn dài). Bạn sẽ dùng kỹ thuật nào để tránh context overflow và giữ agent focus?

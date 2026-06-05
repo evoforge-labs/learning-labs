@@ -1,0 +1,58 @@
+---
+id: concept-foundation-model
+title: "Foundation Model"
+type: "concept"
+aliases: ["foundation model", "pretrained model", "mô hình nền tảng", "base model", "frontier model"]
+tags: [llm, foundation-model, ai-engineering, fine-tuning]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Hãy nghĩ đến một đầu bếp được đào tạo tổng quát ở trường nấu ăn: họ biết mọi kỹ thuật cơ bản — xào, luộc, nướng — nhưng chưa giỏi bất kỳ thứ gì đặc biệt. Sau đó họ thực tập 3 năm ở nhà hàng Nhật: giờ họ giỏi sushi, nhưng vẫn giữ được nền tảng. Foundation model cũng vậy.
+
+## Là gì
+
+**Foundation model** là model được pretrain trên lượng dữ liệu khổng lồ (văn bản, code, hình ảnh), tạo ra một "nền tảng" rộng trước khi được tinh chỉnh cho mục đích cụ thể.
+
+Quy trình chuẩn 2026:
+
+1. **Pretraining** — học dự đoán token trên hàng nghìn tỷ từ. Model học ngôn ngữ, kiến thức, lý luận.
+2. **SFT (Supervised Fine-Tuning)** — huấn luyện thêm với các cặp (câu hỏi → câu trả lời tốt) do con người viết. Model bắt đầu biết theo lệnh.
+3. **RLHF (Reinforcement Learning from Human Feedback)** — human rater so sánh các response, model học làm hài lòng người dùng hơn.
+
+Base model thô (sau pretraining, chưa SFT/RLHF) rất khó giao tiếp — nó chỉ "hoàn thành văn bản", không phải "trả lời câu hỏi".
+
+## Ví dụ thật
+
+**Các family model 2026 bạn sẽ dùng:**
+
+| Provider | Standard | Reasoning |
+|---|---|---|
+| Anthropic | Opus 4.8, Sonnet 4.6, Haiku 4.5 | Sonnet 4.6 (extended thinking) |
+| OpenAI | GPT-5.5, GPT-5.4 | o-series |
+| Google | Gemini 2.5 | Gemini 3.x thinking |
+| Meta | Llama (open-weight) | — |
+
+**Standard models** tối ưu cho tốc độ và chi phí, phù hợp với hầu hết tác vụ.
+
+**Reasoning models** có chuỗi suy luận nội bộ — phù hợp cho bài toán phức tạp nhiều bước. Xem chi tiết tại [concept-reasoning-models](/concepts/reasoning-models).
+
+<Callout title="Góc kỹ thuật">
+Frontier model (GPT-5.5, Claude Opus 4.8, Gemini 2.5) tốn nhiều tiền và compute nhất. Với hầu hết ứng dụng production, **Sonnet/Flash/GPT-5.4 mini** là điểm ngọt giữa chất lượng và chi phí. Chọn Opus/GPT-5.5 chỉ khi bài toán thực sự đòi hỏi — không phải vì "dùng model tốt nhất cho chắc".
+</Callout>
+
+<Callout title="Nhớ nhé">
+Foundation model không phải product — nó là nguyên liệu. Nghề AI engineer là ghép nó với prompt, data, và eval để tạo ra sản phẩm đáng tin cậy.
+</Callout>
+
+## Đọc thêm
+
+- [Anthropic – Models overview](https://platform.claude.com/docs/en/about-claude/models/overview) — Bảng so sánh đầy đủ các Claude model 2026: giá, context window, extended thinking, knowledge cutoff.
+- [OpenAI – Models](https://developers.openai.com/api/docs/models) — Catalog GPT-5.5, GPT-5.4, GPT-5.4 mini và o-series với mô tả use case và khả năng của từng model.
+- [Google AI – Gemini API Models](https://ai.google.dev/gemini-api/docs/models) — Danh sách đầy đủ Gemini 2.5/3.x, bao gồm model stable, preview, và experimental, cùng thông tin pricing và deprecation.
+
+## Tự kiểm tra
+
+1. Tại sao base model (chưa SFT/RLHF) lại khó dùng hơn assistant model? Điều gì xảy ra trong SFT và RLHF để thay đổi điều đó?
+2. Khi nào bạn nên chọn reasoning model thay vì standard model? Cho 2 ví dụ cụ thể.
+3. Bạn build app tóm tắt email cho 10.000 user/ngày. Giữa Claude Opus 4.8 ($5/MTok input) và Claude Haiku 4.5 ($1/MTok input), bạn bắt đầu với cái nào và tại sao?

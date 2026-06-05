@@ -1,0 +1,63 @@
+---
+id: concept-contextual-retrieval
+title: "Contextual Retrieval"
+type: "concept"
+aliases: ["contextual embedding", "chunk contextualization", "context prepending", "contextual BM25"]
+tags: [ai-engineering, contextual-retrieval, rag, chunking, embeddings, retrieval]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Hãy tưởng tượng bạn xé tờ báo thành từng đoạn rồi trộn lẫn. Một ai đó bốc ngẫu nhiên lên đọc: "Kết quả là 3-1." Họ không biết đây là bóng đá hay bóng rổ, đội nào thắng, trận nào. Đoạn văn đúng — nhưng không có ngữ cảnh, nó vô nghĩa.
+
+Chunk trong RAG cũng mắc đúng vấn đề này.
+
+## Là gì
+
+**Contextual Retrieval** là kỹ thuật của Anthropic (2024): trước khi embed mỗi chunk, dùng LLM để sinh thêm 50-100 token tóm tắt *bối cảnh của chunk đó trong tài liệu gốc*, rồi prepend vào chunk. Chunk mới được embed có đủ ngữ cảnh → embedding chính xác hơn → retrieval tốt hơn.
+
+Không phải technique "advanced" — đây là **baseline mới** thay cho naive chunk-and-embed.
+
+## Ví dụ thật
+
+**Trước (naive chunking):**
+> Chunk: "Kết quả kiểm tra cho thấy tỷ lệ lỗi giảm xuống còn 2%."
+
+LLM embed cái này không biết đang nói về product nào, test nào, so sánh với gì.
+
+**Sau (contextual retrieval):**
+> Chunk: "Ngữ cảnh: Đây là phần kết quả A/B test tính năng checkout trong báo cáo Q3 2024. Kết quả kiểm tra cho thấy tỷ lệ lỗi giảm xuống còn 2%."
+
+Embedding giờ "hiểu" chunk này nói về gì → khi user hỏi "kết quả A/B test checkout Q3" sẽ tìm ra đúng chunk.
+
+**Số liệu thực nghiệm (Anthropic, 2024):**
+- Contextual Embeddings đơn thuần: giảm **35%** lỗi retrieval (5.7% → 3.7%)
+- + BM25: giảm **49%** (5.7% → 2.9%)
+- + Reranking: giảm **67%** (5.7% → 1.9%)
+
+**Chi phí:** ~$1.02 per million token tài liệu khi dùng prompt caching (Anthropic). Rẻ hơn nhiều so với re-embedding toàn bộ corpus từ đầu.
+
+<Callout title="Góc kỹ thuật">
+Contextual retrieval dùng prompt caching để tiết kiệm cost: toàn bộ tài liệu gốc được cache, chỉ phần chunk thay đổi giữa các lần gọi. Nếu tài liệu dài, bạn tiết kiệm 80-90% token cost so với gọi không cache.
+</Callout>
+
+<Callout title="Cẩn thận">
+Contextual retrieval thêm bước LLM inference vào lúc **indexing** (không phải query time) — pipeline index sẽ chậm và tốn chi phí hơn. Cân nhắc: với corpus cập nhật liên tục (hàng nghìn doc/ngày), bước này cần được parallelize và cache kỹ càng.
+</Callout>
+
+<Callout title="Nhớ nhé">
+Năm 2026: đừng build RAG với naive chunk-and-embed nữa. Contextual retrieval + BM25 + reranking là bộ ba nên là điểm xuất phát. Xem [concept-chunking](/concepts/chunking), [concept-hybrid-search](/concepts/hybrid-search), [concept-reranking](/concepts/reranking).
+</Callout>
+
+## Đọc thêm
+
+- [Contextual Retrieval — Anthropic](https://www.anthropic.com/news/contextual-retrieval) — Bài gốc của Anthropic: giải thích technique, số liệu thực nghiệm chi tiết và code example. Đọc bắt buộc.
+- [Effective Context Engineering for AI Agents — Anthropic](https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents) — Bức tranh rộng hơn: contextual retrieval nằm trong xu hướng "context engineering" — quản lý toàn bộ context window cho AI agent hiệu quả.
+- [OpenAI Retrieval Guide](https://developers.openai.com/api/docs/guides/retrieval) — So sánh để hiểu contextual retrieval là bước cải tiến trên nền tảng chunking cơ bản: chunk overlap, metadata, và các tuning parameter chuẩn.
+- [LlamaIndex: Basic RAG Strategies](https://developers.llamaindex.ai/python/framework/optimizing/basic_strategies/basic_strategies/) — Cách implement contextual retrieval trong LlamaIndex: tích hợp với metadata filter, hybrid search và reranker.
+
+## Tự kiểm tra
+
+1. Tại sao một chunk như "Doanh thu tăng 15% so với quý trước" lại gây ra vấn đề retrieval? Contextual retrieval giải quyết điều này thế nào?
+2. Contextual retrieval thêm chi phí ở bước nào — indexing hay query time? Điều này ảnh hưởng gì đến thiết kế hệ thống?
+3. Bạn có corpus 500.000 document cập nhật hàng ngày 10.000 doc mới. Bạn sẽ áp dụng contextual retrieval cho toàn bộ hay chỉ tài liệu mới? Tại sao?

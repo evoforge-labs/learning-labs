@@ -1,0 +1,57 @@
+---
+id: concept-eval-dataset
+title: "Eval Dataset / Golden Set"
+type: "concept"
+aliases: ["golden set", "test set", "eval set", "bộ dữ liệu đánh giá", "bộ test chuẩn"]
+tags: [evals, eval-dataset, ai-engineering, llm]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Bác sĩ không chứng minh thuốc hiệu quả bằng cách nhìn bệnh nhân "trông khỏe hơn". Họ dùng **nhóm đối chứng** — tập bệnh nhân chuẩn, đo được, so sánh được. Eval dataset là nhóm đối chứng của bạn.
+
+Không có golden set → mỗi lần sửa prompt, bạn không biết mình đang tiến hay lùi.
+
+## Là gì
+
+**Eval Dataset (hay Golden Set)** là tập các case test có đầu vào và kết quả mong đợi đã được xác nhận bởi domain expert. Đây là thước đo cố định để bạn so sánh mọi thay đổi trong pipeline.
+
+Một golden set tốt không phải là tập bạn viết trong 30 phút trên bàn làm việc — mà là tập lấy từ **lỗi thật ngoài production**.
+
+## Ví dụ thật
+
+Feature hỏi đáp về chính sách công ty. Quy trình xây golden set:
+
+**Bước 1 — Error analysis từ trace production:**
+Xuất 200 trace thật → đọc từng trace → gán nhãn lỗi (open coding) → nhóm lỗi thành category (axial coding). Ví dụ: "model tự suy diễn chính sách không rõ", "model từ chối câu hỏi hợp lệ", "model bịa số ngày nghỉ phép".
+
+**Bước 2 — Tạo case từ lỗi:**
+Mỗi category lỗi → ít nhất 3–5 case test. Đây là case quan trọng nhất vì nó phản ánh **lỗi thật**, không phải lỗi bạn tưởng tượng.
+
+**Bước 3 — Bổ sung synthetic:**
+Với category ít trace thật, dùng LLM sinh thêm case (seed tuple). Luôn review synthetic case trước khi dùng.
+
+**Bước 4 — Thêm case nên-từ-chối:**
+Đừng quên case model *nên* nói "Tôi không biết" hoặc từ chối. Một model luôn trả lời sẽ pass rate 100% — nhưng bịa tất cả.
+
+**Pass rate ~70%** thường có ý nghĩa hơn 100%: nếu model pass hết mọi case, golden set của bạn quá dễ.
+
+<Callout title="Cẩn thận">
+Đừng xây golden set từ đầu bằng cách ngồi nghĩ "mình sẽ test gì". Bạn sẽ bỏ sót 80% lỗi thật. Hãy xuất trace production trước, đọc, rồi mới viết case.
+</Callout>
+
+<Callout title="Nhớ nhé">
+Golden set = lỗi thật + case nên-từ-chối + synthetic cho phần thiếu. Pass rate ~70% thường có ý nghĩa hơn 100%.
+</Callout>
+
+## Đọc thêm
+
+- [Hamel Husain – LLM Evals FAQ (Jan 2026)](https://hamel.dev/blog/posts/evals-faq/) — Giải thích chi tiết quy trình error analysis (open → axial coding), tại sao nên bắt đầu với 20–50 output thực trước khi nghĩ đến infrastructure eval.
+- [OpenAI – Evals guide](https://developers.openai.com/api/docs/guides/evals) — Hướng dẫn thực tế cách tổ chức eval dataset dạng JSONL, upload lên platform, chạy grader tự động, và phân tích kết quả.
+- [OpenAI – Evaluation best practices](https://developers.openai.com/api/docs/guides/evaluation-best-practices) — Framework xây eval dataset: collect từ real interactions, handle edge case (multilingual, jailbreak), và cách cân bằng tập positive/negative.
+
+## Tự kiểm tra
+
+1. Tại sao nên lấy trace production làm điểm khởi đầu xây golden set, thay vì ngồi tự nghĩ test case?
+2. "Case nên-từ-chối" là gì và tại sao nó quan trọng trong golden set?
+3. Pass rate 100% trên golden set có phải dấu hiệu tốt không? Tại sao ~70% lại thường có ý nghĩa hơn?

@@ -1,0 +1,54 @@
+---
+id: concept-reranking
+title: "Reranking"
+type: "concept"
+aliases: ["reranker", "cross-encoder", "two-stage retrieval", "second-stage ranking", "Cohere Rerank", "BGE reranker"]
+tags: [ai-engineering, reranking, rag, retrieval, embeddings]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Tuyển dụng thường có hai vòng: vòng lọc CV nhanh (loại 90%) rồi vòng phỏng vấn kỹ (chọn người tốt nhất). Nếu chỉ có vòng lọc CV, bạn tiết kiệm thời gian nhưng dễ bỏ qua ứng viên giỏi. Nếu phỏng vấn tất cả 1000 người, bạn chết. Hai vòng là cân bằng lý tưởng.
+
+RAG retrieval cũng vậy.
+
+## Là gì
+
+**Reranking** là tầng thứ hai trong retrieval pipeline: sau khi vector search nhanh lấy ~100-150 ứng viên, một model chuyên biệt hơn (cross-encoder) đọc từng cặp (query, document) và cho điểm độ liên quan chính xác hơn — rồi chọn top 5-20 để đưa vào LLM.
+
+**Bi-encoder** (embedding model thông thường): encode query và document *riêng lẻ*, rồi so sánh. Nhanh, nhưng bỏ qua tương tác giữa hai bên.
+
+**Cross-encoder** (reranker): đọc query và document *cùng lúc*, hiểu rõ từng từ trong query ảnh hưởng thế nào đến từng phần của document. Chậm hơn nhưng chính xác hơn nhiều.
+
+## Ví dụ thật
+
+Pipeline điển hình: embedding search lấy 150 chunk → Cohere Rerank/BGE-Reranker/Jina Reranker cho điểm và sắp xếp lại → lấy top 10 → đưa vào LLM.
+
+Kết quả từ Anthropic: reranking sau contextual retrieval giảm 67% lỗi retrieval so với baseline (từ 5.7% xuống 1.9% failure rate). Đây là cú nhảy chất lượng lớn nhất trong toàn bộ RAG pipeline.
+
+**Khi nào KHÔNG cần rerank?** Khi latency là ưu tiên số một và quality "đủ tốt". Reranker thêm 100-500ms latency vì phải gọi model hoặc API riêng.
+
+<Callout title="Góc kỹ thuật">
+Cohere Rerank, Jina Reranker v2 và BGE-Reranker-v2 là các lựa chọn phổ biến nhất tính đến 2026. Cohere có API managed, BGE là open-source có thể self-host. Jina hỗ trợ 100+ ngôn ngữ — phù hợp cho corpus tiếng Việt.
+</Callout>
+
+<Callout title="Cẩn thận">
+Reranker không thể cứu retrieval nếu bước đầu (embedding search) không lấy đủ ứng viên tốt. Nếu chunk liên quan không nằm trong top 150 của embedding search, reranker không biết nó tồn tại. Tune recall ở bước đầu trước khi optimize reranking.
+</Callout>
+
+<Callout title="Nhớ nhé">
+Hai tầng: lấy nhiều (nhanh) → chọn tốt (chính xác). Reranking là khoản đầu tư chất lượng lớn nhất trong RAG pipeline, thường dễ implement và impact rõ ràng nhất.
+</Callout>
+
+## Đọc thêm
+
+- [Contextual Retrieval — Anthropic](https://www.anthropic.com/news/contextual-retrieval) — Số liệu thực tế về tác động của reranking: từ 35% (contextual embed) → 49% (+ BM25) → 67% (+ rerank) giảm lỗi retrieval. Rất đáng đọc.
+- [Reranking with Cohere — Cohere Docs](https://docs.cohere.com/docs/reranking-with-cohere) — Hướng dẫn chính thức từ Cohere: dùng Rerank API cho text, semi-structured data và multilingual retrieval. Ví dụ code thực tế.
+- [LlamaIndex: Basic RAG Strategies](https://developers.llamaindex.ai/python/framework/optimizing/basic_strategies/basic_strategies/) — Cách tích hợp reranker vào LlamaIndex pipeline: `NodePostprocessor`, kết hợp với hybrid search và metadata filter.
+- [OpenAI Retrieval Guide](https://developers.openai.com/api/docs/guides/retrieval) — Ranking options trong OpenAI Retrieval API: cách tune hybrid search weight và filter để complement reranking.
+
+## Tự kiểm tra
+
+1. Tại sao không dùng cross-encoder (reranker) thay hoàn toàn cho bi-encoder (embedding) từ đầu? Vấn đề gì sẽ xảy ra với latency và scale?
+2. Reranker của bạn đang chọn top 5 từ 150 ứng viên. Nếu chunk đúng nhất không nằm trong 150 ứng viên đó, reranker có giúp được không? Bạn sẽ fix vấn đề này ở đâu?
+3. Bạn đang build trợ lý pháp lý cho người dùng Việt Nam. Tại sao Jina Reranker (100+ ngôn ngữ) có thể là lựa chọn tốt hơn Cohere Rerank trong trường hợp này?

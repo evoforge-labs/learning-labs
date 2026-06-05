@@ -1,0 +1,52 @@
+---
+id: concept-context-window
+title: "Context Window (Cửa sổ ngữ cảnh)"
+type: "concept"
+aliases: ["context window", "cửa sổ ngữ cảnh", "bộ nhớ làm việc", "context rot"]
+tags: [llm, context-window, ai-engineering, agents]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Tưởng tượng bạn phải giải quyết một việc, nhưng chỉ được nhìn vào một tờ giấy A4. Mọi thông tin — ghi chú, lịch sử cuộc hội thoại, tài liệu tham khảo — đều phải vừa trên tờ đó. Khi hết chỗ, bạn phải xóa thứ cũ đi mới viết thêm được.
+
+Context window là tờ giấy A4 đó của LLM.
+
+## Là gì
+
+**Context window** là toàn bộ lượng token mà model có thể "nhìn thấy" trong một lần gọi API: system prompt + lịch sử hội thoại + nội dung user gửi + kết quả tool + phần response model đang sinh ra.
+
+Năm 2026, các flagship model có context window rất lớn: **Claude Opus 4.8 và Sonnet 4.6 đạt 1M token** — tương đương khoảng 750.000 từ tiếng Anh.
+
+## Ví dụ thật
+
+Bạn build chatbot hỗ trợ khách hàng. Mỗi lượt chat, bạn đẩy vào context: system prompt (2.000 token) + toàn bộ lịch sử cuộc trò chuyện (tăng dần) + câu hỏi mới của user.
+
+Sau 50 lượt hỏi đáp, context đã chiếm 80.000 token. Model vẫn "nhớ" mọi thứ — nhưng chất lượng câu trả lời bắt đầu giảm. Đây là **context rot**: khi token tăng, khả năng recall chính xác thông tin ở đầu context bị suy giảm, dù context window vẫn còn chỗ.
+
+<Callout title="Cẩn thận">
+**Nhiều context hơn KHÔNG có nghĩa là tốt hơn.** Nhồi mọi thứ vào context khiến model "mất tập trung" — recall giảm, latency tăng, cost tăng. Curation (chọn lọc cái gì nên ở trong context) quan trọng hơn capacity (bao nhiêu token vừa).
+</Callout>
+
+**Trong context window có gì?**
+- System prompt
+- Lịch sử hội thoại (user/assistant turns)
+- Kết quả tool calls
+- Tài liệu được inject (RAG)
+- Extended thinking blocks (với Claude Sonnet 4.6)
+
+<Callout title="Mẹo">
+Với agent chạy dài, dùng **compaction** — API của Anthropic tự động tóm tắt phần lịch sử cũ, giải phóng context mà không mất ngữ cảnh quan trọng. Đây là giải pháp chính thức cho bài toán "agent hội thoại dài".
+</Callout>
+
+## Đọc thêm
+
+- [Anthropic – Context Windows guide](https://platform.claude.com/docs/en/docs/build-with-claude/context-windows) — Giải thích chi tiết cách context window hoạt động, context rot, và các chiến lược quản lý: compaction, context editing, tool result clearing.
+- [Anthropic Engineering – Effective Context Engineering for AI Agents](https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents) — Bài nghiên cứu thực chiến từ team Anthropic về context rot (vì sao xảy ra ở tầng kiến trúc transformer) và cách engineer xung quanh nó.
+- [Anthropic – Models overview (context window sizes)](https://platform.claude.com/docs/en/about-claude/models/overview) — Bảng so sánh context window của từng Claude model: Opus 4.8 (1M), Sonnet 4.6 (1M), Haiku 4.5 (200k).
+
+## Tự kiểm tra
+
+1. "Context rot" là gì? Tại sao tăng context window không tự động giải quyết vấn đề này?
+2. Trong context window của một agent call, có những thành phần nào? Liệt kê ít nhất 4 loại.
+3. Bạn build một agent đọc và xử lý tài liệu dài. Sau 30 phút agent đang chạy, context gần đầy. Bạn có 2 lựa chọn: (a) tăng context window, (b) dùng compaction. Cái nào đúng hơn và tại sao?

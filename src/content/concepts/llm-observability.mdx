@@ -1,0 +1,66 @@
+---
+id: concept-llm-observability
+title: "LLM Observability"
+type: "concept"
+aliases: ["LLM tracing", "LLM monitoring", "LLM logging", "trace", "span", "Langfuse", "LLM debug"]
+tags: [ai-engineering, observability, llmops, traces, monitoring, llm, evals]
+prerequisites: [concept-observability, concept-llm, concept-llmops]
+related: [concept-llm-evals, concept-latency-cost-optimization, concept-llmops]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Hệ thống web truyền thống: lỗi → stack trace → dòng code → fix. Hệ thống LLM: lỗi → "câu trả lời trông có vẻ sai" → không có trace → đoán mò prompt nào gây ra → không biết xảy ra bao nhiêu lần. Đó là debugging LLM không có observability.
+
+**LLM observability** mang lại cho hệ thống ngôn ngữ khả năng mà hệ thống phần mềm bình thường đã có từ lâu: thấy được chuyện gì đang xảy ra bên trong.
+
+## Là gì
+
+Mỗi request qua hệ thống LLM được ghi thành một **trace** — bản ghi đầy đủ hành trình của request đó. Mỗi bước trong hành trình (retrieval, inference, tool call) là một **span**.
+
+Khác với APM truyền thống, LLM observability phải hiểu:
+- **Nội dung ngữ nghĩa** — prompt nào được gửi, response nào nhận về.
+- **Token usage** — input/output tokens, cached tokens, chi phí từng request.
+- **Điểm eval** — gắn kết quả đánh giá chất lượng (pass/fail, score) vào trace cụ thể.
+- **Lỗi ngữ nghĩa** — model trả lời sai nhưng HTTP 200, không có exception.
+
+Dữ liệu một trace điển hình:
+
+| Field | Ví dụ |
+|---|---|
+| Trace ID | `trce_abc123` |
+| Latency | 2.4s (retrieval: 0.3s, inference: 2.1s) |
+| Input tokens | 4.210 (3.800 cached) |
+| Output tokens | 312 |
+| Cost | $0.0048 |
+| Eval score | pass |
+| User feedback | 👍 |
+
+## Ví dụ thật
+
+Chatbot hỗ trợ khách hàng nhận complaint: "bot trả lời sai chính sách hoàn tiền." Không có observability: bạn không biết prompt nào, context nào, lần nào.
+
+Với Langfuse: filter trace theo topic "hoàn tiền" → thấy 43 request trong 7 ngày → 12 cái bị mark fail bởi LLM-as-judge → click vào từng trace → thấy đúng đoạn retrieved chunk sai bị nhồi vào context → sửa retrieval logic.
+
+**Gửi trace bất đồng bộ** là bắt buộc: Langfuse và các tool tương tự ghi log trong background, không block response của user. Latency của app không bị ảnh hưởng bởi việc tracing.
+
+<Callout title="Góc kỹ thuật">
+Gắn `user_id` và `session_id` vào mỗi trace ngay từ đầu. Khi cần điều tra complaint của user cụ thể, bạn filter theo `user_id` và thấy toàn bộ lịch sử hội thoại của họ — thay vì lục lọc logs không có cấu trúc.
+</Callout>
+
+<Callout title="Nhớ nhé">
+Lỗi LLM là lỗi **ngữ nghĩa**, không phải exception. Observability cho LLM phải ghi nội dung prompt/response, không chỉ HTTP status và latency. Mỗi request = 1 trace, mỗi bước = 1 span.
+</Callout>
+
+## Đọc thêm
+
+- [Langfuse Tracing Overview](https://langfuse.com/docs/tracing) — Tài liệu chính về data model của Langfuse: trace, observation (span), session; cách SDK hoạt động bất đồng bộ và tích hợp với 50+ framework.
+- [Langfuse Observability Overview](https://langfuse.com/docs/observability/overview) — Giải thích tại sao LLM cần observability riêng: non-determinism, semantic errors, và cách gắn eval score vào từng trace.
+- [Production Best Practices — OpenAI](https://developers.openai.com/api/docs/guides/production-best-practices) — Khuyến nghị của OpenAI cho production: logging, monitoring, cost controls và khi nào nên alert.
+- [Observability — Learning Lab](/concepts/observability) — Nền tảng về logs, metrics, traces trong hệ thống phần mềm — trực tiếp áp dụng vào LLM observability.
+
+## Tự kiểm tra
+
+1. Tại sao HTTP 200 không có nghĩa là LLM đang hoạt động đúng? Cho một ví dụ cụ thể về "lỗi ngữ nghĩa" mà monitoring truyền thống không bắt được.
+2. Trong một RAG pipeline (user query → retrieval → reranking → LLM inference → response), bạn cần tạo bao nhiêu span? Mỗi span nên ghi những gì?
+3. Bạn nhận được complaint từ một user cụ thể: "Bot trả lời sai thông tin sản phẩm lúc 14:32 hôm qua." Mô tả các bước bạn làm trong Langfuse để tìm ra nguyên nhân gốc.

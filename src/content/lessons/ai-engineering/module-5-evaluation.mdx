@@ -1,0 +1,97 @@
+---
+id: lesson-aieng-005
+title: "Evals: kỹ năng cốt lõi nhất của AI engineer"
+type: "lesson"
+track: ai-engineering
+module: evals
+level: advanced
+tags: [ai-engineering, evals, llm-as-judge, eval-dataset, hallucination, groundedness, rag-evaluation, agent-evaluation]
+prerequisites:
+  - concept-llm-evals
+  - concept-llm-as-judge
+  - concept-eval-dataset
+  - concept-hallucination
+  - concept-groundedness
+  - concept-offline-vs-online-eval
+  - concept-rag-evaluation
+  - concept-agent-evaluation
+related:
+  - exercise-aieng-005
+  - rubric-ai-engineering
+status: published
+---
+import Callout from '../../../components/content/Callout.astro';
+
+Một prompt thay đổi nhỏ. Output trông tốt hơn. Bạn ship. Ba ngày sau, khách hàng báo model bịa số. Bạn không biết lỗi từ bao giờ, không biết bao nhiêu case bị ảnh hưởng.
+
+Đây là cuộc sống của AI engineer *không có eval*. Module này dạy bạn xây hệ thống đo lường để điều đó không bao giờ xảy ra.
+
+## 1 — Tại sao eval là kỹ năng số 1
+
+Sức mạnh của LLM cũng là điểm nguy hiểm nhất: nó *luôn* sinh ra output — tự tin, hoàn chỉnh, nghe có lý — kể cả khi sai. Không có eval, bạn không phân biệt được "tốt hơn" với "trông tốt hơn".
+
+Năm 2026, các team AI engineering hàng đầu dồn 60–80% thời gian vào hiểu lỗi qua eval. Không phải vào viết prompt hay chọn model — mà vào **đo lường có hệ thống**.
+
+Xem lại [LLM Evals](/concepts/llm-evals) nếu cần nhắc lại tổng quan.
+
+## 2 — Xây golden set từ lỗi thật
+
+Bước đầu tiên luôn là: xuất trace production, đọc, và phân loại lỗi (open coding → axial coding). Từ lỗi thật bạn mới biết cần test gì.
+
+Golden set tốt có hai loại case không thể thiếu: câu nên-trả-lời và câu nên-từ-chối. Thiếu loại thứ hai, bạn không phát hiện được [hallucination](/concepts/hallucination).
+
+Pass rate ~70% thường có ý nghĩa hơn 100%: nếu model pass hết, bộ test của bạn quá dễ.
+
+Xem chi tiết tại [Eval Dataset / Golden Set](/concepts/eval-dataset).
+
+## 3 — Grader theo thứ tự ưu tiên
+
+Đừng nhảy thẳng vào LLM-judge cho mọi thứ. Thứ tự đúng:
+
+**Code-based trước** — nhanh nhất, đáng tin nhất. Dùng khi output có cấu trúc: exact match, regex, JSON schema. Một grader code chạy 1000 case trong vài giây.
+
+**LLM-judge khi output tự do** — dùng binary pass/fail + critique, không dùng thang 1–5. Bắt judge lý luận trước verdict. Calibrate với domain expert đến >90% agreement trước khi scale.
+
+**Human grader** — chỉ để calibrate LLM-judge, không phải primary grader.
+
+Xem [LLM-as-a-Judge](/concepts/llm-as-judge) để hiểu cách thiết kế judge đáng tin.
+
+## 4 — Hallucination và groundedness cho RAG
+
+RAG pipeline có điểm yếu đặc thù: model có thể bịa dù đã có tài liệu nguồn (hallucination intrinsic).
+
+[Groundedness / Faithfulness](/concepts/groundedness) là metric chính: tách output thành từng claim, kiểm từng claim xem có trong chunks không. Metric này không cần ground-truth — chạy được ngay trên production.
+
+Đừng dùng BLEU hay cosine similarity cho output sinh ngôn ngữ tự nhiên — chúng không đo chất lượng ý nghĩa.
+
+## 5 — Tách retrieval và generation khi eval RAG
+
+[RAG Evaluation](/concepts/rag-evaluation) hiệu quả khi bạn tách hai khâu:
+
+- **Retrieval**: Context Precision (chunk retrieved có liên quan không?) và Context Recall (có đủ thông tin không?).
+- **Generation**: Faithfulness (có bịa ngoài chunks không?) và Answer Relevance (có trả lời đúng câu hỏi không?).
+
+Faithfulness thấp → sửa prompt/model. Context Precision thấp → sửa retriever hay chunking.
+
+## 6 — Eval agent bằng outcome và pass@k / pass^k
+
+Agent khác chatbot: non-deterministic, nhiều bước, tác động thật lên môi trường.
+
+Hai quy tắc quan trọng từ [Agent Evaluation](/concepts/agent-evaluation):
+
+1. **Chấm outcome, không chấm lời nói.** Kiểm trạng thái môi trường sau khi agent chạy xong — file được tạo đúng không, database được cập nhật đúng không.
+2. **Chạy k trial, báo cáo cả pass@k và pass^k.** pass@k = ít nhất một lần thành công. pass^k = tất cả đều thành công. Với workflow tự động trong production, pass^k mới là số quan trọng.
+
+## 7 — Offline → Online → Flywheel
+
+[Offline eval](/concepts/offline-vs-online-eval) chạy trong CI mỗi PR: golden set cố định, phát hiện regression trước khi ship.
+
+Online eval chạy trên production: sample 5–10% trace thật, chấm reference-free, theo dõi confidence interval.
+
+Flywheel: lỗi từ online → error analysis → case mới → thêm vào golden set → offline eval chặt hơn → ít lỗi production hơn. Vòng lặp này là thứ team AI engineering hàng đầu xây trước tiên.
+
+<Callout title="Nhớ nhé">
+Thứ tự đúng: **golden set từ lỗi thật → code grader trước → LLM-judge (binary + critique) khi cần → offline trong CI → online monitor → flywheel**. Mỗi bước bổ sung cho bước trước, không thay thế.
+</Callout>
+
+Thực hành ngay với [bài xây eval cho feature LLM →](/exercises/ai-engineering/m5-build-an-eval)

@@ -1,0 +1,63 @@
+---
+id: concept-groundedness
+title: "Groundedness / Faithfulness"
+type: "concept"
+aliases: ["faithfulness", "groundedness", "grounded", "faithful", "độ bám nguồn", "tính trung thực với nguồn"]
+tags: [evals, groundedness, hallucination, rag, rag-evaluation, ai-engineering]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Một nhà báo tốt chỉ viết điều họ có thể truy về nguồn. Không phải "tôi nghĩ", không phải "có vẻ như" — mà là "theo báo cáo X trang Y". Groundedness đo xem LLM có làm được điều đó không.
+
+## Là gì
+
+**Groundedness** (hay **Faithfulness**) đo lường xem mỗi câu khẳng định trong output của LLM có thể truy về tài liệu nguồn hay không. Metric này không cần ground-truth câu trả lời — chỉ cần tài liệu nguồn và output của model.
+
+Điều này làm groundedness trở thành metric lý tưởng cho RAG: bạn luôn có chunks đã retrieve, và bạn có thể chấm ngay không cần label thủ công.
+
+**Phân biệt hai khái niệm gần nhau:**
+
+- **Faithfulness**: Output có bịa gì ngoài tài liệu nguồn không? (kiểm hallucination)
+- **Context adherence**: Output có bám sát nội dung được yêu cầu không? (kiểm scope)
+
+RAGAS dùng "faithfulness"; một số framework gọi là "groundedness" — bản chất giống nhau.
+
+## Ví dụ thật
+
+Tài liệu nguồn (chunk được retrieve):
+> "Sản phẩm bảo hành 24 tháng kể từ ngày mua."
+
+Output model:
+> "Sản phẩm của bạn được bảo hành **2 năm** và bao gồm cả hư hỏng do tai nạn."
+
+Chấm ở mức claim:
+- "bảo hành 2 năm" → truy được về nguồn (24 tháng = 2 năm) ✓
+- "bao gồm hư hỏng do tai nạn" → không có trong nguồn ✗
+
+Faithfulness score = 1/2 = 0.5.
+
+**Quy trình chấm RAGAS:**
+1. Tách output thành từng câu khẳng định riêng biệt.
+2. Với mỗi claim, LLM-judge kiểm: "Claim này có trong tài liệu nguồn không?"
+3. Score = số claim truy được / tổng số claim.
+
+<Callout title="Góc kỹ thuật">
+Groundedness chấm được mà không cần ground-truth answer — chỉ cần (query, retrieved chunks, output). Đây là lợi thế lớn so với answer correctness (cần label đúng/sai cho từng câu hỏi). Trong production, bạn có thể chấm groundedness tự động 100% trace.
+</Callout>
+
+<Callout title="Nhớ nhé">
+Chấm groundedness ở mức **claim** (từng câu), không phải mức đoạn văn. Một output có thể đúng 80% và bịa 20% — chấm mức đoạn sẽ bỏ sót phần bịa đó.
+</Callout>
+
+## Đọc thêm
+
+- [RAGAS – Available metrics](https://docs.ragas.io/en/stable/concepts/metrics/available_metrics/) — Tài liệu chính thức RAGAS: định nghĩa faithfulness, công thức tính, code mẫu Python. Đây là nguồn tham khảo chuẩn cho mọi RAG eval pipeline.
+- [Confident AI – RAG evaluation metrics: answer relevancy, faithfulness and more](https://www.confident-ai.com/blog/rag-evaluation-metrics-answer-relevancy-faithfulness-and-more) — So sánh faithfulness với các metric RAG khác, cách dùng DeepEval framework để implement, và ví dụ thực tế về cách score được tính.
+- [Anthropic – Develop tests and evaluate](https://platform.claude.com/docs/en/docs/test-and-evaluate/develop-tests) — Hướng dẫn thiết kế LLM-based grader cho context utilization — áp dụng trực tiếp để chấm groundedness với rubric rõ ràng.
+
+## Tự kiểm tra
+
+1. Groundedness khác gì với "answer correctness"? Tại sao groundedness không cần ground-truth label?
+2. Tại sao nên chấm ở mức claim (từng câu) thay vì mức đoạn văn hay toàn bộ output?
+3. Một output có faithfulness score 0.9 — điều đó có nghĩa là gì? Có đảm bảo output đúng không?

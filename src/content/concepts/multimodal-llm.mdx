@@ -1,0 +1,52 @@
+---
+id: concept-multimodal-llm
+title: "Multimodal LLM"
+type: "concept"
+aliases: ["multimodal", "multimodal model", "vision model", "mô hình đa phương thức", "image understanding"]
+tags: [llm, multimodal, ai-engineering, vision]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Bạn có thể vừa đọc email, vừa xem ảnh đính kèm, vừa nghe đồng nghiệp nói chuyện — và xử lý tất cả cùng lúc. Não người là multimodal từ đầu. LLM 2026 đang tiến về hướng đó.
+
+## Là gì
+
+**Multimodal LLM** là model có thể nhận và xử lý nhiều loại dữ liệu đầu vào, không chỉ văn bản: hình ảnh, audio, video, PDF, code.
+
+Trước 2023, "LLM" = text-only. Từ 2024–2025, vision được tích hợp vào. Đến 2026, **mọi frontier model đều nhận hình ảnh mặc định** — Claude Opus 4.8/Sonnet 4.6/Haiku 4.5, GPT-5.5, Gemini 2.5/3.x đều làm được điều này mà không cần switch model hay plugin đặc biệt.
+
+## Ví dụ thật
+
+Bạn build tool kiểm tra hóa đơn: user upload ảnh chụp hóa đơn → Claude Sonnet 4.6 đọc số tiền, ngày, tên nhà cung cấp, trả về JSON.
+
+Không cần OCR riêng. Không cần pipeline phức tạp. Một API call, model xử lý cả văn bản lẫn hình ảnh.
+
+**Khả năng thực tế theo loại modal (2026):**
+
+| Modal | Khả năng | Ghi chú |
+|---|---|---|
+| Hình ảnh | Rộng rãi, ổn định | Mọi frontier model |
+| PDF/document | Tốt | Claude, Gemini |
+| Audio (real-time) | Gemini Live API | Low-latency voice agents |
+| Video | Gemini, hạn chế ở các model khác | Còn đang phát triển |
+
+<Callout title="Mẹo">
+Khi gửi ảnh kèm text prompt, **đặt prompt SAU ảnh** — không phải trước. Thứ tự: [ảnh] → [câu hỏi về ảnh]. Anthropic và Google đều xác nhận thứ tự này cho kết quả tốt hơn trong hầu hết trường hợp.
+</Callout>
+
+<Callout title="Cẩn thận">
+Audio và video **không đồng đều giữa các provider**. Gemini Live API hỗ trợ real-time audio hai chiều (phù hợp voice agent). Claude và GPT-5.5 chưa có tính năng tương đương ở mức đó. Chọn model theo modal bạn cần, không phải chỉ theo thương hiệu.
+</Callout>
+
+## Đọc thêm
+
+- [Google AI – Vision (Image Understanding)](https://ai.google.dev/gemini-api/docs/vision) — Hướng dẫn chi tiết cách Gemini xử lý hình ảnh: object detection, bounding box, multi-image, và tối ưu token cho ảnh.
+- [Google AI – Live API (real-time audio/video)](https://ai.google.dev/gemini-api/docs/live-api) — Tài liệu Gemini Live API: WebSocket real-time, voice input/output, barge-in, và use case voice agent.
+- [Anthropic – Models overview (multimodal support)](https://platform.claude.com/docs/en/about-claude/models/overview) — Xác nhận mọi Claude model hiện tại đều hỗ trợ text + image input; thông tin về PDF support và các modal được hỗ trợ.
+
+## Tự kiểm tra
+
+1. Năm 2026, một developer mới muốn dùng LLM để phân tích hình ảnh. Họ có cần tìm "vision model" riêng không? Tại sao?
+2. Bạn build voice assistant real-time (user nói, AI nói lại ngay lập tức). Nên dùng provider nào và API nào? Tại sao không phải Claude hay GPT-5.5?
+3. Khi gửi prompt kèm ảnh sản phẩm để hỏi "ảnh này chụp gì?", bạn nên đặt ảnh ở đâu trong request — trước hay sau câu hỏi?

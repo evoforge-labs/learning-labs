@@ -1,0 +1,64 @@
+---
+id: exercise-aieng-008
+title: "Capstone: Thiết kế & đánh giá một RAG Assistant end-to-end"
+type: "exercise"
+track: ai-engineering
+tags: [ai-engineering, rag, evals, agents, llmops, production-hardening]
+estimatedMinutes: 120
+related: [lesson-aieng-005, concept-context-engineering, concept-rag, concept-llm-evals, concept-agent-harness, concept-prompt-caching, rubric-ai-engineering]
+status: published
+---
+import Callout from '../../../components/content/Callout.astro';
+
+Đây là bài tổng hợp cả track. Bạn không viết code production — bạn dựng **bản thiết kế kỹ thuật** cho một hệ thống LLM thật, chạm vào cả 7 module. Mục tiêu: chứng minh bạn nghĩ như một AI engineer, không phải người chỉ biết gọi API.
+
+## Tình huống
+
+Bạn build **"DocPilot"** — trợ lý hỏi-đáp cho ~20.000 trang tài liệu nội bộ của một công ty (chính sách HR, quy trình kỹ thuật, hợp đồng). Yêu cầu:
+
+- Trả lời có **căn cứ** (trích nguồn), không bịa.
+- Một số hành động có quyền thật: tạo ticket, gửi email cho phòng ban liên quan.
+- Ngân sách & độ trễ phải chấp nhận được ở quy mô ~2.000 nhân viên.
+- Bạn là **một AI engineer**, có ~6 tuần.
+
+<Callout title="Nhớ nhé">
+Điểm cao không thuộc về bản thiết kế "nhiều công nghệ nhất" — mà về bản *đo được chất lượng* (eval) và *không over-engineer* (vd: chưa cần multi-agent, chưa cần fine-tune nếu prompt + RAG đủ).
+</Callout>
+
+## Nhiệm vụ
+
+Viết tài liệu thiết kế gồm 6 phần.
+
+### Phần 1 — Model & Context (M1, M2)
+- Chọn model 2026 phù hợp (standard vs reasoning, context window, multimodal?) và lý do ([concept-foundation-model](/concepts/foundation-model), [concept-reasoning-models](/concepts/reasoning-models)).
+- Phác cách bạn làm **context engineering**: cái gì vào context, cắt/nén ra sao ([concept-context-engineering](/concepts/context-engineering)); structured output cho câu trả lời có trích nguồn ([concept-structured-output](/concepts/structured-output)).
+
+### Phần 2 — Retrieval (M3)
+- Thiết kế pipeline RAG: chunking + metadata, **hybrid search**, reranking, và có dùng **contextual retrieval** không ([concept-rag](/concepts/rag), [concept-hybrid-search](/concepts/hybrid-search), [concept-reranking](/concepts/reranking), [concept-contextual-retrieval](/concepts/contextual-retrieval)).
+- Quyết định: RAG hay long-context cho corpus 20k trang? Vì sao?
+
+### Phần 3 — Agent & Tools (M4)
+- Quyết định **workflow hay agent** (và vì sao chưa cần multi-agent) ([concept-ai-agent](/concepts/ai-agent), [concept-multi-agent](/concepts/multi-agent)).
+- Thiết kế 2-3 tool theo nguyên tắc "ít & rộng, trả ngữ nghĩa" ([concept-tool-calling](/concepts/tool-calling)); phác **harness** tối thiểu ([concept-agent-harness](/concepts/agent-harness)).
+
+### Phần 4 — Evaluation (M5) ⭐ *(phần quan trọng nhất)*
+- Xây **golden set** lấy từ đâu, gồm cả case nên-từ-chối ([concept-eval-dataset](/concepts/eval-dataset)).
+- Thiết kế **LLM-as-judge** binary pass/fail + critique cho **groundedness** ([concept-llm-as-judge](/concepts/llm-as-judge), [concept-groundedness](/concepts/groundedness)).
+- Tách **RAG eval** (retrieval vs generation) và nêu cái gì chạy **offline (CI)** vs **online** ([concept-rag-evaluation](/concepts/rag-evaluation), [concept-offline-vs-online-eval](/concepts/offline-vs-online-eval)).
+
+### Phần 5 — Vận hành & Tối ưu (M6)
+- Áp **prompt caching** ở đâu, ước lượng % tiết kiệm ([concept-prompt-caching](/concepts/prompt-caching)).
+- 2-3 cách giảm latency/cost ([concept-latency-cost-optimization](/concepts/latency-cost-optimization)); bạn theo dõi gì qua **observability** ([concept-llm-observability](/concepts/llm-observability)).
+
+### Phần 6 — An toàn & Hardening (M7)
+- **Guardrails** input/output ở tầng hạ tầng ([concept-guardrails](/concepts/guardrails)).
+- **Production hardening**: circuit breaker, least-privilege cho tool gửi email/tạo ticket; chỗ cần **human-in-the-loop** ([concept-production-hardening](/concepts/production-hardening), [concept-human-in-the-loop](/concepts/human-in-the-loop)).
+- 2 kịch bản **red-team** (gồm 1 indirect prompt injection qua tài liệu được retrieve) ([concept-red-teaming](/concepts/red-teaming), [concept-prompt-injection](/concepts/prompt-injection)).
+
+<Callout title="Mẹo">
+Có thể trình bày theo [System Design Template](/templates/system-design-template) để có cấu trúc. Mỗi phần ngắn gọn, nêu rõ *đánh đổi* và *vì sao không làm phức tạp hơn cần thiết*.
+</Callout>
+
+## Tiêu chí đánh giá
+
+Xem [AI Engineering Rubric](../../rubrics/ai-engineering-rubric). Trọng số lớn nhất là **eval** (Phần 4): một hệ thống không đo được chất lượng thì không đáng tin, dù kiến trúc đẹp đến đâu. Chú ý thứ hai: **không over-engineer** — biện minh được vì sao *chưa* dùng multi-agent / fine-tune sẽ được điểm cao hơn là nhồi mọi công nghệ vào.

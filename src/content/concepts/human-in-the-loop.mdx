@@ -1,0 +1,61 @@
+---
+id: concept-human-in-the-loop
+title: "Human-in-the-Loop (HITL)"
+type: "concept"
+aliases: ["HITL", "human review", "human approval", "human oversight", "giám sát người"]
+tags: [ai-engineering, safety, human-in-the-loop, agents, agentic-workflows, production-hardening]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Bạn có thể thuê người lái xe, nhưng với chuyến hàng chứa hóa chất nguy hiểm, bạn sẽ không để tài xế tự ký giấy thông quan — bạn phải ký. Không phải vì tài xế không tin cậy. Mà vì nếu có sai sót, hậu quả không đảo ngược được.
+
+Đó là logic của **Human-in-the-Loop**: agent AI dừng lại và chờ người duyệt trước những hành động khó đảo ngược hoặc rủi ro cao.
+
+## Là gì
+
+**Human-in-the-Loop (HITL)** là cơ chế tạm dừng workflow của agent để con người xem xét và quyết định trước khi thực hiện hành động quan trọng. Đây là **primitive first-class** trong các framework agent hiện đại — không phải tính năng optional.
+
+Cả LangGraph lẫn OpenAI Agents SDK (2026) đều có HITL built-in: agent có thể `interrupt` tại một node, serialize toàn bộ state, và resume sau khi nhận approval.
+
+## Ba nguyên tắc thiết kế
+
+**Minimal footprint** — Agent chỉ nên làm những gì cần thiết cho task hiện tại. Đừng đọc thêm dữ liệu không liên quan. Đừng gọi tool không cần thiết.
+
+**Ưu tiên hành động đảo ngược được** — Nếu có thể chọn giữa "gửi email ngay" và "tạo draft cho người review", chọn draft. Hành động đảo ngược được cho phép sai mà không gây hậu quả lớn.
+
+**Hỏi khi không chắc** — Thay vì đoán, agent nên interrupt và hỏi người dùng. Đây là dấu hiệu của agent được thiết kế tốt, không phải điểm yếu.
+
+## Ví dụ thật
+
+Agent hỗ trợ khách hàng có quyền: xem đơn hàng, gửi email, hoàn tiền.
+
+Quy trình HITL:
+- Tra cứu đơn hàng → agent tự làm (đảo ngược được, low risk)
+- Soạn email → agent soạn, người duyệt trước khi gửi (medium risk)
+- Hoàn tiền > $50 → **interrupt, chờ approval** từ human agent (high risk, khó đảo ngược)
+- Hoàn tiền > $500 → interrupt, ghi log, escalate lên supervisor
+
+Không phải tất cả hành động đều cần HITL — chỉ những hành động mà nếu sai thì khó/không thể fix.
+
+Xem thêm: [concept-agentic-workflows](/concepts/agentic-workflows) — HITL là một trong các pattern cốt lõi để kiểm soát agent trong workflow phức tạp.
+
+<Callout title="Cẩn thận">
+HITL quá nhiều sẽ giết UX — agent dừng liên tục thì khác gì user làm tay. Nguyên tắc: chỉ interrupt khi hậu quả của sai sót khó đảo ngược, chi phí sai sót cao, hoặc action vượt ngưỡng được định nghĩa trước. Calibrate ngưỡng này dựa trên dữ liệu thực tế.
+</Callout>
+
+<Callout title="Nhớ nhé">
+HITL = dừng agent trước hành động rủi ro cao / khó đảo ngược. Không phải vì model không giỏi — mà vì một số quyết định cần con người chịu trách nhiệm.
+</Callout>
+
+## Đọc thêm
+
+- [Building Effective Agents — Anthropic Research](https://www.anthropic.com/research/building-effective-agents) — Anthropic đặt HITL và minimal footprint là nguyên tắc thiết kế cốt lõi cho agent production-ready.
+- [Agents SDK — OpenAI Developers](https://developers.openai.com/api/docs/guides/agents) — OpenAI Agents SDK với HITL built-in: Guardrails and human review section, cách interrupt và resume workflow an toàn.
+- [Safety Best Practices — OpenAI Developers](https://developers.openai.com/api/docs/guides/safety-best-practices) — Hướng dẫn triển khai human review loop trong production: khi nào cần, cách thiết kế escalation path.
+
+## Tự kiểm tra
+
+1. Một agent booking lịch hẹn khám bệnh có thể: tìm slot trống, tạo booking, gửi SMS xác nhận, hủy booking. Hành động nào nên có HITL? Lý giải theo tiêu chí "đảo ngược được không" và "rủi ro nếu sai".
+2. "Minimal footprint" có nghĩa là gì trong thực tế? Đưa ra một ví dụ cụ thể về agent vi phạm nguyên tắc này và hậu quả tiềm ẩn.
+3. Sự khác biệt giữa HITL (interrupt + wait) và approval workflow thông thường (gửi request → email → người duyệt) là gì khi thiết kế agent stateful?

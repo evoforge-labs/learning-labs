@@ -462,6 +462,278 @@ edges:
     target: exercise-solo-005
     rel: evaluates
 
+  # === AI Engineering A-Z ===
+  # --- M1 LLM Foundations — theory progression ---
+  - source: concept-llm
+    target: concept-tokens-tokenization
+    rel: leads-to
+  - source: concept-tokens-tokenization
+    target: concept-context-window
+    rel: leads-to
+  - source: concept-context-window
+    target: concept-temperature-sampling
+    rel: leads-to
+  - source: concept-temperature-sampling
+    target: concept-foundation-model
+    rel: leads-to
+  - source: concept-foundation-model
+    target: concept-multimodal-llm
+    rel: leads-to
+  - source: concept-foundation-model
+    target: concept-reasoning-models
+    rel: leads-to
+  # reasoning models change how temperature/sampling works
+  - source: concept-temperature-sampling
+    target: concept-reasoning-models
+    rel: supports
+  # M1 lesson and exercise wiring
+  - source: concept-llm
+    target: lesson-aieng-001
+    rel: supports
+  - source: concept-tokens-tokenization
+    target: lesson-aieng-001
+    rel: supports
+  - source: concept-context-window
+    target: lesson-aieng-001
+    rel: supports
+  - source: concept-temperature-sampling
+    target: lesson-aieng-001
+    rel: supports
+  - source: concept-foundation-model
+    target: lesson-aieng-001
+    rel: supports
+  - source: concept-multimodal-llm
+    target: lesson-aieng-001
+    rel: supports
+  - source: concept-reasoning-models
+    target: lesson-aieng-001
+    rel: supports
+  - source: concept-tokens-tokenization
+    target: exercise-aieng-001
+    rel: trains
+  - source: concept-context-window
+    target: exercise-aieng-001
+    rel: trains
+  - source: concept-foundation-model
+    target: exercise-aieng-001
+    rel: trains
+  - source: rubric-ai-engineering
+    target: exercise-aieng-001
+    rel: evaluates
+  # M1 -> M2 bridge: prompt engineering builds on LLM foundations
+  - source: concept-llm
+    target: concept-prompt-engineering
+    rel: leads-to
+  - source: concept-context-window
+    target: concept-context-engineering
+    rel: leads-to
+
+  # --- M2 Prompt & Context Engineering — theory progression ---
+  - source: concept-prompt-engineering
+    target: concept-system-vs-user-prompt
+    rel: leads-to
+  - source: concept-system-vs-user-prompt
+    target: concept-few-shot-prompting
+    rel: leads-to
+  - source: concept-few-shot-prompting
+    target: concept-chain-of-thought
+    rel: leads-to
+  - source: concept-chain-of-thought
+    target: concept-structured-output
+    rel: leads-to
+  - source: concept-structured-output
+    target: concept-prompt-injection
+    rel: leads-to
+  - source: concept-prompt-injection
+    target: concept-context-engineering
+    rel: leads-to
+  # reasoning models shift applies to both CoT and few-shot
+  - source: concept-reasoning-models
+    target: concept-chain-of-thought
+    rel: supports
+  - source: concept-reasoning-models
+    target: concept-few-shot-prompting
+    rel: supports
+  # M2 -> M3 bridge: context engineering leads into RAG
+  - source: concept-context-engineering
+    target: concept-embeddings
+    rel: leads-to
+  # M2 lesson and exercise wiring
+  - source: concept-prompt-engineering
+    target: lesson-aieng-002
+    rel: supports
+  - source: concept-system-vs-user-prompt
+    target: lesson-aieng-002
+    rel: supports
+  - source: concept-few-shot-prompting
+    target: lesson-aieng-002
+    rel: supports
+  - source: concept-chain-of-thought
+    target: lesson-aieng-002
+    rel: supports
+  - source: concept-structured-output
+    target: lesson-aieng-002
+    rel: supports
+  - source: concept-prompt-injection
+    target: lesson-aieng-002
+    rel: supports
+  - source: concept-context-engineering
+    target: lesson-aieng-002
+    rel: supports
+  - source: concept-structured-output
+    target: exercise-aieng-002
+    rel: trains
+  - source: concept-prompt-injection
+    target: exercise-aieng-002
+    rel: trains
+  - source: concept-system-vs-user-prompt
+    target: exercise-aieng-002
+    rel: trains
+  - source: concept-few-shot-prompting
+    target: exercise-aieng-002
+    rel: trains
+  - source: concept-context-engineering
+    target: exercise-aieng-002
+    rel: trains
+  - source: rubric-ai-engineering
+    target: exercise-aieng-002
+    rel: evaluates
+
+  # --- M3 RAG & Retrieval — theory progression ---
+  - source: concept-embeddings
+    target: concept-vector-database
+    rel: leads-to
+  - source: concept-vector-database
+    target: concept-semantic-search
+    rel: leads-to
+  - source: concept-semantic-search
+    target: concept-rag
+    rel: leads-to
+  - source: concept-rag
+    target: concept-chunking
+    rel: leads-to
+  - source: concept-chunking
+    target: concept-hybrid-search
+    rel: leads-to
+  - source: concept-hybrid-search
+    target: concept-reranking
+    rel: leads-to
+  - source: concept-reranking
+    target: concept-contextual-retrieval
+    rel: leads-to
+  # contextual retrieval improves chunking quality
+  - source: concept-chunking
+    target: concept-contextual-retrieval
+    rel: supports
+  # hybrid search subsumes semantic search
+  - source: concept-semantic-search
+    target: concept-hybrid-search
+    rel: leads-to
+  # context engineering frames RAG as context curation
+  - source: concept-context-engineering
+    target: concept-rag
+    rel: supports
+  # M3 -> M4 bridge: RAG feeds into agentic workflows
+  - source: concept-contextual-retrieval
+    target: concept-ai-agent
+    rel: leads-to
+  # M3 lesson and exercise wiring
+  - source: concept-embeddings
+    target: lesson-aieng-003
+    rel: supports
+  - source: concept-vector-database
+    target: lesson-aieng-003
+    rel: supports
+  - source: concept-semantic-search
+    target: lesson-aieng-003
+    rel: supports
+  - source: concept-rag
+    target: lesson-aieng-003
+    rel: supports
+  - source: concept-chunking
+    target: lesson-aieng-003
+    rel: supports
+  - source: concept-hybrid-search
+    target: lesson-aieng-003
+    rel: supports
+  - source: concept-reranking
+    target: lesson-aieng-003
+    rel: supports
+  - source: concept-contextual-retrieval
+    target: lesson-aieng-003
+    rel: supports
+  - source: concept-rag
+    target: exercise-aieng-003
+    rel: trains
+  - source: concept-chunking
+    target: exercise-aieng-003
+    rel: trains
+  - source: concept-hybrid-search
+    target: exercise-aieng-003
+    rel: trains
+  - source: concept-reranking
+    target: exercise-aieng-003
+    rel: trains
+  - source: concept-contextual-retrieval
+    target: exercise-aieng-003
+    rel: trains
+  - source: rubric-ai-engineering
+    target: exercise-aieng-003
+    rel: evaluates
+
+  # --- AI Engineering: Module 7 — Safety & Hardening ---
+  # Theory progression
+  - source: concept-prompt-injection
+    target: concept-guardrails
+    rel: leads-to
+  - source: concept-guardrails
+    target: concept-production-hardening
+    rel: leads-to
+  - source: concept-production-hardening
+    target: concept-human-in-the-loop
+    rel: leads-to
+  - source: concept-human-in-the-loop
+    target: concept-red-teaming
+    rel: leads-to
+  # Cross-links from existing infra concepts
+  - source: concept-rate-limiting
+    target: concept-production-hardening
+    rel: supports
+  - source: concept-single-point-of-failure
+    target: concept-production-hardening
+    rel: supports
+  - source: concept-agentic-workflows
+    target: concept-human-in-the-loop
+    rel: supports
+  # M7 lesson and exercise wiring
+  - source: concept-guardrails
+    target: lesson-aieng-007
+    rel: supports
+  - source: concept-production-hardening
+    target: lesson-aieng-007
+    rel: supports
+  - source: concept-human-in-the-loop
+    target: lesson-aieng-007
+    rel: supports
+  - source: concept-red-teaming
+    target: lesson-aieng-007
+    rel: supports
+  - source: concept-guardrails
+    target: exercise-aieng-007
+    rel: trains
+  - source: concept-production-hardening
+    target: exercise-aieng-007
+    rel: trains
+  - source: concept-human-in-the-loop
+    target: exercise-aieng-007
+    rel: trains
+  - source: concept-red-teaming
+    target: exercise-aieng-007
+    rel: trains
+  - source: rubric-ai-engineering
+    target: exercise-aieng-007
+    rel: evaluates
+
   # --- Capstone draws on the whole track ---
   - source: concept-positioning
     target: exercise-solo-006
@@ -477,4 +749,270 @@ edges:
     rel: trains
   - source: rubric-solo-founder
     target: exercise-solo-006
+    rel: evaluates
+
+  # --- AI Engineering Module 4: Agents, Tools & Harness ---
+  # Theory progression within M4
+  - source: concept-ai-agent
+    target: concept-tool-calling
+    rel: leads-to
+  - source: concept-tool-calling
+    target: concept-react-pattern
+    rel: leads-to
+  - source: concept-react-pattern
+    target: concept-mcp
+    rel: leads-to
+  - source: concept-ai-agent
+    target: concept-agentic-workflows
+    rel: leads-to
+  - source: concept-agentic-workflows
+    target: concept-multi-agent
+    rel: leads-to
+  - source: concept-agent-memory
+    target: concept-agent-harness
+    rel: leads-to
+  - source: concept-react-pattern
+    target: concept-agent-memory
+    rel: leads-to
+  # Cross-module links
+  - source: concept-context-window
+    target: concept-agent-memory
+    rel: supports
+  - source: concept-context-engineering
+    target: concept-agent-harness
+    rel: supports
+  - source: concept-human-in-the-loop
+    target: concept-agentic-workflows
+    rel: supports
+  - source: concept-tool-calling
+    target: concept-mcp
+    rel: leads-to
+  # Lesson and exercise wiring
+  - source: concept-ai-agent
+    target: lesson-aieng-004
+    rel: supports
+  - source: concept-tool-calling
+    target: lesson-aieng-004
+    rel: supports
+  - source: concept-react-pattern
+    target: lesson-aieng-004
+    rel: supports
+  - source: concept-mcp
+    target: lesson-aieng-004
+    rel: supports
+  - source: concept-multi-agent
+    target: lesson-aieng-004
+    rel: supports
+  - source: concept-agent-memory
+    target: lesson-aieng-004
+    rel: supports
+  - source: concept-agentic-workflows
+    target: lesson-aieng-004
+    rel: supports
+  - source: concept-agent-harness
+    target: lesson-aieng-004
+    rel: supports
+  - source: concept-ai-agent
+    target: exercise-aieng-004
+    rel: trains
+  - source: concept-tool-calling
+    target: exercise-aieng-004
+    rel: trains
+  - source: concept-multi-agent
+    target: exercise-aieng-004
+    rel: trains
+  - source: concept-agent-harness
+    target: exercise-aieng-004
+    rel: trains
+  - source: rubric-ai-engineering
+    target: exercise-aieng-004
+    rel: evaluates
+
+  # --- AI Engineering Module 5: Evaluation & Quality ---
+  # Theory progression within M5
+  - source: concept-llm-evals
+    target: concept-eval-dataset
+    rel: leads-to
+  - source: concept-eval-dataset
+    target: concept-llm-as-judge
+    rel: leads-to
+  - source: concept-llm-as-judge
+    target: concept-hallucination
+    rel: leads-to
+  - source: concept-hallucination
+    target: concept-groundedness
+    rel: leads-to
+  - source: concept-groundedness
+    target: concept-rag-evaluation
+    rel: leads-to
+  - source: concept-rag-evaluation
+    target: concept-agent-evaluation
+    rel: leads-to
+  - source: concept-agent-evaluation
+    target: concept-offline-vs-online-eval
+    rel: leads-to
+  # Cross-links: hallucination and groundedness are two sides of same coin
+  - source: concept-hallucination
+    target: concept-groundedness
+    rel: specializes
+  # RAG eval builds on RAG pipeline knowledge
+  - source: concept-rag
+    target: concept-rag-evaluation
+    rel: supports
+  # Agent eval builds on agent harness knowledge
+  - source: concept-agent-harness
+    target: concept-agent-evaluation
+    rel: supports
+  # Offline/online eval builds on observability
+  - source: concept-observability
+    target: concept-offline-vs-online-eval
+    rel: supports
+  # M4 -> M5 bridge: harness enables systematic eval
+  - source: concept-agent-harness
+    target: concept-llm-evals
+    rel: leads-to
+  # M5 lesson wiring
+  - source: concept-llm-evals
+    target: lesson-aieng-005
+    rel: supports
+  - source: concept-llm-as-judge
+    target: lesson-aieng-005
+    rel: supports
+  - source: concept-eval-dataset
+    target: lesson-aieng-005
+    rel: supports
+  - source: concept-hallucination
+    target: lesson-aieng-005
+    rel: supports
+  - source: concept-groundedness
+    target: lesson-aieng-005
+    rel: supports
+  - source: concept-offline-vs-online-eval
+    target: lesson-aieng-005
+    rel: supports
+  - source: concept-rag-evaluation
+    target: lesson-aieng-005
+    rel: supports
+  - source: concept-agent-evaluation
+    target: lesson-aieng-005
+    rel: supports
+  # M5 exercise wiring
+  - source: concept-llm-evals
+    target: exercise-aieng-005
+    rel: trains
+  - source: concept-llm-as-judge
+    target: exercise-aieng-005
+    rel: trains
+  - source: concept-eval-dataset
+    target: exercise-aieng-005
+    rel: trains
+  - source: concept-groundedness
+    target: exercise-aieng-005
+    rel: trains
+  - source: concept-offline-vs-online-eval
+    target: exercise-aieng-005
+    rel: trains
+  - source: rubric-ai-engineering
+    target: exercise-aieng-005
+    rel: evaluates
+
+  # --- AI Engineering Module 6: LLMOps & Tối ưu ---
+  # Theory progression within M6
+  - source: concept-llmops
+    target: concept-prompt-caching
+    rel: leads-to
+  - source: concept-prompt-caching
+    target: concept-latency-cost-optimization
+    rel: leads-to
+  - source: concept-latency-cost-optimization
+    target: concept-llm-observability
+    rel: leads-to
+  - source: concept-llm-observability
+    target: concept-fine-tuning
+    rel: leads-to
+  - source: concept-fine-tuning
+    target: concept-fine-tuning-vs-rag
+    rel: leads-to
+  # M5 -> M6 bridge: evals feed into LLMOps loop
+  - source: concept-offline-vs-online-eval
+    target: concept-llmops
+    rel: leads-to
+  # M6 -> M7 bridge: LLMOps leads to hardening
+  - source: concept-llmops
+    target: concept-guardrails
+    rel: leads-to
+  # Cross-links: reuse infra concepts from system design track
+  - source: concept-caching
+    target: concept-prompt-caching
+    rel: supports
+  - source: concept-latency-vs-throughput
+    target: concept-latency-cost-optimization
+    rel: supports
+  - source: concept-observability
+    target: concept-llm-observability
+    rel: supports
+  # fine-tuning-vs-rag cross-link to RAG
+  - source: concept-rag
+    target: concept-fine-tuning-vs-rag
+    rel: supports
+  # M6 lesson wiring
+  - source: concept-llmops
+    target: lesson-aieng-006
+    rel: supports
+  - source: concept-prompt-caching
+    target: lesson-aieng-006
+    rel: supports
+  - source: concept-latency-cost-optimization
+    target: lesson-aieng-006
+    rel: supports
+  - source: concept-llm-observability
+    target: lesson-aieng-006
+    rel: supports
+  - source: concept-fine-tuning
+    target: lesson-aieng-006
+    rel: supports
+  - source: concept-fine-tuning-vs-rag
+    target: lesson-aieng-006
+    rel: supports
+  # M6 exercise wiring
+  - source: concept-prompt-caching
+    target: exercise-aieng-006
+    rel: trains
+  - source: concept-latency-cost-optimization
+    target: exercise-aieng-006
+    rel: trains
+  - source: concept-fine-tuning-vs-rag
+    target: exercise-aieng-006
+    rel: trains
+  - source: concept-llmops
+    target: exercise-aieng-006
+    rel: trains
+  - source: rubric-ai-engineering
+    target: exercise-aieng-006
+    rel: evaluates
+
+  # --- AI Engineering Capstone (exercise-aieng-008) draws on the whole track ---
+  - source: concept-context-engineering
+    target: exercise-aieng-008
+    rel: trains
+  - source: concept-rag
+    target: exercise-aieng-008
+    rel: trains
+  - source: concept-agent-harness
+    target: exercise-aieng-008
+    rel: trains
+  - source: concept-llm-evals
+    target: exercise-aieng-008
+    rel: trains
+  - source: concept-groundedness
+    target: exercise-aieng-008
+    rel: trains
+  - source: concept-prompt-caching
+    target: exercise-aieng-008
+    rel: trains
+  - source: concept-production-hardening
+    target: exercise-aieng-008
+    rel: trains
+  - source: rubric-ai-engineering
+    target: exercise-aieng-008
     rel: evaluates

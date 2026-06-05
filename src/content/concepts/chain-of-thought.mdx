@@ -1,0 +1,63 @@
+---
+id: concept-chain-of-thought
+title: "Chain-of-Thought (CoT)"
+type: "concept"
+aliases: ["CoT", "chain of thought", "think step by step", "suy nghĩ từng bước"]
+tags: [ai-engineering, prompt, llm, chain-of-thought, reasoning-models, extended-thinking]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Bạn tính nhẩm `17 × 14`. Nếu cố gắng trả lời ngay — dễ sai. Nhưng nếu bạn tự nhủ *"17 × 10 = 170, 17 × 4 = 68, cộng lại 238"* — đúng hơn hẳn. Việc "nói ra" từng bước giúp não không bỏ sót.
+
+LLM cũng vậy — khi được phép "nghĩ thành lời" trước khi trả lời, độ chính xác tăng rõ rệt trên các bài toán phức tạp.
+
+## Là gì
+
+**Chain-of-thought (CoT)** là kỹ thuật khuyến khích model trình bày các bước suy luận trung gian trước khi đưa ra câu trả lời cuối. Thay vì hỏi "Đáp án là gì?", bạn hỏi "Hãy suy nghĩ từng bước rồi đưa ra đáp án."
+
+Hiệu quả nhất với các bài toán: toán học, suy luận logic, phân tích đa bước, code debugging.
+
+**Shift 2026 cực quan trọng — đừng nhầm:**
+
+Với **reasoning models** (Claude Opus 4.8 extended thinking, OpenAI o3/o4, Gemini 3.x thinking), **đừng prompt "think step by step"**. Các model này đã suy luận *nội bộ* — bạn không thấy, nhưng chúng đang làm CoT rất sâu. Prompt thêm CoT không giúp ích, đôi khi còn cản.
+
+Thay vào đó: dùng tham số `thinking` (Anthropic) hoặc `reasoning_effort` (OpenAI) để điều chỉnh *mức độ* suy luận. Để model làm việc, bạn đừng chen vào giữa.
+
+## Ví dụ thật
+
+**Model thông thường (Claude Haiku, GPT-4o):**
+```
+Hãy phân tích xem cách tiếp cận nào tốt hơn, suy nghĩ từng bước trước khi kết luận.
+```
+→ Model viết ra lý luận → kết luận rõ ràng hơn.
+
+**Reasoning model (Claude Opus 4.8, o3):**
+```python
+client.messages.create(
+    model="claude-opus-4-8",
+    thinking={"type": "enabled", "budget_tokens": 8000},
+    messages=[{"role": "user", "content": "Phân tích tradeoff..."}]
+)
+```
+→ Model tự suy luận nội bộ (bạn nhận được `thinking` block riêng), không cần nhắc "think step by step".
+
+<Callout title="Cẩn thận">
+Đừng nhầm: với reasoning models, prompt "Hãy suy nghĩ từng bước" là **thừa và đôi khi phản tác dụng**. Reasoning models đã làm CoT nội bộ rất sâu. Việc thêm chỉ thị CoT có thể làm model "biểu diễn" lý luận bề mặt thay vì dùng hết khả năng suy luận thực sự.
+</Callout>
+
+<Callout title="Nhớ nhé">
+CoT hiệu quả với model thông thường — thêm "think step by step" hoặc few-shot CoT examples. Với reasoning models: dùng tham số effort/thinking thay prompt CoT. Hai nhóm model này cần cách tiếp cận khác nhau.
+</Callout>
+
+## Đọc thêm
+
+- [Extended Thinking — Anthropic](https://platform.claude.com/docs/en/docs/build-with-claude/extended-thinking) — Cách bật extended thinking cho Claude 4.x: tham số `thinking`, `budget_tokens`, adaptive thinking, và cách thinking blocks tương tác với tool use.
+- [Reasoning Best Practices — OpenAI](https://developers.openai.com/api/docs/guides/reasoning-best-practices) — Tại sao không nên thêm CoT prompt vào reasoning models, khi nào dùng o3/o4 vs GPT, và cách dùng `reasoning_effort`.
+- [Prompting Best Practices — Anthropic](https://platform.claude.com/docs/en/docs/build-with-claude/prompt-engineering/claude-prompting-best-practices) — Hướng dẫn về thinking và khi nào dùng CoT trong prompt cho model thông thường vs reasoning models của Claude.
+
+## Tự kiểm tra
+
+1. Bạn dùng Claude Opus 4.8 để phân tích hợp đồng pháp lý. Bạn nên thêm "hãy suy nghĩ từng bước" vào prompt không? Tại sao?
+2. CoT giúp model thông thường cải thiện điều gì cụ thể? Loại bài toán nào không cần CoT?
+3. Sự khác biệt giữa CoT "trong prompt" và CoT "nội bộ" của reasoning models là gì từ góc nhìn của developer?

@@ -1,0 +1,55 @@
+---
+id: concept-llmops
+title: "LLMOps"
+type: "concept"
+aliases: ["LLM operations", "LLM ops", "MLOps for LLM", "prompt versioning", "LLM production ops"]
+tags: [ai-engineering, llmops, observability, evals, cost-optimization, production-hardening, llm]
+prerequisites: [concept-llm, concept-llm-evals, concept-observability]
+related: [concept-prompt-caching, concept-latency-cost-optimization, concept-llm-observability, concept-fine-tuning, concept-guardrails]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Nếu bạn đã từng deploy một service REST, bạn biết drill: CI/CD, logs, alerts, rollback khi có bug. Giờ hãy tưởng tượng service đó trả lời đôi khi hay, đôi khi tệ — và bạn không có stack trace nào để nhìn vào. Đó là vấn đề bạn sẽ gặp khi đưa LLM ra production.
+
+**LLMOps** là bộ kỷ luật kỹ thuật giúp bạn vận hành một hệ thống dùng LLM một cách đáng tin cậy, đo lường được và tiết kiệm chi phí.
+
+## Là gì
+
+LLMOps = MLOps, nhưng thêm một tầng phức tạp: **model không tất định**. Cùng một prompt, chạy hai lần ra hai kết quả khác nhau. Lỗi không phải 500 — lỗi là câu trả lời sai về mặt ngữ nghĩa mà không có exception nào được throw.
+
+Bốn trụ cột cốt lõi:
+
+1. **Prompt versioning** — Prompt là code. Cần version control, review, rollback như code.
+2. **Eval pipeline** — CI offline (chạy test cases trước khi deploy) + monitoring online (theo dõi chất lượng trong prod).
+3. **Observability** — Trace mỗi request, gắn token usage + cost + latency vào từng span.
+4. **Cost & guardrails** — Circuit breaker cho chi phí, giới hạn token, phòng vệ trước prompt injection.
+
+## Ví dụ thật
+
+Team bạn deploy chatbot hỗ trợ khách hàng. Tuần đầu ổn. Tuần thứ ba, có người dùng phàn nàn bot trả lời sai chính sách hoàn tiền — nhưng không có log nào, không biết prompt nào gây ra, không biết xảy ra bao nhiêu lần.
+
+Nếu có LLMOps đúng cách:
+- **Langfuse** ghi trace toàn bộ request → bạn filter ngay những request có topic "hoàn tiền".
+- **Eval pipeline** đã chạy 50 test case về hoàn tiền trước khi deploy → bug này đã bị bắt trước khi lên prod.
+- **Prompt versioning** cho bạn biết chính xác prompt nào đang chạy và so sánh với version trước.
+
+<Callout title="Cẩn thận">
+LLMOps không phải "chọn model tốt hơn". Đổi từ GPT-4o sang Claude Sonnet không giải quyết được vấn đề nếu bạn không có eval để biết cái nào thực sự tốt hơn cho usecase của bạn. Kỷ luật kỹ thuật quan trọng hơn lựa chọn model.
+</Callout>
+
+<Callout title="Nhớ nhé">
+Coi LLM như một **thành phần không đáng tin** — rồi bọc kỷ luật (eval, trace, guardrail, version) xung quanh nó. Hệ thống đáng tin không đến từ model tốt, mà đến từ hạ tầng tốt.
+</Callout>
+
+## Đọc thêm
+
+- [What is LLMOps? — Google Cloud](https://cloud.google.com/discover/what-is-llmops) — Tổng quan LLMOps từ Google: định nghĩa, điểm khác biệt với MLOps truyền thống, và các thành phần cốt lõi trong vòng đời LLM production.
+- [Production Best Practices — OpenAI](https://developers.openai.com/api/docs/guides/production-best-practices) — Hướng dẫn chính thức của OpenAI: setup staging/prod environment, quản lý API key an toàn, billing controls, và scaling chiến lược.
+- [Langfuse Documentation](https://langfuse.com/docs) — Nền tảng observability mã nguồn mở cho LLM: tracing, prompt management, eval tích hợp, dashboard cost/latency.
+
+## Tự kiểm tra
+
+1. Tại sao "không có 500 error" không đồng nghĩa với "LLM đang hoạt động tốt"? Loại lỗi nào đặc trưng cho hệ thống LLM mà monitoring truyền thống không bắt được?
+2. Bạn đổi prompt của một feature từ v3 sang v4. Làm sao bạn biết v4 thực sự tốt hơn trước khi deploy cho 100% user?
+3. Liệt kê 3 điểm khác biệt quan trọng nhất giữa LLMOps và DevOps/MLOps truyền thống.

@@ -1,0 +1,55 @@
+---
+id: concept-latency-cost-optimization
+title: "Tối ưu Latency & Cost"
+type: "concept"
+aliases: ["latency optimization", "cost optimization", "LLM cost", "token cost", "streaming", "model routing", "batch API", "LLM latency"]
+tags: [ai-engineering, latency, cost-optimization, llmops, prompt-caching, llm, performance]
+prerequisites: [concept-latency-vs-throughput, concept-prompt-caching, concept-tokens-tokenization]
+related: [concept-llmops, concept-llm-observability, concept-prompt-caching]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Hóa đơn OpenAI cuối tháng cao hơn bạn nghĩ. Người dùng phàn nàn chờ lâu. Hai vấn đề này nghe có vẻ khác nhau — nhưng thường có cùng nguyên nhân gốc: **bạn đang làm nhiều hơn cần thiết**.
+
+## Là gì
+
+Tối ưu latency & cost cho LLM là tìm cách **làm ít hơn mà ra kết quả tương đương**: gọi model nhỏ hơn cho việc đơn giản, truyền kết quả sớm hơn, gộp request khi không cần real-time.
+
+Sáu đòn bẩy chính, theo mức ưu tiên thực tế:
+
+**1. Streaming** — Bắt đầu hiển thị token ngay khi model generate, thay vì đợi toàn bộ response. Đây là cải thiện *cảm nhận* lớn nhất: total latency không đổi, nhưng user thấy chữ xuất hiện sau 200ms thay vì chờ 5 giây rồi nhận cả đoạn. Implement một dòng code, tác động lớn nhất.
+
+**2. Model routing** — Không phải mọi task đều cần GPT-4o hay Claude Opus. Phân loại task: câu hỏi đơn giản/FAQ → model nhỏ (GPT-4o-mini, Claude Haiku) với cost thấp hơn 10–20x. Chỉ escalate lên model lớn khi cần reasoning phức tạp.
+
+**3. Giảm token** — Mỗi token = tiền. Với RAG: chỉ truyền những chunk thực sự relevant (top-3 thay vì top-10). Với system prompt: cắt phần thừa, dùng bullet thay vì prose dài. Với few-shot: fine-tune để loại bỏ examples dài (xem [concept-fine-tuning](/concepts/fine-tuning)).
+
+**4. Prompt caching** — Đối với context tĩnh (tài liệu, system prompt dài), cache prefix để tránh tính lại. Chi tiết ở [concept-prompt-caching](/concepts/prompt-caching).
+
+**5. Parallelization** — Nếu pipeline có nhiều bước độc lập (ví dụ: phân loại intent + extract entities + check guardrails), chạy song song thay vì tuần tự. Giảm wall-clock time đáng kể.
+
+**6. Batching (Batch API)** — Khi không cần real-time response (đánh giá offline, generate nội dung hàng loạt, pre-compute), dùng Batch API: Anthropic giảm ~50% cost, OpenAI tương tự. Trade-off: kết quả trả về trong vài giờ thay vì vài giây.
+
+## Ví dụ thật
+
+Chatbot tài liệu nội bộ đang gửi 15 chunk × 500 token/chunk vào mỗi request = 7.500 token context. Sau khi thêm reranker và chỉ giữ top-3 chunk: còn 1.500 token — giảm 80% cost và giảm latency tương ứng, chất lượng không đổi vì chunk thừa thường là noise.
+
+<Callout title="Cẩn thận">
+Đừng tối ưu latency bằng cách giảm max_tokens quá thấp. Nếu model bị cắt giữa chừng, response không hoàn chỉnh còn tệ hơn response chậm. Tối ưu đúng chỗ: giảm *input*, không phải cắt *output*.
+</Callout>
+
+<Callout title="Nhớ nhé">
+Thứ tự ưu tiên: **Streaming trước** (free win về UX) → **Model routing** (free win về cost) → **Giảm token input** → **Caching** → **Parallelization** → **Batching** (khi không cần real-time).
+</Callout>
+
+## Đọc thêm
+
+- [Latency Optimization — OpenAI](https://developers.openai.com/api/docs/guides/latency-optimization) — 7 nguyên tắc tối ưu latency từ OpenAI: process ít token hơn, generate ít hơn, parallelization, và khi nào không nên dùng LLM.
+- [Message Batches API — Anthropic](https://platform.claude.com/docs/en/docs/build-with-claude/batch-processing) — Hướng dẫn Batch API của Anthropic: giảm 50% cost, xử lý không đồng bộ, phù hợp cho eval và generate hàng loạt.
+- [Latency vs Throughput — Learning Lab](/concepts/latency-vs-throughput) — Nền tảng về trade-off giữa tốc độ một request và tổng lượng request xử lý được — áp dụng trực tiếp khi chọn streaming vs batching.
+
+## Tự kiểm tra
+
+1. App của bạn gọi LLM để: (a) trả lời FAQ ngắn, (b) phân tích hợp đồng 50 trang, (c) generate email marketing hàng loạt 10.000 email/ngày. Với mỗi case, bạn chọn chiến lược tối ưu nào và tại sao?
+2. Streaming không giảm total latency — vậy tại sao nó vẫn là cải thiện UX quan trọng nhất? Khi nào streaming *không* phù hợp?
+3. RAG pipeline của bạn đang retrieve top-10 chunks và nhồi hết vào prompt. Chi phí/chunk cao. Bạn có 3 cách giảm token input mà không ảnh hưởng chất lượng — liệt kê và giải thích.

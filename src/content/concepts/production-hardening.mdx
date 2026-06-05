@@ -1,0 +1,58 @@
+---
+id: concept-production-hardening
+title: "Production Hardening"
+type: "concept"
+aliases: ["hardening", "LLM hardening", "production safety", "defensive infrastructure"]
+tags: [ai-engineering, safety, production-hardening, llmops, reliability, guardrails]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Năm 2024, một agent AI được giao task viết code và tự sửa lỗi. Không ai đặt giới hạn số lần retry. Agent chạy vòng lặp liên tục trong **11 ngày** — tốn **$47.000** tiền API trước khi ai đó nhận ra. Không phải model hỏng. Không phải prompt sai. Chỉ đơn giản là thiếu hạ tầng phòng thủ.
+
+## Là gì
+
+**Production hardening** là tập hợp các lớp bảo vệ ở tầng hạ tầng/code bao quanh LLM app: circuit breaker, session isolation, graceful degradation, least-privilege cho tool, và pipeline nhiều tầng tách trách nhiệm.
+
+Khác với guardrails (lọc nội dung), production hardening xử lý **rủi ro vận hành**: cost không kiểm soát, crash lan rộng, tool dùng nhiều quyền hơn cần thiết.
+
+## Bốn lớp quan trọng nhất
+
+**Circuit breaker** — Dừng hệ thống khi phát hiện bất thường trước khi thiệt hại leo thang. Ví dụ: giới hạn số lượt gọi LLM mỗi session (max 20 bước), giới hạn chi phí tích lũy (max $5/session), cắt sau N lần lỗi liên tiếp. Đây là bài học đắt giá nhất từ case $47k.
+
+**Session isolation** — Mỗi session của mỗi user chạy trong context riêng biệt. Lỗi của user A không kéo chết user B. Agent trong một conversation không đọc được state của conversation khác.
+
+**Least-privilege cho tool** — Agent chỉ được cấp quyền tối thiểu đủ để làm task. Agent trả lời câu hỏi FAQ không cần quyền xóa record. Agent tra cứu đơn hàng không cần quyền hoàn tiền. Nguyên tắc: nếu không cần tool đó cho task hiện tại, đừng mount nó vào agent.
+
+**Graceful degradation** — Khi model gặp sự cố hoặc trả lời không hợp lệ, hệ thống phải có fallback rõ ràng thay vì crash im lặng. Ví dụ: nếu parse JSON từ LLM thất bại, trả về thông báo lỗi thân thiện và log chi tiết — không để exception lan ra toàn bộ pipeline.
+
+## Ví dụ thật
+
+Một agent hỗ trợ khách hàng có quyền: đọc web, tra đơn hàng, gửi email, hoàn tiền.
+
+Không hardening: agent nhận prompt mơ hồ, gọi tool hoàn tiền nhầm, gửi email thông báo sai cho 500 khách hàng, không ai biết cho đến sáng hôm sau.
+
+Có hardening: hoàn tiền > $100 cần human-in-the-loop, email chỉ gửi được ≤10 cái mỗi session, toàn bộ tool call được log với trace ID, circuit breaker dừng nếu session vượt 30 bước.
+
+Xem thêm: [concept-rate-limiting](/concepts/rate-limiting) và [concept-single-point-of-failure](/concepts/single-point-of-failure) — hai khái niệm cơ sở mà production hardening xây trên đó.
+
+<Callout title="Cẩn thận">
+Hardening dễ bị bỏ qua khi prototype "đang chạy tốt". Nhưng LLM app lên production khác hoàn toàn: user thật tìm cách phá, load thật gây race condition, và một vòng lặp không giới hạn có thể tốn tiền của bạn trong khi bạn ngủ.
+</Callout>
+
+<Callout title="Nhớ nhé">
+Production hardening = bao quanh LLM bằng circuit breaker + session isolation + least-privilege + graceful degradation. Model tốt chưa đủ — hạ tầng xung quanh mới quyết định app có sống được không.
+</Callout>
+
+## Đọc thêm
+
+- [Production Best Practices — OpenAI Developers](https://developers.openai.com/api/docs/guides/production-best-practices) — Hướng dẫn chuyển từ prototype sang production: scaling, latency, cost management, security — góc nhìn thực tế từ đội OpenAI.
+- [Safety Best Practices — OpenAI Developers](https://developers.openai.com/api/docs/guides/safety-best-practices) — Checklist an toàn production: least-privilege, input/output constraints, human review, abuse reporting.
+- [What 1,200 Production Deployments Reveal — ZenML](https://www.zenml.io/blog/what-1200-production-deployments-reveal-about-llmops-in-2025) — 1.200 LLM deployment thực tế: infra-based guardrails và circuit breaker là điểm phân biệt production thật sự vs prototype.
+- [Building Effective Agents — Anthropic Research](https://www.anthropic.com/research/building-effective-agents) — Anthropic khuyến cáo minimal footprint, ưu tiên hành động đảo ngược được, và dừng sớm khi không chắc — nguyên tắc cốt lõi của hardening agent.
+
+## Tự kiểm tra
+
+1. Case agent chạy 11 ngày tốn $47k có thể phòng tránh bằng cơ chế nào? Liệt kê ít nhất hai circuit breaker bạn sẽ đặt ngay từ đầu.
+2. Tại sao "least-privilege cho tool" lại quan trọng đặc biệt với agent — khác với REST API thông thường?
+3. Graceful degradation và circuit breaker khác nhau thế nào? Đưa ra ví dụ mỗi loại trong một LLM app cụ thể.
