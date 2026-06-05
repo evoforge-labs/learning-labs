@@ -21,52 +21,69 @@ const legend = typeOrder.filter((t) => counts[t]).map((t) => ({ type: t, label: 
 
 const payload = JSON.stringify({ nodes, edges, typeColors: TYPE_HEX, trackColors: TRACK_HEX });
 ---
-<div class="km-root flex flex-col gap-3">
-  <!-- top controls -->
-  <div class="flex flex-wrap items-center gap-2">
-    <div class="relative flex-1 min-w-[180px] max-w-xs">
+<!-- Graph fills the full width; all controls float on top of it. -->
+<div class="km-graph relative w-full h-[78vh] rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 overflow-hidden">
+  <div id="cy" class="w-full h-full"></div>
+
+  <!-- floating control panel (top-left) -->
+  <div id="km-panel" class="absolute z-10 top-3 left-3 w-52 max-w-[70%] rounded-xl border border-zinc-200/80 dark:border-zinc-700/80 bg-white/85 dark:bg-zinc-900/85 backdrop-blur-md shadow-lg">
+    <button id="km-panel-toggle" class="flex w-full items-center justify-between px-3 py-2 text-sm font-medium text-zinc-700 dark:text-zinc-200">
+      <span class="flex items-center gap-1.5">
+        <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+        Bộ lọc
+      </span>
+      <svg class="km-chevron w-4 h-4 transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+    </button>
+
+    <div class="km-panel-body px-2.5 pb-2.5 space-y-2.5">
       <input id="km-search" type="search" placeholder="Tìm node…" autocomplete="off"
-        class="w-full rounded-lg border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 px-3 py-1.5 text-sm focus:outline-none focus:border-brand/60" />
-    </div>
-    <label class="flex items-center gap-1.5 text-xs text-zinc-500">
-      Tô màu:
-      <select id="km-colorby" class="rounded-lg border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 px-2 py-1.5 text-sm">
-        <option value="type">Type</option>
-        <option value="track">Track</option>
-      </select>
-    </label>
-    <button id="km-reset" class="rounded-lg border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 px-3 py-1.5 text-sm hover:border-brand/60">⟳ Reset view</button>
-  </div>
+        class="w-full rounded-lg border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 px-2.5 py-1.5 text-sm focus:outline-none focus:border-brand/60" />
 
-  <!-- legend (left) + graph -->
-  <div class="flex flex-col md:flex-row gap-3">
-    <div id="km-legend" class="flex md:flex-col gap-1.5 overflow-x-auto md:overflow-visible md:w-44 shrink-0 pb-1 md:pb-0">
-      <div class="hidden md:block text-[11px] uppercase tracking-wider text-zinc-400 mb-1">Legend · click để lọc</div>
-      {legend.map((l) => (
-        <button class="km-legend-item flex items-center gap-2 rounded-lg border border-zinc-200 dark:border-zinc-800 px-2.5 py-1.5 text-sm whitespace-nowrap transition" data-type={l.type}>
-          <span class="km-swatch w-2.5 h-2.5 rounded-full shrink-0" style={`background:${l.hex}`}></span>
-          <span class="flex-1 text-left">{l.label}</span>
-          <span class="text-xs text-zinc-400 tabular-nums">{l.count}</span>
-        </button>
-      ))}
-    </div>
+      <div class="flex items-center gap-1.5">
+        <label class="flex flex-1 items-center gap-1.5 text-xs text-zinc-500">
+          Màu:
+          <select id="km-colorby" class="flex-1 rounded-lg border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 px-1.5 py-1 text-sm">
+            <option value="type">Type</option>
+            <option value="track">Track</option>
+          </select>
+        </label>
+        <button id="km-reset" title="Reset view" class="rounded-lg border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 px-2 py-1 text-sm hover:border-brand/60">⟳</button>
+      </div>
 
-    <div class="relative flex-1">
-      <div id="cy" class="w-full h-[70vh] rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900"></div>
-      <!-- peek panel -->
-      <div id="km-peek" class="hidden absolute right-3 top-3 w-64 max-w-[80%] rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 shadow-lg p-4">
-        <button id="km-peek-close" class="absolute right-2 top-2 text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200 text-sm leading-none">✕</button>
-        <div class="flex items-center gap-2 mb-1.5">
-          <span id="km-peek-dot" class="w-2 h-2 rounded-full shrink-0"></span>
-          <span id="km-peek-type" class="text-[11px] uppercase tracking-wider text-zinc-400"></span>
+      <div class="border-t border-zinc-200/70 dark:border-zinc-700/70 pt-2">
+        <div class="text-[10px] uppercase tracking-wider text-zinc-400 mb-1.5">Legend · click để lọc</div>
+        <div id="km-legend" class="space-y-1 max-h-56 overflow-y-auto">
+          {legend.map((l) => (
+            <button class="km-legend-item flex w-full items-center gap-2 rounded-md px-1.5 py-1 text-sm transition hover:bg-zinc-100 dark:hover:bg-zinc-800" data-type={l.type}>
+              <span class="w-2.5 h-2.5 rounded-full shrink-0" style={`background:${l.hex}`}></span>
+              <span class="flex-1 text-left">{l.label}</span>
+              <span class="text-xs text-zinc-400 tabular-nums">{l.count}</span>
+            </button>
+          ))}
         </div>
-        <h3 id="km-peek-title" class="font-semibold text-sm text-zinc-900 dark:text-white"></h3>
-        <p id="km-peek-summary" class="mt-1.5 text-xs text-zinc-500 dark:text-zinc-400 line-clamp-4"></p>
-        <a id="km-peek-link" href="#" class="mt-3 inline-block rounded-lg bg-brand px-3 py-1.5 text-xs font-medium text-white hover:opacity-90">Mở trang →</a>
       </div>
     </div>
   </div>
+
+  <!-- peek panel (top-right) -->
+  <div id="km-peek" class="hidden absolute z-10 right-3 top-3 w-64 max-w-[70%] rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white/95 dark:bg-zinc-900/95 backdrop-blur-md shadow-lg p-4">
+    <button id="km-peek-close" class="absolute right-2 top-2 text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200 text-sm leading-none">✕</button>
+    <div class="flex items-center gap-2 mb-1.5">
+      <span id="km-peek-dot" class="w-2 h-2 rounded-full shrink-0"></span>
+      <span id="km-peek-type" class="text-[11px] uppercase tracking-wider text-zinc-400"></span>
+    </div>
+    <h3 id="km-peek-title" class="font-semibold text-sm text-zinc-900 dark:text-white"></h3>
+    <p id="km-peek-summary" class="mt-1.5 text-xs text-zinc-500 dark:text-zinc-400 line-clamp-4"></p>
+    <a id="km-peek-link" href="#" class="mt-3 inline-block rounded-lg bg-brand px-3 py-1.5 text-xs font-medium text-white hover:opacity-90">Mở trang →</a>
+  </div>
 </div>
+
+<style>
+  /* collapsed: hide everything but the toggle button; rotate the chevron. */
+  #km-panel.km-collapsed .km-panel-body { display: none; }
+  #km-panel.km-collapsed .km-chevron { transform: rotate(-90deg); }
+  #km-panel.km-collapsed { width: auto; }
+</style>
 
 <script type="application/json" id="cy-data" set:html={payload}></script>
 <script>
@@ -105,15 +122,17 @@ const payload = JSON.stringify({ nodes, edges, typeColors: TYPE_HEX, trackColors
       ],
     });
 
-    const layout = cy.layout({ name: 'cola', infinite: true, fit: false, avoidOverlap: true, handleDisconnected: true, nodeSpacing: 16, edgeLength: 130 } as any);
+    // Continuous physics: nodes keep gently settling and dragging one perturbs
+    // its neighbours live (the "bouncing" feel). Filtering hides nodes via
+    // display:none — they stay in the simulation, so the layout never jumps.
+    // Larger edgeLength + nodeSpacing spread the graph out so it reads clearly.
+    // The sim is stopped on page-leave (astro:before-swap) to free CPU.
+    const layout = cy.layout({ name: 'cola', infinite: true, fit: false, avoidOverlap: true, handleDisconnected: true, nodeSpacing: 28, edgeLength: 150 } as any);
     layout.run();
     running = layout;
-    // Settle the physics, fit once, then STOP so we don't burn CPU forever and
-    // so later show/hide of nodes doesn't make the graph jump around.
-    setTimeout(() => {
-      cy.animate({ fit: { eles: cy.elements(), padding: 40 }, duration: 400 });
-      setTimeout(() => running?.stop?.(), 500);
-    }, 1400);
+    // The container is absolutely positioned, so its height can resolve a frame
+    // after cytoscape inits — resize() before fitting so it doesn't lock to 0.
+    setTimeout(() => { cy.resize(); cy.animate({ fit: { eles: cy.elements(), padding: 50 }, duration: 400 }); }, 600);
 
     wireControls();
   }
@@ -167,10 +186,16 @@ const payload = JSON.stringify({ nodes, edges, typeColors: TYPE_HEX, trackColors
     });
 
     document.getElementById('km-reset')?.addEventListener('click', () => {
-      cy.animate({ fit: { eles: cy.elements(':visible'), padding: 40 }, duration: 350 });
+      cy.animate({ fit: { eles: cy.elements(':visible'), padding: 50 }, duration: 350 });
     });
 
     document.getElementById('km-peek-close')?.addEventListener('click', hidePeek);
+
+    // collapsible control panel — collapsed by default on small screens.
+    const panel = document.getElementById('km-panel');
+    const toggle = document.getElementById('km-panel-toggle');
+    if (panel && window.matchMedia('(max-width: 767px)').matches) panel.classList.add('km-collapsed');
+    toggle?.addEventListener('click', () => panel?.classList.toggle('km-collapsed'));
   }
 
   function applyFilter() {
