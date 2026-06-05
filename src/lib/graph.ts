@@ -1,7 +1,7 @@
 import type { GraphNode, GraphEdge } from './types';
 
 interface RawDoc { id: string; title: string; type: string; collection: string; slug: string;
-  track?: string; exercise?: string; rubric?: string; prerequisites?: string[]; related?: string[]; }
+  track?: string; summary?: string; exercise?: string; rubric?: string; prerequisites?: string[]; related?: string[]; }
 
 const REF_FIELDS: { field: keyof RawDoc; rel: string }[] = [
   { field: 'exercise', rel: 'exercise' }, { field: 'rubric', rel: 'rubric' },
@@ -10,7 +10,10 @@ const REF_FIELDS: { field: keyof RawDoc; rel: string }[] = [
 
 export function buildGraph(docs: RawDoc[], extraEdges: GraphEdge[]): { nodes: GraphNode[]; edges: GraphEdge[] } {
   const known = new Set(docs.map((d) => d.id));
-  const nodes: GraphNode[] = docs.map((d) => ({ id: d.id, label: d.title, type: d.type, url: `/${d.collection}/${d.slug}` }));
+  const nodes: GraphNode[] = docs.map((d) => ({
+    id: d.id, label: d.title, type: d.type, url: `/${d.collection}/${d.slug}`,
+    track: d.track, summary: d.summary,
+  }));
   const edges: GraphEdge[] = [];
   for (const d of docs) {
     for (const { field, rel } of REF_FIELDS) {

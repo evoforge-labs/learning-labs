@@ -23,5 +23,20 @@ export function typeColor(t: string): string {
   return TYPE_COLOR[t] ?? '#a1a1aa';
 }
 
-export interface GraphNode { id: string; label: string; type: string; url: string; }
+// Per-track accent colors, keyed by track slug (entry.id, e.g. 'ai-engineering').
+// Separate axis from TYPE_COLOR: "which curriculum" vs "what kind of thing".
+export const TRACK_COLOR: Record<string, string> = {
+  'ai-engineering': 'var(--track-ai-engineering)',
+  'building-with-ai-agents': 'var(--track-building-with-ai-agents)',
+  'product-minded-builder': 'var(--track-product-minded-builder)',
+  'solo-founder': 'var(--track-solo-founder)',
+  'system-design-for-builders': 'var(--track-system-design-for-builders)',
+};
+
+// Safe accessor: unknown track slugs get a neutral grey.
+export function trackColor(slug: string): string {
+  return TRACK_COLOR[slug] ?? '#a1a1aa';
+}
+
+export interface GraphNode { id: string; label: string; type: string; url: string; track?: string; summary?: string; }
 export interface GraphEdge { source: string; target: string; rel: string; }

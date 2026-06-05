@@ -6,17 +6,21 @@ import SectionHeader from '../components/ui/SectionHeader.astro';
 import Button from '../components/ui/Button.astro';
 import { Compass, GitFork } from '@lucide/astro';
 import { getAll } from '../lib/content';
+import { trackColor } from '../lib/types';
 
 const tracks = await getAll('tracks');
-const counts = async (track: string) => {
-  const [l, e, c] = await Promise.all([getAll('lessons'), getAll('exercises'), getAll('concepts')]);
-  return {
-    lessons: l.filter((x: any) => x.data.track === track).length,
-    exercises: e.filter((x: any) => x.data.track === track).length,
-    concepts: c.length,
-  };
+const [allLessons, allExercises] = await Promise.all([getAll('lessons'), getAll('exercises')]);
+// Concepts aren't tagged with a track directly — a track "covers" a concept when
+// one of its lessons/exercises references that concept id in prerequisites/related.
+const conceptRefs = (x: any): string[] =>
+  [...(x.data.prerequisites ?? []), ...(x.data.related ?? [])].filter((id: string) => id.startsWith('concept-'));
+const counts = (track: string) => {
+  const lessons = allLessons.filter((x: any) => x.data.track === track);
+  const exercises = allExercises.filter((x: any) => x.data.track === track);
+  const concepts = new Set([...lessons, ...exercises].flatMap(conceptRefs));
+  return { lessons: lessons.length, exercises: exercises.length, concepts: concepts.size };
 };
-const trackCards = await Promise.all(tracks.map(async (t: any) => ({ t, c: await counts(t.id) })));
+const trackCards = tracks.map((t: any) => ({ t, c: counts(t.id) }));
 
 const recent = (await Promise.all((['lessons', 'exercises', 'concepts', 'rubrics'] as const).map(getAll)))
   .flat().slice(0, 6);
@@ -35,8 +39,8 @@ const recent = (await Promise.all((['lessons', 'exercises', 'concepts', 'rubrics
     <SectionHeader title="Tracks" href="/tracks" />
     <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
       {trackCards.map(({ t, c }) => (
-        <Card href={`/tracks/${t.id}`} class="group">
-          <div class="flex items-center gap-2 mb-2"><span class="w-2 h-2 rounded-full" style="background:var(--type-track)"></span><span class="text-[11px] uppercase tracking-wide text-zinc-400">Track</span></div>
+        <Card href={`/tracks/${t.id}`} class="group border-l-4" style={`border-left-color:${trackColor(t.id)}`}>
+          <div class="flex items-center gap-2 mb-2"><span class="w-2 h-2 rounded-full" style={`background:${trackColor(t.id)}`}></span><span class="text-[11px] uppercase tracking-wide text-zinc-400">Track</span></div>
           <h3 class="font-semibold text-zinc-900 dark:text-white group-hover:text-brand">{t.data.title}</h3>
           <p class="mt-1 text-sm text-zinc-500 dark:text-zinc-400">{t.data.summary}</p>
           <div class="mt-4 flex gap-3 text-xs text-zinc-500"><span>{c.concepts} concepts</span><span>·</span><span>{c.lessons} lessons</span><span>·</span><span>{c.exercises} exercises</span></div>
