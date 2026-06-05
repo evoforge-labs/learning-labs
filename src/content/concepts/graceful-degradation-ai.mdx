@@ -1,0 +1,55 @@
+---
+id: concept-graceful-degradation-ai
+title: "Graceful Degradation for AI"
+type: "concept"
+aliases: ["graceful degradation AI", "AI fallback design", "AI xuống cấp an toàn", "fallback khi AI sai", "AI không chắc thì sao"]
+tags: [ai-product-management, fallback, reliability, ai-feature-design, uncertainty, graceful-degradation]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Máy bay có nhiều động cơ không phải vì các kỹ sư bi quan. Mà vì họ biết động cơ có thể hỏng — và thiết kế cho tình huống đó *từ đầu*, không phải *sau khi xảy ra*.
+
+Feature AI của bạn sẽ sai. Model sẽ không chắc. Câu hỏi không phải "có hỏng không" — mà là "khi hỏng, chuyện gì xảy ra với người dùng?"
+
+## Là gì
+
+**Graceful degradation cho AI** là khả năng một AI feature *giảm chức năng một cách an toàn* khi model không đủ tự tin, gặp input ngoài scope, hoặc trả về kết quả có thể sai — thay vì sập hoàn toàn hoặc tệ hơn, im lặng đưa ra kết quả sai.
+
+Có ba mức độ:
+1. **Nói thật khi không biết** — AI từ chối trả lời thay vì bịa: "Tôi không có đủ thông tin về vấn đề này."
+2. **Giảm phạm vi** — thay vì trả lời đầy đủ, AI trả lời phần nó chắc chắn và nói rõ phần còn lại cần xác nhận.
+3. **Chuyển về luồng không-AI** — khi model không đủ tự tin, hệ thống tự động chuyển về flow truyền thống (form, FAQ tĩnh, hoặc con người).
+
+## Ví dụ thật
+
+Chatbot hỗ trợ hợp đồng pháp lý. Người dùng hỏi: "Tôi có thể đơn phương hủy hợp đồng này không?"
+
+**Không có graceful degradation:** AI trả lời tự tin với một giải thích pháp lý nghe có vẻ đúng — nhưng thực ra không chính xác với luật địa phương. Người dùng tin, hành động, gặp rắc rối pháp lý.
+
+**Có graceful degradation:** AI nhận ra đây là câu hỏi pháp lý cụ thể vượt ngoài phạm vi an toàn của nó, trả lời: "Câu hỏi về quyền hủy hợp đồng phụ thuộc nhiều vào điều khoản cụ thể và luật địa phương — tôi không đủ tự tin để đưa ra câu trả lời chính xác cho trường hợp này. Bạn có muốn tôi tóm tắt những gì tôi tìm thấy trong hợp đồng để bạn tham khảo với luật sư không?"
+
+Người dùng nhận được ít hơn — nhưng không bị hại.
+
+<Callout title="Cẩn thận">
+Graceful degradation không phải là AI nói "Tôi không biết" với mọi thứ khó. Đó là thất bại theo hướng khác. Mục tiêu là calibration đúng: tự tin khi biết, từ chối hoặc giảm phạm vi khi không biết, không phải luôn luôn né tránh.
+</Callout>
+
+Khi thiết kế, hãy nghĩ đến **confidence threshold**: dưới ngưỡng nào thì AI chuyển sang fallback? Ngưỡng này cần được định nghĩa trong eval, không phải đoán mò lúc deploy.
+
+<Callout title="Nhớ nhé">
+Thiết kế cho failure từ đầu, không phải sau khi có incident. Ba câu hỏi cần trả lời trước khi ship AI feature: (1) Khi model không chắc, nó nói gì? (2) Khi câu hỏi ngoài scope, luồng nào được kích hoạt? (3) Người dùng có đường lui an toàn không?
+</Callout>
+
+## Đọc thêm
+
+- [When to Hand Off to a Human: How to Set Effective AI Escalation Rules — Replicant](https://www.replicant.com/blog/when-to-hand-off-to-a-human-how-to-set-effective-ai-escalation-rules/) — Hướng dẫn thực tế về cách xác định ngưỡng escalation; khi nào AI tự xử lý, khi nào chuyển fallback; dùng được cho cả PM lẫn kỹ sư.
+- [From Loops to Oops: Fallback Behaviors of Language Models Under Uncertainty — arXiv](https://arxiv.org/abs/2407.06071) — Nghiên cứu về cách LLM hành xử khi không chắc; hiểu rõ "fallback behaviors" tự nhiên của model để thiết kế sản phẩm tốt hơn.
+- [Chatbot Escalation Best Practices — Cobbai](https://cobbai.com/blog/chatbot-escalation-best-practices) — Tổng hợp best practices về escalation: các pattern kích hoạt fallback, cách viết thông báo khi AI từ chối, và đo lường chất lượng của fallback flow.
+- [Agent Handoff Patterns: AI to Human Escalation — BuildMVPFast](https://www.buildmvpfast.com/blog/agent-handoff-patterns-ai-human-escalation-confidence-threshold-2026) — Các pattern thiết kế cụ thể cho AI-to-human handoff, bao gồm confidence-based, permission-based, và capability-based escalation.
+
+## Tự kiểm tra
+
+1. Sự khác biệt giữa "AI sập" và "AI xuống cấp an toàn (graceful degradation)" là gì? Cho ví dụ cụ thể.
+2. Bạn đang thiết kế một AI feature để tóm tắt hợp đồng cho người dùng không rành pháp lý. Hãy mô tả 3 tình huống khi feature nên kích hoạt fallback thay vì cố gắng trả lời.
+3. Tại sao "confidence threshold" cần được định nghĩa trong eval trước khi deploy, thay vì điều chỉnh sau khi có user feedback?

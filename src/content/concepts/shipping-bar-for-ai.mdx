@@ -1,0 +1,62 @@
+---
+id: concept-shipping-bar-for-ai
+title: "The Shipping Bar for AI"
+type: "concept"
+aliases: ["shipping bar cho AI", "khi nào ship AI feature", "đủ tốt để ship AI", "AI readiness threshold", "ngưỡng chất lượng để ship", "ship rồi cải thiện vs chờ hoàn hảo AI"]
+tags: [ai-product-management, shipping, quality, decision-making, product, baseline, risk]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Cách đây vài năm, một PM nói: "Đợi AI đủ tốt rồi mới ship." Hai năm sau, tính năng vẫn chưa ra. Competitor ship phiên bản trung bình, học từ người dùng, và bây giờ tốt hơn nhiều.
+
+"Đủ tốt" không phải một điểm đến cố định — nó là một quyết định bạn phải đưa ra có lý do.
+
+## Là gì
+
+**Shipping bar cho AI** là ngưỡng chất lượng tối thiểu mà một AI feature cần đạt trước khi bạn có thể ship cho người dùng thật. Không phải "hoàn hảo" — mà là "đủ tốt để không gây hại, và đủ để học được gì đó".
+
+Ba thành phần để xác định ngưỡng này:
+
+**Baseline con người (human baseline)** — AI của bạn so với giải pháp hiện tại (thường là con người hoặc manual process) như thế nào? Nếu AI đúng 70% mà con người đúng 60%, bạn đang cải thiện. Nếu AI đúng 70% mà con người đúng 95%, bạn đang thụt lùi — dù 70% nghe "không tệ".
+
+**Chi phí của một lần sai** — mỗi domain có chi phí lỗi khác nhau. AI gợi ý nhạc sai: người dùng skip, không sao. AI gợi ý liều thuốc sai: nguy hiểm tính mạng. Shipping bar phải tỉ lệ thuận với chi phí lỗi — domain rủi ro cao cần bar cao hơn nhiều.
+
+**Ship rồi cải thiện vs chờ hoàn hảo** — với AI, dữ liệu thật từ người dùng thật là thứ cải thiện model nhanh nhất. Chờ hoàn hảo trong lab nghĩa là bỏ lỡ feedback loop quan trọng nhất. Nhưng ship quá sớm có thể đốt niềm tin không lấy lại được.
+
+## Ví dụ thật
+
+Tính năng AI viết mô tả sản phẩm cho sàn thương mại điện tử. Benchmark nội bộ: 78% mô tả được PM đánh giá "đạt chất lượng". Có nên ship không?
+
+Hỏi thêm: copywriter hiện tại đạt bao nhiêu? 82%. Vậy AI đang kém con người 4 điểm phần trăm. Chi phí lỗi? Mô tả sản phẩm tệ làm giảm conversion — có thể đo được, nhưng không gây hại nghiêm trọng. Người dùng có thể edit?
+
+Kết luận: ship với edit mode bật — AI tạo draft, người dùng review và chỉnh. Thu thập edit data để cải thiện model. Trong 3 tháng, edit rate giảm từ 45% xuống 28%, AI vượt baseline con người.
+
+<Callout title="Cẩn thận">
+Đừng dùng chỉ một con số để quyết định ship. "Accuracy 85%" có thể đủ tốt với một use case và hoàn toàn không đủ với use case khác. Luôn hỏi: tốt hơn hay kém hơn gì? Và chi phí khi sai là bao nhiêu?
+</Callout>
+
+**Framework nhanh để đặt shipping bar:**
+
+1. Đo baseline con người (hoặc giải pháp hiện tại) trên cùng task.
+2. Xác định chi phí lỗi: thấp / trung bình / cao / không chấp nhận được.
+3. Nếu chi phí lỗi thấp-trung bình: ship khi AI đạt hoặc gần baseline con người, có cơ chế edit/feedback.
+4. Nếu chi phí lỗi cao: ship sau khi AI rõ ràng vượt baseline, kèm human review ở điểm rủi ro.
+5. Không bao giờ ship vào domain "không chấp nhận được lỗi" mà không có guardrail mạnh.
+
+<Callout title="Nhớ nhé">
+Shipping bar không phải con số tuyệt đối. Nó là: AI tốt hơn giải pháp hiện tại không? Chi phí lỗi là bao nhiêu? Nếu cả hai câu đó có câu trả lời rõ ràng, bạn có đủ cơ sở để quyết định.
+</Callout>
+
+## Đọc thêm
+
+- [The Human Baseline Problem in AI Risk Management — Medium](https://medium.com/@rotimi.fawumi/the-human-baseline-problem-in-ai-risk-management-8f6c49d4144a) — Framework tám bước để thiết lập human baseline phòng thủ được; giải thích tại sao "tốt hơn con người" phải là bằng chứng, không phải khẩu hiệu.
+- [Stop Shipping Features: Why AI Products Need an Experiment Mindset — Clint Johnson](https://www.clint-johnson.com/articles/experiment-velocity-beats-features) — Góc nhìn thực tế từ PM: ship hypothesis có measurable threshold, không phải feature; ví dụ thực tế 12 feature không dịch chuyển metric nào.
+- [Building Trust in AI: A Guide to LLM Evaluations — HealthEdge](https://healthedge.com/resources/blog/building-trust-in-ai-a-guide-to-llm-evaluations) — Cách thiết lập quality threshold và automated gate trước khi ship AI vào production; ví dụ từ domain y tế — bar rất cao.
+- [AI Eval Metrics: Beyond Accuracy — Statsig](https://www.statsig.com/perspectives/ai-eval-metrics-beyond-accuracy) — Thực tiễn từ Statsig về đo user-centric metrics thay vì chỉ accuracy khi quyết định ship AI feature.
+
+## Tự kiểm tra
+
+1. Tại sao "accuracy 90%" không đủ thông tin để quyết định có ship hay không? Bạn cần biết thêm gì?
+2. Giải thích "chi phí lỗi" bằng ví dụ hai domain khác nhau — một domain chi phí thấp, một domain chi phí cao.
+3. Bạn đang build AI feature gợi ý địa điểm ăn uống. Human baseline hiện tại (editor curate) đạt 4.2/5 sao. AI đang ở 3.8/5 sao. Bạn có ship không? Điều kiện kèm theo là gì?

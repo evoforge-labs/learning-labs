@@ -1,0 +1,52 @@
+---
+id: concept-feedback-collection
+title: "Feedback Collection (Thumbs & Implicit Signals)"
+type: "concept"
+aliases: ["feedback collection AI product", "thu phản hồi người dùng AI", "thumbs up down LLM", "tín hiệu ngầm hành vi người dùng", "explicit implicit feedback LLM"]
+tags: [ai-product-management, feedback, evaluation, data, llm, ux]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Bạn mở một bài nhạc, nghe 3 giây rồi tắt. Spotify không cần bạn bấm "không thích" — họ đã biết rồi.
+
+Đó là tín hiệu ngầm. Người dùng không nói gì, nhưng hành động của họ nói rất nhiều. Thu thập phản hồi trong sản phẩm AI cũng hoạt động theo nguyên tắc đó: bạn không chỉ nghe những gì user *nói* — bạn còn đọc những gì user *làm*.
+
+## Là gì
+
+**Feedback collection** là quá trình thu thập tín hiệu từ người dùng về chất lượng output của AI — để biến những tín hiệu đó thành dữ liệu eval và cải thiện model.
+
+Có hai loại:
+
+**Explicit (rõ ràng):** User chủ động đánh giá — bấm 👍 👎, chọn rating, gõ comment. Rõ nhưng hiếm — dưới 1% tương tác có explicit feedback.
+
+**Implicit (ngầm):** Bạn suy ra từ hành vi — user có copy output không, có sửa lại câu trả lời không, có đặt câu hỏi tiếp theo không, có rời trang ngay không? Nhiều hơn rất nhiều, nhưng cần diễn giải.
+
+## Ví dụ thật
+
+Bạn có một AI viết draft email. Bạn đặt nút 👍👎 bên dưới mỗi draft. Sau một tháng: 10.000 draft, 87 lượt đánh giá. Quá ít để học.
+
+Nhưng bạn cũng theo dõi: user có chỉnh sửa draft trước khi gửi không? Nếu họ xóa đi viết lại hoàn toàn — đó là 👎 ngầm. Nếu họ gửi ngay không sửa gì — đó là 👍 ngầm. Tỉ lệ "gửi không sửa" cho bạn tín hiệu chất lượng trên toàn bộ 10.000 draft.
+
+Kết hợp hai nguồn: 87 nhãn rõ ràng làm "vàng" để calibrate, còn hành vi của 10.000 draft làm tín hiệu quy mô lớn.
+
+<Callout title="Cẩn thận">
+Đừng thiết kế UI thu feedback như một checkbox hành chính. Nút 👍👎 đặt ở góc nhỏ màu xám sẽ bị bỏ qua. Đặt đúng lúc — ngay sau khi user nhận được giá trị, không phải sau khi họ đã bỏ trang. Và đừng yêu cầu giải thích ngay lập tức — giải thích thêm thì sau.
+</Callout>
+
+<Callout title="Nhớ nhé">
+Explicit feedback là vàng nhưng hiếm. Implicit feedback là bạc nhưng dồi dào. Bạn cần cả hai: dùng explicit để calibrate, dùng implicit để có đủ volume. Cả hai đều phải được gắn nhãn và lưu vào bộ eval — không phải chỉ dùng để hiển thị dashboard.
+</Callout>
+
+## Đọc thêm
+
+- [Explicit and Implicit LLM User Feedback: A Quick Guide — Nebuly](https://www.nebuly.com/blog/explicit-implicit-llm-user-feedback-quick-guide) — Hướng dẫn thực tế so sánh hai loại feedback, ưu nhược điểm và cách kết hợp; phù hợp cho PM bắt đầu thiết kế cơ chế thu thập.
+- [User Feedback in LLM-Powered Applications — Winder.ai](https://winder.ai/user-feedback-llm-powered-applications/) — Trình bày 5 phương pháp thu thập feedback (inline, freeform, implicit qua edit, retrospective, differential) với pipeline xử lý dữ liệu đầy đủ.
+- [User Feedback — Langfuse Docs](https://langfuse.com/docs/observability/features/user-feedback) — Tài liệu kỹ thuật về cách implement feedback collection trong ứng dụng LLM thực tế, kèm code example Next.js; hữu ích khi làm việc với team engineering.
+- [Beyond thumbs up and thumbs down — Microsoft Data Science](https://medium.com/data-science-at-microsoft/beyond-thumbs-up-and-thumbs-down-a-human-centered-approach-to-evaluation-design-for-llm-products-d2df5c821da5) — Góc nhìn human-centered về thiết kế eval cho LLM; lý giải tại sao thumbs up/down đơn thuần thường không đủ và cần bổ sung gì.
+
+## Tự kiểm tra
+
+1. Tại sao chỉ dựa vào explicit feedback (👍👎) lại không đủ để cải thiện model AI? Hãy nêu một ví dụ implicit signal cụ thể trong sản phẩm bạn đang build hoặc dự định build.
+2. Một user liên tục đặt câu hỏi tiếp theo sau mỗi câu trả lời của AI. Đó là tín hiệu tốt hay tín hiệu xấu? Tại sao câu trả lời phụ thuộc vào ngữ cảnh?
+3. Bạn sẽ ưu tiên loại implicit signal nào để đưa vào bộ eval dataset, và tại sao?

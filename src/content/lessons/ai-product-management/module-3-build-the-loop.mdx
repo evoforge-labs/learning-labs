@@ -1,0 +1,57 @@
+---
+id: lesson-aipm-003
+title: "Biến người dùng thành động cơ cải thiện model"
+type: "lesson"
+track: ai-product-management
+module: data-loop
+level: intermediate
+tags: [ai-product-management, data-flywheel, feedback-loop, cold-start, data-labeling, eval-dataset]
+prerequisites: [concept-data-flywheel, concept-feedback-collection, concept-cold-start-problem, concept-data-labeling-for-product, concept-eval-dataset, concept-rag]
+related: [exercise-aipm-003, rubric-ai-product-management]
+status: published
+---
+import Callout from '../../../components/content/Callout.astro';
+
+Hầu hết PM nghĩ nhiệm vụ của họ kết thúc khi feature AI được deploy. Thực ra đó là lúc nhiệm vụ thật sự bắt đầu.
+
+Lesson này xâu chuỗi bốn concept của Module 3 thành một vòng lặp duy nhất: biến mỗi tương tác của người dùng thành nhiên liệu để model ngày càng tốt hơn.
+
+## Vấn đề của ngày đầu
+
+Bạn ra mắt tính năng AI. Model chạy được — nhưng chưa tốt. Bạn chưa biết nó tệ ở đâu vì chưa có dữ liệu người dùng thật.
+
+Đây là [cold start problem](/concepts/cold-start-problem): sản phẩm cần dữ liệu để tốt, nhưng cần tốt để có người dùng tạo ra dữ liệu.
+
+Giải pháp không phải là chờ. Giải pháp là **khởi động bánh đà bằng tay**: mượn foundation model làm baseline, tạo synthetic data để warm up bộ eval, seed thủ công 50–100 ví dụ tốt để có [eval dataset](/concepts/eval-dataset) đầu tiên. Ra mắt sớm với kỳ vọng thấp hơn — rồi dùng dữ liệu thật cải thiện.
+
+## Thu phản hồi từ ngày đầu
+
+Ngay khi có người dùng đầu tiên, hệ thống thu thập phản hồi phải chạy song song.
+
+[Feedback collection](/concepts/feedback-collection) không chỉ là nút 👍👎. Đó là toàn bộ lớp dữ liệu bạn thu từ hành vi: user có chỉnh sửa output không, có dùng kết quả không, có hỏi tiếp không? Explicit feedback là vàng nhưng hiếm — implicit signal là thứ bạn có thể khai thác ở quy mô.
+
+Thiết kế feedback collection *trước khi* build feature. Nếu sau khi deploy mới nghĩ đến, bạn sẽ thiếu dữ liệu gốc không thể lấy lại được.
+
+<Callout title="Mẹo">
+Với hệ thống RAG (xem [concept-rag](/concepts/rag)), một tín hiệu implicit rất có giá trị là "user có đặt câu hỏi tiếp theo không?". Nếu câu trả lời đầu tiên đã đủ, user dừng lại. Nếu không đủ, họ sẽ hỏi thêm hoặc reformulate. Tín hiệu đó nói lên chất lượng retrieval + generation mà không cần user bấm gì cả.
+</Callout>
+
+## Từ phản hồi đến dữ liệu eval
+
+Thu được phản hồi rồi — bước tiếp theo là biến nó thành nhãn.
+
+Đây là chỗ [data labeling for product](/concepts/data-labeling-for-product) vào cuộc. PM không tự gán nhãn tất cả — nhưng PM định nghĩa tiêu chí: "output tốt là gì" theo nghĩa sản phẩm, không phải kỹ thuật. Không có tiêu chí rõ ràng, người gán nhãn sẽ mỗi người hiểu một kiểu — và golden set của bạn sẽ nhiễu ngay từ đầu.
+
+Mỗi ví dụ được gán nhãn tốt là một viên gạch cho [eval dataset](/concepts/eval-dataset). Bộ eval đó là thước đo duy nhất để biết model đang tốt lên hay chỉ là cảm giác.
+
+## Bánh đà bắt đầu quay
+
+Khi ba thứ kết nối với nhau — feedback collection có hệ thống, labeling có tiêu chí, eval dataset được cập nhật liên tục — [data flywheel](/concepts/data-flywheel) bắt đầu tự quay.
+
+Mỗi người dùng mới tạo ra tín hiệu mới. Tín hiệu được gán nhãn thành dữ liệu tốt. Dữ liệu tốt cải thiện model (qua fine-tune, prompt engineering, hoặc RAG tốt hơn). Model tốt hơn giữ chân user lâu hơn, kéo thêm user mới. Vòng lặp khép lại.
+
+<Callout title="Nhớ nhé">
+Ba bước không thể thiếu để vòng lặp chạy: (1) thu feedback từ ngày đầu — cả explicit lẫn implicit; (2) PM sở hữu tiêu chí gán nhãn; (3) eval dataset được cập nhật thường xuyên từ dữ liệu thật. Thiếu một bước, bánh đà không quay.
+</Callout>
+
+Thực hành thiết kế vòng lặp này với [bài tập m3-design-the-flywheel →](/exercises/ai-product-management/m3-design-the-flywheel)

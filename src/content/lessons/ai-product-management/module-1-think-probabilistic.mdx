@@ -1,0 +1,67 @@
+---
+id: lesson-aipm-001
+title: "Trước khi gắn AI, tư duy như một AI PM"
+type: "lesson"
+track: ai-product-management
+module: foundations
+level: beginner
+tags: [product-thinking, evals, decision-making, product, ai-engineering]
+prerequisites: [concept-ai-product-management, concept-probabilistic-product-thinking, concept-when-ai-adds-value, concept-ai-product-lifecycle, concept-jobs-to-be-done, concept-mvp]
+related: [exercise-aipm-001, rubric-ai-product-management]
+status: published
+---
+import Callout from '../../../components/content/Callout.astro';
+
+Bạn có ý tưởng feature mới. Ai đó nói "thêm AI vào đây đi, hay lắm". Bạn gật. Hai tuần sau, feature ra — AI chạy được nhưng user không dùng.
+
+Chuyện đó xảy ra khi bạn quyết định *trước khi suy nghĩ*. Lesson này là quy trình tư duy ngắn để bạn chạy *trước khi viết dòng code AI đầu tiên*.
+
+## Bắt đầu từ Job, không phải từ AI
+
+Bước đầu tiên không liên quan gì đến AI.
+
+Hỏi: *Người dùng đang cố hoàn thành việc gì?* Đây là trung tâm của [Jobs-to-be-Done](/concepts/jobs-to-be-done). Nếu bạn không trả lời được câu này, bạn chưa đủ điều kiện quyết định công nghệ nào sẽ dùng.
+
+Nhiều feature AI thất bại không phải vì AI dở — mà vì không có job thật để giải. AI rất giỏi giải bài toán phức tạp. Nhưng nó không tạo ra nhu cầu từ chỗ không có gì.
+
+## AI có thực sự thêm giá trị không?
+
+Sau khi có job rõ ràng, câu hỏi tiếp theo: [AI có phải cách tốt nhất để giải không?](/concepts/when-ai-adds-value)
+
+Tự hỏi: nếu viết rule thủ công cho bài toán này, mất bao nhiêu rule và chúng có ổn định không? Nếu câu trả lời là "ít rule, ổn định lâu" — rule-based có thể tốt hơn, rẻ hơn, và dễ debug hơn.
+
+AI thêm giá trị thật sự khi bài toán có biến thiên cao, không thể enumerate hết, và lợi ích đủ lớn để bù đắp chi phí — cả tiền lẫn độ phức tạp quản lý.
+
+<Callout title="Mẹo">
+Câu hỏi nhanh để tự kiểm tra: "Nếu AI model đột ngột bị tắt ngay bây giờ, tôi có thể dùng rule đơn giản để thay thế tạm không?" Nếu có — AI có thể là overkill. Nếu không — AI đang giải thứ gì đó thật sự phức tạp.
+</Callout>
+
+## Tư duy xác suất trước khi thiết kế
+
+Nếu quyết định dùng AI, hãy chuyển sang [tư duy xác suất](/concepts/probabilistic-product-thinking) *trước khi* thiết kế UX hay viết spec.
+
+Hỏi bản thân ba câu:
+- AI sai thì trải nghiệm người dùng là gì? Thiết kế cho tình huống đó chưa?
+- "Tốt" có nghĩa là gì với feature này? Bạn đo nó bằng số liệu nào?
+- Bao nhiêu % trường hợp quan trọng AI cần đúng để đáng ship?
+
+Nếu không trả lời được cả ba — bạn chưa sẵn sàng build. Bạn cần thêm thời gian để hiểu bài toán.
+
+## Vẽ vòng đời ngay từ đầu
+
+Trước khi viết dòng code đầu tiên, hãy phác thảo [vòng đời AI](/concepts/ai-product-lifecycle) cho feature của bạn:
+
+- **Prototype:** Mất bao lâu để có demo chạy được?
+- **Eval:** Tập test case nào sẽ dùng để đo "đủ tốt"? Tiêu chí rõ chưa?
+- **Ship:** Ra cho ai trước — beta users, 10% traffic, hay full launch?
+- **Monitor:** Tín hiệu nào cho biết feature đang hoạt động tốt trên thực tế? Tín hiệu nào báo hiệu suy giảm?
+
+Không cần chi tiết hoàn hảo. Chỉ cần *có kế hoạch cho tất cả bốn bước* — không bỏ Monitor và Eval về "làm sau".
+
+<Callout title="Nhớ nhé">
+Quy trình tư duy AI PM: (1) Job rõ chưa? → (2) AI có thực sự thêm giá trị không? → (3) Thiết kế cho xác suất, không phải cho chắc chắn → (4) Vẽ vòng đời trước khi code. Bốn câu hỏi này mất 30 phút trên giấy, tiết kiệm tuần làm lại.
+</Callout>
+
+Lý tưởng là bắt đầu với [MVP](/concepts/mvp) — phiên bản đơn giản nhất để kiểm tra giả thuyết AI trước khi đầu tư lớn. Trong AI, prototype nhỏ + eval sớm > build hoàn chỉnh mà không đo được.
+
+Sẵn sàng áp dụng chưa? Thử ngay với [bài tập thực tế →](/exercises/ai-product-management/m1-should-this-be-ai)

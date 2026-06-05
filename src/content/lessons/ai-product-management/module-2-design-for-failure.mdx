@@ -1,0 +1,85 @@
+---
+id: lesson-aipm-002
+title: "Thiết kế AI feature cho cả lúc nó sai"
+type: "lesson"
+track: ai-product-management
+module: design
+level: intermediate
+tags: [ai-product-management, ai-feature-design, eval-first, trust, fallback, human-handoff, graceful-degradation]
+prerequisites:
+  - concept-eval-first-product
+  - concept-ai-ux-trust
+  - concept-graceful-degradation-ai
+  - concept-human-ai-handoff
+  - concept-human-in-the-loop
+  - concept-guardrails
+related:
+  - exercise-aipm-002
+  - rubric-ai-product-management
+status: published
+---
+import Callout from '../../../components/content/Callout.astro';
+
+Hầu hết PM thiết kế AI feature cho lúc nó **đúng**. Họ demo tình huống đẹp nhất, viết user story cho happy path, và ship.
+
+Rồi model bịa. Người dùng tin. Hậu quả xảy ra.
+
+Module này dạy bạn thiết kế cho cả hai trường hợp — vì với AI, "lúc nó sai" không phải edge case, đó là điều kiện bình thường.
+
+## Bắt đầu từ định nghĩa "đủ tốt"
+
+Trước khi viết bất kỳ dòng prompt nào, câu hỏi đầu tiên không phải là "AI này làm được gì?" mà là: **"AI này sai thế nào thì không chấp nhận được?"**
+
+Đó là core của [eval-first product thinking](/concepts/eval-first-product). Eval không phải công việc của kỹ sư sau khi build — eval là **spec của bạn với tư cách PM**. Khi bạn viết "AI phải đạt 90% accuracy trên bộ test case này và từ chối trả lời khi không đủ thông tin", bạn vừa viết definition of done cho toàn bộ sprint.
+
+Không có eval → không có điểm dừng → không biết khi nào ship → không phát hiện regression khi thay model.
+
+## Xây trust từ giao diện
+
+Model đã tốt rồi — nhưng người dùng không biết điều đó. Hoặc tệ hơn: họ tin quá mức.
+
+[Designing AI UX for Trust](/concepts/ai-ux-trust) là tập hợp quyết định thiết kế để người dùng tin *đúng mức*: hiểu AI lấy thông tin từ đâu, biết khi nào nên kiểm tra lại, và luôn có thể override. Thiếu những thứ này, bạn đang tạo ra người dùng autopilot — và khi model sai, họ không phát hiện ra.
+
+Ba câu hỏi thiết kế cần trả lời cho mỗi AI feature:
+- Người dùng có thể thấy nguồn/lý do không?
+- AI có nói rõ khi nó không chắc không?
+- Người dùng có thể sửa hoặc bác bỏ không?
+
+## Thiết kế cho failure case
+
+Mọi AI feature cần ít nhất một fallback được thiết kế có chủ ý. Đó là [graceful degradation](/concepts/graceful-degradation-ai).
+
+Hỏi cho từng feature: khi model không đủ tự tin, chuyện gì xảy ra với người dùng? Ba cấp độ bạn có thể chọn:
+
+1. AI từ chối trả lời, giải thích tại sao
+2. AI trả lời phần nó chắc, nói rõ phần cần xác nhận
+3. Hệ thống chuyển về flow không-AI (form tĩnh, FAQ, hoặc con người)
+
+Confidence threshold — ngưỡng dưới đó AI kích hoạt fallback — cần được viết vào eval spec, không phải điều chỉnh bằng cảm tính sau khi deploy.
+
+<Callout title="Nhớ nhé">
+[Guardrails](/concepts/guardrails) là lớp bảo vệ kỹ thuật (input/output filter). Graceful degradation là lớp thiết kế sản phẩm — nó quyết định *trải nghiệm người dùng* khi model đạt giới hạn. Hai thứ bổ sung cho nhau, không thay thế nhau.
+</Callout>
+
+## Biết khi nào nhường lại
+
+Ngay cả khi graceful degradation hoạt động tốt, có những tình huống AI không nên cố xử lý tiếp: quyết định cần trách nhiệm pháp lý, cảm xúc leo thang, hoặc đơn giản là người dùng yêu cầu gặp người thật.
+
+Đó là [human-AI handoff](/concepts/human-ai-handoff) — và khác với [human-in-the-loop](/concepts/human-in-the-loop) (phê duyệt theo workflow định sẵn), handoff là phản ứng động dựa trên tình huống thực tế. Thiết kế tốt cần trigger rõ ràng, transition mượt mà, và đặc biệt: context đầy đủ được chuyển sang người tiếp nhận.
+
+Người dùng tha thứ cho AI không biết câu trả lời. Họ không tha thứ khi phải kể lại câu chuyện từ đầu vì handoff không có context.
+
+## Chuỗi thiết kế đầy đủ
+
+Khi bạn thiết kế một AI feature, bốn lớp này cần được quyết định cùng lúc — không phải sau:
+
+1. **Eval spec:** "đủ tốt" là gì, đo bằng gì
+2. **Trust signals:** người dùng thấy gì để tin đúng mức
+3. **Fallback flow:** khi model không chắc, chuyện gì xảy ra
+4. **Handoff trigger:** khi nào và làm thế nào chuyển sang con người
+
+<Callout title="Nhớ nhé">
+Feature AI "xong" không phải khi nó chạy được — mà khi bạn đã thiết kế cho cả lúc nó sai. Bốn lớp trên là checklist tối thiểu trước mỗi lần ship.
+</Callout>
+
+Luyện tập ngay với [bài tập thiết kế fallback →](/exercises/ai-product-management/m2-design-the-fallback)

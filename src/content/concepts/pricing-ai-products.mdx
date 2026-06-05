@@ -1,0 +1,49 @@
+---
+id: concept-pricing-ai-products
+title: "Pricing AI Products"
+type: "concept"
+aliases: ["định giá AI product", "pricing AI products", "AI usage-based pricing", "bẫy free unlimited AI", "định giá feature AI token"]
+tags: [ai-product-management, pricing, monetization, usage-based, token-cost, saas, launch]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Tưởng tượng bạn mở quán cà phê mà giá nguyên liệu mỗi ly thay đổi theo từng khách — khách nói nhiều thì tốn hạt cà phê nhiều hơn. Bán giá cố định $3/ly thì có ngày lời, có ngày lỗ. Đó chính xác là bài toán định giá sản phẩm AI.
+
+## Là gì
+
+**Pricing AI products** là cách xác định mô hình giá cho sản phẩm khi chi phí vận hành (token, compute) biến thiên theo từng lượt dùng — khác hoàn toàn với SaaS truyền thống vốn có chi phí biên gần bằng 0.
+
+Có ba mô hình chính:
+
+**Flat subscription (giá cố định):** Người dùng trả một mức giá cố định mỗi tháng, dùng bao nhiêu tùy thích. Dễ bán, dễ dự đoán doanh thu — nhưng nguy hiểm vì user "nặng" sẽ ăn hết lợi nhuận của bạn.
+
+**Usage-based (tính theo dùng):** Tính theo số lượt gọi, số token, số tài liệu xử lý. Bạn không bao giờ bán lỗ — nhưng user khó dự đoán hóa đơn, dẫn đến lo lắng và dùng ít hơn.
+
+**Hybrid (kết hợp):** Gói hàng tháng có bao gồm một lượng dùng nhất định; vượt ngưỡng thì tính thêm. Đây là mô hình phổ biến nhất hiện tại và cân bằng tốt nhất giữa hai cực trên.
+
+## Ví dụ thật
+
+Bạn làm app tóm tắt văn bản hợp đồng. Chi phí xử lý mỗi hợp đồng: ~$0.05 (token + overhead). Nếu bán $29/tháng flat và một luật sư upload 800 hợp đồng/tháng, bạn vừa lỗ $11 trên người đó. Nhân với 200 user hạng "nặng" = lỗ $2,200/tháng chỉ từ nhóm dùng nhiều nhất.
+
+Giải pháp hybrid: $29/tháng bao gồm 100 hợp đồng; vượt quá thì $0.10/hợp đồng. Luật sư dùng nhiều vẫn trả thêm; user nhẹ vẫn thấy giá hấp dẫn.
+
+<Callout title="Cẩn thận">
+"Free unlimited AI" là bẫy phổ biến nhất khi ra mắt. Bạn cho dùng miễn phí không giới hạn để thu user, nhưng mỗi lần dùng là một khoản chi thật. Một viral moment — vài nghìn user đổ vào cùng lúc — có thể thổi bay ngân sách trong vài giờ mà không tạo ra một đồng doanh thu. Nếu muốn có free tier, hãy giới hạn bằng credits, số lượt, hoặc độ phức tạp request.
+</Callout>
+
+<Callout title="Nhớ nhé">
+Tính chi phí trung bình mỗi lượt dùng trước khi đặt giá. Nếu không biết số đó, bạn chưa sẵn sàng để ra mắt. Hybrid model — gói bao gồm + tính thêm khi vượt — là điểm khởi đầu an toàn nhất cho hầu hết AI product.
+</Callout>
+
+## Đọc thêm
+
+- [The AI pricing and monetization playbook — Bessemer Venture Partners](https://www.bvp.com/atlas/the-ai-pricing-and-monetization-playbook) — Bessemer phân tích tại sao mô hình SaaS cổ điển không còn phù hợp khi mỗi query AI đều có chi phí thực, và đề xuất hướng định giá theo outcome.
+- [Usage-Based Pricing for SaaS and AI: Your Complete Guide — Revenera](https://www.revenera.com/blog/software-monetization/usage-based-pricing-saas-ai/) — Hướng dẫn thực tế về usage-based pricing, kèm số liệu ngành (59% công ty SaaS chuyển hướng sang usage-based) và ví dụ triển khai cụ thể.
+- [How to Price AI Services in 2025 — Monetizely](https://www.getmonetizely.com/articles/how-to-price-ai-services-in-2025-models-examples-and-strategy-for-saas-leaders) — Tổng hợp các mô hình định giá AI phổ biến nhất hiện tại, kèm ví dụ thực tế từ các sản phẩm đang trên thị trường.
+
+## Tự kiểm tra
+
+1. Tại sao mô hình "flat subscription" lại rủi ro với AI product trong khi hoạt động tốt với SaaS truyền thống?
+2. "Free unlimited AI" nghe hấp dẫn để tăng trưởng người dùng — vấn đề kinh doanh thực sự của chiến lược này là gì?
+3. Một AI feature xử lý ảnh tốn $0.02/lần. Bạn đang cân nhắc gói $9.99/tháng không giới hạn. Cần biết thêm thông tin gì trước khi quyết định mức giá này có bền vững không?

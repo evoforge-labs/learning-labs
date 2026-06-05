@@ -1,0 +1,109 @@
+---
+id: exercise-aipm-005
+title: "Định giá & lên kế hoạch ra mắt một AI feature"
+type: "exercise"
+track: ai-product-management
+tags: [ai-product-management, pricing, unit-economics, responsible-ai, staged-rollout, launch]
+estimatedMinutes: 30
+related: [lesson-aipm-005, concept-pricing-ai-products, concept-ai-cost-economics, concept-responsible-ai-product, concept-launching-ai-features, rubric-ai-product-management]
+status: published
+---
+import Callout from '../../../components/content/Callout.astro';
+
+## Tình huống
+
+Bạn là PM tại một startup HR-tech. Team vừa build xong tính năng **"AI Screening Assistant"**: khi nhà tuyển dụng upload CV, hệ thống tự động:
+1. Trích xuất kỹ năng và kinh nghiệm
+2. So sánh với job description
+3. Đưa ra điểm phù hợp (0–100) kèm tóm tắt lý do
+
+**Chi phí kỹ thuật đã biết:**
+- Xử lý một CV: ~2,000 token input + ~500 token output
+- Model đang dùng: $0.003/1K input token, $0.015/1K output token
+- Overhead (embedding, vector search, logging): cộng thêm 50% trên chi phí inference
+
+**Bối cảnh thị trường:**
+- Khách hàng mục tiêu: công ty từ 20–200 nhân viên
+- Họ thường nhận 50–300 CV mỗi đợt tuyển dụng
+- Tần suất tuyển dụng: trung bình 3–5 đợt/năm
+- Competitor gần nhất: $49/tháng, không giới hạn CV
+
+---
+
+## Nhiệm vụ 1 — Tính unit economics
+
+**Trước tiên, hãy tính:**
+
+1. Chi phí inference thuần để xử lý **một CV** là bao nhiêu? (Dùng mức giá token đã cho.)
+2. Sau khi cộng overhead 50%, chi phí thực tế mỗi CV là bao nhiêu?
+3. Với một khách hàng xử lý **200 CV/tháng**, tổng chi phí của bạn mỗi tháng cho khách đó là bao nhiêu?
+4. Với một khách hàng "nặng" xử lý **1,000 CV/tháng**, chi phí là bao nhiêu?
+
+<Callout title="Mẹo">
+Ghi rõ từng bước tính. Sai một con số nhỏ ở bước đầu sẽ kéo lệch toàn bộ kết luận ở các bước sau.
+</Callout>
+
+---
+
+## Nhiệm vụ 2 — Chọn mô hình giá và biện hộ
+
+Dựa vào unit economics bạn vừa tính, hãy **chọn một mô hình giá** và **giải thích lý do**:
+
+**Lựa chọn A — Flat subscription:** $49/tháng, không giới hạn CV (cùng competitor).
+
+**Lựa chọn B — Hybrid:** $29/tháng bao gồm 100 CV; thêm $0.20/CV khi vượt ngưỡng.
+
+**Lựa chọn C — Usage-based thuần:** $0.25/CV, không có gói cố định.
+
+**Lựa chọn D — Đề xuất mô hình khác** của bạn (cần nêu rõ con số).
+
+Để biện hộ cho lựa chọn của mình, hãy trả lời:
+1. Với mô hình này, gross margin của bạn là bao nhiêu % với khách hàng trung bình (200 CV/tháng)?
+2. Điều gì xảy ra với margin khi gặp khách hàng "nặng" (1,000 CV/tháng)?
+3. Mô hình này bảo vệ bạn khỏi "bẫy free unlimited" như thế nào?
+
+<Callout title="Mẹo">
+Không có đáp án duy nhất đúng. Điều quan trọng là lập luận của bạn xuất phát từ số liệu thực, không phải cảm tính.
+</Callout>
+
+---
+
+## Nhiệm vụ 3 — Responsible AI risk và kế hoạch rollout
+
+**Phần A — Một rủi ro responsible AI cần xử lý:**
+
+AI Screening Assistant chấm điểm CV. Hãy xác định **một rủi ro responsible AI cụ thể** cho feature này và đề xuất **cách xử lý thực tế** trong sản phẩm.
+
+Gợi ý khung suy nghĩ: Rủi ro về *công bằng*? *Minh bạch*? *An toàn*? *Lạm dụng*? Chọn một, phân tích kỹ hơn là liệt kê nhiều.
+
+**Phần B — Kế hoạch rollout 4 giai đoạn:**
+
+Thiết kế một kế hoạch staged rollout ngắn gọn cho AI Screening Assistant. Với mỗi giai đoạn, nêu rõ:
+- Ai được dùng?
+- Bạn đo gì để quyết định chuyển sang giai đoạn tiếp theo?
+- Điều gì khiến bạn dừng lại?
+
+| Giai đoạn | Ai được dùng | Metrics quyết định tiếp | Điều kiện dừng |
+|---|---|---|---|
+| Alpha | ... | ... | ... |
+| Closed beta | ... | ... | ... |
+| Staged rollout (10% → 50%) | ... | ... | ... |
+| GA (100%) | ... | ... | ... |
+
+<Callout title="Nhớ nhé">
+Với AI feature ảnh hưởng đến quyết định tuyển dụng, responsible AI không phải optional. Một kết quả sai có thể gây thiệt hại thực cho ứng viên thật — đó là lý do cần staged rollout kỹ và cơ chế báo cáo lỗi rõ ràng.
+</Callout>
+
+---
+
+## Tiêu chí đánh giá
+
+Tham khảo [AI Product Management Rubric](/rubrics/ai-product-management-rubric) để tự chấm.
+
+Với bài này, tập trung vào ba tiêu chí:
+
+| Tiêu chí | Câu hỏi tự kiểm tra |
+|---|---|
+| Unit economics đúng | Chi phí/CV có được tính từ số token thực không? Có cộng overhead không? |
+| Mô hình giá có lập luận | Gross margin có được tính ra con số cụ thể không? Lựa chọn có xuất phát từ dữ liệu không? |
+| Responsible AI + rollout thực tế | Rủi ro có cụ thể và có hành động xử lý không? Rollout plan có criteria rõ ràng không? |

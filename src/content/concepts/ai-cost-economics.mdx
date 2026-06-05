@@ -1,0 +1,56 @@
+---
+id: concept-ai-cost-economics
+title: "AI Cost Economics (COGS & Margins)"
+type: "concept"
+aliases: ["AI cost economics", "COGS AI feature", "gross margin AI", "chi phí vốn feature AI", "inference cost margin", "kinh tế chi phí AI"]
+tags: [ai-product-management, cost, gross-margin, cogs, inference, unit-economics, launch]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Mở nhà hàng mà mỗi món ăn tốn tiền nguyên liệu — bếp, gia vị, điện. Nếu bán $10 mà nguyên liệu hết $7, bạn chỉ còn $3 để trả lương, thuê mặt bằng, marketing. SaaS truyền thống không như vậy: copy một file phần mềm thêm không tốn gì. Nhưng AI thì giống nhà hàng hơn — mỗi request là một lần nấu ăn mới.
+
+## Là gì
+
+**AI Cost Economics** là cách tính và kiểm soát chi phí vốn (COGS — Cost of Goods Sold) của một feature AI, để biết gross margin thực sự là bao nhiêu và feature đó có đang ăn hết lợi nhuận không.
+
+Với SaaS truyền thống: COGS chiếm khoảng 10–25% doanh thu → gross margin 75–90%. Với AI product: inference thường chiếm 23% doanh thu ngay cả ở scale, cộng thêm overhead khác → gross margin chỉ còn 50–60%.
+
+Chi phí một AI feature gồm:
+- **Inference cost:** Token input + output, gọi API model
+- **Orchestration overhead:** Vector search, embedding, retry logic, pre/post-processing — thường thêm 30–60% trên chi phí inference thuần
+- **Monitoring & observability:** Log, trace, eval infrastructure
+
+## Ví dụ thật
+
+Bạn build tính năng "tóm tắt email" dùng LLM. Chi phí thô: $0.003/email. Nghe rẻ. Nhưng user trung bình xử lý 50 email/ngày × 30 ngày = 1,500 email/tháng. Chi phí inference: $4.50/user/tháng. Bạn bán $9/tháng → gross margin ~50% trước khi tính bất cứ chi phí nào khác.
+
+Nếu bạn bán $9 mà không biết con số $4.50 này, bạn đang vận hành mù. Tệ hơn: khi user base tăng gấp đôi, chi phí cũng tăng gấp đôi — khác hoàn toàn với SaaS.
+
+<Callout title="Cẩn thận">
+Đừng để bị lừa bởi giá token đang rẻ dần. Điều này đúng — nhưng khi token rẻ, bạn sẽ dùng nhiều hơn, feature phức tạp hơn, context dài hơn. Tổng chi phí AI của hầu hết công ty vẫn tăng dù giá/token giảm. Đây là "Jevons Paradox": tài nguyên rẻ hơn → dùng nhiều hơn → tổng chi tiêu vẫn tăng.
+</Callout>
+
+Để cải thiện margin, có ba đòn bẩy chính:
+
+**Prompt optimization:** Cắt ngắn context, dùng cache ([concept-prompt-caching](/concepts/prompt-caching)), tránh gọi model cho task không cần LLM.
+
+**Model routing:** Task đơn giản (phân loại, format) dùng model rẻ; task phức tạp mới dùng model mạnh. Chênh lệch giá có thể tới 10–20x.
+
+**Caching kết quả:** Nếu nhiều user hỏi giống nhau, cache output thay vì gọi model lại.
+
+<Callout title="Nhớ nhé">
+Trước khi ra mắt bất kỳ AI feature nào, tính đủ ba con số: (1) chi phí trung bình/user/tháng, (2) chi phí user "nặng" nhất, (3) gross margin tương ứng. Không có ba con số đó, bạn không biết mình có đang kinh doanh bền vững không.
+</Callout>
+
+## Đọc thêm
+
+- [Why AI Gross Margins Are So Much Lower Than SaaS — SoftwareSeni](https://www.softwareseni.com/why-ai-gross-margins-are-so-much-lower-than-saas-and-what-that-means-for-your-business/) — Phân tích cụ thể tại sao inference cost (23% doanh thu) kéo gross margin AI xuống còn 50–60%, so với 75–90% của SaaS; số liệu từ ICONIQ Capital 2026.
+- [The Gross Margin Debate in AI — Tanay Jaipuria](https://www.tanayj.com/p/the-gross-margin-debate-in-ai) — Tác giả phân tích gross margin theo từng lớp AI stack: chip (70%), cloud (50–55%), application (25–60%); hữu ích để biết mình đứng ở đâu trong chuỗi giá trị.
+- [How AI Changes SaaS Gross Margin: CFO Guide — The SaaS Academy](https://www.thesaasacademy.com/blog/how-ai-changes-saas-pnl-gross-margin) — Hướng dẫn thực hành cho founder/PM về cách tái cấu trúc P&L khi có AI feature; giải thích tại sao "mỗi API call có chi phí thực, không như SaaS cũ".
+
+## Tự kiểm tra
+
+1. Tại sao gross margin của AI product thường thấp hơn SaaS truyền thống? Kể tên ít nhất hai thành phần chi phí mà SaaS truyền thống không có.
+2. "Token ngày càng rẻ, nên chi phí AI sẽ giảm dần" — lập luận này thiếu gì?
+3. Bạn có một AI feature tốn $2/user/tháng. Để đạt gross margin 60%, bạn cần thu ít nhất bao nhiêu mỗi user mỗi tháng từ feature đó? (Chỉ tính inference cost, không tính chi phí khác.)

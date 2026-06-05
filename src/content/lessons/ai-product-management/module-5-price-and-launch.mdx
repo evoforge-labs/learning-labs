@@ -1,0 +1,77 @@
+---
+id: lesson-aipm-005
+title: "Pricing, rủi ro & ra mắt AI feature bền vững"
+type: "lesson"
+track: ai-product-management
+module: "launch"
+level: intermediate
+tags: [ai-product-management, pricing, launch, responsible-ai, unit-economics, staged-rollout]
+prerequisites: [concept-pricing-ai-products, concept-ai-cost-economics, concept-responsible-ai-product, concept-launching-ai-features, concept-pricing-strategy, concept-dev-cost-token-budget, concept-red-teaming]
+related: [exercise-aipm-005, rubric-ai-product-management]
+status: published
+---
+import Callout from '../../../components/content/Callout.astro';
+
+Bạn đã build xong AI feature. Nó chạy được. Eval tốt. Vậy là sẵn sàng ra mắt chưa?
+
+Chưa. Chạy được và có thể tồn tại bền vững là hai chuyện khác nhau.
+
+Module này kết nối bốn câu hỏi cuối cùng trước khi một AI feature ra thị trường: nó có lãi không, mô hình giá có đúng không, rủi ro có được kiểm soát chưa, và kế hoạch ra mắt có thực tế không.
+
+## Bước 1 — Tính xem có lãi không trước khi đặt giá
+
+Bất kỳ cuộc thảo luận về giá nào cũng bắt đầu từ [AI Cost Economics](/concepts/ai-cost-economics): chi phí trung bình mỗi user mỗi tháng là bao nhiêu?
+
+Không có con số đó, bạn không thể đặt giá hợp lý. Bạn chỉ đang đoán mò.
+
+Công thức nhanh:
+- **Chi phí inference:** số request trung bình/user/tháng × chi phí mỗi request
+- **Overhead:** cộng thêm 30–60% cho embedding, vector search, retry, logging
+- **Buffer an toàn:** nhân với 1.5 cho user "nặng" và burst traffic
+
+Đây là unit economics cơ bản — xem thêm ở [concept-dev-cost-token-budget](/concepts/dev-cost-token-budget) để hiểu rõ hơn tại sao input token tích lũy nhanh hơn bạn nghĩ.
+
+## Bước 2 — Chọn mô hình giá phù hợp
+
+Có ba lựa chọn. Mỗi cái phù hợp với hoàn cảnh khác nhau:
+
+Nếu chi phí/user nhỏ và khó đo lường từ phía user → **flat subscription** (nhưng phải có giới hạn ngầm hoặc fair use policy).
+
+Nếu chi phí biến động nhiều theo mức dùng → **hybrid**: gói bao gồm lượng dùng hợp lý, tính thêm khi vượt ngưỡng. Đây là điểm khởi đầu an toàn nhất.
+
+Nếu user trả tiền chỉ khi AI tạo ra kết quả cụ thể → **outcome-based**: rủi ro cao nhất nhưng alignment cao nhất với giá trị.
+
+Để hiểu tại sao "free unlimited" là bẫy, đọc [Pricing AI Products](/concepts/pricing-ai-products). Để hiểu chiến lược định giá rộng hơn, xem [concept-pricing-strategy](/concepts/pricing-strategy).
+
+<Callout title="Mẹo">
+Bắt đầu với hybrid model: $X/tháng bao gồm Y lần dùng, thêm $Z cho mỗi lần vượt ngưỡng. Đây không phải mô hình hoàn hảo — nhưng nó bảo vệ bạn khỏi bị lỗ trong khi vẫn đơn giản đủ để user hiểu.
+</Callout>
+
+## Bước 3 — Kiểm tra rủi ro responsible AI trước khi ship
+
+Trước khi ra mắt, có ít nhất ba câu hỏi cần trả lời rõ ràng (xem chi tiết tại [Responsible AI as a Product Duty](/concepts/responsible-ai-product)):
+
+1. **Minh bạch:** Người dùng có biết họ đang tương tác với AI không? UI có badge rõ ràng không?
+2. **Công bằng:** Có nhóm user nào nhận kết quả kém hơn không? Đã test trên nhiều phân khúc chưa?
+3. **An toàn:** Feature đã qua [red-teaming](/concepts/red-teaming) chưa? [Guardrails](/concepts/guardrails) đã được thiết lập chưa?
+
+Đây không phải checklist "làm cho xong". Đây là thứ quyết định feature của bạn có gây hại cho người dùng hay cho công ty bạn hay không.
+
+## Bước 4 — Staged rollout: đừng ship cho tất cả cùng lúc
+
+Ngay cả khi eval tốt, production luôn có bất ngờ. [Launching AI Features](/concepts/launching-ai-features) mô tả quy trình chuẩn:
+
+**Alpha → Closed beta → Staged rollout → GA**
+
+Ở mỗi giai đoạn, bạn cần xác định trước:
+- Ai được dùng?
+- Metrics nào sẽ quyết định chuyển sang giai đoạn tiếp theo?
+- Điều kiện nào khiến bạn dừng lại hoặc rollback?
+
+Truyền thông với user ở beta: nói rõ giới hạn, không hứa hẹn quá. AI sai không phải thảm họa — nhưng user bị bất ngờ vì kỳ vọng sai thì mới là thảm họa.
+
+<Callout title="Nhớ nhé">
+Ra mắt AI feature bền vững = unit economics dương + mô hình giá bảo vệ margin + responsible AI checklist xanh + staged rollout có kill switch. Bốn thứ đó không phải "best practice" — chúng là điều kiện cần thiết tối thiểu.
+</Callout>
+
+Thực hành ngay với [bài tập định giá và lên kế hoạch ra mắt →](/exercises/ai-product-management/m5-price-an-ai-feature)

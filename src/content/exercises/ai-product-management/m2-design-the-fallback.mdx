@@ -1,0 +1,112 @@
+---
+id: exercise-aipm-002
+title: "Thiết kế UX cho AI feature kể cả lúc nó sai"
+type: "exercise"
+track: ai-product-management
+tags: [ai-product-management, eval-first, trust, fallback, human-handoff, graceful-degradation, ai-feature-design]
+estimatedMinutes: 30
+related:
+  - lesson-aipm-002
+  - concept-eval-first-product
+  - concept-ai-ux-trust
+  - concept-graceful-degradation-ai
+  - concept-human-ai-handoff
+  - rubric-ai-product-management
+status: published
+---
+import Callout from '../../../components/content/Callout.astro';
+
+## Tình huống
+
+Bạn là PM tại một startup SaaS bán phần mềm quản lý khách sạn vừa và nhỏ. Team vừa quyết định thêm một **AI assistant** vào trang hỗ trợ khách hàng — thay thế một phần hệ thống ticket support hiện tại.
+
+AI assistant này sẽ:
+- Trả lời câu hỏi về cách dùng phần mềm (tính năng, thao tác, cài đặt)
+- Giải thích chính sách hoàn tiền và nâng cấp gói dịch vụ
+- Hỗ trợ troubleshoot lỗi phổ biến
+
+Người dùng chủ yếu là quản lý khách sạn — không rành công nghệ, thường bận rộn, cần câu trả lời nhanh và chính xác. Một câu trả lời sai về chính sách hoàn tiền có thể dẫn đến tranh chấp và mất khách hàng.
+
+Team kỹ thuật đã có một prototype hoạt động được. Nhưng chưa ai hỏi: *khi AI sai thì sao?*
+
+Bài tập này yêu cầu bạn thiết kế cho câu hỏi đó.
+
+---
+
+## Nhiệm vụ 1 — Định nghĩa "đủ tốt" bằng eval trước khi ship
+
+Viết **bộ eval spec** cho AI assistant này — tức là bạn định nghĩa "đủ tốt" trước khi bất kỳ dòng prompt nào được tinh chỉnh.
+
+Bộ eval spec cần bao gồm:
+
+**A. Ít nhất 3 tiêu chí thành công có số đo cụ thể.** Ví dụ về dạng đúng: "90% câu trả lời về tính năng phần mềm được người dùng đánh giá là đúng hoặc gần đúng trên bộ 40 test case." Không chấp nhận: "AI phải trả lời chính xác" — quá mơ hồ, không đo được.
+
+**B. Ít nhất 2 tiêu chí "đường đỏ" — điều kiện AI không được vượt qua.** Ví dụ: "AI không được đưa ra thông tin sai về chính sách hoàn tiền" hoặc "tỷ lệ bịa thông tin không có trong knowledge base dưới 3%."
+
+**C. Mô tả ngắn: ai kiểm tra, bằng cách nào?** Tự đánh giá thủ công? LLM judge? Feedback từ support agent?
+
+<Callout title="Mẹo">
+Bắt đầu bằng cách hỏi: "Nếu AI nói sai về chủ đề này, hậu quả với người dùng là gì?" Chủ đề nào có hậu quả lớn nhất → đó là nơi cần tiêu chí nghiêm ngặt nhất.
+</Callout>
+
+---
+
+## Nhiệm vụ 2 — Thiết kế trust signals cho giao diện
+
+Chọn **2 trong 4 tình huống** dưới đây. Với mỗi tình huống, mô tả cụ thể AI assistant sẽ hiển thị thông tin thế nào để người dùng tin đúng mức — không quá tin, không mất tin.
+
+**Tình huống A:** Người dùng hỏi về một tính năng mới nhất mà knowledge base chỉ có thông tin cũ (6 tháng trước).
+
+**Tình huống B:** AI trả lời về quy trình hoàn tiền — nhưng quy trình này có 2 trường hợp ngoại lệ mà AI không chắc áp dụng cho trường hợp của khách hàng này hay không.
+
+**Tình huống C:** Người dùng hỏi về giá gói enterprise — thông tin chính xác nhưng cần được xác nhận bởi sales team trước khi cam kết.
+
+**Tình huống D:** AI trả lời câu hỏi troubleshoot lỗi phần mềm với độ tự tin cao — nhưng đây là lần đầu tiên câu hỏi kiểu này xuất hiện, không có user feedback trước đó để xác nhận.
+
+Với mỗi tình huống bạn chọn, mô tả: (1) AI nói gì, (2) UI hiển thị thêm thông tin gì (nguồn, mức độ chắc chắn, lưu ý), (3) người dùng có thể làm gì tiếp theo.
+
+<Callout title="Mẹo">
+Đừng thiết kế cho "AI luôn đúng". Thiết kế cho "người dùng biết AI đúng đến đâu". Hai điều đó khác nhau hoàn toàn.
+</Callout>
+
+---
+
+## Nhiệm vụ 3 — Thiết kế fallback và handoff
+
+Thiết kế **fallback flow và handoff trigger** cho AI assistant này.
+
+**Phần A — Fallback flow (graceful degradation):**
+
+Xác định ít nhất 3 tình huống cụ thể khi AI nên kích hoạt fallback thay vì cố trả lời. Với mỗi tình huống:
+- Mô tả tình huống (ví dụ: "khách hàng hỏi về điều khoản hợp đồng tùy chỉnh ngoài gói chuẩn")
+- AI sẽ nói gì? (viết ra đúng lời AI sẽ phản hồi)
+- Bước tiếp theo trong flow là gì?
+
+**Phần B — Human handoff trigger:**
+
+Viết ra **3 trigger cụ thể** sẽ kích hoạt chuyển từ AI sang con người. Với mỗi trigger:
+- Điều kiện kỹ thuật (ví dụ: "AI không giải quyết được sau 2 lần thử")
+- Thông báo với người dùng trông như thế nào?
+- Thông tin gì được chuyển sang nhân viên hỗ trợ?
+
+**Phần C — Trade-off:**
+
+Đội ngũ hỗ trợ của bạn chỉ có 2 người, làm việc từ 8h-17h. Ngoài giờ đó, không có ai nhận handoff. Bạn xử lý tình huống này thế nào trong thiết kế? Mô tả giải pháp và trade-off bạn chấp nhận.
+
+<Callout title="Nhớ nhé">
+Không có đáp án duy nhất đúng. Điều quan trọng là bạn đã nghĩ đến failure case *trước khi ship*, không phải sau khi người dùng gặp vấn đề.
+</Callout>
+
+---
+
+## Tiêu chí đánh giá
+
+Tham khảo [AI Product Management Rubric](/rubrics/ai-product-management-rubric) để tự chấm.
+
+Với bài này, tập trung vào ba tiêu chí:
+
+| Tiêu chí | Câu hỏi tự kiểm tra |
+|---|---|
+| Eval spec có số đo rõ ràng | Tiêu chí của bạn có thể kiểm tra được không, hay chỉ là "cảm giác đúng"? |
+| Trust signal phù hợp với rủi ro | Bạn có đang hiển thị quá nhiều (gây overwhelm) hay quá ít (gây over-trust) không? |
+| Fallback và handoff được thiết kế từ đầu | Người dùng có "đường lui an toàn" trong mọi tình huống không? |

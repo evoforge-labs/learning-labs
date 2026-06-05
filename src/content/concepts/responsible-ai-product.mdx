@@ -1,0 +1,53 @@
+---
+id: concept-responsible-ai-product
+title: "Responsible AI as a Product Duty"
+type: "concept"
+aliases: ["responsible AI product", "AI có trách nhiệm", "công bằng AI", "minh bạch AI", "AI product duty", "trách nhiệm AI sản phẩm"]
+tags: [ai-product-management, responsible-ai, fairness, transparency, safety, ethics, launch]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Bạn build một tính năng AI chấm điểm CV để tuyển dụng. Sau một tháng, team nhận ra model đang từ chối CV của phụ nữ nhiều hơn nam — không phải vì bạn cố ý, mà vì data huấn luyện phản ánh lịch sử tuyển dụng thiên vị trước đây. Bạn không lập trình điều đó. Nhưng bạn đã ship nó.
+
+Đó là lý do responsible AI không phải việc của "đội ethics" — mà là trách nhiệm của người làm sản phẩm.
+
+## Là gì
+
+**Responsible AI** là tập hợp nghĩa vụ của PM/builder khi đưa AI vào sản phẩm: đảm bảo hệ thống công bằng, an toàn, minh bạch với người dùng, và có cơ chế xử lý khi bị lạm dụng.
+
+Bốn trụ cột thực hành:
+
+**Công bằng (Fairness):** Hệ thống có đưa ra kết quả tệ hơn cho một nhóm người dùng cụ thể không? Điều này không tự nhiên hiện rõ — phải đo, phải kiểm tra theo phân khúc (giới tính, địa lý, ngôn ngữ).
+
+**Minh bạch (Transparency):** Người dùng có biết họ đang tương tác với AI không? Không nên để AI giả vờ là người thật. Khi AI đưa ra quyết định ảnh hưởng người dùng (từ chối khoản vay, đề xuất giá khác nhau), họ có quyền biết cơ sở là gì.
+
+**An toàn (Safety):** Hệ thống có thể bị dùng để gây hại không? Dù không cố ý, feature AI có thể bị khai thác — cần [guardrails](/concepts/guardrails), cần [red-teaming](/concepts/red-teaming) trước khi ra mắt.
+
+**Xử lý lạm dụng (Abuse handling):** Có kênh để user báo cáo kết quả sai không? Có quy trình review và can thiệp khi phát hiện pattern bất thường không?
+
+## Ví dụ thật
+
+Một chatbot hỗ trợ khách hàng dùng LLM. PM không ghi rõ trong UI rằng đây là AI. Khi user hỏi "Tôi đang nói chuyện với người hay máy?", chatbot trả lời mơ hồ. Một tuần sau, báo chí đưa tin. Công ty mất uy tín không phải vì chatbot hoạt động kém — mà vì thiếu minh bạch.
+
+Fix đơn giản: badge "AI Assistant" rõ ràng, câu trả lời thẳng thắn khi user hỏi về bản chất AI, và nút "Nói chuyện với người thật" luôn hiện hữu.
+
+<Callout title="Cẩn thận">
+Responsible AI không phải thứ bạn thêm vào sau khi build xong. Nếu để đến cuối mới nghĩ, bạn sẽ phải refactor data pipeline, thay đổi UX, viết lại system prompt. Chi phí sửa sau gấp 5–10 lần chi phí thiết kế đúng ngay từ đầu. Đưa checklist responsible AI vào định nghĩa "done" của mọi AI feature.
+</Callout>
+
+<Callout title="Nhớ nhé">
+Ba câu hỏi cần trả lời trước khi ship bất kỳ AI feature nào: (1) Người dùng có biết đây là AI không? (2) Có nhóm người dùng nào bị thiệt thòi bởi hệ thống này không? (3) Nếu feature bị dùng sai mục đích, hậu quả tệ nhất là gì và bạn có cơ chế gì để ngăn chặn?
+</Callout>
+
+## Đọc thêm
+
+- [Microsoft Responsible AI: Principles and Approach](https://www.microsoft.com/en-us/ai/principles-and-approach) — Microsoft trình bày sáu nguyên tắc AI có trách nhiệm (công bằng, độ tin cậy, bảo mật, toàn diện, minh bạch, trách nhiệm giải trình) kèm hướng dẫn triển khai thực tế; tài liệu tham chiếu phổ biến nhất trong ngành.
+- [Building a Responsible AI Framework: 5 Key Principles — Harvard DCE](https://professional.dce.harvard.edu/blog/building-a-responsible-ai-framework-5-key-principles-for-organizations/) — Năm nguyên tắc xây dựng AI có trách nhiệm từ Harvard Professional: công bằng, minh bạch, trách nhiệm, quyền riêng tư, bảo mật — và tại sao governance cần có "enforcement power" chứ không chỉ là văn bản.
+- [Responsible AI — Stanford HAI 2026 AI Index Report](https://hai.stanford.edu/ai-index/2026-ai-index-report/responsible-ai) — Báo cáo thường niên của Stanford HAI về tình trạng triển khai responsible AI trên toàn cầu; dữ liệu thực tế về mức độ áp dụng governance frameworks trong các tổ chức.
+
+## Tự kiểm tra
+
+1. Một AI feature có thể "công bằng" về mặt kỹ thuật nhưng vẫn gây bất công — điều này xảy ra như thế nào? Cho một ví dụ cụ thể.
+2. Tại sao "nói rõ đây là AI" lại là trách nhiệm của PM chứ không chỉ là vấn đề kỹ thuật?
+3. Bạn phát hiện AI feature của mình đang đưa ra kết quả tệ hơn cho người dùng ở một tỉnh cụ thể. Ba bước tiếp theo của bạn là gì?

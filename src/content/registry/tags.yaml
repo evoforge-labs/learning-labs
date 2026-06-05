@@ -244,3 +244,22 @@ tags:
   - dashboards
   - privacy
   - consent
+  # --- AI Product Management ---
+  - ai-product-management
+  - probabilistic
+  - eval-first
+  - ai-ux
+  - trust
+  - graceful-degradation
+  - human-ai-handoff
+  - data-flywheel
+  - feedback
+  - cold-start
+  - data-labeling
+  - annotation
+  - ai-quality
+  - shipping-bar
+  - ai-pricing
+  - cost-economics
+  - responsible-ai
+  - ai-launch

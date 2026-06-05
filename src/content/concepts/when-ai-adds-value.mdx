@@ -1,0 +1,60 @@
+---
+id: concept-when-ai-adds-value
+title: "When AI Adds Value (and When It Doesn't)"
+type: "concept"
+aliases: ["khi nào AI thêm giá trị", "AI vs rule-based decision", "when not to use AI", "AI không phải giải pháp cho mọi thứ"]
+tags: [product-thinking, decision-making, product, trade-off, ai-engineering]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Có một chiếc búa rất xịn trong tay. Mọi thứ trông đều giống đinh.
+
+Đó là bẫy AI hiện nay. Model ngày càng mạnh, API ngày càng rẻ — nên việc "thêm AI" trở thành phản xạ đầu tiên. Nhưng búa xịn không có nghĩa là mọi thứ đều cần đóng đinh.
+
+## Là gì
+
+AI thêm giá trị khi bài toán có **độ phức tạp hoặc biến thiên cao** đến mức viết rule thủ công không theo kịp. Khi bài toán đơn giản, có cấu trúc, và ít thay đổi — rule-based hoặc logic đơn giản nhanh hơn, rẻ hơn, dễ kiểm soát hơn.
+
+AI là **phương tiện**, không phải mục tiêu. Câu hỏi không phải "dùng AI ở đâu?" mà là "vấn đề nào AI giải tốt hơn mọi cách khác?"
+
+## Ví dụ thật
+
+**Nên dùng AI:**
+- Phân loại cảm xúc feedback của người dùng (hàng ngàn kiểu viết khác nhau, rule không bao giờ đủ).
+- Gợi ý nội dung cá nhân hóa (hành vi người dùng phức tạp, không thể hard-code hết).
+- Tóm tắt cuộc họp dài từ transcript (không có cấu trúc cố định).
+
+**Không nên dùng AI:**
+- Validate email format — regex là đủ, AI chỉ thêm chi phí và rủi ro sai.
+- Tính giá vận chuyển theo bảng giá cố định — if/else là xong.
+- Hiển thị thông báo lỗi chuẩn — string template, không cần AI "sáng tạo" thông báo lỗi.
+
+<Callout title="Cẩn thận">
+AI không cứu được sản phẩm mà không ai cần. Nếu người dùng không có pain thật, thêm AI chỉ làm sản phẩm phức tạp hơn và tốn kém hơn. Luôn hỏi [Jobs-to-be-Done](/concepts/jobs-to-be-done) trước: *việc gì người dùng đang cố hoàn thành?* Rồi mới hỏi AI có phải cách tốt nhất để giải không.
+</Callout>
+
+Một heuristic đơn để tự hỏi trước khi thêm AI:
+
+**Nếu viết rule thủ công cho bài toán này, tốn bao lâu và bao nhiêu rule?**
+- Ít hơn 20 rule, ổn định lâu dài → thử rule-based trước.
+- Hàng trăm rule hoặc thay đổi liên tục → AI bắt đầu có lý.
+
+Một lý do khác để chọn rule: **explainability**. Khi bị hỏi "tại sao hệ thống ra quyết định đó?", bạn cần trả lời được. Rule-based trả lời dễ hơn nhiều so với black-box AI.
+
+<Callout title="Nhớ nhé">
+Dùng AI khi độ phức tạp vượt quá sức của rule thủ công. Dùng rule/logic đơn giản khi bài toán có cấu trúc rõ, ổn định, hoặc cần explainability cao. AI không phải câu trả lời mặc định — nó là công cụ đúng cho đúng vấn đề.
+</Callout>
+
+## Đọc thêm
+
+- [How to Choose Between Rule-Based vs Machine Learning Systems — TechTarget](https://www.techtarget.com/searchenterpriseai/feature/How-to-choose-between-a-rules-based-vs-machine-learning-system) — Framework thực tế để quyết định khi nào dùng rule-based, khi nào dùng ML; phân tích ưu nhược điểm của từng loại với ví dụ cụ thể.
+- [AI vs Rule-Based Systems: Which One Should You Use and When? — CodingCops](https://codingcops.com/ai-vs-rule-based-systems/) — Giải thích rõ ràng sự khác biệt và đưa ra checklist quyết định; phù hợp đọc nhanh trước khi họp về tech decision.
+- [Why AI Products Fail Even When the Code Works — iamprayerson](https://www.iamprayerson.com/p/why-ai-products-fail-even-when-code-works) — Phân tích các lý do sản phẩm AI thất bại không phải vì kỹ thuật mà vì product thinking sai; thực tế và thẳng thắn.
+- [Building AI Products In The Probabilistic Era — Gian Segato](https://giansegato.com/essays/probabilistic-era) — Bài luận đặt nền tảng tư duy: AI thay đổi software từ "hàm xác định" sang "phân phối", giúp hiểu rõ hơn khi nào sự thay đổi đó đáng đánh đổi.
+
+## Tự kiểm tra
+
+1. Liệt kê ba dấu hiệu cho thấy bài toán *phù hợp* để dùng AI, và ba dấu hiệu cho thấy rule-based là đủ.
+2. Tại sao "thêm AI vào vì AI đang hot" là lý do nguy hiểm? Nó có thể gây hại cho sản phẩm thế nào?
+3. Bạn đang build tính năng lọc nội dung spam cho một diễn đàn nhỏ. Bạn sẽ bắt đầu với AI hay rule-based, và tại sao?

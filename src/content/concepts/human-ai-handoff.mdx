@@ -1,0 +1,56 @@
+---
+id: concept-human-ai-handoff
+title: "Human-AI Handoff"
+type: "concept"
+aliases: ["human-AI handoff", "AI chuyển cho con người", "AI escalation to human", "bàn giao AI sang người", "when AI escalates to human"]
+tags: [ai-product-management, human-ai-handoff, escalation, ux, customer-support, ai-feature-design]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Một phi công giỏi biết khi nào nên tắt autopilot. Không phải vì autopilot tệ — mà vì có những tình huống autopilot không được thiết kế để xử lý, và đó là lúc tay người phải cầm lái.
+
+Feature AI cũng cần biết khi nào nó hết vai trò.
+
+## Là gì
+
+**Human-AI handoff** là quá trình chuyển giao có chủ ý từ AI sang con người khi AI nhận ra mình không còn là lựa chọn tốt nhất cho tình huống đó. Không phải thất bại — mà là *thiết kế đúng*. AI biết giới hạn của mình, và giới hạn đó được xây vào sản phẩm.
+
+Bốn tình huống phổ biến cần handoff:
+- **Vượt ngoài năng lực:** câu hỏi quá phức tạp hoặc ngoài scope được train
+- **Vượt ngoài quyền hạn:** quyết định cần con người chịu trách nhiệm (hoàn tiền lớn, thay đổi hợp đồng)
+- **Người dùng yêu cầu:** "Cho tôi nói chuyện với người thật"
+- **Cảm xúc leo thang:** phát hiện frustration, tức giận, hoặc tình huống nhạy cảm
+
+## Ví dụ thật
+
+Chatbot hỗ trợ khách hàng cho một ứng dụng SaaS. Khách hàng hỏi câu thứ tư liên tiếp về vấn đề thanh toán, mỗi câu trả lời của AI đều không giải quyết được. Đây là dấu hiệu rõ ràng: AI đang xoay vòng, khách hàng đang mất kiên nhẫn.
+
+**Handoff tệ:** Bot tiếp tục cố trả lời lần thứ năm, khách hàng tức giận, rời bỏ.
+
+**Handoff tốt:** Sau lần thứ hai không giải quyết được, bot nói: "Có vẻ vấn đề này cần được xem xét kỹ hơn. Tôi sẽ chuyển bạn cho nhân viên hỗ trợ — họ sẽ có đầy đủ lịch sử cuộc trò chuyện này." Nhân viên nhận được toàn bộ context, không hỏi lại từ đầu.
+
+Điểm mấu chốt: **context không được mất trong handoff**. Đó là lúc nhiều sản phẩm thất bại — con người tiếp nhận nhưng không biết chuyện gì đã xảy ra.
+
+<Callout title="Cẩn thận">
+80% người dùng sẽ không dùng chatbot nếu không có đường để gặp người thật. Nhưng handoff quá sớm cũng phá vỡ value của AI. Cân bằng ở đây: escalate *đúng lúc*, không phải *sớm nhất có thể* hay *muộn nhất có thể*. Tệ hơn cả là khi người dùng biết rằng họ bị giữ lại bởi AI dù đã yêu cầu gặp người — lúc đó trust mất hoàn toàn.
+</Callout>
+
+Thiết kế handoff tốt gồm ba thứ: **trigger rõ ràng** (điều kiện nào kích hoạt), **transition mượt mà** (thông báo thế nào, bao lâu chờ), và **context đầy đủ** (người tiếp nhận biết gì từ cuộc hội thoại trước).
+
+<Callout title="Nhớ nhé">
+Handoff không phải thất bại của AI — đó là AI hoạt động đúng thiết kế. Sản phẩm AI tốt biết khi nào nên nhường lại. Người dùng tin tưởng AI hơn khi AI biết giới hạn của mình.
+</Callout>
+
+## Đọc thêm
+
+- [Chatbot Handoff UX: How to Design Better Transitions — Standard Beagle Studio](https://standardbeagle.com/chatbot-handoff-ux/) — Hướng dẫn chi tiết về UX của handoff: thời điểm, ngôn ngữ thông báo, cách truyền context; có ví dụ cụ thể cho customer support.
+- [When to Hand Off to a Human: Setting Effective AI Escalation Rules — Replicant](https://www.replicant.com/blog/when-to-hand-off-to-a-human-how-to-set-effective-ai-escalation-rules/) — Framework phân loại 4 loại escalation; khi nào dùng loại nào; trade-off giữa escalate sớm và muộn.
+- [AI Chatbot with Human Handoff: Guide 2026 — SocialIntents](https://www.socialintents.com/blog/ai-chatbot-with-human-handoff/) — Hướng dẫn toàn diện về tích hợp human handoff vào chatbot: các trigger tự động, cách thiết kế UX, công cụ thực tế.
+- [AI Escalation Pathways: When Agents Should Hand Off — AI UX Design Guide](https://www.aiuxdesign.guide/patterns/escalation-pathways) — Thư viện design patterns cho escalation: confidence-based, permission-based, conflict-based, capability-based; dành cho cả PM lẫn designer.
+
+## Tự kiểm tra
+
+1. Liệt kê 4 tình huống cụ thể khi AI nên chủ động kích hoạt handoff sang con người. Tại sao mỗi tình huống đó không phù hợp để AI tiếp tục xử lý?
+2. "Context không được mất trong handoff" có nghĩa là gì về mặt thiết kế sản phẩm? Điều gì xảy ra khi context bị mất?
+3. Một PM tranh luận rằng "thêm handoff làm tăng chi phí hỗ trợ và phá vỡ giá trị của AI". Bạn phản biện thế nào?
