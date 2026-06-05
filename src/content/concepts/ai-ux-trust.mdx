@@ -1,0 +1,55 @@
+---
+id: concept-ai-ux-trust
+title: "Designing AI UX for Trust"
+type: "concept"
+aliases: ["AI UX trust design", "thiết kế UX niềm tin AI", "AI transparency UX", "trust signals AI feature", "hiển thị độ tin cậy AI"]
+tags: [ai-product-management, ux, trust, transparency, ai-feature-design, over-trust]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Bạn nhờ một người bạn tư vấn và anh ta nói với vẻ tự tin tuyệt đối: "Làm A đi, đảm bảo thành công." Bạn làm theo, thất bại. Sau đó bạn phát hiện anh ta cũng không chắc — chỉ là không nói.
+
+Cảm giác bị lừa đó tệ hơn nhiều so với ngay từ đầu anh ta nói "mình nghĩ A có thể đúng, nhưng không chắc lắm."
+
+AI feature trong sản phẩm của bạn cũng vậy.
+
+## Là gì
+
+**Designing AI UX for Trust** là tập hợp các quyết định thiết kế giúp người dùng hiểu *khi nào nên tin* và *khi nào nên nghi ngờ* output của AI. Cụ thể: hiển thị nguồn thông tin, mức độ tin cậy, cho phép sửa kết quả, và không giả vờ chắc chắn khi AI không chắc.
+
+Ba thành phần cốt lõi:
+- **Transparency** — AI lấy thông tin từ đâu? Dựa trên gì?
+- **Calibration** — AI thể hiện mức độ chắc chắn đúng với thực tế?
+- **Correctability** — Người dùng có thể sửa, bác bỏ, hoặc yêu cầu giải thích không?
+
+## Ví dụ thật
+
+Feature AI gợi ý sản phẩm cho khách hàng. Hai cách thiết kế:
+
+**Thiết kế kém:** "Sản phẩm được đề xuất cho bạn: X" — không giải thích tại sao, không để người dùng biết dựa trên gì.
+
+**Thiết kế tốt:** "Dựa trên lịch sử mua hàng của bạn (3 lần mua sản phẩm A), chúng tôi nghĩ bạn sẽ thích X. Không phải bạn? [Điều chỉnh sở thích]" — người dùng hiểu logic, tin hơn khi gợi ý đúng, không cảm thấy bị lừa khi gợi ý sai.
+
+<Callout title="Cẩn thận">
+**Over-trust còn nguy hiểm hơn under-trust.** Khi AI luôn nói với giọng chắc chắn, người dùng không còn kiểm tra lại nữa — họ "autopilot" theo AI. Đó là lúc một lỗi nhỏ của model có thể gây hậu quả lớn. Thiết kế tốt không phải làm AI trông ngầu hơn — mà làm người dùng *tiếp tục suy nghĩ*.
+</Callout>
+
+Hai cách hiển thị mức độ tin cậy phổ biến: **ngôn ngữ xác suất** ("Có vẻ như...", "Dựa trên thông tin hiện có...") và **nguồn trích dẫn** (link đến tài liệu gốc, dữ liệu người dùng cụ thể). Tránh badge "AI verified" vô nghĩa — nó tạo false confidence mà không thêm thông tin gì.
+
+<Callout title="Nhớ nhé">
+Người dùng chấp nhận AI không hoàn hảo — họ không chấp nhận bị lừa về mức độ hoàn hảo đó. Hiển thị nguồn, nói rõ khi không chắc, luôn để người dùng override: đó là ba nền tảng của trust design cho AI feature.
+</Callout>
+
+## Đọc thêm
+
+- [Designing for Trust: UX Patterns for AI Features — DesignKey Studio](https://www.designkey.studio/post/designing-for-trust-ux-ai-features) — Tổng hợp các UX pattern cụ thể cho AI feature: cách hiển thị confidence, nguồn, và cho phép override; có ví dụ thực tế.
+- [Prioritize Smarts over Sentience to Increase Trust in AI — Nielsen Norman Group](https://www.nngroup.com/articles/smarts-emotion-trust-ai/) — Nghiên cứu của NN/G: tại sao AI trông "thông minh" đáng tin hơn AI trông "giống người"; hướng dẫn đặt kỳ vọng đúng từ đầu.
+- [Designing Trust and Feedback in AI-Driven User Interfaces — AlterSquare](https://altersquare.io/designing-trust-feedback-ai-driven-user-interfaces/) — Ba tầng transparency (algorithmic, interaction, social) và cách áp dụng vào sản phẩm cụ thể; phù hợp cho PM lẫn designer.
+- [Designing AI Interfaces Users Can Trust — ScreamingBox](https://www.screamingbox.net/blog/designing-ai-interfaces-users-can-trust-how-transparency-ux-and-explainability-build-confidence) — Giải thích sự khác biệt giữa explainability và transparency trong AI UX; kèm checklist thực hành.
+
+## Tự kiểm tra
+
+1. Trong thiết kế AI UX, "over-trust" là gì và tại sao nó nguy hiểm hơn "under-trust"?
+2. Hãy mô tả 2 cách cụ thể để hiển thị mức độ tin cậy của AI output mà không làm UI trở nên phức tạp.
+3. Bạn build chatbot hỗ trợ khách hàng. Khách hàng hỏi về chính sách hoàn tiền nhưng knowledge base của bạn không có thông tin này. AI nên phản hồi thế nào để duy trì trust?

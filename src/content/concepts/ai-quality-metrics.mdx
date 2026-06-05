@@ -1,0 +1,54 @@
+---
+id: concept-ai-quality-metrics
+title: "AI Quality Metrics (Product View)"
+type: "concept"
+aliases: ["AI quality metrics product view", "đo chất lượng AI tầng sản phẩm", "helpfulness metric AI", "tỉ lệ chỉnh sửa AI", "độ chính xác cảm nhận người dùng", "product-level AI quality"]
+tags: [ai-product-management, evaluation, metrics, product, quality, user-experience]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Bạn có một model AI trả lời đúng 92% câu hỏi trong bộ test. Bạn ship. Người dùng complain. Retention giảm. Chuyện gì đã xảy ra?
+
+Accuracy 92% là con số của phòng lab. Còn người dùng thật không sống trong phòng lab.
+
+## Là gì
+
+**AI quality metrics (tầng sản phẩm)** là những chỉ số đo lường chất lượng AI từ góc nhìn người dùng và sản phẩm — không phải từ góc nhìn kỹ thuật. Thay vì hỏi "model đúng bao nhiêu phần trăm?", bạn hỏi: "người dùng có thấy câu trả lời này hữu ích không? Họ có phải sửa lại không? Họ có quay lại dùng không?"
+
+Ba nhóm chỉ số cốt lõi ở tầng sản phẩm:
+
+**Helpfulness (Tính hữu ích)** — người dùng đánh giá câu trả lời có giúp được họ không. Đo qua thumbs up/down, star rating, hoặc hỏi thẳng "câu trả lời này có giải quyết vấn đề của bạn không?" Đây là tín hiệu trực tiếp nhất.
+
+**Perceived accuracy (Độ chính xác cảm nhận)** — người dùng có tin câu trả lời là đúng không, dù bạn chưa verify được 100%. Khác với accuracy kỹ thuật: một câu trả lời đúng nhưng người dùng không tin vẫn là thất bại. Một câu trả lời sai nhưng người dùng tin thì còn nguy hiểm hơn.
+
+**Edit rate / Revision rate (Tỉ lệ chỉnh sửa)** — bao nhiêu phần trăm output AI bị người dùng sửa lại trước khi dùng? Nếu AI tạo ra bản nháp email và 80% người dùng phải viết lại toàn bộ, tính năng đó chưa đủ tốt. Edit rate thấp = AI đang tiết kiệm thực sự công sức cho người dùng.
+
+## Ví dụ thật
+
+Một tính năng AI tóm tắt báo cáo bán hàng cho sales manager. Accuracy kỹ thuật (so với bản tóm tắt chuẩn): 88%. Nghe ổn.
+
+Nhưng khi đo ở tầng sản phẩm: 65% sales manager phải bổ sung thêm số liệu thủ công vào bản tóm tắt, và 40% nói tóm tắt "không có ích cho cuộc họp". Helpfulness score: 3.1/5. Edit rate: 58%.
+
+Chẩn đoán: model đúng về con số nhưng tóm tắt sai *những gì quan trọng với người dùng thật*. Vấn đề không phải accuracy — mà là relevance.
+
+<Callout title="Cẩn thận">
+Đừng chỉ dùng thumbs up/down làm signal duy nhất. Người dùng thường chỉ click thumbs down khi câu trả lời tệ rõ ràng — những lần "trung bình, dùng được nhưng không tốt" họ không phản hồi. Kết hợp implicit signal (edit rate, copy rate, thời gian trên trang) để có bức tranh đầy đủ hơn.
+</Callout>
+
+<Callout title="Nhớ nhé">
+Accuracy kỹ thuật là điều kiện cần, không phải điều kiện đủ. Sản phẩm AI tốt cần đo thêm: helpfulness, perceived accuracy, và edit rate — những thứ chỉ đo được khi có người dùng thật.
+</Callout>
+
+## Đọc thêm
+
+- [The Four Types of Metrics for AI Product Managers — 5D Vision](https://www.5dvision.com/post/metrics-for-ai-pms/) — Phân tích bốn tầng metric cho AI PM: model, system, product, business; giải thích rõ tại sao cần đo đồng thời cả bốn tầng thay vì chỉ model metrics.
+- [AI Eval Metrics: Beyond Accuracy — Statsig](https://www.statsig.com/perspectives/ai-eval-metrics-beyond-accuracy) — Lập luận thực tiễn rằng accuracy cao trong lab nhưng sụp đổ khi gặp người dùng thật; đề xuất framework đo user-centric outcomes như task completion và retention.
+- [Evaluation Metrics for AI Products That Drive Trust — Product School](https://productschool.com/blog/artificial-intelligence/evaluation-metrics) — Tổng quan chín chiều đánh giá chất lượng AI từ góc nhìn PM; nhấn mạnh "accuracy là table stakes, trust mới là differentiator".
+- [5 Metrics to Measure AI Decision-Making Impact — Glean](https://www.glean.com/blog/metrics-ai-decision-impact) — Ví dụ thực tế từ AI doanh nghiệp về đo tác động ra quyết định, không chỉ đo độ chính xác câu trả lời.
+
+## Tự kiểm tra
+
+1. Một AI feature có accuracy kỹ thuật 90% nhưng edit rate 70%. Bạn sẽ diễn giải điều này như thế nào với team engineering?
+2. Tại sao "thumbs up/down" một mình không đủ để đo helpfulness? Bạn sẽ bổ sung signal nào?
+3. Sự khác biệt giữa "accuracy" và "perceived accuracy" là gì? Khi nào chúng trái chiều nhau?

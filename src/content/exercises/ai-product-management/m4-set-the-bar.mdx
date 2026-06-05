@@ -1,0 +1,96 @@
+---
+id: exercise-aipm-004
+title: "Đặt shipping bar cho một AI feature"
+type: "exercise"
+track: ai-product-management
+tags: [ai-product-management, evaluation, metrics, ab-testing, shipping, quality, decision-making]
+estimatedMinutes: 30
+related: [lesson-aipm-004, concept-ai-quality-metrics, concept-ai-ab-testing, concept-hallucination-as-product-risk, concept-shipping-bar-for-ai, rubric-ai-product-management]
+status: published
+---
+import Callout from '../../../components/content/Callout.astro';
+
+## Tình huống
+
+Bạn là PM tại một startup B2B SaaS giúp các doanh nghiệp vừa và nhỏ quản lý hợp đồng với nhà cung cấp. Sau 3 tháng phát triển, team bạn đã build xong tính năng **AI Contract Reviewer** — người dùng upload hợp đồng PDF, AI phân tích và tóm tắt: các điều khoản chính, rủi ro tiềm ẩn, và deadline quan trọng.
+
+**Dữ liệu bạn có:**
+
+- Benchmark nội bộ (offline eval, 200 hợp đồng mẫu): 81% tóm tắt được luật sư nội bộ đánh giá "chính xác và đủ để dùng được".
+- Luật sư nội bộ làm thủ công cùng tập test: 94% đạt chuẩn.
+- Thời gian AI xử lý: trung bình 12 giây/hợp đồng. Thủ công: 25-40 phút.
+- Hallucination spot-check (50 hợp đồng): 3 trường hợp AI thêm điều khoản không có trong bản gốc (6%).
+- 120 user đang trong waitlist muốn dùng.
+
+Câu hỏi trước mắt: **có nên ship không? Nếu ship thì ship thế nào?**
+
+---
+
+## Nhiệm vụ 1 — Chọn quality metric tầng sản phẩm
+
+Benchmark 81% là con số offline. Khi feature ra tay người dùng thật, bạn cần đo thêm ở tầng sản phẩm.
+
+**Làm:**
+
+1. Chọn **3 metric tầng sản phẩm** bạn sẽ đo cho AI Contract Reviewer. Với mỗi metric, giải thích:
+   - Đo cái gì cụ thể
+   - Đo bằng cách nào (implicit hay explicit signal)
+   - Target ban đầu bạn đặt ra là bao nhiêu và tại sao
+
+2. Trong 3 metric đó, metric nào là **leading indicator** (báo hiệu sớm) và metric nào là **lagging indicator** (kết quả chậm)?
+
+<Callout title="Mẹo">
+Edit rate đặc biệt hữu ích cho tính năng này. Người dùng upload hợp đồng để tiết kiệm thời gian — nếu họ vẫn phải đọc lại toàn bộ để kiểm tra AI, thì feature chưa thực sự giúp ích.
+</Callout>
+
+---
+
+## Nhiệm vụ 2 — Thiết kế A/B test cho AI
+
+Sau khi ship phiên bản đầu, team muốn thử nghiệm Prompt B — một prompt mới tập trung vào phát hiện rủi ro pháp lý, thay vì tóm tắt toàn diện.
+
+**Làm:**
+
+Thiết kế A/B test so sánh Prompt A (hiện tại) vs Prompt B (mới). Bài thiết kế cần trả lời đủ 5 câu hỏi:
+
+1. **Metric chính** — bạn đo gì để biết prompt nào "thắng"?
+2. **Guardrail metric** — metric nào nếu giảm thì dừng test ngay, dù metric chính đang tốt?
+3. **Mẫu và thời gian** — cần bao nhiêu user và bao lâu? Tại sao không phải ít hơn?
+4. **Sticky session** — tại sao cần giữ một user luôn trong cùng một variant? Điều gì xảy ra nếu không làm?
+5. **Khi nào kết luận** — bạn dừng test và đưa ra kết luận khi điều kiện nào được thỏa mãn?
+
+<Callout title="Cẩn thận">
+Với hợp đồng, người dùng thường xử lý theo batch (cả tuần mới có vài hợp đồng mới). Điều này ảnh hưởng đến tốc độ thu thập mẫu — hãy tính thực tế.
+</Callout>
+
+---
+
+## Nhiệm vụ 3 — Định shipping bar có lý do
+
+Dựa vào tất cả dữ liệu trong tình huống, viết một **shipping decision memo** ngắn gọn (dưới 200 từ) trả lời ba câu:
+
+1. **Có ship không?** Nếu có, ship dưới hình thức nào (full rollout, limited beta, với safeguard gì)?
+2. **Lý do cụ thể**: dựa vào data nào? Tại sao con số đó đủ hoặc chưa đủ?
+3. **Điều kiện để mở rộng**: sau khi ship, bạn cần thấy gì trong 30 ngày đầu để tự tin rollout rộng hơn?
+
+<Callout title="Mẹo">
+Đừng quên hallucination rate 6% — đây là điều khoản pháp lý, không phải gợi ý nhạc. Chi phí một lần sai là khác nhau hoàn toàn. Quyết định ship của bạn phải đề cập đến con số này.
+</Callout>
+
+---
+
+## Tiêu chí đánh giá
+
+Tham khảo [AI Product Management Rubric](/rubrics/ai-product-management-rubric) để tự chấm.
+
+Với bài này, tập trung vào:
+
+| Tiêu chí | Câu hỏi tự kiểm tra |
+|---|---|
+| Chọn metric có lý do | Metric bạn chọn có phản ánh giá trị thực với người dùng không, hay chỉ là con số dễ đo? |
+| Thiết kế experiment chặt chẽ | Bạn đã tính đến variance cao và learning effect của AI chưa? |
+| Quyết định ship có cơ sở | Quyết định của bạn có giải thích được bằng data, không phải cảm tính? |
+
+<Callout title="Nhớ nhé">
+Không có đáp án duy nhất đúng cho "có ship không". Điều quan trọng là lý luận: bạn so sánh với baseline gì, bạn tính chi phí lỗi ra sao, và safeguard của bạn tương xứng với rủi ro không.
+</Callout>

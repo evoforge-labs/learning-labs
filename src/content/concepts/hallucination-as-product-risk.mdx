@@ -1,0 +1,61 @@
+---
+id: concept-hallucination-as-product-risk
+title: "Hallucination as Product Risk"
+type: "concept"
+aliases: ["hallucination rủi ro sản phẩm", "hallucination product risk PM", "chi phí câu trả lời sai AI", "rủi ro uy tín AI", "hallucination business cost", "AI sai thông tin rủi ro"]
+tags: [ai-product-management, hallucination, risk, product, trust, reputation, safety]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Luật sư nộp hồ sơ tòa. Trong đó trích dẫn 6 vụ án tiền lệ. Tất cả 6 vụ đó không tồn tại — AI tạo ra. Thẩm phán phát hiện. Luật sư bị phạt và hầu như mất nghề.
+
+Đây không phải lỗi kỹ thuật. Đây là rủi ro sản phẩm.
+
+## Là gì
+
+**Hallucination là rủi ro sản phẩm** khi AI tạo ra thông tin nghe có vẻ đúng nhưng sai hoàn toàn — và người dùng tin, hành động theo, rồi chịu hậu quả. Đây không còn là vấn đề benchmark model; đây là vấn đề niềm tin, uy tín thương hiệu, và đôi khi là pháp lý.
+
+Hiểu hallucination là gì về mặt kỹ thuật, xem [concept-hallucination](/concepts/hallucination). Ở đây chúng ta xem xét nó từ góc độ PM: khi một câu trả lời sai thoát ra ngoài người dùng, chi phí là gì?
+
+**Ba loại chi phí thực:**
+
+**Chi phí trực tiếp** — người dùng hành động sai dựa trên thông tin AI cung cấp. Air Canada bị tòa buộc bồi thường vì chatbot tạo ra chính sách hoàn tiền không tồn tại. Thiệt hại: tiền, thời gian xử lý, và precedent pháp lý.
+
+**Chi phí uy tín** — người dùng mất niềm tin, không dùng nữa, và kể cho người khác. Một AI y tế đề xuất liều thuốc sai có thể phá hủy cả sản phẩm dù chỉ xảy ra một lần.
+
+**Chi phí cơ hội** — team mất thời gian handle fallout thay vì build feature mới; support cost tăng; cycle investigation kéo dài.
+
+## Ví dụ thật
+
+Tính năng AI tóm tắt điều khoản hợp đồng cho SMB. Model đôi khi "sáng tạo" thêm điều khoản không có trong bản gốc. Accuracy kỹ thuật nhìn chung vẫn cao — 95% đúng về nội dung chính.
+
+Nhưng 5% câu trả lời sai đó rơi vào đúng những chi tiết quan trọng (con số, deadline, điều kiện phạt). Một khách hàng ký hợp đồng dựa trên bản tóm tắt AI, sau đó phát hiện điều khoản thực khác. Rủi ro pháp lý là thật. Từ đó, cả sản phẩm mang tiếng "không đáng tin".
+
+<Callout title="Cẩn thận">
+Hallucination nguy hiểm nhất khi nó *tự tin*. Model không nói "tôi không chắc" — nó trả lời chắc chắn, mạch lạc, có vẻ có căn cứ. Người dùng càng bận, càng tin AI mà không verify. Thiết kế sản phẩm phải tính đến điều này.
+</Callout>
+
+**Mitigations từ góc PM** (không phải kỹ thuật):
+
+- **Giới hạn phạm vi rõ ràng**: đừng để AI trả lời những câu hỏi mà sai là hệ quả nghiêm trọng, trừ khi có guardrail tốt.
+- **Citation bắt buộc**: với domain nhạy cảm, AI chỉ được trả lời kèm nguồn trích dẫn có thể verify được.
+- **Human-in-the-loop ở điểm rủi ro cao**: không để output AI đi thẳng vào quyết định quan trọng mà không qua người xem lại.
+- **Đo hallucination rate liên tục**: dùng LLM-as-judge hoặc sampling thủ công để theo dõi xu hướng.
+
+<Callout title="Nhớ nhé">
+Đóng khung hallucination như rủi ro sản phẩm, không phải lỗi kỹ thuật. PM cần biết: loại câu hỏi nào rủi ro cao, chi phí một lần sai là bao nhiêu, và safeguard nào đang bảo vệ người dùng.
+</Callout>
+
+## Đọc thêm
+
+- [The Risk of AI Hallucinations: How to Protect Your Brand — NeuralTrust](https://neuraltrust.ai/blog/ai-hallucinations-business-risk) — Phân tích hallucination như brand liability với ví dụ thực tế (luật sư, Air Canada); đề xuất output guardrails và monitoring cụ thể.
+- [LLM Hallucinations: Implications for Businesses — BizTech Magazine](https://biztechmagazine.com/article/2025/02/llm-hallucinations-implications-for-businesses-perfcon) — Tổng quan rủi ro kinh doanh từ hallucination: pháp lý, uy tín, tài chính; kèm các chiến lược giảm thiểu thực tế.
+- [Hallucinations in LLMs: Technical Challenges, Systemic Risks and AI Governance — IAPP](https://iapp.org/news/a/hallucinations-in-llms-technical-challenges-systemic-risks-and-ai-governance-implications) — Góc nhìn quản trị và chính sách về hallucination; phân tích tại sao đây có thể là vấn đề kiến trúc căn bản, không chỉ là lỗi cần fix.
+- [Managing Hallucination Risk in LLM Deployments — EY](https://www.ey.com/content/dam/ey-unified-site/ey-com/en-gl/technical/documents/ey-gl-managing-hallucination-risk-in-llm-deployments-01-26.pdf) — Framework quản lý rủi ro hallucination từ góc nhìn doanh nghiệp lớn; thực tế với tổ chức có yêu cầu compliance.
+
+## Tự kiểm tra
+
+1. Tại sao hallucination tự tin (confident hallucination) nguy hiểm hơn hallucination rõ ràng?
+2. Bạn là PM của một tính năng AI tóm tắt hợp đồng. Bạn sẽ đặt "human-in-the-loop" ở điểm nào trong luồng? Tại sao?
+3. Nếu hallucination rate của tính năng là 2%, đó là con số tốt hay xấu? Câu trả lời phụ thuộc vào điều gì?

@@ -1,0 +1,56 @@
+---
+id: concept-probabilistic-product-thinking
+title: "Probabilistic Product Thinking"
+type: "concept"
+aliases: ["probabilistic thinking product", "tư duy xác suất sản phẩm", "deterministic vs probabilistic product", "thiết kế cho sự không chắc chắn"]
+tags: [product-thinking, evals, product, decision-making, trade-off, ai-engineering]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Bạn bấm nút "gửi email" — email đi. Luôn luôn. Đó là hệ thống **deterministic**: đầu vào A → đầu ra B, không có ngoại lệ.
+
+Bây giờ bạn bấm nút "tóm tắt email này bằng AI" — kết quả *thường* đúng, đôi khi bỏ sót chi tiết quan trọng, hiếm khi bịa thêm thứ không có. Đó là hệ thống **probabilistic**: đầu vào A → đầu ra *phân phối quanh* B.
+
+Hai loại hệ thống này cần hai cách tư duy sản phẩm hoàn toàn khác nhau.
+
+## Là gì
+
+**Probabilistic Product Thinking** là cách tư duy khi xây sản phẩm có lõi AI: chấp nhận rằng output không bao giờ đảm bảo 100% đúng, và *thiết kế cho điều đó* thay vì cố xóa nó đi.
+
+Không phải "làm sao để AI luôn đúng". Mà là "khi AI sai, trải nghiệm người dùng vẫn ổn".
+
+## Ví dụ thật
+
+Feature "gợi ý email reply tự động". PM theo kiểu deterministic sẽ cố thêm rule để gợi ý luôn chính xác — và thất bại vì AI không hoạt động theo cách đó.
+
+PM theo kiểu probabilistic sẽ thiết kế khác:
+- Hiển thị ba gợi ý thay vì một (tăng xác suất một trong số đó phù hợp).
+- Thêm chỉ số confidence nhỏ bên cạnh gợi ý.
+- Cho phép user chỉnh sửa dễ dàng, không phải chấp nhận hoặc từ chối trọn vẹn.
+- Đo "% gợi ý được dùng dù phải sửa" chứ không chỉ "% gợi ý được dùng nguyên bản".
+
+Cùng một feature, nhưng cách thiết kế và đo hoàn toàn khác.
+
+<Callout title="Cẩn thận">
+Đừng nhầm "chấp nhận sai" với "không cần cải thiện". Probabilistic thinking không có nghĩa là bỏ mặc chất lượng. Nghĩa là bạn **đo được** chất lượng (qua eval), **thiết kế graceful degradation** (khi sai vẫn ổn), và **cải thiện liên tục** — thay vì cố đạt 100% rồi mới ship.
+</Callout>
+
+Một hệ quả thực tế: **bạn không thể "xong" một feature AI**. Vì model thay đổi, dữ liệu thay đổi, phân phối output thay đổi. Mỗi thay đổi model là một lần phải đo lại.
+
+<Callout title="Nhớ nhé">
+Sản phẩm AI không "đúng hay sai" — nó "đúng bao nhiêu %". Thiết kế cho xác suất có nghĩa: fallback khi sai, hiển thị confidence, đo phân phối output, cải thiện liên tục thay vì cố hoàn hảo rồi mới ra.
+</Callout>
+
+## Đọc thêm
+
+- [Building AI Products In The Probabilistic Era — Gian Segato](https://giansegato.com/essays/probabilistic-era) — Bài luận sâu về cách AI biến phần mềm từ "hàm xác định" thành "phân phối xác suất"; đặc biệt hữu ích về mục tại sao SLO truyền thống không còn phù hợp.
+- [Probabilistic UX Design Patterns — CoCreate Field Notes](https://cocreate.consulting/field-notes/probabilistic-ux-design-patterns) — Hướng dẫn thực tế thiết kế UX cho AI uncertainty: confidence UI, generative UI, và fallback state; kèm pattern cụ thể áp dụng được ngay.
+- [AI Product Development: Navigating Probabilistic Features — B. Prigent](https://www.bprigent.com/article/ai-product-development-probabilistic-features) — Tác giả đề xuất thêm bước "Calibrate" vào quy trình phát triển truyền thống Build–Verify–Measure; rất cụ thể về vai trò từng người trong team.
+- [The Shift to Probabilistic: Challenges in Building AI Products — Medium](https://medium.com/@alfredosone/the-shift-to-probabilistic-914dd60192b3) — Tổng hợp ngắn gọn những thách thức khi chuyển từ tư duy deterministic sang probabilistic, từ góc nhìn kỹ thuật lẫn sản phẩm.
+
+## Tự kiểm tra
+
+1. Cho ví dụ một feature bạn biết: nó deterministic hay probabilistic? Điều gì trong thiết kế hiện tại sẽ cần thay đổi nếu nó chuyển sang AI?
+2. Tại sao một feature AI không bao giờ thực sự "xong"? Điều gì khiến nó cần đo lại liên tục?
+3. "Graceful degradation" trong sản phẩm AI là gì? Thiết kế nó khác gì so với xử lý lỗi thông thường?

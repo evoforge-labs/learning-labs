@@ -1,0 +1,46 @@
+---
+id: track-ai-product-management
+title: "AI Product Management"
+type: "track"
+summary: "Làm sản phẩm AI cho người tự build: quyết định khi nào dùng AI, thiết kế cho hệ thống xác suất, lấy eval làm cốt lõi, đo chất lượng, và định giá/ra mắt feature AI một cách có trách nhiệm."
+tags: [ai-product-management, ai, product, evaluation, solo-builder]
+status: published
+---
+
+# AI Product Management
+
+Bạn đã biết *kỹ thuật* xây feature AI (track AI Engineering) và biết *tư duy sản phẩm* (track Product-minded Builder). Track này lấp khe giữa hai cái: **làm sản phẩm khi lõi của nó là một mô hình xác suất, có thể sai bất cứ lúc nào**.
+
+Sản phẩm truyền thống: nhấn nút A → luôn ra B. Sản phẩm AI: nhấn nút A → *thường* ra B, đôi khi ra C, thỉnh thoảng bịa ra D. Quản lý sản phẩm trong thế giới đó cần một bộ tư duy khác.
+
+## Outcome
+
+Sau track này, bạn chuyển từ:
+
+> Mình gắn LLM vào, hy vọng nó đủ tốt.
+
+sang:
+
+> Mình định nghĩa "đủ tốt" bằng eval trước khi build, thiết kế UX cho lúc model sai, đo chất lượng trên người dùng thật, và biết tính giá sao cho không lỗ vì chi phí token.
+
+## Track này luyện gì?
+
+- Quyết định *khi nào* AI thực sự thêm giá trị — và khi nào nó chỉ là gánh nặng.
+- Thiết kế cho hệ thống xác suất: trust, transparency, fallback khi model thất bại.
+- Lấy **eval làm cốt lõi sản phẩm**, không phải nghĩ sau.
+- Xây vòng lặp dữ liệu (data flywheel) và thu feedback từ ngày đầu.
+- Định giá feature AI theo chi phí thật; ra mắt có trách nhiệm.
+
+## Năm chặng từ cơ bản đến nâng cao
+
+1. **Nền tảng AI PM** — AI product khác gì, tư duy xác suất, khi nào dùng AI, vòng đời.
+2. **Thiết kế AI feature** — eval-first, UX cho trust, graceful degradation, human handoff.
+3. **Dữ liệu & vòng lặp** — data flywheel, thu feedback, cold start, labeling.
+4. **Đo lường & chất lượng** — quality metrics, A/B cho AI, hallucination như rủi ro sản phẩm, shipping bar.
+5. **Pricing, rủi ro & ra mắt** — định giá feature AI, unit economics, responsible AI, launch.
+
+Tra cứu nhanh mọi thuật ngữ ở trang [Glossary](/glossary).
+
+## First principle
+
+Một feature AI không "xong" khi nó chạy được lần đầu — nó "xong" khi bạn đo được nó tốt đến đâu, biết nó sai thế nào, và đã thiết kế cho cái lúc nó sai. Định nghĩa thành công bằng eval *trước*, không phải đoán mò *sau*.

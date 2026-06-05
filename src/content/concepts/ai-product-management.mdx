@@ -1,0 +1,54 @@
+---
+id: concept-ai-product-management
+title: "AI Product Management"
+type: "concept"
+aliases: ["AI PM", "quản lý sản phẩm AI", "AI product manager role", "AI PM vs PM thường"]
+tags: [product, product-thinking, evals, data-driven, decision-making, ai-engineering]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Hãy tưởng tượng bạn là đầu bếp. PM truyền thống như nấu theo công thức cố định — thêm 2 muỗng muối, xào 5 phút, luôn ra đúng món. AI PM giống quản lý một đầu bếp robot: nó nấu *rất giỏi*, nhưng đôi khi tự sáng tạo kiểu lạ, và bạn không bao giờ chắc 100% hôm nay nó ra món gì.
+
+Đó là sự khác biệt cốt lõi: sản phẩm AI không "luôn đúng" — nó "đúng theo xác suất".
+
+## Là gì
+
+**AI Product Management (AI PM)** là vai trò quản lý sản phẩm mà phần lõi của sản phẩm là một mô hình AI — thứ cho ra kết quả *có thể sai*, thay đổi theo dữ liệu, và không thể đoán trước hoàn toàn.
+
+AI PM không chỉ thêm AI vào feature. AI PM phải định nghĩa "tốt" nghĩa là gì khi không có đáp án tuyệt đối — và đo được điều đó.
+
+## Ví dụ thật
+
+PM truyền thống build tính năng "tìm kiếm sản phẩm": gõ đúng tên → ra đúng kết quả. Kiểm thử bằng test case cụ thể, pass là xong.
+
+AI PM build "gợi ý sản phẩm thông minh": kết quả phụ thuộc lịch sử, ngữ cảnh, model. Không có "đáp án đúng duy nhất". Kiểm thử bằng eval — đo tỉ lệ click, đo độ liên quan, so sánh A/B với baseline. Không bao giờ "xong hẳn" — model mới ra, dữ liệu thay đổi, lại phải đo lại.
+
+Ba thứ AI PM cần làm khác:
+
+**Xác suất thay vì đúng/sai.** Câu hỏi không phải "nó có chạy không?" mà là "nó đúng bao nhiêu % trong trường hợp quan trọng?"
+
+**Eval là vũ khí chính.** Bạn không thể test AI như test code thông thường. Phải xây bộ eval: tập câu hỏi đại diện + tiêu chí đánh giá + quy trình đo định kỳ.
+
+**Dữ liệu là lợi thế cạnh tranh.** Model có thể mua hoặc dùng API. Nhưng dữ liệu thật của người dùng bạn — không ai có. Ai thu thập tốt hơn, người đó thắng về lâu dài.
+
+<Callout title="Cẩn thận">
+AI PM không phải là PM biết code AI. Bạn không cần viết được PyTorch. Bạn cần hiểu *sản phẩm* hoạt động khác như thế nào khi lõi của nó là probabilistic — và thiết kế UX, đo lường, ra quyết định phù hợp với điều đó.
+</Callout>
+
+<Callout title="Nhớ nhé">
+AI PM khác PM thường ở ba điểm: tư duy xác suất thay vì đúng/sai, eval thay vì test case, và dữ liệu như lợi thế cạnh tranh thay vì chỉ là "đầu vào".
+</Callout>
+
+## Đọc thêm
+
+- [AI Product Manager: Real Role or Buzzword? — Product School](https://productschool.com/blog/artificial-intelligence/guide-ai-product-manager) — Phân tích ba loại PM trong thời đại AI: truyền thống, AI-powered, và AIPM thực sự; giúp bạn xác định mình đang ở đâu và cần phát triển gì.
+- [Confessions of an AI Product Manager — Monte Carlo](https://montecarlo.ai/blog-ai-product-manager/) — Thú nhận thật của một AI PM về ba thách thức lớn nhất: quản lý uncertainty, dữ liệu như tài sản cốt lõi, và bài toán explainability; rất thực tế.
+- [AI Product Management — SVPG](https://www.svpg.com/ai-product-management/) — Silicon Valley Product Group phân tích cách AI thay đổi công việc PM; góc nhìn chiến lược từ một trong những tổ chức có ảnh hưởng nhất trong ngành sản phẩm.
+- [The Evolution of the PM Role in the Age of AI — Medium/Beyond the Build](https://medium.com/beyond-the-build/the-evolution-of-the-product-manager-role-in-the-age-of-ai-3df1648551c8) — Nima Torabi phân tích cụ thể các kỹ năng PM truyền thống nào còn giữ nguyên và kỹ năng nào phải học lại trong thế giới AI.
+
+## Tự kiểm tra
+
+1. Kể ba điểm khác biệt cụ thể giữa AI PM và PM truyền thống. Điểm nào bạn thấy khó thích nghi nhất?
+2. Tại sao "dữ liệu của người dùng thật" lại là lợi thế cạnh tranh dài hạn hơn việc dùng model tốt hơn?
+3. Một PM truyền thống dùng test case để kiểm thử feature. AI PM dùng gì thay thế, và tại sao test case đơn thuần không đủ cho sản phẩm AI?

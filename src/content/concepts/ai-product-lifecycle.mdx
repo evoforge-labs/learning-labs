@@ -1,0 +1,62 @@
+---
+id: concept-ai-product-lifecycle
+title: "AI Product Lifecycle"
+type: "concept"
+aliases: ["AI product lifecycle", "vòng đời sản phẩm AI", "prototype eval ship monitor AI", "vòng lặp cải thiện AI"]
+tags: [product, evals, llmops, monitoring, iteration, ai-engineering]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Sản phẩm truyền thống có thể "xong": bạn ship, bug được fix, feature chạy ổn, coi như hoàn thành. Như xây một cái cầu — xong thì xong.
+
+Sản phẩm AI giống như nuôi một đứa trẻ hơn là xây cầu. Nó lớn lên, thay đổi, cần theo dõi liên tục. Không có ngày "hoàn thành".
+
+## Là gì
+
+**AI Product Lifecycle** là vòng lặp liên tục mà sản phẩm AI trải qua từ khi bắt đầu đến khi chạy trên production — và lặp lại mãi:
+
+**Prototype → Eval → Ship → Monitor → Cải thiện → (lặp lại)**
+
+Khác vòng đời sản phẩm thường ở chỗ không có điểm kết thúc. Model mới ra, data drift xảy ra, hành vi người dùng thay đổi — tất cả đều buộc bạn quay lại vòng lặp.
+
+## Ví dụ thật
+
+Bạn build tính năng "tóm tắt ticket support bằng AI":
+
+**Prototype:** Gắn LLM, thử vài trường hợp thủ công, "trông ổn" — mất 2 ngày.
+
+**Eval:** Tạo tập 50 ticket đại diện + tiêu chí rõ ràng ("tóm tắt phải có action item, không được bỏ sót severity"). Đo baseline: model đúng 72% theo tiêu chí. Ghi lại để so sánh sau. Mất 1 tuần — nhưng từ đây mọi thay đổi đều đo được.
+
+**Ship:** Ra cho 10% user trước. Không phải ship hết luôn.
+
+**Monitor:** Theo dõi tỉ lệ agent mở lại ticket sau khi đọc tóm tắt (tín hiệu tóm tắt không đủ thông tin). Theo dõi latency. Xem log các tóm tắt bị user report sai.
+
+**Cải thiện:** Tháng sau OpenAI ra model mới. Chạy lại eval trên tập đã có — từ 72% lên 81%. Quyết định upgrade. Vòng lặp tiếp tục.
+
+<Callout title="Góc kỹ thuật">
+Bước **Eval** là thứ phân biệt team AI làm tốt và team AI loay hoay. Không có eval → bạn không biết thay đổi model có tốt hơn không. Không biết regression xảy ra khi nào. Không biết khi nào đủ tốt để ship. Eval không phải optional — nó là cơ sở ra quyết định.
+</Callout>
+
+Hai sự khác biệt lớn nhất so với vòng đời sản phẩm thường:
+
+**Không có "done".** Mỗi lần model cập nhật, data drift, hoặc hành vi người dùng thay đổi — bạn phải đo lại.
+
+**Monitor quan trọng như build.** Trong sản phẩm thường, monitor là afterthought. Trong sản phẩm AI, monitor chính là cách bạn phát hiện silent degradation — model vẫn chạy nhưng chất lượng đang giảm dần mà không ai hay.
+
+<Callout title="Nhớ nhé">
+Vòng đời AI: Prototype → Eval → Ship → Monitor → Cải thiện → lặp lại. Eval là trung tâm — không có eval thì không biết mình đang đi đúng hướng hay không. Monitor là vũ khí phát hiện sự cố trước khi user phàn nàn.
+</Callout>
+
+## Đọc thêm
+
+- [The Engineering Guide to the AI Product Lifecycle — Medium](https://medium.com/@vinaykiran0404/the-engineering-guide-to-the-ai-product-lifecycle-09f181a2f9a6) — Framework 12 bước chi tiết cho vòng đời sản phẩm AI, tổ chức thành 4 pha; đặc biệt hữu ích về phần Evaluation Driven Development.
+- [The Agent Development Lifecycle — LangChain](https://www.langchain.com/blog/the-agent-development-lifecycle) — LangChain trình bày vòng lặp Build → Test → Deploy → Monitor cho AI agents; thực tế và kèm tool recommendations cụ thể.
+- [Eval Driven System Design: From Prototype to Production — OpenAI Cookbook](https://cookbook.openai.com/examples/partners/eval_driven_system_design/receipt_inspection) — Hướng dẫn thực hành xây eval từ đầu cho một hệ thống AI thật; rất cụ thể và có thể làm theo ngay.
+- [Demystifying Evals for AI Agents — Anthropic Engineering](https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents) — Anthropic giải thích cách thiết kế eval cho AI agents; hữu ích cho bước Eval trong vòng lặp, đặc biệt phần offline vs online eval.
+
+## Tự kiểm tra
+
+1. Vẽ (hoặc mô tả) vòng lặp AI product lifecycle. Tại sao nó là vòng tròn thay vì đường thẳng?
+2. Điều gì xảy ra nếu bạn ship sản phẩm AI mà không có bước Eval? Cho ví dụ rủi ro cụ thể.
+3. "Silent degradation" trong sản phẩm AI là gì? Tại sao Monitor quan trọng hơn trong AI so với sản phẩm thông thường?

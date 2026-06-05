@@ -1,0 +1,87 @@
+---
+id: exercise-aipm-003
+title: "Thiết kế vòng lặp dữ liệu cho AI feature mới ra mắt"
+type: "exercise"
+track: ai-product-management
+tags: [ai-product-management, data-flywheel, feedback-collection, cold-start, data-labeling, eval-dataset]
+estimatedMinutes: 30
+related: [lesson-aipm-003, concept-data-flywheel, concept-feedback-collection, concept-cold-start-problem, concept-data-labeling-for-product, concept-eval-dataset, rubric-ai-product-management]
+status: published
+---
+import Callout from '../../../components/content/Callout.astro';
+
+## Tình huống
+
+Bạn là PM tại một startup edtech. Nhóm vừa hoàn thành tính năng **AI tutor** — người dùng đặt câu hỏi về bài học, AI trả lời và gợi ý bài tập phù hợp.
+
+Ngày ra mắt: **tuần sau**. Dữ liệu thật từ người dùng: **bằng không**. Bộ eval: **chưa có**. Model đang dùng: GPT-4o với system prompt bạn tự viết.
+
+Team engineering đã xong phần kỹ thuật. Bây giờ là công việc của bạn.
+
+---
+
+## Nhiệm vụ 1 — Kế hoạch vượt cold start (10 phút)
+
+Tuần tới ra mắt mà chưa có dữ liệu người dùng. Bạn cần có một baseline đủ tốt để không làm thất vọng 200 user beta đầu tiên — đồng thời bắt đầu thu dữ liệu thật ngay từ ngày đầu.
+
+Trả lời ba câu hỏi sau:
+
+1. **Baseline:** Bạn sẽ dùng gì làm "model" cho tuần đầu tiên trước khi có đủ dữ liệu thật? Giải thích lý do chọn (foundation model? heuristics? Wizard of Oz?).
+
+2. **Warm-up eval:** Bạn sẽ tạo ít nhất 30 ví dụ đầu tiên cho bộ eval bằng cách nào trước khi có user thật? Mô tả quy trình cụ thể (ai làm, dữ liệu lấy từ đâu, tiêu chí nhãn là gì).
+
+3. **Điều kiện để thoát cold start:** Bạn sẽ biết "giai đoạn cold start kết thúc" khi nào? Đặt ra một con số cụ thể.
+
+<Callout title="Mẹo">
+Đừng nghĩ "phải giải quyết hoàn toàn cold start trước khi ra mắt". Mục tiêu là có đủ để ra mắt an toàn — và thiết kế sản phẩm để thu dữ liệu thật ngay từ ngày đầu.
+</Callout>
+
+---
+
+## Nhiệm vụ 2 — Thiết kế cơ chế thu feedback (10 phút)
+
+AI tutor sẽ trả lời hàng nghìn câu hỏi mỗi ngày. Bạn cần thu phản hồi ở quy mô đó — không thể nhờ user bấm 👍👎 cho từng câu trả lời.
+
+Thiết kế hệ thống thu feedback gồm:
+
+1. **Một điểm explicit feedback** — đặt ở đâu trong UI, kích hoạt khi nào, yêu cầu gì từ user? Lý do bạn đặt ở thời điểm đó thay vì sau mỗi câu trả lời.
+
+2. **Hai loại implicit signal** — mô tả hành vi cụ thể bạn sẽ theo dõi, tại sao hành vi đó là tín hiệu chất lượng tốt hay xấu. Ví dụ: "user có copy câu trả lời vào notebook không?"
+
+3. **Cách lưu và gắn nhãn:** Hai loại tín hiệu trên được lưu thế nào, và bạn sẽ làm gì với chúng — hiển thị dashboard, đưa vào eval dataset, hay cả hai?
+
+<Callout title="Mẹo">
+Với AI tutor, một implicit signal đặc biệt giá trị là "user có hỏi lại cùng chủ đề sau 10 phút không?" — có thể nghĩa là câu trả lời đầu chưa đủ rõ.
+</Callout>
+
+---
+
+## Nhiệm vụ 3 — Plan golden set (10 phút)
+
+Sau 4 tuần ra mắt, bạn đã có 3.000 câu hỏi–câu trả lời từ user thật. Bạn muốn xây golden set 100 ví dụ từ bộ dữ liệu này.
+
+Trả lời:
+
+1. **Tiêu chí chọn ví dụ:** Bạn chọn 100 ví dụ từ 3.000 như thế nào? Ưu tiên loại nào (câu hỏi phổ biến nhất? câu hỏi model hay sai nhất? phân phối đều theo chủ đề?). Giải thích lý do.
+
+2. **Ai gán nhãn và theo tiêu chí gì:** Viết ra một rubric gán nhãn ngắn gọn (3–5 tiêu chí cụ thể) mà bất kỳ giáo viên nào cũng có thể dùng để đánh giá câu trả lời của AI tutor là "tốt" hay "không tốt".
+
+3. **Cập nhật golden set:** Golden set này sẽ lỗi thời sau bao lâu? Bạn sẽ cập nhật nó theo lịch nào và dựa vào tín hiệu gì để biết lúc nào cần làm mới?
+
+<Callout title="Nhớ nhé">
+Golden set không phải tài liệu bất biến. Sản phẩm thay đổi, tiêu chí chất lượng thay đổi, người dùng thay đổi. Plan cập nhật golden set cũng quan trọng như plan tạo ra nó.
+</Callout>
+
+---
+
+## Tiêu chí đánh giá
+
+Tham khảo [AI Product Management Rubric](/rubrics/rubric-ai-product-management) để tự chấm.
+
+Với bài này, tập trung vào:
+
+| Tiêu chí | Câu hỏi để tự kiểm tra |
+|---|---|
+| Kế hoạch cold start có thực tế không | Bạn có thể thực hiện trong 1 tuần với team 3 người không? |
+| Feedback collection có gắn với eval không | Tín hiệu bạn thu có đi vào bộ eval hay chỉ dừng ở dashboard? |
+| Golden set có tiêu chí nhãn cụ thể không | Hai người gán nhãn khác nhau có cho cùng kết quả không? |

@@ -1,0 +1,54 @@
+---
+id: concept-data-labeling-for-product
+title: "Data Labeling for Product"
+type: "concept"
+aliases: ["data labeling product", "gán nhãn dữ liệu sản phẩm AI", "annotation golden set PM", "nhãn dữ liệu eval chất lượng", "PM owns golden set labeling"]
+tags: [ai-product-management, data-labeling, evaluation, eval-dataset, quality, annotation]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Thước đo chỉ chính xác khi ai đó đã hiệu chỉnh nó đúng cách. Nếu thước của bạn lệch 2cm, mọi vật bạn đo đều sai — và bạn không biết mình sai.
+
+Golden set trong AI là cái thước đó. Nếu nhãn trong golden set sai, mọi điểm eval bạn tính ra đều vô nghĩa. Và người chịu trách nhiệm về cái thước đó không phải kỹ sư — mà là PM.
+
+## Là gì
+
+**Data labeling for product** là quá trình gán nhãn "đúng/sai", "tốt/tệ", hoặc "loại nào" cho từng example trong bộ dữ liệu — để tạo ra golden set dùng cho eval. Chất lượng nhãn quyết định chất lượng eval, và chất lượng eval quyết định bạn có biết mình đang cải thiện hay không.
+
+PM là người sở hữu golden set vì PM hiểu định nghĩa "output tốt" theo tiêu chí sản phẩm — không phải theo tiêu chí kỹ thuật.
+
+## Ví dụ thật
+
+Bạn có AI tóm tắt hợp đồng pháp lý. Bạn nhờ intern gán nhãn 200 ví dụ: "tóm tắt này đúng/sai". Intern không biết luật, họ chỉ nhìn xem câu có trôi chảy không. Kết quả: 95% nhãn "đúng", nhưng nhiều tóm tắt bỏ sót điều khoản quan trọng.
+
+Bộ eval của bạn nói model tốt. Nhưng user thật — luật sư — phàn nàn model bỏ sót điều quan trọng. Vấn đề không phải model — mà là tiêu chí gán nhãn sai từ đầu.
+
+Giải pháp: PM ngồi cùng một luật sư, định nghĩa rõ "tóm tắt tốt là gì" bằng rubric cụ thể trước khi gán nhãn. Rồi gán nhãn lại 200 ví dụ đó theo tiêu chí mới.
+
+<Callout title="Cẩn thận">
+Đừng giao toàn bộ việc gán nhãn cho người không hiểu domain — dù là intern, crowdworker, hay thậm chí một LLM khác. Với các task có chuyên môn (y tế, pháp lý, tài chính), người gán nhãn phải hiểu đủ để biết "đúng" nghĩa là gì trong ngữ cảnh đó. Một golden set nhỏ nhưng chất lượng cao luôn tốt hơn một bộ lớn nhưng nhãn lung tung.
+</Callout>
+
+**Ai nên gán nhãn?** Phụ thuộc vào domain:
+
+- Task phổ thông (phân loại sentiment, nhận biết ý định): crowdworker có hướng dẫn rõ ràng.
+- Task chuyên môn (pháp lý, y tế, kỹ thuật): cần domain expert.
+- Task về "có phù hợp với sản phẩm không": PM tự làm một phần để calibrate, rồi delegate.
+
+<Callout title="Nhớ nhé">
+PM sở hữu golden set — không có nghĩa là PM tự gán nhãn tất cả, mà là PM định nghĩa tiêu chí, kiểm tra chất lượng nhãn, và chịu trách nhiệm khi bộ eval nói dối. Chất lượng nhãn là chất lượng sản phẩm.
+</Callout>
+
+## Đọc thêm
+
+- [Golden Dataset: Role In Custom LLM Evals — Arize AI](https://arize.com/resource/golden-dataset/) — Giải thích vai trò của golden dataset trong eval LLM, cách tạo annotated benchmark và cải thiện evaluator qua vòng lặp; thực tế và có hướng dẫn từng bước.
+- [Building a Golden Dataset for AI Evaluation — Maxim AI](https://www.getmaxim.ai/articles/building-a-golden-dataset-for-ai-evaluation-a-step-by-step-guide/) — Hướng dẫn 8 bước xây golden dataset từ production data đến synthetic examples, kèm framework governance; phù hợp làm checklist thực tế cho PM.
+- [Data Labeling Quality Guide — TaskMonk](https://www.taskmonk.ai/blogs/guide-to-data-labeling-quality) — Các tiêu chí và metrics đo chất lượng gán nhãn (inter-annotator agreement, precision, recall); giúp PM hiểu cách kiểm tra xem nhãn của mình có đáng tin không.
+- [Rubric vs Guidelines vs Golden Set — Twine](https://www.twine.net/blog/rubric-vs-guidelines-vs-golden-set/) — Phân biệt rõ ba công cụ đo chất lượng annotation: guidelines (làm thế nào), rubric (chấm thế nào), golden set (đo thế nào); hữu ích để PM không dùng sai công cụ.
+
+## Tự kiểm tra
+
+1. Tại sao PM — chứ không phải kỹ sư — nên là người "sở hữu" golden set? Điều gì xảy ra nếu kỹ sư tự định nghĩa tiêu chí nhãn mà không có PM?
+2. Bạn cần gán nhãn 500 ví dụ cho một AI phân loại email hỗ trợ khách hàng. Bạn sẽ chọn ai để gán nhãn và tại sao? Bạn sẽ kiểm tra chất lượng nhãn bằng cách nào?
+3. Một bộ golden set đã có 6 tháng tuổi. Khi nào bạn cần cập nhật nó, và dấu hiệu nào cho thấy nó đang "cũ"?

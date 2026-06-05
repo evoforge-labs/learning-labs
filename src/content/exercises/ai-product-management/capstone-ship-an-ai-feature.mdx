@@ -1,0 +1,61 @@
+---
+id: exercise-aipm-006
+title: "Capstone: Đưa một AI feature từ ý tưởng đến ra mắt"
+type: "exercise"
+track: ai-product-management
+skill: ai-product-management
+tags: [ai-product-management, ai, product, evaluation, pricing, responsible-ai, capstone, solo-builder]
+estimatedMinutes: 90
+related: [rubric-ai-product-management, concept-when-ai-adds-value, concept-eval-first-product, concept-ai-ux-trust, concept-graceful-degradation-ai, concept-feedback-collection, concept-cold-start-problem, concept-shipping-bar-for-ai, concept-hallucination-as-product-risk, concept-pricing-ai-products, concept-ai-cost-economics, concept-responsible-ai-product, concept-launching-ai-features]
+status: published
+---
+import Callout from '../../../components/content/Callout.astro';
+
+## Tình huống
+
+Bạn làm **"Replyly"** — công cụ giúp chủ shop online trả lời tin nhắn khách hàng. Bạn muốn thêm một feature AI: **tự soạn câu trả lời gợi ý** dựa trên tin nhắn của khách + thông tin sản phẩm. Chủ shop xem, sửa nếu cần, rồi gửi.
+
+3.000 user trả tiền, 39 USD/tháng. Mỗi câu trả lời gợi ý tốn khoảng 1.500 token. Bạn chỉ có một mình.
+
+Capstone này yêu cầu bạn đi trọn vòng đời một AI feature — gom mọi thứ đã học trong track.
+
+---
+
+## Nhiệm vụ 1 — Có nên là AI không, và "đủ tốt" là gì?
+
+1. Lập luận ngắn: feature này [AI có thật sự thêm giá trị](/concepts/when-ai-adds-value) không, hay một template có sẵn cũng xong việc? Quyết định và bảo vệ.
+2. Theo tư duy [eval-first](/concepts/eval-first-product): định nghĩa **"đủ tốt"** bằng eval *trước khi build*. Viết 3-5 tiêu chí một câu trả lời gợi ý phải đạt, và bạn sẽ chấm thế nào.
+
+---
+
+## Nhiệm vụ 2 — Thiết kế cho lúc nó sai
+
+1. Thiết kế **2 trust signal** trong UX (vd: đánh dấu "bản nháp AI", hiển thị độ tự tin, luôn cho sửa trước khi gửi).
+2. Thiết kế **graceful degradation**: khi model không chắc hoặc thiếu thông tin sản phẩm thì sao? Đường lui an toàn là gì?
+3. [Hallucination ở đây là rủi ro sản phẩm](/concepts/hallucination-as-product-risk): một câu trả lời bịa thông tin (giá sai, chính sách đổi trả sai) gây hậu quả gì? Nêu một mitigation.
+
+---
+
+## Nhiệm vụ 3 — Dữ liệu, chất lượng & shipping bar
+
+1. Ngày đầu chưa có dữ liệu ([cold start](/concepts/cold-start-problem)) — bạn seed chất lượng thế nào?
+2. Thiết kế cơ chế [thu feedback](/concepts/feedback-collection): khi chủ shop *sửa* câu gợi ý, bạn học được gì và lưu lại ra sao?
+3. Định [shipping bar](/concepts/shipping-bar-for-ai): tỉ lệ gợi ý "dùng được mà không cần sửa nhiều" phải đạt bao nhiêu thì bạn dám ra mắt? Vì sao con số đó?
+
+---
+
+## Nhiệm vụ 4 — Pricing, chi phí & ra mắt
+
+1. **Unit economics:** ước tính chi phí token mỗi user/tháng (giả định số lần dùng hợp lý) và xem nó ăn bao nhiêu % của 39 USD. Margin còn lại ổn không?
+2. Chọn **mô hình giá** cho feature: gộp vào gói hiện tại, add-on, hay giới hạn lượt? Bảo vệ lựa chọn.
+3. Nêu **một rủi ro responsible-AI** phải xử lý (vd: phải cho khách biết câu trả lời do AI soạn? bảo vệ dữ liệu khách?) và **kế hoạch staged rollout**.
+
+---
+
+## Tiêu chí đánh giá
+
+Tự chấm theo [AI Product Management Rubric](../../rubrics/ai-product-management-rubric). Capstone chạm cả 5 tiêu chí — bài tổng hợp của cả track.
+
+<Callout title="Nhớ nhé">
+Một feature AI tốt không phải feature dùng model xịn nhất. Đó là feature bạn biết *khi nào nó sai*, đã thiết kế cho cái lúc đó, đo được nó tốt đến đâu, và bán được mà không lỗ. Model là phần dễ — phần khó là mọi thứ quanh nó.
+</Callout>

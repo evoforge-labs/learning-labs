@@ -1,0 +1,50 @@
+---
+id: concept-eval-first-product
+title: "Eval-First Product Thinking"
+type: "concept"
+aliases: ["eval-first product thinking", "eval trước khi build", "định nghĩa đủ tốt bằng eval", "product eval spec", "evaluation as product spec"]
+tags: [ai-product-management, evals, product-thinking, llm-evals, quality, ai-engineering]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Trước khi xây nhà, thợ cần bản thiết kế. Bản thiết kế không phải là nhà — nhưng không có nó, bạn không biết khi nào xây xong, không biết "xong" trông như thế nào.
+
+Với feature AI, **eval là bản thiết kế đó**. Nó định nghĩa "đủ tốt" *trước khi* bạn viết một dòng prompt.
+
+## Là gì
+
+**Eval-first product thinking** là cách tiếp cận trong đó bạn viết bộ tiêu chí đánh giá (eval) *trước* khi bắt đầu build feature AI. Eval ở đây không chỉ là unit test kỹ thuật — nó là **spec sản phẩm** cho hệ thống xác suất: nó nói rõ feature này "tốt" khi nào, "tệ" khi nào, và làm sao đo được.
+
+Ngược lại với cách thông thường: build trước → dùng thử → cảm thấy "có vẻ ổn" → ship. Cách đó không có điểm dừng rõ ràng — và không phát hiện được regression khi bạn thay prompt hay model.
+
+## Ví dụ thật
+
+PM thiết kế tính năng AI trả lời câu hỏi của khách hàng. Thay vì viết "AI phải trả lời hay", họ viết eval:
+
+- **Chính xác:** 90% câu trả lời đúng với chính sách sản phẩm (đo bằng bộ 50 câu hỏi mẫu + LLM judge)
+- **Không bịa:** dưới 5% câu trả lời chứa thông tin không có trong knowledge base
+- **Từ chối hợp lý:** khi không biết, AI nói "tôi không chắc" thay vì bịa — đo bằng 20 câu hỏi ngoài scope
+
+Bộ eval này trở thành **definition of done** cho sprint. Khi đạt cả ba tiêu chí → ship. Khi thay prompt mới → chạy lại eval ngay, không cần đợi user phàn nàn.
+
+<Callout title="Cẩn thận">
+Eval không phải chỉ dành cho kỹ sư. Nếu PM không tham gia viết eval, bộ eval sẽ đo những gì kỹ sư nghĩ là quan trọng — chứ không phải những gì *user cần*. PM cần viết ít nhất 20-30 test case từ góc nhìn người dùng thật trước khi giao cho team kỹ thuật.
+</Callout>
+
+<Callout title="Nhớ nhé">
+Eval là spec sản phẩm cho AI feature. Viết eval trước → bạn biết khi nào xong, phát hiện regression sớm, và ra quyết định ship có cơ sở chứ không phải cảm tính.
+</Callout>
+
+## Đọc thêm
+
+- [Your AI Product Needs Evals — Hamel Husain](https://hamel.dev/blog/posts/evals/) — Bài thực hành kinh điển: tại sao hầu hết AI product thất bại vì thiếu eval, và cách xây hệ thống eval từ đầu; dùng case study thật với sản phẩm SaaS.
+- [AI Evals for Product Managers — Productboard](https://www.productboard.com/blog/ai-evals-for-product-managers/) — Góc nhìn PM: eval là feedback loop cho AI feature, cách tích hợp eval vào quy trình phát triển sản phẩm, không cần hiểu sâu kỹ thuật.
+- [AI Evals for PMs: Everything You Need to Know — Aakash Gupta](https://www.news.aakashg.com/p/ai-evals) — Newsletter dành cho PM: giải thích các loại eval, cách PM đặt câu hỏi đúng, và ví dụ eval cho các loại feature AI phổ biến.
+- [Evaluation Best Practices — OpenAI](https://platform.openai.com/docs/guides/evals) — Tài liệu chính thức của OpenAI về xây dựng eval pipeline; thực hành chuẩn mực công nghiệp.
+
+## Tự kiểm tra
+
+1. Sự khác biệt giữa "viết test sau khi build" và "viết eval trước khi build" là gì? Tại sao cái sau quan trọng hơn với AI feature?
+2. PM của bạn muốn build tính năng AI tóm tắt email. Hãy viết 3 tiêu chí eval cụ thể (có số) cho feature đó.
+3. Nếu sau khi thay model mới, điểm eval tăng ở tiêu chí "chính xác" nhưng giảm ở tiêu chí "không bịa" — bạn có nên ship không? Tại sao?

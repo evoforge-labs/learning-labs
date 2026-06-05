@@ -1,0 +1,58 @@
+---
+id: lesson-aipm-004
+title: "Biết feature AI của bạn tốt đến đâu, trên người dùng thật"
+type: "lesson"
+track: ai-product-management
+module: measurement
+level: intermediate
+tags: [ai-product-management, evaluation, metrics, quality, ab-testing, shipping, measurement]
+prerequisites: [concept-ai-quality-metrics, concept-ai-ab-testing, concept-hallucination-as-product-risk, concept-shipping-bar-for-ai, concept-llm-evals, concept-offline-vs-online-eval, concept-llm-as-judge]
+related: [exercise-aipm-004, rubric-ai-product-management]
+status: published
+---
+import Callout from '../../../components/content/Callout.astro';
+
+Benchmark trong lab tốt không có nghĩa là feature tốt. Bài học này xâu chuỗi bốn công cụ tư duy về đo lường thành một quy trình bạn chạy *trước khi ship và sau khi ship* — trên người dùng thật.
+
+## Vòng đo lường của một AI feature
+
+Hầu hết PM dừng lại ở "model đạt điểm tốt trong eval nội bộ là đủ". Nhưng có hai vòng đo lường hoàn toàn khác nhau:
+
+**Vòng offline (trước khi có người dùng thật):** bạn dùng [concept-llm-evals](/concepts/llm-evals) và [concept-llm-as-judge](/concepts/llm-as-judge) để đánh giá chất lượng output trên dataset được kiểm soát. Đây là vòng nhanh và rẻ để lọc ra những phiên bản rõ ràng tệ. Chi tiết về sự khác biệt offline vs online: [concept-offline-vs-online-eval](/concepts/offline-vs-online-eval).
+
+**Vòng online (khi có người dùng thật):** bạn dùng [concept-ai-quality-metrics](/concepts/ai-quality-metrics) — helpfulness, perceived accuracy, edit rate — để biết feature thực sự giúp ích gì. Vòng này không thể thay thế bằng vòng offline, vì người dùng thật hỏi những câu bạn không nghĩ đến trong dataset.
+
+Hai vòng này không cạnh tranh — chúng bổ sung nhau. Offline để lọc, online để học.
+
+## Từ eval đến experiment
+
+Eval offline cho bạn biết "phiên bản nào trông tốt hơn trên paper". Muốn biết thật sự tốt hơn, bạn cần experiment trên người dùng thật.
+
+Đây là lúc [concept-ai-ab-testing](/concepts/ai-ab-testing) vào. A/B test với AI feature khác A/B test UI vì LLM không tất định — cùng input, khác output. Cần mẫu lớn hơn, thời gian dài hơn, và metric đo rõ hơn trước khi chạy.
+
+<Callout title="Mẹo">
+Trước khi chạy A/B test, viết xuống: metric chính là gì, guardrail metric là gì, và khi nào thì dừng. Đừng để "nhìn số xem thế nào" trở thành tiêu chí dừng — đó là cách tự mislead mình.
+</Callout>
+
+## Hallucination là biến số ẩn
+
+Eval và A/B test bắt được nhiều thứ, nhưng hallucination là loại lỗi nguy hiểm nhất vì nó tự tin và khó phát hiện qua aggregate metrics.
+
+[concept-hallucination-as-product-risk](/concepts/hallucination-as-product-risk) nhắc nhở: một câu trả lời sai trong domain rủi ro cao có thể phá hủy niềm tin mà không bao giờ bị bắt bởi average helpfulness score. Bạn cần sampling thủ công hoặc LLM-as-judge chuyên biệt để theo dõi hallucination rate riêng, đặc biệt ở những luồng quan trọng.
+
+## Quyết định cuối: shipping bar
+
+Sau tất cả dữ liệu — offline eval, A/B test, hallucination check — bạn vẫn phải đưa ra quyết định: ship hay không?
+
+[concept-shipping-bar-for-ai](/concepts/shipping-bar-for-ai) đưa ra framework ba câu hỏi:
+1. AI của bạn tốt hơn hay kém hơn giải pháp hiện tại?
+2. Chi phí của một lần sai là bao nhiêu?
+3. Nếu ship sớm, cơ chế nào bảo vệ người dùng khi AI sai?
+
+Câu trả lời cho ba câu đó — không phải một con số accuracy đơn lẻ — mới là shipping bar thực sự.
+
+<Callout title="Nhớ nhé">
+Vòng đo lường hoàn chỉnh: offline eval để lọc → A/B test online để so sánh → theo dõi hallucination riêng → dùng shipping bar framework để ra quyết định. Bỏ một bước là mù một phần.
+</Callout>
+
+Thực hành ngay: [Bài tập đặt shipping bar →](/exercises/ai-product-management/m4-set-the-bar)

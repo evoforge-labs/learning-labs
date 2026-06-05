@@ -1,0 +1,56 @@
+---
+id: concept-ai-ab-testing
+title: "A/B Testing for AI Features"
+type: "concept"
+aliases: ["A/B testing cho AI", "thử nghiệm AI không tất định", "AI feature experiment design", "kiểm thử tính năng AI", "non-deterministic AB test", "thử nghiệm LLM production"]
+tags: [ai-product-management, ab-testing, evaluation, experimentation, llm, statistics, product]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Bạn thay màu nút từ xanh sang đỏ. Chạy A/B test 2 tuần. Kết quả rõ ràng. Đó là A/B test truyền thống — kết quả tất định, chỉ cần đủ traffic là đủ.
+
+Bây giờ bạn thay một prompt AI. Chạy A/B test 2 tuần. Kết quả... lộn xộn. Cùng một input, model đôi khi cho output khác nhau. Cùng một variant, user A thích còn user B ghét vì lý do hoàn toàn khác. Bạn đang chơi A/B test trên một hệ thống không tất định.
+
+## Là gì
+
+**A/B testing cho AI features** là thử nghiệm so sánh các phiên bản khác nhau của một tính năng AI (prompt, model, logic xử lý) trên người dùng thật — nhưng phải tính đến những ràng buộc mà A/B test thông thường không có:
+
+1. **Variance cao hơn**: LLM không ra cùng một output cho cùng một input. Muốn kết quả có ý nghĩa thống kê, bạn cần mẫu lớn hơn và thời gian dài hơn so với A/B test UI thông thường.
+
+2. **Hiệu ứng học (learning effect)**: Người dùng tương tác với AI theo chuỗi — context của lần trước ảnh hưởng lần sau. Một output tệ hôm nay có thể khiến user thay đổi cách dùng ngày mai, làm nhiễu dữ liệu.
+
+3. **Metric khó đồng nhất**: Với nút bấm, conversion là rõ ràng. Với AI, "câu trả lời tốt" cần định nghĩa trước và nhất quán — không thể chỉ đo click.
+
+## Ví dụ thật
+
+Bạn muốn so sánh hai prompt cho tính năng tóm tắt email: Prompt A (ngắn gọn) vs Prompt B (có bullet points). Mỗi ngày có 500 user dùng tính năng này.
+
+Với A/B test UI thông thường, 500 user/ngày là đủ để ra kết quả sau 1 tuần. Với AI: mỗi user nhận output khác nhau (LLM variance), rating của họ phụ thuộc vào cả session trước, và thumbs-up thì thưa thớt. Thực tế bạn cần chạy ít nhất 3-4 tuần, dùng nhiều signal (không chỉ rating), và tách riêng cohort user mới vs user cũ để tránh learning effect.
+
+<Callout title="Cẩn thận">
+Đừng kết luận sớm. Với AI features, "kết quả tốt trong tuần đầu" thường là nhiễu thống kê — người dùng mới tò mò, rating cao bất thường. Hãy đợi đủ mẫu và kiểm tra statistical significance trước khi rollout.
+</Callout>
+
+**Một số thực hành giúp A/B test AI chắc chắn hơn:**
+
+- **Sticky sessions**: một user luôn nhận cùng một variant trong suốt experiment để tránh nhiễu cross-variant.
+- **Implicit signals**: đo cả edit rate, copy rate, thời gian đọc — không chỉ explicit rating.
+- **Versioned prompts**: quản lý prompt như code, biết chính xác variant nào đang chạy lúc nào.
+
+<Callout title="Nhớ nhé">
+A/B test AI khác A/B test UI ở ba điểm: variance cao hơn (cần mẫu lớn hơn), hiệu ứng học (cần tách cohort), và metric mờ hơn (cần định nghĩa trước). Thiếu một trong ba, kết quả sẽ mislead.
+</Callout>
+
+## Đọc thêm
+
+- [Best Practices for Running AI Output A/B Test in Production — Render](https://render.com/articles/best-practices-for-running-ai-output-a-b-test-in-production) — Hướng dẫn thực hành kiến trúc routing, sticky sessions, và explicit feedback cho A/B test LLM output trên production; rất cụ thể về pitfalls kỹ thuật.
+- [Testing AI Agents: Validating Non-Deterministic Behavior — SitePoint](https://www.sitepoint.com/testing-ai-agents-deterministic-evaluation-in-a-non-deterministic-world/) — Giải thích tại sao non-determinism của AI agents làm phức tạp evaluation và cần chạy nhiều lần để hấp thụ variance.
+- [The Good, The Bad, and The Greedy: Evaluation of LLMs Should Not Ignore Non-Determinism — arXiv](https://arxiv.org/abs/2407.10457) — Nghiên cứu học thuật chứng minh cùng một LLM với cùng settings cho output biến thiên đáng kể; đặt nền tảng lý thuyết cho vấn đề variance trong A/B testing AI.
+- [Stop Shipping Features: Why AI Products Need an Experiment Mindset — Clint Johnson](https://www.clint-johnson.com/articles/experiment-velocity-beats-features) — Lập luận rằng AI teams nên đo "experiment velocity" thay vì "feature velocity"; ví dụ thực tế ship 12 feature mà không có metric nào dịch chuyển.
+
+## Tự kiểm tra
+
+1. Tại sao A/B test một AI feature cần mẫu lớn hơn và thời gian dài hơn so với A/B test một nút bấm?
+2. "Hiệu ứng học" (learning effect) trong A/B test AI là gì? Nó ảnh hưởng kết quả như thế nào?
+3. Bạn đang test hai phiên bản prompt cho chatbot hỗ trợ khách hàng. Ngoài rating explicit (thumbs up/down), bạn sẽ đo thêm implicit signal nào?

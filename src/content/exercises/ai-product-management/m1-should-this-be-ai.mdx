@@ -1,0 +1,105 @@
+---
+id: exercise-aipm-001
+title: "Có nên dùng AI cho feature này không?"
+type: "exercise"
+track: ai-product-management
+tags: [product-thinking, decision-making, evals, product, ai-engineering, iteration]
+estimatedMinutes: 25
+related: [lesson-aipm-001, concept-ai-product-management, concept-probabilistic-product-thinking, concept-when-ai-adds-value, concept-ai-product-lifecycle, concept-jobs-to-be-done, rubric-ai-product-management]
+status: published
+---
+import Callout from '../../../components/content/Callout.astro';
+
+## Tình huống
+
+Bạn là PM tại một startup SaaS nhỏ — nền tảng quản lý dự án cho freelancer. Hiện tại app có các tính năng cơ bản: tạo task, đặt deadline, track thời gian.
+
+Trong buổi họp tuần qua, founder đề xuất:
+
+> *"Mình thêm AI để tự động phân loại task theo độ ưu tiên nhé. User tạo task, AI đọc tiêu đề + mô tả rồi gắn tag 'Urgent / High / Medium / Low' tự động. Nghe hay không?"*
+
+Đội bạn hào hứng. Ai đó đã thử prototype trong 2 giờ — GPT-4o đọc tiêu đề task và gắn priority trông "ổn". Founder muốn ship trong 2 tuần.
+
+Bạn cần đưa ra quyết định có nên đi tiếp không — và nếu có, thì như thế nào.
+
+---
+
+## Nhiệm vụ 1 — Quyết định: AI có thêm giá trị thật sự không?
+
+Trước khi quyết định, làm rõ bài toán:
+
+**1a. Xác định Job-to-be-Done thật sự.**
+Người dùng freelancer đang cố *hoàn thành việc gì* khi họ muốn task được phân loại priority? Đừng đoán — hãy viết ít nhất hai "job" khả dĩ khác nhau. (Ví dụ gợi ý để bắt đầu suy nghĩ: "biết làm gì trước khi ngồi xuống làm việc sáng thứ Hai" — đó có phải job thật không? Job nào quan trọng hơn?)
+
+**1b. Đánh giá: AI hay rule-based?**
+Viết ra:
+- Hai lý do dùng AI *có* thêm giá trị cho bài toán này.
+- Hai lý do dùng rule đơn giản *có thể đủ* (ví dụ: deadline trong vòng 24h → Urgent).
+- Kết luận của bạn: bắt đầu bằng AI hay rule-based? Tại sao?
+
+**1c. Nếu dùng AI — rủi ro là gì?**
+Nêu ít nhất hai rủi ro cụ thể khi AI phân loại sai priority. Với mỗi rủi ro, đề xuất một cách giảm thiểu trong thiết kế UX.
+
+<Callout title="Mẹo">
+Hãy thử scenario này: một freelancer đang gấp dự án cho khách hàng lớn. Họ vừa tạo task "Gửi invoice tháng này". AI phân loại là "Low". Chuyện gì xảy ra tiếp theo? Thiết kế của bạn có xử lý được không?
+</Callout>
+
+---
+
+## Nhiệm vụ 2 — Thiết kế cho tư duy xác suất
+
+Giả sử bạn quyết định thử AI. Nhưng bạn biết AI không bao giờ đúng 100%.
+
+**2a. Định nghĩa "đủ tốt".**
+Viết một tiêu chí đo lường cụ thể: AI phân loại priority đúng bao nhiêu % trong trường hợp nào thì mới đáng ship? Giải thích cách bạn tính % đó — không được dùng "cảm giác ổn".
+
+**2b. Thiết kế cho lúc AI sai.**
+Vẽ (hoặc mô tả bằng lời) luồng UX cho hai trường hợp:
+- AI phân loại đúng — user trải nghiệm thế nào?
+- AI phân loại sai — user phát hiện và sửa thế nào? Thao tác đó có nhẹ nhàng không?
+
+**2c. Xác định tín hiệu monitor.**
+Sau khi ship, bạn cần biết feature có đang hoạt động tốt không. Chọn *hai* tín hiệu đo được (không phải "user hài lòng" chung chung) để theo dõi. Giải thích tại sao hai tín hiệu đó nói lên chất lượng AI.
+
+<Callout title="Cẩn thận">
+Tránh metric ảo: "số lần AI gắn tag" không nói lên chất lượng. Hãy nghĩ đến hành vi thực tế của user phản ánh AI đang giúp hay cản trở họ.
+</Callout>
+
+---
+
+## Nhiệm vụ 3 — Vẽ vòng đời AI cho feature này
+
+Dựa vào quyết định và thiết kế ở Nhiệm vụ 1-2, phác thảo vòng đời AI cho feature phân loại priority:
+
+| Giai đoạn | Bạn sẽ làm gì? | Mất bao lâu (ước lượng)? |
+|---|---|---|
+| Prototype | | |
+| Eval | | |
+| Ship | | |
+| Monitor | | |
+| Cải thiện (vòng lặp tiếp theo) | | |
+
+Cho mỗi giai đoạn, viết ít nhất một hành động cụ thể — không phải "làm eval" chung chung mà là "tạo tập 30 task thật từ user cũ, gắn label tay theo tiêu chí X, đo accuracy của model".
+
+<Callout title="Mẹo">
+Với một feature nhỏ như này, cả vòng lặp đầu tiên (từ Prototype đến Ship) nên mất không quá 2-3 tuần. Nếu ước lượng của bạn lâu hơn nhiều, hãy xem lại xem bạn đang scope quá rộng ở đâu.
+</Callout>
+
+---
+
+## Tiêu chí đánh giá
+
+Tham khảo [AI Product Management Rubric](/rubrics/ai-product-management-rubric) để tự chấm.
+
+Với bài này, tập trung vào:
+
+| Tiêu chí | Câu hỏi tự kiểm tra |
+|---|---|
+| Job-to-be-Done rõ ràng | Job bạn xác định có đủ cụ thể không? Hay vẫn là "user muốn organize tasks" chung chung? |
+| Quyết định AI vs rule có lý luận | Bạn có so sánh hai lựa chọn thật sự không, hay chỉ justify AI vì "nghe hay"? |
+| Thiết kế cho uncertainty | UX của bạn có graceful degradation khi AI sai không? |
+| Vòng đời có đủ bốn bước | Bạn có bỏ qua Monitor hoặc Eval không? |
+
+<Callout title="Nhớ nhé">
+Không có đáp án "đúng" duy nhất — quyết định dùng AI hay không đều có thể đúng tùy lập luận. Điều quan trọng là *quy trình*: job rõ → đánh giá trung thực → thiết kế cho xác suất → vòng đời có đủ bốn bước.
+</Callout>

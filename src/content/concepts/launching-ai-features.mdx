@@ -1,0 +1,54 @@
+---
+id: concept-launching-ai-features
+title: "Launching AI Features"
+type: "concept"
+aliases: ["launching AI features", "ra mắt AI feature", "staged rollout AI", "beta AI feature", "quản lý kỳ vọng AI", "AI feature launch plan"]
+tags: [ai-product-management, launch, staged-rollout, beta, expectations, communication, product]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Hãy nhớ lần đầu bạn dùng thử một tính năng AI mới và nó hoạt động hoàn hảo trong demo — rồi bạn thử trên dữ liệu thật của mình và nó sai lè. Cảm giác thất vọng đó không phải do tính năng kém: nó do kỳ vọng đã bị quản lý sai từ đầu.
+
+Ra mắt AI feature thành công = feature đủ tốt × kỳ vọng được đặt đúng.
+
+## Là gì
+
+**Launching AI features** là quy trình đưa một tính năng AI từ internal build ra tay người dùng thật — bao gồm staged rollout (triển khai từng bước), beta, truyền thông trung thực về giới hạn, và thu thập tín hiệu sớm để quyết định có tiếp tục mở rộng không.
+
+AI feature khác feature thông thường ở chỗ: nó có thể *đúng 90% lần* và vẫn tạo ra vấn đề niềm tin nặng nề từ 10% lần sai. Người dùng tha thứ cho bug phần mềm hơn là "AI nói nhảm". Điều đó đặt ra yêu cầu cao hơn cho cả chất lượng lẫn cách truyền thông.
+
+## Ví dụ thật
+
+Một PM ra mắt tính năng "tóm tắt hợp đồng tự động". Thay vì ship thẳng cho tất cả user, họ làm theo trình tự:
+
+1. **Internal alpha (tuần 1–2):** Chỉ team nội bộ dùng, tìm lỗi nghiêm trọng.
+2. **Closed beta (tuần 3–6):** 50 khách hàng được mời, đồng ý nhận feature còn thô. UI có badge "Beta" và dòng chú thích: "Tóm tắt tự động — luôn đọc lại bản gốc trước khi ký."
+3. **Staged rollout (tuần 7–10):** Bật cho 10% user, theo dõi error rate và user feedback. Nếu ổn, mở rộng lên 50%, rồi 100%.
+
+Kết quả: khi feature "chính thức" ra mắt, team đã có 6 tuần feedback thực tế và đặt kỳ vọng đúng. Không có màn hình "AI nói đây là hợp đồng bán nhà nhưng thực ra là hợp đồng thuê xe".
+
+<Callout title="Cẩn thận">
+Đừng dùng "Beta" như một tấm khiên pháp lý rồi thôi. Nếu feature ở beta mà bạn không có kế hoạch thu feedback, không có criteria để "tốt nghiệp" beta, và không truyền thông giới hạn cụ thể — thì beta chỉ là label, không phải quy trình. User vẫn sẽ bị tổn thương, bạn chỉ có thêm một lý do để đổ lỗi.
+</Callout>
+
+Truyền thông trung thực nghĩa là:
+- Nói rõ AI có thể sai và trong trường hợp nào
+- Cho user cách để báo cáo kết quả sai
+- Không hứa "AI sẽ thay thế [công việc X]" khi thực tế nó chỉ hỗ trợ một phần nhỏ
+
+<Callout title="Nhớ nhé">
+Staged rollout cho AI feature không phải optional — nó là mandatory. Không có eval hoàn hảo nào thay thế được 30 ngày dùng thực tế. Ra mắt từng bước, đo sớm, và có sẵn "kill switch" để tắt feature nếu cần.
+</Callout>
+
+## Đọc thêm
+
+- [How to Do a Phased Rollout — PostHog](https://posthog.com/tutorials/phased-rollout) — Hướng dẫn kỹ thuật từng bước về phased rollout dùng feature flags và cohort; trực tiếp áp dụng được cho bất kỳ AI feature nào cần kiểm soát ai được dùng trước.
+- [Enterprise AI Rollout Failures: Causes and Case Studies — IntuitionLabs](https://intuitionlabs.ai/articles/enterprise-ai-rollout-failures) — Phân tích ~95% dự án AI enterprise thất bại không vì kỹ thuật kém mà vì tích hợp sai, data quality kém, và kỳ vọng không thực tế; bài học thiết yếu trước khi lên kế hoạch launch.
+- [Expectation Management in AI: A Framework — PMC/Heliyon](https://pmc.ncbi.nlm.nih.gov/articles/PMC10990870/) — Nghiên cứu học thuật có ứng dụng thực tế: framework quản lý kỳ vọng AI cho stakeholder; người dùng thật kỳ vọng minh bạch về nguồn dữ liệu, độ chính xác, và khả năng phản hồi khi AI sai.
+
+## Tự kiểm tra
+
+1. Tại sao "staged rollout" đặc biệt quan trọng với AI feature hơn là feature phần mềm thông thường?
+2. "Beta" label mang lại gì về mặt kỳ vọng người dùng — và điều kiện gì cần có để beta là một quy trình thực sự, không phải chỉ là label?
+3. Bạn chuẩn bị ra mắt AI feature tóm tắt tin tức. Hãy liệt kê ba điều cần truyền thông rõ ràng với người dùng về giới hạn của feature này.

@@ -1476,3 +1476,90 @@ edges:
   - source: rubric-product-analytics
     target: exercise-pana-006
     rel: evaluates
+
+  # ============================================================
+  # AI Product Management (aipm) — theory progression + drills
+  # ============================================================
+  - source: concept-when-ai-adds-value
+    target: concept-eval-first-product
+    rel: leads-to
+  - source: concept-probabilistic-product-thinking
+    target: concept-graceful-degradation-ai
+    rel: leads-to
+  - source: concept-ai-product-lifecycle
+    target: concept-data-flywheel
+    rel: leads-to
+  - source: concept-eval-first-product
+    target: concept-ai-quality-metrics
+    rel: leads-to
+  - source: concept-ai-ux-trust
+    target: concept-human-ai-handoff
+    rel: supports
+  - source: concept-feedback-collection
+    target: concept-data-flywheel
+    rel: supports
+  - source: concept-cold-start-problem
+    target: concept-data-labeling-for-product
+    rel: supports
+  - source: concept-ai-quality-metrics
+    target: concept-shipping-bar-for-ai
+    rel: leads-to
+  - source: concept-hallucination-as-product-risk
+    target: concept-responsible-ai-product
+    rel: leads-to
+  - source: concept-shipping-bar-for-ai
+    target: concept-launching-ai-features
+    rel: leads-to
+  - source: concept-ai-cost-economics
+    target: concept-pricing-ai-products
+    rel: leads-to
+  # cross-track bridges (AI Eng + Product -> AI PM)
+  - source: concept-llm-evals
+    target: concept-eval-first-product
+    rel: supports
+  - source: concept-hallucination
+    target: concept-hallucination-as-product-risk
+    rel: leads-to
+  - source: concept-human-in-the-loop
+    target: concept-human-ai-handoff
+    rel: supports
+  - source: concept-pricing-strategy
+    target: concept-pricing-ai-products
+    rel: supports
+  - source: concept-dev-cost-token-budget
+    target: concept-ai-cost-economics
+    rel: supports
+  # Drills: which concept each aipm exercise trains
+  - source: concept-when-ai-adds-value
+    target: exercise-aipm-001
+    rel: trains
+  - source: concept-ai-product-lifecycle
+    target: exercise-aipm-001
+    rel: trains
+  - source: concept-eval-first-product
+    target: exercise-aipm-002
+    rel: trains
+  - source: concept-graceful-degradation-ai
+    target: exercise-aipm-002
+    rel: trains
+  - source: concept-cold-start-problem
+    target: exercise-aipm-003
+    rel: trains
+  - source: concept-feedback-collection
+    target: exercise-aipm-003
+    rel: trains
+  - source: concept-shipping-bar-for-ai
+    target: exercise-aipm-004
+    rel: trains
+  - source: concept-ai-ab-testing
+    target: exercise-aipm-004
+    rel: trains
+  - source: concept-pricing-ai-products
+    target: exercise-aipm-005
+    rel: trains
+  - source: concept-ai-cost-economics
+    target: exercise-aipm-005
+    rel: trains
+  - source: rubric-ai-product-management
+    target: exercise-aipm-006
+    rel: evaluates
