@@ -1,0 +1,86 @@
+---
+id: exercise-ux-002
+title: "Bố cục một trang từ đầu"
+type: "exercise"
+track: design-for-builders
+tags: [design, ux, layout, grid, alignment, responsive, eye-tracking, above-the-fold, design-for-builders]
+estimatedMinutes: 30
+related: [lesson-ux-002, concept-layout-and-grid, concept-alignment-and-proximity, concept-responsive-design, concept-visual-scanning-patterns, rubric-design-for-builders]
+status: published
+---
+import Callout from '../../../components/content/Callout.astro';
+
+## Tình huống
+
+Bạn vừa hoàn thành MVP của **DailyBoard** — một dashboard đơn giản cho freelancer theo dõi dự án, task, và doanh thu. Người dùng mở app mỗi sáng để xem nhanh tình hình và quyết định làm gì hôm nay.
+
+Trang chính (home dashboard) hiện có các thành phần sau chưa được sắp xếp:
+
+- **Tổng doanh thu tháng này** (số lớn, highlight)
+- **Danh sách task hôm nay** (3-5 task, mỗi task có checkbox)
+- **Dự án đang chạy** (3-4 dự án, mỗi cái có tên + tiến độ %)
+- **Shortcut nhanh**: "Thêm task", "Ghi nhận thu nhập", "Tạo dự án mới"
+- **Thông báo/nhắc nhở** (deadline sắp đến, invoice chưa gửi)
+
+Bạn cần thiết kế bố cục cho trang này — trên desktop và mobile.
+
+---
+
+## Nhiệm vụ 1 — Đặt lưới và căn chỉnh
+
+Xác định hệ thống lưới cho desktop layout (1280px):
+
+1. **Chọn số cột** và gutter size. Giải thích tại sao (vd: 12 cột vì... / 8 cột vì...).
+2. **Phân vùng màn hình**: mỗi thành phần trên chiếm bao nhiêu cột? Vẽ sơ đồ đơn giản (chữ mô tả hoặc ASCII art cũng được) cho thấy cách bạn chia cột.
+3. **Quyết định proximity**: những thành phần nào nên đặt gần nhau (cùng nhóm)? Những thành phần nào nên tách xa? Giải thích lý do — không chỉ nói "trông đẹp hơn".
+
+<Callout title="Mẹo">
+Hỏi: "Người dùng mở trang này xong sẽ làm gì ngay lập tức?" Thứ liên quan đến hành động đó nên được nhóm lại gần nhau.
+</Callout>
+
+---
+
+## Nhiệm vụ 2 — Quyết định above the fold và đường quét
+
+Dashboard này là trang nhiều thông tin, không phải landing page. Xác định:
+
+1. **Above the fold**: trên desktop (viewport 768px cao), những thành phần nào sẽ hiển thị mà không cần cuộn? Bạn phải chọn — không đủ chỗ cho tất cả. Giải thích thứ tự ưu tiên.
+2. **Mẫu quét**: Dashboard này phù hợp với F-pattern hay Z-pattern hơn? Tại sao? Từ đó, bạn sẽ đặt thông tin quan trọng nhất ở đâu để khớp với đường quét tự nhiên đó?
+3. **Điểm nhìn đầu tiên**: Khi người dùng mở DailyBoard buổi sáng, mắt họ nên dừng lại ở đâu *đầu tiên*? Bạn sẽ làm gì với bố cục hoặc visual để hướng mắt họ đến điểm đó?
+
+<Callout title="Mẹo">
+Mở một dashboard bạn hay dùng (Notion, Linear, hoặc bất kỳ app nào). Để ý mắt bạn nhìn vào đâu đầu tiên. Đó là do thiết kế hay do thói quen? Phân tích ngắn gọn rồi áp dụng vào DailyBoard.
+</Callout>
+
+---
+
+## Nhiệm vụ 3 — Phác thảo responsive cho mobile
+
+Người dùng hay check DailyBoard nhanh trên điện thoại trong lúc uống cà phê sáng. Viewport mobile: 375px rộng.
+
+1. **Thứ tự ưu tiên trên mobile**: trên mobile, tất cả 5 thành phần xếp dọc. Bạn sẽ sắp xếp chúng theo thứ tự nào từ trên xuống? Lý do?
+2. **Thứ gì bị thu gọn hoặc ẩn trên mobile?** Có thứ gì trên desktop không cần thiết trên mobile không? Nếu có, mô tả cách xử lý (ẩn hoàn toàn / thu gọn / chuyển vào menu khác).
+3. **Một breakpoint quan trọng nhất** cho DailyBoard là ở đâu? Tại điểm đó, layout thay đổi như thế nào?
+
+<Callout title="Cẩn thận">
+Nếu bạn thấy mình muốn ẩn thứ gì đó trên mobile bằng `display: none`, hãy dừng lại và hỏi: tại sao thứ đó cần tồn tại trên desktop? Nếu không trả lời được, xem xét bỏ nó khỏi cả hai.
+</Callout>
+
+---
+
+## Tiêu chí đánh giá
+
+Tham khảo [Design for Builders Rubric](/rubrics/design-for-builders-rubric) để tự chấm.
+
+Với bài này, tập trung vào:
+
+| Tiêu chí | Câu hỏi tự kiểm tra |
+|---|---|
+| Hệ thống lưới nhất quán | Các quyết định cột của bạn có theo hệ thống hay từng phần tử một số riêng? |
+| Proximity có chủ đích | Bạn có giải thích được tại sao đặt từng nhóm gần nhau không? |
+| Above the fold có ưu tiên rõ ràng | Nếu người dùng chỉ nhìn 5 giây, họ nhận ra gì? |
+| Responsive có thứ tự ưu tiên | Thứ tự mobile của bạn có phản ánh điều người dùng thực sự cần nhất không? |
+
+<Callout title="Nhớ nhé">
+Bài tập này không có một đáp án đúng duy nhất. Điều quan trọng là mỗi quyết định bố cục của bạn đều có lý do — không phải "trông ổn" hay "cảm giác đúng", mà là "vì người dùng cần thấy X trước, và đường quét tự nhiên là Y, nên mình đặt X ở vị trí Z."
+</Callout>

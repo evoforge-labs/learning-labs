@@ -1,0 +1,80 @@
+---
+id: exercise-ux-004
+title: "Audit Usability Một Luồng Thật"
+type: "exercise"
+track: design-for-builders
+tags: [ux, usability, accessibility, friction, user-flows, heuristics, design-for-builders, audit]
+estimatedMinutes: 30
+related: [lesson-ux-004, concept-usability-heuristics, concept-user-flows, concept-friction-in-ux, concept-accessibility-basics, rubric-design-for-builders]
+status: published
+---
+import Callout from '../../../components/content/Callout.astro';
+
+## Tình huống
+
+Bạn vừa được giao nhiệm vụ cải thiện tỷ lệ hoàn thành của luồng **onboarding** một app quản lý công việc (to-do app). Dữ liệu cho thấy 60% người dùng bỏ cuộc trước khi tạo xong task đầu tiên.
+
+Luồng hiện tại (theo mô tả của dev):
+
+> Màn hình chào → Tạo tài khoản (email + mật khẩu + tên công ty + số điện thoại + chọn plan) → Xác nhận email → Chọn template workspace → Mời thành viên → Tạo project đầu tiên → Tạo task đầu tiên → Màn hình "Bạn đã sẵn sàng!"
+
+Bạn chưa có quyền truy cập Figma hay code. Chỉ có mô tả trên và một tờ giấy trắng.
+
+---
+
+## Nhiệm vụ 1 — Vẽ user flow và tìm 2 điểm ma sát
+
+Dựa vào mô tả luồng onboarding ở trên:
+
+1. Vẽ user flow dưới dạng sơ đồ — có thể dùng bút và giấy, FigJam, hoặc bất kỳ công cụ nào. Mỗi bước là một ô, mỗi quyết định là hình thoi, mũi tên thể hiện hướng đi.
+2. Xác định **ít nhất 2 điểm ma sát xấu** trong luồng — các bước hoặc yêu cầu cản trở user mà không có lý do bảo mật hay kinh doanh rõ ràng.
+3. Với mỗi điểm ma sát, đề xuất cách bỏ bớt hoặc trì hoãn sang sau (progressive disclosure).
+
+<Callout title="Mẹo">
+Câu hỏi để tìm ma sát: "Bước này có cần thiết để user tạo được task đầu tiên không?" Nếu không — đó là ma sát. Ví dụ: user có cần mời thành viên trước khi tạo task đầu tiên không?
+</Callout>
+
+---
+
+## Nhiệm vụ 2 — Chấm theo heuristics Nielsen
+
+Chọn **3 heuristics** trong số 10 heuristics của Nielsen và đánh giá luồng onboarding trên theo từng heuristic đó.
+
+Với mỗi heuristic bạn chọn:
+
+1. Nêu tên heuristic.
+2. Mô tả cụ thể một điểm trong luồng *vi phạm* hoặc *tuân thủ* heuristic đó.
+3. Nếu vi phạm — đề xuất sửa cụ thể (không phải chung chung "cải thiện UX").
+
+<Callout title="Mẹo">
+Bắt đầu với heuristic số 1 (Visibility of system status): luồng onboarding dài như này có cho user biết họ đang ở bước mấy/tổng cộng mấy bước không? Nếu không — đó là vi phạm rõ ràng và có thể sửa bằng một progress indicator đơn giản.
+</Callout>
+
+---
+
+## Nhiệm vụ 3 — Kiểm tra 3 vấn đề accessibility cơ bản
+
+Tưởng tượng bạn đang build màn hình "Tạo tài khoản" của luồng trên. Mô tả cách bạn sẽ đảm bảo 3 điều sau:
+
+1. **Alt text:** Form đăng ký có logo công ty ở góc trên trái — không mang thông tin nội dung. Bạn nên viết alt text thế nào?
+2. **Semantic HTML:** Nút "Tiếp tục" cuối form nên dùng thẻ HTML nào? Tại sao không dùng `div` hay `span`?
+3. **Keyboard navigation:** Mô tả thứ tự Tab hợp lý cho form có 5 trường: Tên hiển thị → Email → Mật khẩu → Số điện thoại → Tên công ty, và nút "Tiếp tục". Có trường nào bạn đề xuất bỏ hoặc làm optional để giảm ma sát không?
+
+<Callout title="Nhớ nhé">
+Accessibility và usability thường đi đôi với nhau. Semantic HTML đúng giúp cả screen reader lẫn keyboard navigation. Form ngắn hơn giúp cả người dùng bình thường lẫn người dùng assistive technology. Hai mục tiêu, một giải pháp.
+</Callout>
+
+---
+
+## Tiêu chí đánh giá
+
+Tham khảo [Design & UX Rubric](/rubrics/design-for-builders-rubric) để tự chấm. Với bài này, tập trung vào tiêu chí thứ tư:
+
+| Tiêu chí | Câu hỏi để tự kiểm tra |
+|---|---|
+| UX tương tác: affordance rõ, có feedback, xử lý đủ trạng thái | Đề xuất sửa của bạn có giải quyết vấn đề gốc rễ không, hay chỉ là cosmetic? |
+| Usability & accessibility: ít ma sát, dễ hiểu, dùng được cho nhiều người | Đề xuất accessibility của bạn có dựa trên lý do kỹ thuật cụ thể không? |
+
+<Callout title="Nhớ nhé">
+Không có đáp án duy nhất đúng. Điều quan trọng là lập luận rõ ràng: bạn thấy vấn đề gì, tại sao đó là vấn đề (heuristic nào, loại friction nào, tiêu chuẩn accessibility nào), và bạn sửa thế nào. Lý luận rõ ràng quan trọng hơn giải pháp "hoàn hảo".
+</Callout>

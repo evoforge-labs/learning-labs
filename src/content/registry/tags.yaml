@@ -292,3 +292,32 @@ tags:
   - soc2
   - security-logging
   - breach-response
+  # --- Design & UX for Builders ---
+  - design
+  - ux
+  - ui
+  - visual-hierarchy
+  - typography
+  - whitespace
+  - color
+  - contrast
+  - layout
+  - grid
+  - alignment
+  - responsive-design
+  - scanning-patterns
+  - affordance
+  - feedback
+  - ui-states
+  - form-ux
+  - microcopy
+  - usability
+  - heuristics
+  - user-flows
+  - friction
+  - accessibility
+  - a11y
+  - design-system
+  - design-tokens
+  - design-to-code
+  - design-taste

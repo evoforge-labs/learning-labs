@@ -1,0 +1,104 @@
+---
+id: exercise-ux-003
+title: "Thiết kế tương tác đầy đủ cho một feature"
+type: "exercise"
+track: design-for-builders
+tags: [design, ux, ui, interaction-design, affordance, feedback, ui-states, form-design, microcopy, usability]
+estimatedMinutes: 30
+related: [lesson-ux-003, concept-affordance-and-signifiers, concept-ui-feedback, concept-ui-states, concept-form-ux, concept-microcopy, rubric-design-for-builders]
+status: published
+---
+import Callout from '../../../components/content/Callout.astro';
+
+## Tình huống
+
+Bạn đang build tính năng **upload ảnh đại diện** cho một app cộng đồng. Feature này có:
+
+- Nút "Tải ảnh lên" trên trang hồ sơ cá nhân
+- Form nhỏ: chọn file + nút xác nhận
+- Yêu cầu kỹ thuật: chỉ chấp nhận JPG/PNG, tối đa 5MB
+- Ảnh được xử lý phía server (crop + resize) mất 2-4 giây
+
+Nhìn vào feature này, hầu hết builder chỉ thiết kế cho trường hợp: người dùng chọn ảnh đúng format, bấm xác nhận, ảnh lên thành công. Bài tập này yêu cầu bạn thiết kế đầy đủ hơn thế.
+
+---
+
+## Nhiệm vụ 1 — Thiết kế 3 trạng thái UI ngoài happy path
+
+Feature upload ảnh có ít nhất 4 trạng thái: trạng thái mặc định (chưa có ảnh), đang tải (loading), lỗi, và thành công. Bài này tập trung vào 3 trạng thái ngoài happy path.
+
+Với **mỗi trạng thái**, mô tả cụ thể những gì xuất hiện trên màn hình:
+
+**a. Empty state** — người dùng chưa có ảnh đại diện (lần đầu dùng app).
+- Hiển thị gì thay cho ảnh?
+- Có CTA không? Nếu có, viết chính xác text của nút/link đó.
+- Giọng văn ra sao — neutral, friendly, hay có yếu tố tạo động lực?
+
+**b. Loading state** — ảnh đang được xử lý phía server (2-4 giây).
+- Dùng spinner hay skeleton hay gì khác? Tại sao?
+- Nút "Xác nhận" lúc này trông như thế nào? Có disable không?
+- Có hiển thị progress không? Bao nhiêu % là đủ?
+
+**c. Error state** — người dùng chọn file PNG 8MB (quá 5MB giới hạn).
+- Hiển thị lỗi ở đâu: trên form, dưới field, hay popup?
+- Viết chính xác nội dung thông báo lỗi (theo nguyên tắc microcopy: cụ thể + hướng dẫn tiếp theo).
+- Người dùng có thể làm gì ngay lúc đó mà không cần thoát form?
+
+<Callout title="Mẹo">
+Đừng chỉ liệt kê tên trạng thái — mô tả đủ để một developer build được mà không cần hỏi lại. "Hiển thị spinner" chưa đủ; "Hiển thị spinner màu brand ở giữa khung ảnh, nút Xác nhận bị disable và đổi text thành Đang xử lý..." mới đủ.
+</Callout>
+
+---
+
+## Nhiệm vụ 2 — Cải thiện affordance và feedback cho nút upload
+
+Nút hiện tại: một button với text "Upload" ở góc phải form, màu xám, không có icon.
+
+Phân tích và cải thiện:
+
+1. **Affordance/Signifier**: nút hiện tại có signifier nào nói với người dùng đây là upload không? Nếu thiếu, thêm gì?
+2. **Trạng thái hover và active**: mô tả nút trông như thế nào khi chuột di qua (hover) và khi đang được bấm (active). Mục tiêu: người dùng cảm nhận được phản hồi ngay lập tức.
+3. **Disabled state**: khi nào nút nên bị disable? Khi disable, nó trông khác gì so với khi active? Làm sao người dùng biết *tại sao* nó đang disabled?
+
+<Callout title="Mẹo">
+Hỏi: nếu bỏ hết chữ khỏi nút này, người dùng có đoán được dùng để làm gì không? Nếu không — thêm signifier.
+</Callout>
+
+---
+
+## Nhiệm vụ 3 — Viết lại microcopy cho form
+
+Form upload hiện tại có những text sau (tất cả đều chưa tốt):
+
+| Vị trí | Text hiện tại |
+|---|---|
+| Label trên file picker | "File" |
+| Placeholder bên trong file picker | "Chọn file..." |
+| Helper text dưới field | (không có) |
+| Nút xác nhận | "Submit" |
+| Thông báo thành công | "Thành công" |
+| Thông báo lỗi file lớn | "Lỗi: File quá lớn" |
+
+Viết lại **toàn bộ 6 dòng** trên theo nguyên tắc microcopy tốt:
+- Ngôn ngữ người dùng, không phải hệ thống
+- Nút mô tả hành động và/hoặc kết quả cụ thể
+- Lỗi giải thích vấn đề + chỉ đường ra
+- Helper text trả lời câu hỏi người dùng chưa kịp hỏi
+
+<Callout title="Nhớ nhé">
+Không có đáp án duy nhất đúng — nhưng có câu trả lời rõ ràng hơn hoặc mơ hồ hơn. Tiêu chí: một người dùng mới đọc form này lần đầu, họ có biết phải làm gì và điều gì sẽ xảy ra không?
+</Callout>
+
+---
+
+## Tiêu chí đánh giá
+
+Tham khảo [Design for Builders Rubric](/rubrics/design-for-builders-rubric) để tự chấm.
+
+Với bài này, tập trung vào:
+
+| Tiêu chí | Câu hỏi để tự kiểm tra |
+|---|---|
+| Đủ trạng thái UI | Ba trạng thái (empty/loading/error) có đủ thông tin để người dùng hiểu và biết bước tiếp theo không? |
+| Affordance và feedback rõ ràng | Nút upload có signifier đủ mạnh không? Mỗi trạng thái hover/active/disabled có phân biệt được không? |
+| Microcopy rõ ràng và con người | Text đã viết lại có trả lời câu hỏi người dùng chưa kịp hỏi không? Có dùng ngôn ngữ hệ thống không? |

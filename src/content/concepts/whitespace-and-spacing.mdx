@@ -1,0 +1,51 @@
+---
+id: concept-whitespace-and-spacing
+title: "Whitespace & Spacing"
+type: "concept"
+aliases: ["whitespace and spacing", "khoảng trắng và khoảng cách UI", "white space design", "spacing scale 8px", "khoảng trắng thiết kế giao diện"]
+tags: [design, ux, ui, whitespace, spacing, layout]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Trong nhạc, khoảng lặng giữa các nốt không phải chỗ trống vô nghĩa — nó tạo ra nhịp điệu, khiến nốt tiếp theo có trọng lượng. Bài nhạc không có khoảng lặng là tiếng ồn.
+
+Khoảng trắng trong UI cũng vậy. Không phải lãng phí chỗ — nó là công cụ thiết kế.
+
+## Là gì
+
+**Whitespace** (khoảng trắng) là phần màn hình không có nội dung. Nó nhóm những thứ liên quan lại gần nhau, và tách những thứ không liên quan ra xa. **Spacing** là hệ thống quyết định khoảng trắng đó lớn bao nhiêu, nhất quán ra sao.
+
+Khoảng trắng không làm giao diện trông "trống" — nó làm giao diện trông **thở được**.
+
+## Ví dụ thật
+
+Một card hiển thị thông tin sản phẩm: tên, giá, nút mua. Nếu ba thứ đó dính sát nhau, mắt phải cố tách chúng ra. Thêm padding 16px bên trong card và khoảng cách 8px giữa các thành phần — đột nhiên mắt đọc trơn tru hơn, không cần cố.
+
+Nguyên tắc thực tế bạn cần biết:
+
+**Thang 4px/8px** — dùng bội số của 4 hoặc 8 cho mọi khoảng cách: 4, 8, 12, 16, 24, 32, 48. Lý do: các màn hình hiện đại đều chia đều theo 8px, nên con số lẻ (13px, 17px) hay tạo ra lệch pixel. Material Design và Tailwind đều dùng thang này.
+
+**Khoảng trong nhỏ hơn khoảng ngoài** — padding bên trong một component (8-16px) nên nhỏ hơn khoảng cách giữa các component (24-32px). Điều này cho mắt thấy đâu là "cùng nhóm", đâu là "nhóm khác".
+
+**Khoảng trắng tạo cấp bậc** — nhiều khoảng trắng xung quanh = quan trọng hơn. Tiêu đề section nên có margin-top lớn hơn margin-bottom để rõ ràng nó mở đầu một khối mới.
+
+<Callout title="Cẩn thận">
+"Thêm vào cho đầy" là phản xạ sai. Khi màn hình trông trống, bản năng là thêm thứ gì đó — icon, text, border. Nhưng thường giải pháp đúng là **tăng spacing** cho những thứ đã có, không phải thêm nội dung mới.
+</Callout>
+
+<Callout title="Nhớ nhé">
+Chọn một thang spacing (ví dụ: 4, 8, 16, 24, 32, 48) và **dùng đúng nó**. Không dùng 13px vì "trông vừa hơn". Sự nhất quán quan trọng hơn số hoàn hảo.
+</Callout>
+
+## Đọc thêm
+
+- [Space, Grids, and Layouts — Design Systems](https://www.designsystems.com/space-grids-and-layouts/) — Tổng quan về cách các design system lớn tổ chức spacing, grid và layout; giải thích tại sao nhất quán quan trọng hơn "đẹp".
+- [Spacing best practices: 8pt grid system — Cieden](https://cieden.com/book/sub-atomic/spacing/spacing-best-practices) — Hướng dẫn thực hành với thang 8pt grid, quy tắc internal ≤ external, và ví dụ áp dụng cụ thể vào component.
+- [The 8pt Grid System: A Simple Guide to Consistent UI Spacing — Rejuvenate Digital](https://www.rejuvenate.digital/news/designing-rhythm-power-8pt-grid-ui-design) — Giải thích tại sao 8px là đơn vị cơ bản, cách áp dụng vào button, card, và layout một cách nhất quán.
+
+## Tự kiểm tra
+
+1. Bạn có một màn hình trông "chật chội". Không thêm tính năng mới, bạn sẽ thay đổi gì với spacing để cải thiện cảm giác đó?
+2. Tại sao dùng 13px padding lại tệ hơn 16px, ngay cả khi 13px "trông vừa hơn" theo cảm quan?
+3. Cho ví dụ về một UI mà khoảng trắng lớn hơn thực sự giúp người dùng hiểu rõ hơn cấu trúc nội dung.

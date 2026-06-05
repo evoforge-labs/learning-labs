@@ -1,0 +1,47 @@
+---
+id: concept-layout-and-grid
+title: "Layout & Grid Systems"
+type: "concept"
+aliases: ["layout grid", "lưới bố cục", "12-column grid", "hệ thống lưới", "css grid layout", "lưới 12 cột"]
+tags: [design, ux, layout, grid, css, visual-design, design-for-builders]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Hồi học phổ thông, bạn kẻ ô vở trước khi viết chữ. Không phải để chữ đẹp hơn — mà để chữ thẳng hàng, đều nhau, dễ đọc. Trang giấy trắng trơn thì chữ lệch tứ phía, nhìn rối mắt.
+
+Giao diện cũng vậy. Lưới (grid) là tập hợp những đường kẻ vô hình mà bạn đặt các phần tử lên đó — để mọi thứ thẳng hàng, nhịp nhàng, và mắt người đọc không bị mất phương hướng.
+
+## Là gì
+
+**Layout** là cách sắp xếp các phần tử trên màn hình: cái gì ở đâu, to bao nhiêu, cách nhau bao nhiêu.
+
+**Grid system** là hệ thống lưới chia màn hình thành các cột đều nhau, giúp builder đặt phần tử theo quy tắc nhất quán. Chuẩn phổ biến nhất là **lưới 12 cột**: 12 chia hết cho 2, 3, 4, 6 — nên bạn dễ tạo layout 2-cột, 3-cột, hoặc 4-cột mà không cần tính toán phức tạp.
+
+## Ví dụ thật
+
+Bạn đang làm trang dashboard. Không có lưới, bạn kéo thả sidebar 240px, main content 700px, widget 260px — ba con số chẳng liên quan nhau. Sau đó thêm section mới, bạn lại đoán thêm số mới. Sau ba tháng, mỗi màn hình một kiểu, không ai sửa được nếu không nhìn từng file CSS.
+
+Với lưới 12 cột: sidebar chiếm 3 cột, main content 6 cột, widget panel 3 cột. Tổng 12. Màn hình nào cũng dùng cùng hệ thống — thêm màn hình mới, bạn chỉ cần quyết định mỗi phần chiếm bao nhiêu cột.
+
+<Callout title="Cẩn thận">
+Lưới không có nghĩa là mọi thứ phải cứng nhắc nằm vào ô vuông. Bạn có thể để một phần tử "phá lưới" một chút để tạo điểm nhấn — nhưng phải cố ý, không phải vì quên dùng lưới. Sai lầm phổ biến: không dùng lưới gì cả rồi nói "mình muốn tự do".
+</Callout>
+
+**Gutters và margins** cũng là một phần của lưới. Gutter là khoảng cách giữa các cột (thường 16–24px). Margin là khoảng cách từ mép ngoài cùng vào. Nhất quán hai thứ này, giao diện nhìn ngay "gọn hơn" một cách không giải thích được.
+
+<Callout title="Nhớ nhé">
+Lưới 12 cột giúp bạn đặt phần tử theo quy tắc nhất quán, không đoán mò. Dùng cùng gutter và margin xuyên suốt. Kết quả: màn hình thẳng hàng, dễ maintain, dễ mở rộng.
+</Callout>
+
+## Đọc thêm
+
+- [CSS Grid Layout — MDN Web Docs](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_grid_layout) — Tài liệu kỹ thuật đầy đủ về CSS Grid, từ khái niệm cơ bản đến các pattern nâng cao; nguồn tham khảo chính xác nhất cho implementation.
+- [CSS Grid Layout — Learn Web Development | MDN](https://developer.mozilla.org/en-US/docs/Learn_web_development/Core/CSS_layout/Grids) — Hướng dẫn học có cấu trúc, giải thích grid từ đầu với ví dụ thực hành; phù hợp nếu bạn muốn xây nền tảng vững.
+- [CSS 12-Column Grid Layout — W3Schools](https://www.w3schools.com/css/css_grid_12column.asp) — Ví dụ cụ thể cách xây lưới 12 cột bằng CSS Grid; ngắn gọn và có code chạy được ngay.
+
+## Tự kiểm tra
+
+1. Tại sao lưới 12 cột được ưa dùng hơn lưới 10 cột hay 8 cột? Liên quan gì đến số chia hết?
+2. "Gutter" và "margin" trong grid system là gì? Hai thứ này khác nhau ở điểm nào?
+3. Khi nào nên cho phần tử "phá lưới" — và làm sao để cố ý phá lưới trông khác với vô tình quên dùng lưới?

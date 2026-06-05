@@ -1,0 +1,77 @@
+---
+id: concept-accessibility-basics
+title: "Accessibility (a11y) Basics"
+type: "concept"
+aliases: ["accessibility basics", "a11y cơ bản", "thiết kế tiếp cận phổ cập", "web accessibility a11y", "curb-cut effect thiết kế"]
+tags: [accessibility, a11y, ux, wcag, semantic-html, design-for-builders, inclusive-design]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Ở Mỹ, vỉa hè được vát xuống ở mỗi góc đường — ban đầu để xe lăn có thể đi qua. Nhưng ai đang dùng những dốc vát đó nhiều nhất? Người đẩy xe nôi. Người kéo vali. Người đi xe đạp. Người giao hàng với xe đẩy hàng.
+
+Thiết kế cho người khuyết tật thường làm cuộc sống tốt hơn cho *tất cả mọi người*. Hiệu ứng đó được gọi là **curb-cut effect** — và nó đúng cho cả web.
+
+## Là gì
+
+**Accessibility** (thường viết tắt là **a11y** — chữ a, 11 chữ ở giữa, chữ y) là thực hành thiết kế sản phẩm sao cho người khuyết tật — thị giác, thính giác, vận động, nhận thức — vẫn dùng được.
+
+Các nhóm cần accessibility:
+
+- **Thị giác:** người mù dùng screen reader (VoiceOver, NVDA), người mờ mắt tăng cỡ chữ, người mù màu.
+- **Thính giác:** người điếc cần phụ đề, cần transcript cho audio.
+- **Vận động:** người dùng bàn phím thay mouse, người dùng switch access.
+- **Nhận thức:** người dyslexia cần font rõ ràng, người lo âu cần giao diện không có thứ chớp liên tục.
+
+Nhưng a11y không chỉ là "làm cho người khuyết tật". Caption video giúp cả người xem ở nơi ồn ào. Contrast cao giúp cả người xem ngoài nắng. Alt text giúp cả khi ảnh load chậm.
+
+## Ví dụ thật
+
+Bốn kỹ thuật cơ bản nhất, áp dụng ngay:
+
+**1. Alt text cho ảnh**
+```html
+<!-- Xấu -->
+<img src="chart.png" />
+
+<!-- Tốt -->
+<img src="chart.png" alt="Biểu đồ doanh thu Q1-Q4 2024, tăng 40% so với năm trước" />
+```
+Screen reader đọc alt text cho người mù. Nếu ảnh thuần trang trí, dùng `alt=""` — screen reader sẽ bỏ qua.
+
+**2. Tương phản màu sắc**
+Tỷ lệ tương phản tối thiểu giữa chữ và nền: **4.5:1** cho chữ thường (theo WCAG AA). Chữ xám nhạt trên nền trắng trông "minimal" nhưng người mờ mắt không đọc được. Dùng công cụ như WebAIM Contrast Checker để kiểm tra.
+
+**3. Semantic HTML**
+```html
+<!-- Xấu — screen reader không biết đây là gì -->
+<div class="btn" onclick="...">Gửi</div>
+
+<!-- Tốt — screen reader biết đây là nút, có thể Tab đến và Enter để nhấn -->
+<button type="submit">Gửi</button>
+```
+Dùng đúng thẻ: `button` cho nút bấm, `a` cho link, `nav` cho điều hướng, `h1`/`h2`/`h3` theo thứ bậc.
+
+**4. Focus management**
+Mọi thao tác tương tác (button, link, form) phải dùng được bằng bàn phím. Thử: Tab qua toàn bộ trang. Bạn có thể đến được mọi nơi không? Thứ tự Tab có hợp lý không? Focus indicator (viền xanh quanh element đang chọn) có nhìn thấy không?
+
+<Callout title="Cẩn thận">
+Đừng xóa viền focus (`outline: none`) để trông "đẹp hơn" mà không thay thế bằng cái gì khác. Người dùng bàn phím mất đi dấu hiệu duy nhất cho biết họ đang ở đâu trong trang. Nếu muốn style lại, thay bằng `outline` có màu rõ hoặc box-shadow.
+</Callout>
+
+<Callout title="Nhớ nhé">
+Bắt đầu từ 4 thứ: alt text đầy đủ, contrast đủ 4.5:1, semantic HTML đúng thẻ, toàn bộ trang Tab được. Bốn thứ này tốn ít thời gian nhất nhưng giải quyết phần lớn vấn đề accessibility. Không cần hoàn hảo ngay từ đầu — bắt đầu là đủ.
+</Callout>
+
+## Đọc thêm
+
+- [Introduction to Web Accessibility — W3C WAI](https://www.w3.org/WAI/fundamentals/accessibility-intro/) — Tài liệu gốc của W3C giải thích tại sao accessibility quan trọng và liên kết đến chuẩn WCAG; cập nhật 2026.
+- [What is accessibility? — MDN Web Docs](https://developer.mozilla.org/en-US/docs/Learn_web_development/Core/Accessibility/What_is_accessibility) — Hướng dẫn thực hành từ MDN: các loại khuyết tật, tools hỗ trợ, và cách bắt đầu viết code accessible.
+- [How to Meet WCAG — W3C Quick Reference](https://www.w3.org/WAI/WCAG22/quickref/) — Bảng tra cứu nhanh toàn bộ tiêu chí WCAG 2.2; lọc được theo mức độ (A, AA, AAA) và loại kỹ thuật.
+- [A Beginner's Guide to Web Accessibility — DEV Community](https://dev.to/kedar7/a-beginners-guide-to-web-accessibility-wcag-easy-checks-semantic-html-2936) — Hướng dẫn ngắn gọn với ví dụ code cụ thể: WCAG, semantic HTML, easy checks; phù hợp để bắt đầu nhanh.
+
+## Tự kiểm tra
+
+1. Bạn có một ảnh banner trang chủ chỉ dùng để trang trí, không mang thông tin. Bạn nên viết alt text thế nào?
+2. Chữ màu `#999999` trên nền trắng `#FFFFFF` — tỷ lệ tương phản xấp xỉ 2.85:1. Đạt chuẩn WCAG AA chưa? Bạn cần thay đổi gì?
+3. Kể ra 2 nhóm người *không* bị khuyết tật nhưng vẫn được hưởng lợi từ thiết kế accessible. Giải thích cụ thể.

@@ -1,0 +1,54 @@
+---
+id: concept-form-ux
+title: "Form UX"
+type: "concept"
+aliases: ["form ux thiết kế biểu mẫu", "form design inline validation", "ux form đăng ký", "biểu mẫu người dùng bỏ cuộc"]
+tags: [design, ux, ui, form-design, validation, usability, conversion]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Bạn đến bệnh viện lần đầu. Lễ tân đưa cho bạn tờ khai: 3 trang A4, chữ nhỏ, hỏi từ số hộ chiếu đến nghề nghiệp của bố mẹ. Bạn ngồi điền 20 phút mà chưa xong. Bạn bắt đầu bỏ trống những chỗ "chắc không quan trọng".
+
+Form trong app của bạn cũng có thể làm người dùng cảm thấy đúng vậy.
+
+## Là gì
+
+**Form UX** là cách thiết kế biểu mẫu để người dùng hoàn thành nó nhanh, ít sai, và không bỏ cuộc giữa chừng. Đây là một trong những điểm rớt conversion cao nhất trong mọi app — gần 70% người dùng bỏ form nếu gặp vấn đề.
+
+Bốn nguyên tắc cốt lõi:
+
+**Label rõ ràng** — đặt label *trên* field, không phải bên trong (placeholder biến mất khi gõ, người dùng quên mình đang điền gì). Viết label bằng ngôn ngữ người dùng dùng, không phải ngôn ngữ hệ thống.
+
+**Ít field nhất có thể** — mỗi field bắt buộc là một rào cản. Hỏi đúng những gì cần thiết ở bước đó. "Số điện thoại" không cần thiết cho bước tạo tài khoản — đừng hỏi.
+
+**Lỗi inline, ngay lập tức** — đừng để người dùng điền hết rồi mới báo lỗi ở trên cùng. Báo ngay khi họ rời khỏi field đó. Và nói cụ thể: "Email không hợp lệ" tốt hơn "Lỗi ở trường số 2".
+
+**Không bắt nhập lại từ đầu** — nếu có lỗi, chỉ xóa field lỗi, giữ lại tất cả field đúng. Không gì làm người dùng tức giận hơn là mất hết dữ liệu đã nhập vì một lỗi nhỏ.
+
+## Ví dụ thật
+
+Form đăng ký có 8 field: tên, email, số điện thoại, ngày sinh, địa chỉ, thành phố, tỉnh, mã bưu chính. Người dùng điền xong 7 field, đến số điện thoại nhập sai format, bấm Submit — cả form reset về trắng.
+
+Chỉ cần giữ lại giá trị đã nhập và highlight đúng field lỗi, conversion rate của form đó sẽ tăng đáng kể.
+
+<Callout title="Cẩn thận">
+Validate *sau khi* người dùng rời khỏi field (on-blur), không phải khi đang gõ (on-change). Báo lỗi khi người dùng còn đang gõ gây annoyance và làm họ mất tập trung. Ngoại lệ: password strength indicator — có thể hiển thị real-time vì nó mang tính *hướng dẫn* chứ không phải *phán xét*.
+</Callout>
+
+<Callout title="Nhớ nhé">
+Form tốt = ít field + label rõ + lỗi inline + không mất dữ liệu. Mỗi field bạn thêm vào là một lý do để người dùng bỏ cuộc. Hỏi: field này có thực sự cần thiết ngay lúc này không?
+</Callout>
+
+## Đọc thêm
+
+- [Form UX Design Tips: Best Practice Examples — Zuko Blog](https://www.zuko.io/blog/form-ux-design-tips-best-practice-examples) — 10 pattern thiết kế form cụ thể, có dẫn số liệu nghiên cứu; ví dụ: inline validation tăng 22% tỷ lệ hoàn thành form.
+- [The UX of Form Validation: Inline or After Submission? — LogRocket](https://blog.logrocket.com/ux-design/ux-form-validation-inline-after-submission/) — Phân tích khi nào nên validate inline vs. sau submit, kèm lý do và ví dụ từng trường hợp.
+- [Inline Validation UX — Smart Interface Design Patterns](https://smart-interface-design-patterns.com/articles/inline-validation-ux/) — Deep-dive về timing và cách hiển thị inline validation; phân biệt on-blur, on-change, hybrid approach với ví dụ ảnh.
+- [Form Validation Best Practices — Ivy Forms](https://ivyforms.io/blog/form-validation-best-practices/) — Tổng hợp best practice đầy đủ từ accessibility đến error message writing, phù hợp dùng làm checklist khi review form.
+
+## Tự kiểm tra
+
+1. Placeholder text bên trong field thường không phải label tốt — tại sao? Khi nào placeholder vẫn hữu ích?
+2. Người dùng gõ email sai format. Khi nào nên hiển thị lỗi: ngay khi gõ (on-change), sau khi rời field (on-blur), hay khi bấm Submit? Bảo vệ lựa chọn của bạn.
+3. Form đăng ký của bạn đang hỏi 10 field. Liệt kê 3 field bạn sẽ xem xét bỏ hoặc dời sang bước sau và lý do tại sao.

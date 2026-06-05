@@ -1,0 +1,57 @@
+---
+id: concept-friction-in-ux
+title: "Friction in UX"
+type: "concept"
+aliases: ["friction in UX", "ma sát UX", "giảm ma sát giao diện", "UX friction design", "intentional friction thiết kế"]
+tags: [ux, friction, conversion, usability, design-for-builders, cognitive-load]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Hãy nghĩ đến lúc bạn mua vé máy bay online. Bạn đã chọn xong chuyến bay, nhưng trước khi thanh toán bạn phải điền form 3 trang, tạo tài khoản, xác nhận email, rồi nhập lại thẻ vì trang timeout. Bạn có bỏ giữa chừng không?
+
+Đó là ma sát: mỗi bước thừa, mỗi form dài hơn cần thiết, mỗi lần phải nghĩ "Tôi đang ở đâu?" đều tiêu hao năng lượng của user. Tích lũy đủ — họ bỏ đi.
+
+## Là gì
+
+**Friction** (ma sát trong UX) là bất kỳ yếu tố nào làm chậm hoặc cản trở người dùng hoàn thành việc họ muốn làm. Có thể là bước thừa, form quá dài, ngôn ngữ khó hiểu, nút khó tìm, hay trang load chậm.
+
+Công thức đơn giản: ma sát càng nhiều ở điểm quan trọng → tỷ lệ hoàn thành càng thấp.
+
+Nhưng có một điều tinh tế hơn: **không phải mọi ma sát đều xấu**.
+
+## Ví dụ thật
+
+**Ma sát xấu (cần bỏ):** Form đăng ký yêu cầu số điện thoại trong khi tính năng không cần số đó. Mỗi trường thêm vào = thêm người bỏ giữa chừng.
+
+**Ma sát tốt (cần giữ):** Nút "Xóa toàn bộ dữ liệu" hiện hộp thoại xác nhận: "Bạn có chắc không? Hành động này không thể hoàn tác." Đây là ma sát *có chủ đích* — làm chậm lại một hành động nguy hiểm để tránh sai sót.
+
+Ví dụ khác về ma sát tốt: đặt mật khẩu hai lần (tránh typo), xác thực 2 bước khi đăng nhập thiết bị mới (bảo mật), màn hình tóm tắt trước khi xác nhận chuyển tiền.
+
+<Callout title="Cẩn thận">
+Bẫy phổ biến: "Tôi sẽ thêm bước này cho an toàn" — rồi thêm cả chục bước không cần thiết khắp app. Trước khi thêm bất kỳ bước hay trường nào, hỏi: *Nếu bỏ cái này, điều xấu nhất xảy ra là gì?* Nếu câu trả lời là "không có gì" — bỏ đi.
+</Callout>
+
+Cách thực tế để giảm ma sát:
+
+- **Bỏ trường không cần thiết** trong form — mỗi trường thêm làm giảm tỷ lệ hoàn thành.
+- **Smart defaults** — điền sẵn giá trị phổ biến nhất thay vì để trống.
+- **Inline validation** — báo lỗi ngay khi user đang nhập, không phải sau khi submit.
+- **Ghi nhớ thông tin** — địa chỉ, phương thức thanh toán đã dùng lần trước.
+- **Rút ngắn luồng** — cho phép thanh toán không cần tạo tài khoản (guest checkout).
+
+<Callout title="Nhớ nhé">
+Ma sát tốt = làm chậm lại hành động nguy hiểm hoặc không thể hoàn tác. Ma sát xấu = cản trở việc user đang cố làm mà không có lý do rõ ràng. Nguyên tắc: bỏ ma sát ở nơi user cần thuận tiện; giữ ma sát ở nơi user cần dừng lại suy nghĩ.
+</Callout>
+
+## Đọc thêm
+
+- [Cognitive Friction in UX Design – Good or Bad? — UXPin](https://www.uxpin.com/studio/blog/cognitive-friction-good-or-bad/) — Phân tích 6 loại friction, ví dụ về friction tốt và xấu; thực hành rõ ràng.
+- [Turning Friction into Positive Experiences in UX Design — Uxcel](https://uxcel.com/blog/turning-friction-into-positive-experiences-in-ux-design-lesson-uxcel-002) — Hướng dẫn xác định friction points qua dữ liệu (rage clicks, form abandonment) và cách sửa.
+- [Easing Cognitive Friction: How Smarter UX Lowers the Mental Load — Versions](https://versions.com/cognition/easing-cognitive-friction-how-smarter-ux-lowers-the-mental-load/) — Góc nhìn tâm lý học nhận thức về tại sao friction gây tổn hao tinh thần; liên kết với cognitive load.
+
+## Tự kiểm tra
+
+1. Một app checkout yêu cầu user tạo tài khoản trước khi thanh toán. Đây là ma sát tốt hay xấu? Giải thích và đề xuất thay thế.
+2. Hãy liệt kê 3 tình huống mà ma sát có chủ đích (intentional friction) là cần thiết và hợp lý.
+3. Bạn có một form 8 trường. Sau khi phân tích, biết rằng 3 trường ít khi được điền và không ảnh hưởng tới tính năng cốt lõi. Bạn nên làm gì?

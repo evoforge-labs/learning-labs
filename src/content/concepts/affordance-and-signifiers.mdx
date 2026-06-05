@@ -1,0 +1,50 @@
+---
+id: concept-affordance-and-signifiers
+title: "Affordance & Signifiers"
+type: "concept"
+aliases: ["affordance", "signifier giao diện", "Norman door ux", "vật cho biết cách dùng", "affordance và signifier thiết kế"]
+tags: [design, ux, usability, interaction-design, affordance, signifiers]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Bạn đứng trước một cánh cửa kính. Có một tấm kim loại phẳng ở giữa. Bạn đẩy — cửa không mở. Bạn kéo — cửa mở ra. Bạn cảm thấy ngớ ngẩn, dù đây là lỗi của cửa, không phải của bạn.
+
+Đây là "Norman door" — cái cửa mà thiết kế của nó nói dối bạn về cách dùng nó.
+
+## Là gì
+
+**Affordance** là khả năng tương tác mà một vật thể *cho phép*. Nút thì bấm được. Thanh kéo thì kéo được. Đây là tính chất vật lý hoặc kỹ thuật — bạn có thể làm gì với nó.
+
+**Signifier** là dấu hiệu *nhìn thấy được* nói cho bạn biết nên tương tác như thế nào và ở đâu. Cái mũi tên trên nút cuộn. Chữ "Kéo xuống để làm mới". Hiệu ứng hover khi chuột di vào.
+
+Nói gọn: affordance là *điều có thể làm*, signifier là *gợi ý để bạn biết làm gì*.
+
+## Ví dụ thật
+
+Bạn build một widget có thể kéo để sắp xếp lại thứ tự — nhưng không có icon "grip" (sáu chấm), không có cursor thay đổi, không có tooltip. Người dùng không biết nó có thể kéo được. Affordance có đó, nhưng signifier thì không.
+
+Thêm icon grip là bạn đã tạo ra signifier. Người dùng nhìn thấy → hiểu ngay → dùng được.
+
+Tương tự với nút submit màu xám mờ khi form chưa điền đủ: cái màu xám mờ đó là signifier — nó nói "chưa làm được đâu, còn thiếu gì đó."
+
+<Callout title="Cẩn thận">
+Đừng dựa vào "người dùng sẽ tự khám phá ra". Tính năng ẩn không có signifier = tính năng không tồn tại với 90% người dùng. Nếu bạn phải giải thích cách dùng một nút trong onboarding, đó là dấu hiệu signifier của bạn đang yếu.
+</Callout>
+
+<Callout title="Nhớ nhé">
+Affordance là *bạn có thể làm gì*, signifier là *gợi ý để bạn biết làm điều đó*. Thiết kế tốt không cần hướng dẫn — vì signifier đã nói hộ rồi.
+</Callout>
+
+## Đọc thêm
+
+- [Affordances — Interaction Design Foundation](https://ixdf.org/literature/topics/affordances) — Giải thích đầy đủ lịch sử và phân loại affordance từ Gibson đến Don Norman, với ví dụ thiết thực cho UI; cập nhật 2026.
+- [Signifiers — Interaction Design Foundation](https://ixdf.org/literature/topics/signifiers) — Phân biệt rõ signifier và affordance, kèm ví dụ từ interface thực tế; nguồn học thuật trung lập với vendor.
+- [Norman Doors: Your Gateway to UX Design — IxDF](https://ixdf.org/literature/article/your-gateway-to-ux-design-norman-doors) — Giải thích tại sao Norman door là ví dụ kinh điển về thiết kế phản trực giác và bài học rút ra cho builder.
+- [Understanding Don Norman's Principles of Interaction — UX Magazine](https://uxmag.com/articles/understanding-don-normans-principles-of-interaction) — Tổng quan 6 nguyên tắc của Norman (trong đó có affordance/signifier), ngắn gọn và thực dụng.
+
+## Tự kiểm tra
+
+1. Bạn build một input có thể gõ để tìm kiếm, nhưng không có icon kính lúp và placeholder chỉ ghi "..." — vấn đề ở đây là thiếu *affordance* hay thiếu *signifier*? Giải thích tại sao.
+2. Một nút "Xóa tài khoản" màu đỏ tươi và một nút "Xác nhận" màu xanh lá — màu sắc đó đóng vai trò gì trong mô hình affordance/signifier?
+3. Kể tên 2 signifier thường gặp trong app mobile mà bạn dùng hàng ngày. Chúng truyền đạt điều gì cho người dùng?

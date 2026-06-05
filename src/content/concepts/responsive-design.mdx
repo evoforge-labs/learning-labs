@@ -1,0 +1,53 @@
+---
+id: concept-responsive-design
+title: "Responsive Design"
+type: "concept"
+aliases: ["responsive design", "thiết kế responsive", "mobile-first design", "breakpoint CSS", "giao diện đa màn hình", "thiết kế thích ứng màn hình"]
+tags: [design, ux, layout, responsive, mobile-first, css, breakpoint, design-for-builders]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Nước đổ vào bình tròn thì có hình tròn. Đổ vào bình vuông thì có hình vuông. Nước không cần biết trước bình to hay nhỏ — nó tự điều chỉnh để vừa khít.
+
+Giao diện responsive cũng vậy: không thiết kế cho một cỡ màn hình cụ thể, mà thiết kế để layout tự điều chỉnh phù hợp với không gian nó có.
+
+## Là gì
+
+**Responsive design** là cách xây giao diện co giãn được theo kích thước màn hình — từ điện thoại 375px đến màn hình 4K 2560px, cùng một codebase, cùng một URL.
+
+Ba kỹ thuật cốt lõi:
+
+**Mobile-first:** Viết CSS cho màn hình nhỏ trước, rồi dùng media query mở rộng lên màn hình lớn hơn. Tại sao ngược không được? Vì màn hình nhỏ có ít không gian hơn — buộc bạn phải quyết định cái gì *thực sự* quan trọng, thay vì nhét mọi thứ vào rồi ẩn đi.
+
+**Breakpoint:** Ngưỡng kích thước màn hình mà layout thay đổi. Ví dụ: dưới 768px hiện một cột, từ 768px trở lên hiện hai cột. Breakpoint phổ biến: 480px (mobile), 768px (tablet), 1024px (desktop nhỏ), 1280px (desktop).
+
+**Fluid units:** Dùng `%`, `vw`, `rem`, `fr` thay vì `px` cứng. Một cột rộng `33%` luôn chiếm một phần ba màn hình, dù màn hình bao nhiêu px.
+
+## Ví dụ thật
+
+Bạn làm trang pricing với ba tier: Free, Pro, Enterprise. Trên desktop, ba card xếp ngang — mỗi card chiếm 4 cột trong lưới 12 cột. Trên tablet (768px), hai card ngang và một card ở dưới — mỗi card 6 cột. Trên mobile, ba card xếp chồng dọc — mỗi card 12 cột, tức full width.
+
+Cùng nội dung, cùng HTML — chỉ CSS thay đổi tùy breakpoint.
+
+<Callout title="Cẩn thận">
+"Responsive" không có nghĩa là ẩn nội dung trên mobile bằng `display: none`. Ẩn đi nghĩa là bạn đã thừa nhận nội dung đó không cần thiết — vậy tại sao giữ nó trên desktop? Nếu thứ gì đó không đáng hiện trên mobile, xem lại xem nó có thực sự cần thiết không.
+</Callout>
+
+**Kiểm tra responsive không cần thiết bị thật:** Mở Chrome DevTools, nhấn biểu tượng responsive (Ctrl+Shift+M / Cmd+Shift+M), kéo thay đổi kích thước. Kiểm tra ít nhất ba điểm: 375px (iPhone nhỏ), 768px (tablet), 1280px (desktop chuẩn).
+
+<Callout title="Nhớ nhé">
+Mobile-first không phải xu hướng — đó là tư duy thiết kế từ ràng buộc. Bắt đầu với màn hình nhỏ nhất buộc bạn ưu tiên đúng thứ. Breakpoint không phải cho thiết bị cụ thể — mà cho điểm layout của bạn thực sự cần thay đổi.
+</Callout>
+
+## Đọc thêm
+
+- [Responsive Web Design: What It Is And How To Use It — Smashing Magazine](https://www.smashingmagazine.com/2011/01/guidelines-for-responsive-web-design/) — Bài viết kinh điển từ Smashing Magazine giải thích responsive design từ gốc: flexible layouts, media queries, fluid images; nền tảng tư duy không lỗi thời.
+- [Responsive Design — Tailwind CSS Docs](https://tailwindcss.com/docs/responsive-design) — Cách Tailwind implement mobile-first breakpoints trong thực tế; ngay cả khi bạn không dùng Tailwind, tư duy mobile-first ở đây rất rõ ràng và áp dụng được cho mọi framework.
+- [Breakpoints in Responsive Web Design: 2026 Guide — Framer](https://www.framer.com/blog/responsive-breakpoints/) — Hướng dẫn cập nhật về breakpoints, giải thích tại sao nên chọn breakpoint dựa trên nội dung chứ không theo tên thiết bị cụ thể.
+
+## Tự kiểm tra
+
+1. Tại sao "mobile-first" được khuyến nghị hơn "desktop-first"? Mô tả sự khác biệt về tư duy, không chỉ về cú pháp CSS.
+2. Bạn có một nav bar với 5 mục menu. Hãy mô tả cách nó nên thay đổi từ mobile (375px) lên desktop (1280px) — không cần viết code, chỉ cần mô tả hành vi.
+3. `display: none` trên mobile có phải là giải pháp responsive hợp lệ không? Khi nào dùng được, khi nào không?

@@ -1,0 +1,49 @@
+---
+id: concept-color-and-contrast
+title: "Color & Contrast"
+type: "concept"
+aliases: ["color and contrast", "màu sắc và tương phản UI", "color palette design", "60-30-10 màu", "contrast ratio accessibility"]
+tags: [design, ux, ui, color, contrast, accessibility]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Bạn mặc áo kẻ sọc xanh, quần ca-rô đỏ, giày thể thao vàng — kết quả là mắt không biết nhìn vào đâu. Nhưng mặc áo trắng, quần navy, giày trắng — cùng 3 thứ, nhưng trông ổn. Không phải vì màu nào đó "đẹp" hơn, mà vì **tỷ lệ và tương phản** đúng.
+
+Màu trong UI cũng thế.
+
+## Là gì
+
+**Color** trong UI không phải chuyện "màu nào đẹp" — mà là dùng bao nhiêu màu, màu nào nổi, màu nào lùi. **Contrast** (tương phản) là sự chênh lệch đủ lớn giữa chữ và nền để đọc được, và giữa nút bấm và nền để nhìn thấy.
+
+Hai nguyên tắc nền tảng:
+
+**Quy tắc 60-30-10** — màu nền trung tính chiếm 60% (trắng, xám nhạt), màu phụ chiếm 30% (nav bar, card), màu nhấn chiếm 10% (button, link, badge). Màu nhấn ít → nó thực sự nổi bật và kéo ánh mắt đúng chỗ.
+
+**Contrast ratio** — chữ trên nền cần tỷ lệ tương phản đủ cao để đọc được. WCAG AA yêu cầu tối thiểu 4.5:1 cho text thường. Chữ xám nhạt trên nền trắng trông "tinh tế" nhưng người dùng ngoài sáng hoặc màn hình kém không đọc được.
+
+## Ví dụ thật
+
+App quản lý task: nền trắng (60%), sidebar xám nhạt (30%), nút "Thêm task" màu xanh lá (10%). Kết quả: mắt tự nhiên tìm thấy nút hành động mà không cần scan toàn màn hình.
+
+Nếu thêm một nút đỏ "Xóa", một badge cam "Khẩn", tiêu đề màu tím — đột nhiên có 4 màu nhấn. Không thứ gì quan trọng nữa vì mọi thứ đều "la hét".
+
+<Callout title="Cẩn thận">
+Chữ xám #999999 trên nền trắng trông nhẹ nhàng, chuyên nghiệp — nhưng contrast ratio chỉ khoảng 2.8:1, không đạt WCAG AA. Khoảng 1/12 nam giới bị color blindness ở mức nào đó. Dùng công cụ như [WebAIM Contrast Checker](https://webaim.org/resources/contrastchecker/) để kiểm tra trước khi ship.
+</Callout>
+
+<Callout title="Nhớ nhé">
+Ít màu + tương phản đúng + một màu nhấn duy nhất. Đó là công thức. Muốn thêm màu sắc, hãy thêm **sắc độ** (tối/sáng hơn) của màu bạn đã có, thay vì thêm màu mới.
+</Callout>
+
+## Đọc thêm
+
+- [Creating accessible digital colour palettes using the 60-30-10 design rule — Vision Australia](https://www.visionaustralia.org/business-consulting/digital-access/Creating-accessible-digital-colour-palettes-60-30-10-design-rule) — Kết hợp quy tắc 60-30-10 với accessibility; giải thích cách palette màu ảnh hưởng đến người dùng mù màu và thị lực kém.
+- [60/30/10 Rule in UI/UX Design — Flowmapp](https://www.flowmapp.com/blog/qa/60-30-10-rule) — Giải thích ngắn gọn, kèm ví dụ minh họa cách áp dụng tỷ lệ 3 màu vào giao diện thực tế.
+- [The 60-30-10 Rule in Web Design — WPMayor](https://wpmayor.com/the-60-30-10-rule-made-our-website-designs-infinitely-better/) — Case study thực tế về cách áp dụng quy tắc này để cải thiện một trang web cụ thể; có ảnh before/after.
+
+## Tự kiểm tra
+
+1. App của bạn đang dùng 5 màu khác nhau. Bạn sẽ giảm xuống 3 màu theo quy tắc 60-30-10 như thế nào? Màu nào đóng vai trò gì?
+2. Tại sao chữ xám nhạt trên nền trắng có thể là vấn đề accessibility, dù trông "gọn" về mặt thẩm mỹ?
+3. Bạn có thêm một màu đỏ cho thông báo lỗi vào app đã có màu nhấn xanh. Điều đó có vi phạm quy tắc 60-30-10 không? Tại sao có hoặc không?

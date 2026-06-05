@@ -1,0 +1,51 @@
+---
+id: concept-visual-hierarchy
+title: "Visual Hierarchy"
+type: "concept"
+aliases: ["visual hierarchy", "cấp bậc thị giác", "thứ tự nhìn UI", "visual hierarchy design principle"]
+tags: [design, ux, ui, visual-hierarchy, typography, layout]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Nhìn vào trang báo giấy — tít lớn ở trên, ảnh dưới, chú thích nhỏ nhất. Mắt bạn biết nhìn đâu trước mà không cần ai chỉ. Không phải vì tờ báo đẹp — mà vì nó có **cấp bậc**.
+
+Màn hình của bạn cũng cần cái đó.
+
+## Là gì
+
+**Visual hierarchy** (cấp bậc thị giác) là cách sắp xếp các phần tử trên màn hình để mắt người dùng tự nhiên nhìn theo đúng thứ tự bạn muốn: quan trọng nhất trước, phụ sau.
+
+Không có cấp bậc, mọi thứ trông ngang nhau → người dùng không biết nhìn đâu → họ nhíu mày, bỏ đi.
+
+## Ví dụ thật
+
+Một màn hình "tạo tài khoản" có ba thứ: tiêu đề trang, form nhập liệu, và nút "Đăng ký". Nếu cả ba có cùng cỡ chữ và cùng màu nền, người dùng mất vài giây tìm nút bấm. Chỉ cần làm tiêu đề to hơn, nút "Đăng ký" nổi bật hơn bằng màu nhấn — cấp bậc xuất hiện, mắt chạy đúng hướng.
+
+Ba công cụ tạo cấp bậc bạn dùng nhiều nhất:
+
+**Kích thước** — to hơn = quan trọng hơn. Tiêu đề lớn, body text nhỏ hơn, chú thích nhỏ nhất.
+
+**Độ đậm nhạt (contrast)** — chữ đen trên nền trắng quan trọng hơn chữ xám. Nút màu sặc sỡ nổi hơn nút outline.
+
+**Vị trí** — trên cùng và giữa trang = quan trọng. Góc phải dưới = ít quan trọng hơn.
+
+<Callout title="Cẩn thận">
+Làm mọi thứ đậm, to, sặc sỡ — thì không thứ gì nổi bật cả. Cấp bậc chỉ tồn tại khi có **sự tương phản**. Muốn một thứ nổi, phải để những thứ xung quanh lùi lại.
+</Callout>
+
+<Callout title="Nhớ nhé">
+Mỗi màn hình chỉ nên có **một** phần tử quan trọng nhất. Nếu bạn không chọn được, người dùng cũng không chọn được.
+</Callout>
+
+## Đọc thêm
+
+- [Visual Hierarchy in UX: Definition — Nielsen Norman Group](https://www.nngroup.com/articles/visual-hierarchy-ux-definition/) — Giải thích ngắn gọn từ NN/g: tại sao cấp bậc thị giác là nền tảng của UX tốt, kèm ví dụ thực tế.
+- [What is Visual Hierarchy? — Figma Resource Library](https://www.figma.com/resource-library/what-is-visual-hierarchy/) — Tổng quan đầy đủ về các nguyên tắc tạo cấp bậc (kích thước, màu sắc, khoảng trắng, kiểu chữ) với minh họa trực quan.
+- [Visual Hierarchy: Making User Experiences Easier to Understand — UXmatters](https://www.uxmatters.com/mt/archives/2024/02/visual-hierarchy-making-user-experiences-easier-to-understand.php) — Bài viết 2024 đi sâu vào cách áp dụng cấp bậc thị giác vào màn hình thực tế, tránh các lỗi phổ biến.
+
+## Tự kiểm tra
+
+1. Bạn đang thiết kế một trang landing page. Liệt kê 3 phần tử và sắp xếp thứ tự quan trọng của chúng — sau đó mô tả bạn sẽ dùng công cụ gì (kích thước/contrast/vị trí) để thể hiện thứ tự đó.
+2. Tại sao "làm mọi thứ nổi bật" lại phá vỡ cấp bậc thị giác? Dùng một ví dụ cụ thể để giải thích.
+3. Trên một màn hình bạn đang làm, phần tử nào đang "ngang hàng" với nhau dù không nên? Bạn sẽ sửa như thế nào?

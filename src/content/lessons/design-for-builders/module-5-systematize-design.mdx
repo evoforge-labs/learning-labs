@@ -1,0 +1,76 @@
+---
+id: lesson-ux-005
+title: "Từ một màn hình đẹp đến cả sản phẩm nhất quán"
+type: "lesson"
+track: design-for-builders
+module: systems
+level: intermediate
+tags: [design, ux, ui, design-systems, design-tokens, design-to-code, design-taste, consistency, solo-builder]
+prerequisites: [concept-design-systems, concept-design-tokens, concept-design-to-code, concept-design-taste-and-critique]
+related: [exercise-ux-005, rubric-design-for-builders]
+status: published
+---
+import Callout from '../../../components/content/Callout.astro';
+
+Bạn đã từng làm được một màn hình trông thật sự ổn. Spacing đúng, màu hài hòa, typography gọn gàng. Rồi bạn làm màn hình tiếp theo — và cái cảm giác "nhất quán" biến mất.
+
+Module này giải quyết chính xác vấn đề đó: làm sao đi từ *một màn hình đẹp* đến *cả sản phẩm nhất quán* — và làm nhanh, không phải ngồi pixel-push từng trang.
+
+## Vấn đề cốt lõi: inconsistency tích lũy theo thời gian
+
+Solo builder không mắc lỗi design lớn. Họ mắc hàng chục lỗi nhỏ: nút này bo góc 4px, nút kia bo 8px. Card này padding 16px, card kia 20px. Font size này 14px, chỗ khác 13px.
+
+Không ai nhận ra từng cái một. Nhưng cộng lại, sản phẩm trông "không chuyên nghiệp" — và bạn không biết tại sao.
+
+Giải pháp không phải là "cẩn thận hơn". Giải pháp là **hệ thống**.
+
+## Bước 1 — Xây nền: Design token
+
+Trước khi làm bất cứ thứ gì, hãy xác định [design token](/concepts/design-tokens): một bộ biến cho màu, spacing, và typography. Không phải 200 token — chỉ cần đủ để cover 80% quyết định thiết kế:
+
+- **Màu:** 1 primary, 1 secondary, neutral scale, và các màu semantic (success, error, warning).
+- **Spacing:** 4px base unit, scale x2: 4, 8, 16, 24, 32, 48, 64.
+- **Typography:** 2-3 size (body, heading-sm, heading-lg), 2 weight (regular, semibold).
+
+Khi token được định nghĩa, mọi quyết định thiết kế sau đó chỉ là "chọn từ bộ có sẵn", không phải "nghĩ ra giá trị mới".
+
+## Bước 2 — Xây khối: Design system tối giản
+
+Token xong, bạn build [design system](/concepts/design-systems) nhỏ — chỉ cần 3-5 component cốt lõi dùng nhiều nhất: Button, Input, Card, Badge, và có thể Modal.
+
+Mỗi component dùng token thay vì hardcode. Button primary dùng `bg-primary`, không phải `bg-[#2563EB]`. Card dùng `p-spacing-4`, không phải `p-4` tùy tiện.
+
+Sau bước này, bạn có "bộ Lego" — những khối tái dùng đảm bảo nhất quán tự động, không cần nhớ.
+
+## Bước 3 — Biến thiết kế thành giao diện thật
+
+Có token và component, bước [design to code](/concepts/design-to-code) trở nên nhanh và cơ học. Bạn không hỏi "nút này màu gì" — bạn dùng `<Button variant="primary">`. Bạn không đo spacing bằng mắt — bạn chọn từ token scale.
+
+Quy tắc vàng: **trước khi tạo một class mới, hỏi "đã có token/component nào cho việc này chưa?"**
+
+<Callout title="Mẹo">
+Dùng shadcn/ui làm nền: cài sẵn, copy component về, sau đó chỉnh token trong `tailwind.config.js` và `globals.css`. Bạn có một design system hoạt động trong vòng một buổi chiều.
+</Callout>
+
+## Bước 4 — Rèn gu: Tự critique theo cấu trúc
+
+Hệ thống giải quyết inconsistency kỹ thuật. Nhưng để sản phẩm thật sự trông tốt, bạn cần rèn [gu thẩm mỹ và kỹ năng critique](/concepts/design-taste-and-critique).
+
+Sau mỗi màn hình mới, dành 5 phút tự hỏi:
+- **Hierarchy:** Mắt người nhìn đâu trước?
+- **Spacing:** Có chỗ nào "chật" hoặc "trống" bất thường?
+- **Clarity:** User biết làm gì tiếp theo không?
+
+Critique không cần ai khác. Bạn tự hỏi, tự trả lời, tự sửa. Đó là vòng lặp cải thiện nhanh nhất cho solo builder.
+
+## Toàn bộ vòng lặp
+
+Token → Component → Implement → Critique → Cải thiện token/component nếu cần → Lặp lại.
+
+Lần đầu thiết lập mất vài giờ. Nhưng từ màn hình thứ hai trở đi, bạn nhanh hơn và nhất quán hơn — không cần nghĩ lại từ đầu mỗi lần.
+
+<Callout title="Nhớ nhé">
+Một màn hình đẹp là may mắn. Cả sản phẩm nhất quán là hệ thống. Token + component + critique = bộ ba biến may mắn thành kỷ luật.
+</Callout>
+
+Thực hành ngay với [bài tập dựng mini design system →](/exercises/design-for-builders/m5-build-a-mini-system)

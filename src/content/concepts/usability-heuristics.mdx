@@ -1,0 +1,56 @@
+---
+id: concept-usability-heuristics
+title: "Usability Heuristics (Nielsen)"
+type: "concept"
+aliases: ["usability heuristics", "10 nguyên tắc Nielsen", "heuristic đánh giá giao diện", "Nielsen heuristics UX", "kiểm tra giao diện dễ dùng"]
+tags: [ux, usability, design, heuristics, ui-review, design-for-builders]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Hãy tưởng tượng bạn đến một căn bếp lạ. Bạn muốn pha trà. Chỉ cần nhìn qua một lượt, bạn đã đoán được ấm đun nước ở đâu, công tắc bật thế nào, cốc để chỗ nào. Căn bếp đó được thiết kế *đúng* — mọi thứ ở chỗ người ta mong đợi, có nhãn rõ, tay cầm trỏ đúng hướng.
+
+Ngược lại, nếu bạn phải mở từng ngăn kéo, đọc hướng dẫn dán trên tủ, và không biết nút nào tắt bếp — thì cái bếp đó vi phạm hầu hết 10 heuristics của Nielsen.
+
+## Là gì
+
+**Usability heuristics** (heuristic tính dễ dùng) là 10 nguyên tắc chung giúp bạn đánh giá nhanh một giao diện có dễ dùng hay không — không cần test user, không cần phần mềm đặc biệt. Jakob Nielsen (Nielsen Norman Group) đúc kết từ hàng trăm nghiên cứu usability từ 1990, và chúng vẫn là checklist chuẩn nhất đến nay.
+
+10 heuristics theo thứ tự:
+
+1. **Visibility of system status** — người dùng luôn biết chuyện gì đang xảy ra (spinner khi load, thông báo khi gửi xong).
+2. **Match between system and real world** — dùng ngôn ngữ và khái niệm người dùng đã biết, không phải jargon kỹ thuật.
+3. **User control and freedom** — cho phép hoàn tác, thoát, quay lại bất cứ lúc nào.
+4. **Consistency and standards** — cùng một việc, làm cùng một cách trên toàn app.
+5. **Error prevention** — thiết kế để tránh lỗi xảy ra trước, thay vì chỉ hiện thông báo lỗi sau.
+6. **Recognition over recall** — hiện thông tin ngay trên màn hình; đừng bắt user nhớ từ trang trước.
+7. **Flexibility and efficiency of use** — shortcut cho người dùng thành thạo, mà không làm người mới bị lạc.
+8. **Aesthetic and minimalist design** — mỗi thứ thêm vào cạnh tranh với thông tin quan trọng — bớt đi là mặc định.
+9. **Help users recognize, diagnose, and recover from errors** — thông báo lỗi phải nói rõ *vấn đề là gì* và *làm gì tiếp theo*.
+10. **Help and documentation** — nếu bắt buộc phải có, tài liệu phải ngắn, tìm được, và nói về task cụ thể.
+
+## Ví dụ thật
+
+Bạn build một form đăng ký. User nhấn Submit, chờ 5 giây, không thấy gì — rồi trang reload về trạng thái trống. User nhập lại từ đầu. Vi phạm heuristic số 1 (không có feedback), số 3 (không giữ dữ liệu), số 9 (không nói lỗi là gì).
+
+Sửa: thêm spinner khi đang gửi, hiện thông báo thành công/thất bại rõ ràng, giữ lại dữ liệu đã nhập khi có lỗi. Ba thay đổi nhỏ, áp dụng đúng 3 heuristics — form từ "bực mình" thành "ổn".
+
+<Callout title="Cẩn thận">
+Heuristic evaluation không thay thế được user testing. Bạn có thể đánh giá nội bộ và không thấy vấn đề vì bạn biết app quá rõ. Heuristics tốt nhất khi dùng như checklist *trước* khi test user — loại lỗi rõ ràng sớm, để user test tập trung vào vấn đề tinh tế hơn.
+</Callout>
+
+<Callout title="Nhớ nhé">
+10 heuristics là checklist nhanh, không phải luật. Dùng chúng để quét giao diện: "Tôi vi phạm cái nào?" Một buổi review 30 phút với checklist này bắt được phần lớn lỗi usability trước khi đến tay user.
+</Callout>
+
+## Đọc thêm
+
+- [10 Usability Heuristics for User Interface Design — Nielsen Norman Group](https://www.nngroup.com/articles/ten-usability-heuristics/) — Bài gốc của Jakob Nielsen; có giải thích từng heuristic kèm ví dụ, poster tải về miễn phí.
+- [10 Usability Heuristics Applied to Complex Applications — NN/G](https://www.nngroup.com/articles/usability-heuristics-complex-applications/) — Áp dụng heuristics vào phần mềm phức tạp (enterprise, dashboard); hữu ích khi bạn build tool không chỉ là trang web đơn giản.
+- [10 Usability Heuristics Every Designer Should Know — UX Collective](https://uxdesign.cc/10-usability-heuristics-every-designer-should-know-129b9779ac53) — Giải thích bằng ví dụ ảnh chụp giao diện thực tế; dễ đọc cho người mới.
+
+## Tự kiểm tra
+
+1. Bạn mở một app và nhấn nút xóa bản ghi — không có hộp thoại xác nhận, dữ liệu biến mất ngay. Đó là vi phạm heuristic nào? Sửa thế nào?
+2. Một trang hiện thông báo lỗi: "Error code 403." Heuristic số 9 nói gì về cách viết thông báo lỗi đúng?
+3. Tại sao heuristic số 6 (recognition over recall) lại đặc biệt quan trọng trên mobile?

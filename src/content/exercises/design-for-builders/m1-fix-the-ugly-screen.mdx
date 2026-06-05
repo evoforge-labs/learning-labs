@@ -1,0 +1,93 @@
+---
+id: exercise-ux-001
+title: "Sửa màn hình 'trông như dev làm'"
+type: "exercise"
+track: design-for-builders
+tags: [design, ux, ui, visual-hierarchy, typography, whitespace, color, contrast]
+estimatedMinutes: 25
+related: [lesson-ux-001, concept-visual-hierarchy, concept-typography-basics, concept-whitespace-and-spacing, concept-color-and-contrast, rubric-design-for-builders]
+status: published
+---
+import Callout from '../../../components/content/Callout.astro';
+
+## Tình huống
+
+Bạn vừa build xong màn hình **Dashboard dự án** cho một app quản lý công việc nhỏ. Nó chạy tốt về mặt kỹ thuật — dữ liệu hiển thị đúng, các nút hoạt động — nhưng đồng nghiệp nhìn vào nói: *"Trông như dev làm."*
+
+Mô tả màn hình hiện tại:
+
+- Tiêu đề trang "Dashboard" cùng cỡ chữ với các nhãn trong card (14px, font hệ thống)
+- Ba card thông tin (Tasks hôm nay / Đang làm / Hoàn thành) nằm ngang, không có padding bên trong, text dính sát cạnh card
+- Nút "Thêm task" màu xanh lá, nút "Xuất báo cáo" màu cam, nút "Xóa tất cả" màu đỏ — cùng kích thước, cùng vị trí
+- Mô tả ngắn dưới mỗi card dùng chữ xám #AAAAAA trên nền trắng
+- Toàn bộ layout không có khoảng cách giữa các khu vực, mọi thứ sát nhau từ trên xuống dưới
+
+---
+
+## Nhiệm vụ 1 — Chẩn đoán: chỉ ra vấn đề và đề xuất sửa cụ thể
+
+Với từng nguyên tắc dưới đây, hãy:
+1. Chỉ ra **vấn đề cụ thể** trên màn hình mô tả
+2. Đề xuất **sửa cụ thể** — không phải "cải thiện hierarchy" mà là "tăng tiêu đề lên 24px bold, giữ body text 14px"
+
+| Nguyên tắc | Vấn đề trên màn hình | Đề xuất sửa cụ thể |
+|---|---|---|
+| Visual hierarchy | ? | ? |
+| Typography | ? | ? |
+| Whitespace & spacing | ? | ? |
+| Color & contrast | ? | ? |
+
+<Callout title="Mẹo">
+Với mỗi vấn đề, tự hỏi: *"Người dùng sẽ gặp khó khăn gì ở đây?"* — không phải "trông xấu ở điểm nào". Hierarchy kém → không biết nhìn đâu trước. Contrast kém → không đọc được. Spacing lộn xộn → cảm giác chật chội. Đó là những hậu quả thực tế.
+</Callout>
+
+---
+
+## Nhiệm vụ 2 — Áp thang spacing nhất quán
+
+Màn hình hiện tại dùng padding lộn xộn: 5px chỗ này, 13px chỗ kia, 20px chỗ khác.
+
+Hãy đề xuất một **spacing scale** dựa trên bội số 4 hoặc 8 cho màn hình này, và chỉ định rõ:
+
+- Padding bên trong mỗi card: bao nhiêu px?
+- Khoảng cách giữa 3 card: bao nhiêu px?
+- Khoảng cách giữa tiêu đề trang và khu vực card: bao nhiêu px?
+- Margin giữa ba nút hành động: bao nhiêu px?
+
+Giải thích ngắn tại sao bạn chọn các con số đó (không phải ngẫu nhiên).
+
+<Callout title="Mẹo">
+Nhớ quy tắc: khoảng cách **bên trong** component (padding card) nên nhỏ hơn khoảng cách **giữa** các component. Điều đó giúp mắt phân biệt "đây là một nhóm" và "đây là hai nhóm khác nhau".
+</Callout>
+
+---
+
+## Nhiệm vụ 3 — Chọn bảng màu tối giản
+
+Màn hình đang có 3 màu nút riêng biệt (xanh lá / cam / đỏ) cộng với màu xám của text phụ.
+
+Hãy đề xuất một bảng màu mới theo quy tắc 60-30-10:
+
+1. **Màu nền (60%):** màu gì? Hex hoặc mô tả (ví dụ: "#FFFFFF trắng", "xám nhạt #F5F5F5")
+2. **Màu phụ (30%):** dùng ở đâu trong màn hình này?
+3. **Màu nhấn duy nhất (10%):** màu gì, và chỉ dùng cho nút/hành động nào?
+4. **Xử lý nút Xóa:** nếu chỉ có 1 màu nhấn, nút "Xóa tất cả" trông thế nào? Đề xuất cách phân biệt nó mà không dùng màu đỏ riêng.
+5. **Kiểm tra contrast:** màu text phụ của bạn trên nền đó có đạt 4.5:1 không? (Dùng [WebAIM Contrast Checker](https://webaim.org/resources/contrastchecker/) nếu cần)
+
+<Callout title="Nhớ nhé">
+Không có đáp án màu "đúng" duy nhất — nhưng có đáp án **sai**: quá nhiều màu nhấn, hoặc contrast không đủ để đọc. Miễn là bạn giải thích lý do chọn, và contrast đạt tiêu chuẩn, bài làm của bạn là hợp lệ.
+</Callout>
+
+---
+
+## Tiêu chí đánh giá
+
+Tham khảo [Design for Builders Rubric](/rubrics/rubric-design-for-builders) để tự chấm.
+
+Với bài này, tập trung vào ba điểm:
+
+| Tiêu chí | Câu hỏi để tự kiểm tra |
+|---|---|
+| Chẩn đoán chính xác | Bạn chỉ ra **hậu quả với người dùng** hay chỉ nói "trông xấu"? |
+| Spacing có hệ thống | Các con số bạn chọn có nhất quán theo thang 4/8 không? Có giải thích được tại sao không? |
+| Màu có logic | Bảng màu có đúng tỷ lệ 60-30-10? Contrast có đạt WCAG AA (4.5:1) không? |

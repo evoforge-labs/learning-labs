@@ -1,0 +1,90 @@
+---
+id: exercise-ux-005
+title: "Dựng một mini design system cho app của bạn"
+type: "exercise"
+track: design-for-builders
+tags: [design, ux, ui, design-systems, design-tokens, design-to-code, design-taste, critique, solo-builder]
+estimatedMinutes: 30
+related: [lesson-ux-005, concept-design-systems, concept-design-tokens, concept-design-to-code, concept-design-taste-and-critique, rubric-design-for-builders]
+status: published
+---
+import Callout from '../../../components/content/Callout.astro';
+
+## Tình huống
+
+Bạn đang build một app — có thể là app bạn đang làm thật, hoặc một app tưởng tượng (habit tracker, tool quản lý chi tiêu, dashboard nội bộ, v.v.).
+
+Hiện tại, mỗi lần làm màn hình mới bạn lại "nghĩ lại từ đầu": dùng màu gì, padding bao nhiêu, nút trông như thế nào. Kết quả: mỗi màn hình ra đời với quyết định hơi khác nhau, và dần dần cả app trông không nhất quán.
+
+Bài tập này giúp bạn xây nền: một **mini design system** đủ dùng cho solo builder — không cần hoàn hảo, chỉ cần đủ để làm nhanh và nhất quán.
+
+---
+
+## Nhiệm vụ 1 — Định nghĩa bộ token cơ bản (10 phút)
+
+Viết ra (trong file config, một file markdown, hoặc comment trong code) một bộ token tối giản gồm ba nhóm:
+
+**Màu (Color tokens):**
+- 1 màu primary (brand color chính)
+- 1 màu secondary (nếu có)
+- Ít nhất 3 neutral (background, text, border/muted)
+- 3 màu semantic: success, warning/caution, error/danger
+
+**Spacing:**
+- Định nghĩa ít nhất 5 mức spacing trên một scale nhất quán. Ví dụ base-4: `xs=4px, sm=8px, md=16px, lg=24px, xl=32px`.
+
+**Typography:**
+- 2-3 cỡ chữ có tên rõ ràng: `text-body`, `text-label`, `text-heading`
+- Font weight: regular và semibold là đủ
+
+<Callout title="Mẹo">
+Nếu bạn dùng Tailwind CSS, mapping trực tiếp vào `tailwind.config.js` là cách nhanh nhất. Nếu dùng CSS thuần, dùng CSS custom properties trong `:root {}`. Mục tiêu: **đặt tên có nghĩa**, không phải `blue-500` hay `16` — mà là `color-primary`, `spacing-component-padding`.
+</Callout>
+
+---
+
+## Nhiệm vụ 2 — Chọn và chuẩn hóa 3 component tái dùng (10 phút)
+
+Chọn 3 component bạn dùng nhiều nhất trong app. Với mỗi component, viết ra (hoặc implement nếu bạn đang build thật):
+
+1. **Tên và mục đích:** Component này dùng để làm gì?
+2. **Các biến thể (variants):** Button có `primary` và `ghost` không? Card có `default` và `elevated` không?
+3. **Token nào nó dùng:** Màu gì, spacing nào, border radius nào? Tham chiếu đến token bạn đã định nghĩa ở Nhiệm vụ 1 — không hardcode giá trị.
+
+<Callout title="Mẹo">
+Ba component phổ biến nhất cho hầu hết app: **Button**, **Card**, **Input**. Nếu app bạn cần loại component khác (Badge, Toast, Avatar...) thì chọn theo đúng nhu cầu thực tế của bạn.
+</Callout>
+
+---
+
+## Nhiệm vụ 3 — Tự critique một màn hình theo cấu trúc (10 phút)
+
+Chọn một màn hình đang có trong app của bạn (hoặc sketch ra nhanh trên giấy/Figma). Tự critique theo 5 tiêu chí sau — mỗi tiêu chí viết ít nhất một nhận xét cụ thể, không phải "trông ổn":
+
+| Tiêu chí | Câu hỏi tự kiểm tra |
+|---|---|
+| **Hierarchy** | Thứ quan trọng nhất có nổi bật không? Mắt bạn nhìn đâu đầu tiên? |
+| **Spacing** | Có element nào bị "chật" hoặc "trôi nổi" không nhất quán? |
+| **Color** | Bao nhiêu màu đang dùng? Màu primary có guide user đến action chính? |
+| **Typography** | Bao nhiêu font weight? Text đủ contrast với background? |
+| **Clarity** | Nếu user mới vào lần đầu, họ biết làm gì tiếp theo không? |
+
+Sau khi liệt kê vấn đề, chọn **một vấn đề quan trọng nhất** và mô tả cách bạn sẽ sửa nó.
+
+<Callout title="Nhớ nhé">
+Critique tốt không phải "nó trông chưa đẹp" — mà phải nói được cụ thể: *cái gì* chưa ổn, *tại sao* nó ảnh hưởng đến user, và bạn *sẽ sửa thế nào*. Không cần hoàn hảo — cần cụ thể.
+</Callout>
+
+---
+
+## Tiêu chí đánh giá
+
+Tham khảo [Design & UX Rubric](/rubrics/design-for-builders-rubric) để tự chấm.
+
+Với bài này, tập trung vào ba tiêu chí:
+
+| Tiêu chí | Câu hỏi tự kiểm tra |
+|---|---|
+| Token có ý nghĩa | Token của bạn được đặt tên theo mục đích (semantic) hay theo giá trị (primitive)? |
+| Component nhất quán | Ba component bạn chọn có tham chiếu token thay vì hardcode không? |
+| Critique cụ thể | Nhận xét của bạn nói được "cái gì sai + tại sao + sửa thế nào" — hay chỉ nói "trông chưa đẹp"? |

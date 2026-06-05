@@ -1,0 +1,54 @@
+---
+id: concept-ui-states
+title: "UI States (Empty, Loading, Error)"
+type: "concept"
+aliases: ["ui states trạng thái giao diện", "empty state loading error", "trạng thái rỗng đang tải lỗi", "off happy path ui design"]
+tags: [design, ux, ui, empty-state, loading-state, error-state, usability]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Bạn thiết kế màn hình danh sách đơn hàng. Nó trông đẹp — đầy đủ dữ liệu, màu sắc hài hòa, layout gọn. Bạn demo, sếp gật đầu.
+
+Rồi người dùng đầu tiên mở app lên — họ chưa có đơn hàng nào. Màn hình trống hoác. Họ không biết chuyện gì đang xảy ra.
+
+Bạn vừa quên thiết kế 70% thời gian người dùng thực sự trải qua.
+
+## Là gì
+
+Mọi màn hình đều có nhiều hơn một trạng thái. "Happy path" — dữ liệu đầy đủ, mọi thứ chạy tốt — chỉ là một trong số đó. Ba trạng thái còn lại mà builder hay bỏ qua:
+
+**Empty state** — không có dữ liệu để hiển thị. Có thể vì người dùng mới, vì kết quả tìm kiếm rỗng, hoặc vì họ đã xóa hết. Đây không phải "lỗi" — nhưng cần được thiết kế chủ động.
+
+**Loading state** — dữ liệu đang được tải. Nếu không có gì hiển thị trong lúc chờ, người dùng nghĩ app bị đơ.
+
+**Error state** — đã xảy ra lỗi. Mạng yếu, server timeout, quyền truy cập bị từ chối. Người dùng cần biết *chuyện gì xảy ra* và *làm gì tiếp theo*.
+
+## Ví dụ thật
+
+App tìm việc. Người dùng tìm "kỹ sư tên lửa tại Đà Lạt" — kết quả rỗng. Nếu chỉ hiển thị màn hình trắng: người dùng không biết có phải lỗi không, hay nên thử lại.
+
+Thiết kế empty state tốt: một icon nhỏ + "Không tìm thấy kết quả phù hợp" + nút "Thử từ khóa khác" hoặc "Xem tất cả việc làm". Người dùng hiểu ngay và biết bước tiếp theo.
+
+Empty state cũng là **cơ hội onboarding**: khi người dùng mới chưa có dữ liệu, đó là thời điểm tốt nhất để hướng dẫn họ tạo thứ đầu tiên.
+
+<Callout title="Cẩn thận">
+Skeleton screen tốt hơn spinner trong hầu hết trường hợp — nó cho người dùng thấy bố cục sắp xuất hiện, giảm cảm giác chờ đợi. Nhưng đừng giữ skeleton quá lâu (quá 3 giây) mà không có fallback — lúc đó nó trở thành error state bị giấu đi.
+</Callout>
+
+<Callout title="Nhớ nhé">
+Thiết kế đủ bốn trạng thái: content (happy path), empty, loading, error. Mỗi trạng thái cần: thông báo rõ chuyện gì đang xảy ra + một hành động để thoát khỏi trạng thái đó (nếu có thể).
+</Callout>
+
+## Đọc thêm
+
+- [Designing Empty States in Complex Applications — Nielsen Norman Group](https://www.nngroup.com/articles/empty-state-interface-design/) — Ba nguyên tắc vàng của NNG cho empty state: truyền đạt trạng thái hệ thống, cung cấp gợi ý học tập, và tạo đường dẫn hành động trực tiếp.
+- [UI Best Practices for Loading, Error, and Empty States in React — LogRocket](https://blog.logrocket.com/ui-design-best-practices-loading-error-empty-state-react/) — Hướng dẫn thực hành với code mẫu, bao gồm skeleton screen, React Suspense và ErrorBoundary — phù hợp cả người muốn implement luôn.
+- [Empty State UI Design: Best Practices — Mobbin](https://mobbin.com/glossary/empty-state) — Tổng hợp pattern và ví dụ thiết kế empty state từ nhiều app thực tế; nguồn tham khảo trực quan tốt nhất cho builder.
+- [Error & Empty States: The Unsung Heroes of UX Design — Medium/Bootcamp](https://medium.com/design-bootcamp/error-empty-states-the-unsung-heroes-of-ux-design-dcb99d99cc2b) — Phân tích tâm lý người dùng khi gặp các trạng thái ngoài happy path và cách viết copy cho từng loại.
+
+## Tự kiểm tra
+
+1. Một màn hình notification không có thông báo nào — bạn nên hiển thị gì? Viết ra nội dung cụ thể cho empty state đó (icon + tiêu đề + mô tả + CTA).
+2. Sự khác nhau giữa skeleton screen và spinner là gì? Khi nào nên dùng cái nào?
+3. App bị lỗi khi tải danh sách sản phẩm. Error state cần có ít nhất những yếu tố nào để người dùng không thoát app?
