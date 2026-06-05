@@ -1,0 +1,62 @@
+---
+id: concept-tracking-plan
+title: "Tracking Plan (Taxonomy)"
+type: "concept"
+aliases: ["tracking plan", "analytics taxonomy", "kế hoạch đo lường", "tài liệu tracking", "event taxonomy", "định nghĩa event trước khi code", "tracking plan product analytics"]
+tags: [product-analytics, tracking, events, data-governance, instrumentation, naming-conventions]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Bạn đang xây nhà với 5 thợ. Mỗi người gọi phòng khách theo một cái tên khác: "phòng chính", "phòng lớn", "living room", "phòng khách", "khu tiếp khách." Bản vẽ kỹ thuật thì dùng "LR-01." Đến khi cần sửa điện, không ai biết đang nói về phòng nào.
+
+Đó là analytics không có tracking plan — dữ liệu tràn lan, tên event mỗi nơi một kiểu, không ai tin được số liệu.
+
+## Là gì
+
+**Tracking plan** (còn gọi là analytics taxonomy) là tài liệu sống định nghĩa:
+- **Event nào** cần track
+- **Property nào** đi kèm mỗi event
+- **Tên gọi chính xác** và format nhất quán
+- **Ai chịu trách nhiệm** implement event nào
+
+Tracking plan phải tồn tại **trước khi** bạn gắn một dòng tracking code nào. Không phải sau.
+
+Cấu trúc cơ bản của một tracking plan:
+
+| Event Name | Trigger | Properties | Owner |
+|---|---|---|---|
+| `signup_completed` | User hoàn thành form đăng ký | `method`, `plan`, `referrer` | Backend |
+| `onboarding_step_completed` | User xong 1 bước onboarding | `step_number`, `step_name`, `time_spent_seconds` | Frontend |
+| `feature_used` | User dùng một feature chính | `feature_name`, `entry_point` | Frontend |
+
+## Ví dụ thật
+
+Không có tracking plan: Engineer A gắn `user_signed_up`. Engineer B gắn `signup_complete`. Analytics dashboard 6 tháng sau có cả hai event, không rõ cái nào đúng. Data team mất 2 ngày để reconcile. Trong khi đó, decision dựa vào số liệu signup đang sai.
+
+Có tracking plan: Trước khi sprint bắt đầu, PM viết vào tracking plan: event `signup_completed`, trigger "sau khi user verify email thành công", properties `{ method: "email|google|github", plan: "free|pro" }`. Engineer nhìn vào — implement đúng, không cần hỏi thêm.
+
+**Naming conventions quan trọng:**
+
+Chọn một format và dùng nhất quán. Ví dụ `object_action` (noun trước, verb sau): `button_clicked`, `checkout_started`, `payment_failed`. Tránh mix: `clickedButton`, `start_checkout`, `PaymentFail`.
+
+<Callout title="Cẩn thận">
+Tracking plan không phải tài liệu viết một lần rồi quên. Mỗi khi thêm feature mới, tracking plan phải được cập nhật trước khi code. Nếu không, bạn sẽ có sự kiện mồ côi không ai nhớ tại sao tồn tại, property bị đổi tên giữa chừng, và dashboard hiển thị số vô nghĩa.
+</Callout>
+
+<Callout title="Nhớ nhé">
+Tracking plan = hợp đồng giữa PM, engineer, và data. Viết trước khi code, cập nhật mỗi sprint. Format đơn giản trong Google Sheet cũng đủ để bắt đầu — không cần tool phức tạp. Quan trọng là tồn tại và được dùng.
+</Callout>
+
+## Đọc thêm
+
+- [How to Create a Tracking Plan — Segment](https://segment.com/blog/what-is-a-tracking-plan/) — Segment hướng dẫn từng bước xây dựng tracking plan từ đầu, kèm template có thể dùng ngay; đây là tài liệu tham khảo thực hành tốt nhất trong ngành.
+- [Analytics Taxonomy Guide — Amplitude](https://amplitude.com/blog/analytics-taxonomy-and-the-what-why-and-how) — Amplitude giải thích sự khác biệt giữa events, properties, và user traits; cách thiết kế taxonomy có thể scale khi sản phẩm lớn.
+- [Event Naming Conventions — Mixpanel](https://mixpanel.com/blog/best-practices-for-event-names/) — Mixpanel tổng hợp naming conventions phổ biến nhất (object-action, verb-object), kèm ví dụ tốt và xấu cụ thể.
+- [Tracking Plan Template — Avo](https://www.avo.app/blog/tracking-plan-template) — Avo cung cấp template tracking plan miễn phí kèm giải thích từng cột; phù hợp cho team mới bắt đầu xây dựng analytics từ đầu.
+
+## Tự kiểm tra
+
+1. Tại sao tracking plan phải được viết trước khi gắn code, không phải sau? Điều gì xảy ra nếu làm ngược lại?
+2. Cho ví dụ về ba cách đặt tên event không nhất quán cho cùng một hành động "user bấm nút mua hàng." Cách nào trong số đó nên được chọn theo convention `object_action`?
+3. Một tracking plan tối thiểu cần có những cột nào? Bạn sẽ thêm cột gì khi team lớn hơn?

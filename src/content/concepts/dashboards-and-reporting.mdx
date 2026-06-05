@@ -1,0 +1,48 @@
+---
+id: concept-dashboards-and-reporting
+title: "Dashboards & Reporting"
+type: "concept"
+aliases: ["dashboards and reporting", "dashboard sản phẩm", "báo cáo chỉ số product", "biến số liệu thành quyết định", "tránh wall of charts", "data storytelling sản phẩm"]
+tags: [product-analytics, dashboards, reporting, data-visualization, decision-making, metrics]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Tưởng tượng bạn bước vào phòng điều hành và thấy 47 màn hình hiển thị đủ loại số liệu nhấp nháy. Bạn nhìn 30 giây rồi không biết mình cần làm gì. Một dashboard tốt thì ngược lại: bạn nhìn vào, biết ngay hôm nay có vấn đề gì không, và nếu có thì ở đâu. **Dashboard không phải để "show off" data — mà để phục vụ một quyết định cụ thể.**
+
+## Là gì
+
+**Dashboard** là tập hợp các biểu đồ và con số được sắp xếp có chủ đích để trả lời một câu hỏi hoặc hỗ trợ một quyết định. **Reporting** là hành động đưa insight từ data đến đúng người vào đúng thời điểm — dưới dạng dashboard, email tóm tắt, hay buổi họp review.
+
+Một dashboard tốt có ba đặc điểm:
+
+- **Phục vụ một câu hỏi:** "Acquisition tuần này như thế nào?" là một câu hỏi. Đừng gom tất cả metric của cả công ty vào một trang — mỗi dashboard nên có audience và mục đích rõ ràng.
+- **Có ngưỡng tham chiếu:** Con số không có ngữ cảnh thì vô nghĩa. "1.200 user hôm nay" — tốt hay xấu? Cần so sánh với tuần trước, tháng trước, hoặc target.
+- **Dẫn đến hành động:** Mỗi chart nên gắn với câu hỏi "nếu con số này đỏ, tôi làm gì?" Nếu câu trả lời là "không làm gì", chart đó không nên ở đây.
+
+## Ví dụ thật
+
+Đội product build một trang dashboard với 22 biểu đồ. Mỗi tuần review mất 45 phút và thường kết thúc bằng "nhìn chung ổn." Không quyết định nào được đưa ra.
+
+Họ refactor: tạo ba dashboard nhỏ, mỗi cái trả lời một câu hỏi — (1) "Tuần này acquisition từ đâu?", (2) "Funnel conversion đang vỡ ở bước nào?", (3) "Feature chính được dùng bao nhiêu?" Mỗi dashboard có tối đa 5-6 chart, mỗi chart có màu đỏ/xanh rõ ràng so với baseline. Review rút xuống còn 15 phút và luôn kết thúc với ít nhất một action item.
+
+<Callout title="Cẩn thận">
+**"Wall of charts"** — dashboard nhồi nhét mọi metric khả dụng — tạo ảo giác đang "data-driven" trong khi thực ra không ai đọc đủ kỹ để ra quyết định. Mỗi lần thêm chart, hỏi: "Chart này trả lời câu hỏi gì, và ai sẽ hành động dựa trên nó?"
+</Callout>
+
+<Callout title="Nhớ nhé">
+Trước khi build dashboard, trả lời ba câu: Ai đọc? Họ cần quyết định gì? Họ cần thấy gì để ra quyết định đó? Bắt đầu từ quyết định, không phải từ data có sẵn. Dashboard tốt nhất là dashboard bạn không cần giải thích cho người mới đọc.
+</Callout>
+
+## Đọc thêm
+
+- [Designing Effective Dashboards — Tableau](https://www.tableau.com/learn/articles/dashboard-design-principles) — Nguyên tắc thiết kế dashboard từ Tableau; có checklist thực tế để tự đánh giá dashboard của bạn.
+- [The Pyramid Principle for Data Storytelling — HBR](https://hbr.org/2021/09/how-to-tell-a-story-with-data) — Harvard Business Review về cách cấu trúc report và presentation data để dẫn đến quyết định; áp dụng được ngay.
+- [Dashboard Design Patterns — Stephen Few](https://www.perceptualedge.com/articles/visual_business_intelligence/dashboard_confusion_revised.pdf) — Bài phân tích kinh điển về những lỗi phổ biến khi thiết kế dashboard và cách sửa; hơi academic nhưng rất sâu.
+- [Building a Metrics Dashboard — Mixpanel Blog](https://mixpanel.com/blog/how-to-build-a-product-metrics-dashboard/) — Hướng dẫn thực hành từ Mixpanel về cách xây dựng product metrics dashboard từ đầu; kèm template và ví dụ thực tế.
+
+## Tự kiểm tra
+
+1. Sự khác biệt giữa một dashboard "cho biết mọi thứ đang xảy ra" và một dashboard "hỗ trợ quyết định" là gì?
+2. Bạn có một chart hiển thị "số user active hàng ngày." Cần thêm thông tin gì để chart này có ý nghĩa và dẫn đến hành động?
+3. Đội của bạn muốn gộp tất cả KPI vào một dashboard duy nhất để "tiện theo dõi." Bạn sẽ phản hồi thế nào?

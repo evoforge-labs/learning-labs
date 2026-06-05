@@ -1,0 +1,124 @@
+---
+id: exercise-pana-003
+title: "Tự trả lời câu hỏi sản phẩm bằng SQL"
+type: "exercise"
+track: product-analytics
+tags: [sql, product-analytics, data, query, dau, activation, self-serve-analytics]
+estimatedMinutes: 35
+related: [lesson-pana-003, concept-sql-basics, concept-sql-joins, concept-sql-aggregations, concept-window-functions, rubric-product-analytics]
+status: published
+---
+import Callout from '../../../components/content/Callout.astro';
+
+## Tình huống
+
+Bạn vừa ra mắt app ghi chú **Notio** được 3 tuần. Sáng nay bạn ngồi với ly cà phê và muốn tự trả lời ba câu hỏi trước khi họp team 9 giờ — không nhờ ai, không dùng tool phức tạp, chỉ SQL.
+
+Bạn có access vào database với hai bảng sau.
+
+---
+
+## Schema
+
+**Bảng `users`**
+
+```sql
+CREATE TABLE users (
+  id          SERIAL PRIMARY KEY,
+  email       TEXT NOT NULL,
+  plan        TEXT DEFAULT 'free',   -- 'free' hoặc 'pro'
+  country     TEXT,
+  created_at  TIMESTAMPTZ NOT NULL
+);
+```
+
+**Bảng `events`**
+
+```sql
+CREATE TABLE events (
+  id          SERIAL PRIMARY KEY,
+  user_id     INTEGER REFERENCES users(id),
+  event_name  TEXT NOT NULL,
+  -- event_name có thể là: 'signup', 'first_note_created',
+  --   'note_shared', 'feature_tag_used', 'upgraded_to_pro'
+  properties  JSONB,
+  created_at  TIMESTAMPTZ NOT NULL
+);
+```
+
+<Callout title="Mẹo">
+Khi chưa biết data trông như thế nào, hãy chạy `SELECT * FROM events LIMIT 20;` trước. Nhìn thực tế trước khi viết query phức tạp.
+</Callout>
+
+---
+
+## Nhiệm vụ 1 — DAU 7 ngày qua
+
+**Câu hỏi:** Mỗi ngày trong 7 ngày qua, app có bao nhiêu Daily Active Users (DAU)?
+
+Định nghĩa DAU: user có ít nhất một event trong ngày đó.
+
+**Viết một query trả về:**
+- Cột `ngay` (dạng date, không phải timestamp)
+- Cột `dau` (số user duy nhất có activity trong ngày đó)
+- Sắp xếp theo ngày từ cũ đến mới
+
+<Callout title="Gợi ý">
+DAU = COUNT(DISTINCT user_id) theo ngày. Nhớ dùng `COUNT(DISTINCT ...)` thay vì `COUNT(*)` để không đếm cùng một user nhiều lần trong một ngày.
+</Callout>
+
+**Câu hỏi bổ sung để tự suy ngẫm:** Nhìn vào kết quả, ngày nào có DAU cao nhất? Ngày đó có điều gì đặc biệt không — thứ 2 vs cuối tuần, sau một thông báo push?
+
+---
+
+## Nhiệm vụ 2 — Tỷ lệ user kích hoạt feature "Tag"
+
+**Câu hỏi:** Trong số tất cả user đã đăng ký, bao nhiêu phần trăm đã dùng feature Tag ít nhất một lần (có event `feature_tag_used`)?
+
+**Viết một query trả về:**
+- Tổng số user đã signup
+- Số user đã dùng feature Tag
+- Tỷ lệ phần trăm (làm tròn 2 chữ số thập phân)
+
+<Callout title="Gợi ý">
+Đây là bài toán LEFT JOIN điển hình. LEFT JOIN bảng `events` (chỉ lấy `feature_tag_used`) vào danh sách user từ bảng `users`. Dùng `COUNT(*)` cho tổng user, `COUNT(DISTINCT events.user_id)` cho user đã dùng feature (NULL không được đếm khi dùng COUNT(cột)).
+
+Tính phần trăm: `ROUND(100.0 * so_da_dung / tong_user, 2)`.
+</Callout>
+
+**Câu hỏi bổ sung để tự suy ngẫm:** Nếu tỷ lệ dưới 20%, đó có phải vấn đề về discoverability (user không biết feature tồn tại) hay vấn đề về value (user biết nhưng không thấy hữu ích)?
+
+---
+
+## Nhiệm vụ 3 — Top 5 event phổ biến nhất
+
+**Câu hỏi:** Trong 7 ngày qua, 5 event nào được trigger nhiều nhất? Mỗi event đó có bao nhiêu user khác nhau đã thực hiện?
+
+**Viết một query trả về:**
+- Cột `event_name`
+- Cột `tong_lan` (tổng số lần event đó xảy ra)
+- Cột `so_user` (số user duy nhất đã trigger event đó)
+- Chỉ lấy 5 event đứng đầu, sắp xếp theo `tong_lan` giảm dần
+
+<Callout title="Gợi ý">
+GROUP BY event_name, sau đó dùng COUNT(*) cho tổng lần và COUNT(DISTINCT user_id) cho số user. Thêm LIMIT 5.
+</Callout>
+
+**Câu hỏi bổ sung để tự suy ngẫm:** So sánh `tong_lan` và `so_user` của từng event. Event nào có `tong_lan / so_user` cao — tức là user trung bình làm nhiều lần? Event đó có phải là core loop của sản phẩm không?
+
+---
+
+## Tiêu chí đánh giá
+
+Tham khảo rubric của track Product Analytics để tự chấm.
+
+| Tiêu chí | Câu hỏi để tự kiểm tra |
+|---|---|
+| Query chạy đúng logic | Kết quả có ý nghĩa không? Số DAU có hợp lý không so với tổng user? |
+| Dùng đúng loại JOIN | Bạn có giải thích được tại sao chọn LEFT JOIN thay vì INNER JOIN ở Nhiệm vụ 2 không? |
+| Phân biệt COUNT(*) và COUNT(DISTINCT) | Bạn có dùng đúng loại COUNT cho từng câu hỏi không? |
+| Rút ra insight từ kết quả | Bạn có nhận xét gì từ số liệu — không chỉ đọc con số mà còn giải thích ý nghĩa? |
+
+<Callout title="Nhớ nhé">
+Mục tiêu không phải viết query hoàn hảo — mà là *có câu trả lời trong 10 phút*. Query đơn giản chạy đúng còn tốt hơn query phức tạp mất 2 giờ debug. Khi đã có con số, mới cần tinh chỉnh query nếu cần.
+</Callout>

@@ -1,0 +1,56 @@
+---
+id: concept-event-tracking
+title: "Event Tracking (Events & Properties)"
+type: "concept"
+aliases: ["event tracking analytics", "ghi lại hành động user", "event name properties", "tracking plan consistency", "analytics event gắn code"]
+tags: [analytics, instrumentation, product-analytics, event-tracking, tracking-plan]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Hãy tưởng tượng bạn thuê một người quan sát ngồi cạnh mỗi user và ghi chép: "14:32 — user bấm nút Mua. 14:33 — user điền địa chỉ. 14:34 — user thoát."
+
+Đó chính xác là việc event tracking làm — nhưng bằng code, không bằng người.
+
+## Là gì
+
+**Event tracking** là kỹ thuật gắn code vào sản phẩm để ghi lại những *hành động có ý nghĩa* của user — mỗi lần click, submit, scroll, hay bất kỳ bước nào bạn muốn đo.
+
+Mỗi event gồm hai phần:
+- **Event name** — tên hành động, ví dụ `checkout_started`, `feature_used`, `onboarding_completed`.
+- **Properties** — thuộc tính bổ sung ngữ cảnh: `plan: "pro"`, `item_count: 3`, `source: "email_campaign"`.
+
+## Ví dụ thật
+
+Bạn muốn biết tại sao user bỏ checkout. Bạn gắn ba event:
+
+```
+checkout_started      { cart_value: 250000, item_count: 2 }
+payment_info_entered  { method: "momo" }
+checkout_abandoned    { last_step: "shipping_address" }
+```
+
+Từ đây bạn thấy: 60% user bỏ ở bước nhập địa chỉ. Không cần đoán — dữ liệu nói thẳng.
+
+**Tracking plan** là tài liệu liệt kê: event nào cần đo, tại sao, property nào đi kèm, và ai chịu trách nhiệm giữ đúng convention. Không có tracking plan, sau 3 tháng bạn sẽ có `Button Clicked`, `button_click`, và `btn_clicked` — ba cái đo cùng một thứ, không thể merge.
+
+<Callout title="Cẩn thận">
+Convention đặt tên event phải nhất quán từ ngày đầu. Dùng một trong hai: `Object Action` (ví dụ `Checkout Started`) hoặc `snake_case` (`checkout_started`) — và áp dụng cho toàn bộ team. Đổi convention giữa chừng rất đau: data cũ và data mới không thể so sánh trực tiếp.
+</Callout>
+
+<Callout title="Nhớ nhé">
+Event = hành động. Property = ngữ cảnh của hành động. Viết tracking plan trước khi gắn code — không phải sau. Dữ liệu thiếu nhất quán không thể sửa ngược về quá khứ.
+</Callout>
+
+## Đọc thêm
+
+- [Create a Tracking Plan — Amplitude Docs](https://amplitude.com/docs/data/create-tracking-plan) — Hướng dẫn chính thức của Amplitude về cách xây dựng tracking plan: cấu trúc event, naming convention, và cách duy trì consistency trong team.
+- [Tracking Strategy — Mixpanel Docs](https://docs.mixpanel.com/guides/strategic-playbooks/onboarding-playbook/plan/tracking-strategy) — Mixpanel giải thích Object-Action framework cho đặt tên event, một trong những convention phổ biến nhất hiện nay.
+- [Best Practices for Analytics Tracking — Amplitude Blog](https://amplitude.com/blog/analytics-tracking-practices) — Tổng hợp các lỗi phổ biến khi gắn event tracking và cách tránh, kèm ví dụ thực tế từ các team sản phẩm.
+- [Event Analytics Ultimate Guide — UXCam](https://uxcam.com/blog/event-analytics/) — Giải thích toàn bộ vòng đời của event tracking: từ thiết kế event đến phân tích và ra quyết định sản phẩm.
+
+## Tự kiểm tra
+
+1. Sự khác biệt giữa event name và event property là gì? Cho ví dụ cụ thể với một feature bạn đang build.
+2. Tại sao cần viết tracking plan *trước* khi gắn code, thay vì gắn trước rồi document sau?
+3. Nếu bạn thấy cùng một hành động được ghi thành `Sign Up`, `signup`, và `user_registered` trong dashboard, vấn đề đó gây ra hậu quả gì khi phân tích?

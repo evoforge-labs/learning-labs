@@ -1,0 +1,54 @@
+---
+id: concept-analytics-tools-landscape
+title: "Analytics Tools Landscape (PostHog, GA4, Amplitude)"
+type: "concept"
+aliases: ["analytics tools landscape", "PostHog GA4 Amplitude so sánh", "product analytics vs web analytics", "warehouse-native analytics", "chọn công cụ analytics cho solo builder"]
+tags: [analytics, instrumentation, product-analytics, posthog, ga4, amplitude, tools]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Bạn cần đo người dùng sản phẩm. Bạn Google "analytics tool" và thấy hàng chục cái tên. GA4, Mixpanel, Amplitude, PostHog, Heap, Segment, Plausible, Umami... Tất cả đều bảo "track everything".
+
+Thực ra chúng phục vụ ba nhu cầu rất khác nhau. Biết nhu cầu của bạn thì 30 giây chọn xong.
+
+## Là gì
+
+Ba loại công cụ analytics chính:
+
+**Web analytics** — hỏi: *bao nhiêu người vào site, từ đâu, đọc gì*. GA4, Plausible, Umami thuộc loại này. Trả lời câu hỏi marketing: traffic, acquisition, content performance.
+
+**Product analytics** — hỏi: *user làm gì trong sản phẩm, funnel nào bị tắc, ai retain*. PostHog, Amplitude, Mixpanel là product analytics thuần. Trả lời câu hỏi sản phẩm: engagement, feature adoption, cohort retention.
+
+**Warehouse-native analytics** — bạn đẩy data vào data warehouse (BigQuery, Snowflake), rồi dùng SQL + BI tool (Metabase, Looker) để phân tích. Phù hợp khi bạn đã có đội data hoặc cần merge analytics data với business data.
+
+## Ví dụ thật: chọn gì cho solo builder
+
+**PostHog** là lựa chọn mạnh nhất cho builder kỹ thuật. Có cả product analytics, session replay, feature flags, A/B testing trong một nền tảng. Free tier: 1 triệu event/tháng. Mã nguồn mở, có thể tự host. Pricing minh bạch theo usage.
+
+**GA4** (Google Analytics 4) thực ra là công cụ *marketing analytics* — tốt cho tracking traffic, campaign attribution, và nếu bạn chạy Google Ads. Không phải product analytics thực sự. UI khó dùng hơn PostHog cho product questions.
+
+**Amplitude** mạnh về product analytics với UI thân thiện cho non-technical user. Free tier hạn chế hơn (10k Monthly Tracked Users). Chi phí leo thang nhanh khi scale. Phù hợp khi team có PM/data analyst không quen code.
+
+<Callout title="Cẩn thận">
+Thông tin pricing và tính năng của các công cụ này thay đổi thường xuyên — số liệu trên đây đúng vào thời điểm viết (2026). Trước khi chọn tool, kiểm tra lại trang pricing chính thức vì free tier và giới hạn có thể đã thay đổi.
+</Callout>
+
+**Segment** là lớp trung gian (CDP — Customer Data Platform): gắn SDK một lần, đẩy data vào nhiều tool cùng lúc. Không phải công cụ analytics trực tiếp, mà là "ống dẫn" giữa app và các analytics tools.
+
+<Callout title="Nhớ nhé">
+Solo builder mới bắt đầu: **PostHog** là điểm khởi đầu tốt nhất — gộp nhiều thứ vào một, free tier đủ dùng, pricing rõ ràng. Không cần Segment cho đến khi bạn thực sự cần đẩy data vào nhiều destination.
+</Callout>
+
+## Đọc thêm
+
+- [PostHog vs GA4 — PostHog Blog](https://posthog.com/blog/posthog-vs-ga4) — PostHog tự so sánh với GA4 theo từng use case: khi nào nên dùng cái nào, điểm mạnh và giới hạn của mỗi tool.
+- [PostHog vs Amplitude — PostHog Blog](https://posthog.com/blog/posthog-vs-amplitude) — So sánh chi tiết feature-by-feature và pricing giữa PostHog và Amplitude; giúp bạn chọn đúng tool theo team size và nhu cầu.
+- [Best Product Analytics Tools 2026 — Vision Labs](https://visionlabs.com/blog/best-product-analytics-tools/) — Tổng hợp và so sánh các công cụ product analytics phổ biến với đánh giá thực tế từ người dùng.
+- [Analytics Free Tier Comparison 2026 — AgentDeals](https://agentdeals.dev/analytics-free-tier-comparison-2026) — Bảng so sánh free tier của PostHog, Mixpanel, Amplitude, Plausible — hữu ích khi bạn cần chọn tool với ngân sách zero.
+
+## Tự kiểm tra
+
+1. Sự khác biệt cốt lõi giữa web analytics (GA4) và product analytics (PostHog, Amplitude) là gì? Câu hỏi nào mỗi loại trả lời tốt hơn?
+2. Bạn đang build app SaaS có 500 user đăng ký, dùng một mình, không có budget. Tool nào bạn chọn và tại sao?
+3. Khi nào thì bạn cần thêm Segment vào stack thay vì chỉ gắn thẳng SDK của một analytics tool?

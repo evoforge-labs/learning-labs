@@ -1,0 +1,127 @@
+---
+id: lesson-pana-003
+title: "Tự trả lời câu hỏi sản phẩm bằng SQL, không cần đợi ai"
+type: "lesson"
+track: product-analytics
+module: sql
+level: intermediate
+tags: [sql, product-analytics, data, query, founder, self-serve-analytics]
+prerequisites: [concept-sql-basics, concept-sql-joins, concept-sql-aggregations, concept-window-functions, concept-data-warehouse]
+related: [exercise-pana-003, rubric-product-analytics]
+status: published
+---
+import Callout from '../../../components/content/Callout.astro';
+
+Mỗi tuần, founder thường có ít nhất ba câu hỏi như thế này: *Hôm qua có bao nhiêu user mới? Feature X có ai dùng không? Tại sao tỷ lệ convert tháng này thấp hơn tháng trước?*
+
+Nếu bạn phải nhờ data engineer mỗi lần hỏi, bạn đang mất 1-2 ngày mỗi câu hỏi. Nhân 3 câu/tuần × 52 tuần = hàng trăm giờ chờ đợi mỗi năm — trong khi bạn hoàn toàn có thể tự trả lời trong 10 phút.
+
+Module này xâu chuỗi năm khái niệm SQL lại thành một quy trình đơn giản: *nhìn thấy câu hỏi → viết query → có đáp án*.
+
+## Bước 1 — Đọc và lọc dữ liệu
+
+Mọi phân tích đều bắt đầu từ [SQL Basics](/concepts/sql-basics): SELECT để chọn cột, WHERE để lọc, GROUP BY để nhóm.
+
+Trước khi viết bất kỳ query nào, hỏi mình ba câu:
+1. *Dữ liệu này nằm ở bảng nào?*
+2. *Tôi muốn lọc theo điều kiện gì?* (thời gian, loại user, loại event)
+3. *Tôi muốn gộp theo chiều nào?* (theo ngày, theo user, theo quốc gia)
+
+```sql
+-- Đếm user mới đăng ký 7 ngày qua, theo ngày
+SELECT
+  DATE(created_at) AS ngay,
+  COUNT(*) AS user_moi
+FROM users
+WHERE created_at >= CURRENT_DATE - INTERVAL '7 days'
+GROUP BY DATE(created_at)
+ORDER BY ngay;
+```
+
+## Bước 2 — Kết hợp dữ liệu từ nhiều bảng
+
+Câu hỏi thực tế hiếm khi trả lời được từ một bảng. "User nào đã đăng ký *và* đã kích hoạt feature X?" — cần JOIN bảng `users` và `events`.
+
+Xem chi tiết tại [SQL JOIN](/concepts/sql-joins). Nhớ quy tắc:
+- Muốn giữ tất cả user dù chưa có event → **LEFT JOIN**
+- Muốn chỉ lấy user có event → **INNER JOIN**
+
+```sql
+-- Tìm user đã đăng ký nhưng chưa activate
+SELECT
+  users.id,
+  users.email,
+  users.created_at
+FROM users
+LEFT JOIN events
+  ON users.id = events.user_id
+  AND events.event_name = 'activated'
+WHERE events.user_id IS NULL
+  AND users.created_at >= CURRENT_DATE - INTERVAL '30 days';
+```
+
+Danh sách này chính là danh sách cần reach out — user có tín hiệu quan tâm nhưng chưa thấy giá trị.
+
+## Bước 3 — Tính số liệu tổng hợp
+
+Khi bạn có một nhóm dữ liệu, bạn muốn tóm tắt nó: bao nhiêu, tổng bao nhiêu, trung bình bao nhiêu. Đó là lúc dùng [SQL Aggregations](/concepts/sql-aggregations).
+
+```sql
+-- Top 5 event phổ biến nhất tuần qua
+SELECT
+  event_name,
+  COUNT(*) AS so_lan,
+  COUNT(DISTINCT user_id) AS so_user
+FROM events
+WHERE created_at >= CURRENT_DATE - INTERVAL '7 days'
+GROUP BY event_name
+ORDER BY so_lan DESC
+LIMIT 5;
+```
+
+Hai cột `so_lan` và `so_user` cho bạn thấy ngay: event nào nhiều lần nhưng ít user (một vài user dùng nhiều) vs. event nào nhiều user nhưng ít lần (phổ biến nhưng không sticky).
+
+<Callout title="Nhớ nhé">
+`COUNT(*)` đếm số hàng (bao gồm duplicate). `COUNT(DISTINCT user_id)` đếm số user duy nhất. Phân biệt hai cái này cực quan trọng khi tính DAU, MAU hay engagement.
+</Callout>
+
+## Bước 4 — Phân tích nâng cao không mất chi tiết
+
+Đôi khi bạn cần câu trả lời phức tạp hơn: *user nào là người dùng feature X sớm nhất?* hay *% user quay lại trong 7 ngày là bao nhiêu?*
+
+[Window functions](/concepts/window-functions) giải quyết những câu hỏi này mà không cần viết query phức tạp hoặc tự join bảng với chính nó.
+
+```sql
+-- Event đầu tiên của mỗi user trong tháng này
+SELECT user_id, event_name, created_at
+FROM (
+  SELECT
+    user_id,
+    event_name,
+    created_at,
+    ROW_NUMBER() OVER (
+      PARTITION BY user_id
+      ORDER BY created_at ASC
+    ) AS stt
+  FROM events
+  WHERE created_at >= DATE_TRUNC('month', CURRENT_DATE)
+) t
+WHERE stt = 1;
+```
+
+Biết "event đầu tiên" của user giúp bạn hiểu điểm tiếp xúc đầu tiên với sản phẩm — thường là insight quan trọng nhất cho onboarding.
+
+## Bước 5 — Chạy query ở đâu
+
+Các query trên bạn có thể chạy trực tiếp trên Postgres production — *nhưng không nên* nếu bảng lớn. Xem lý do tại [Data Warehouse](/concepts/data-warehouse).
+
+Thực tế cho founder:
+- **Dưới ~1 triệu hàng:** Chạy trực tiếp trên Postgres trong giờ ít traffic là tạm ổn.
+- **Từ vài triệu hàng:** Dùng read replica hoặc export dữ liệu sang công cụ analytics (Metabase, Redash, hoặc Postgres replica riêng).
+- **Khi team lớn hơn:** Đầu tư BigQuery hoặc Snowflake để nhiều người có thể query đồng thời mà không ảnh hưởng production.
+
+<Callout title="Nhớ nhé">
+Năm khái niệm trong module này tạo thành một stack hoàn chỉnh: SELECT/WHERE/GROUP BY để đọc và lọc → JOIN để kết hợp bảng → Aggregations để tóm tắt → Window functions cho phân tích nâng cao → Data warehouse để chạy an toàn. Thành thạo năm thứ này, bạn tự trả lời được 90% câu hỏi sản phẩm mà không cần đợi ai.
+</Callout>
+
+Thực hành ngay với [bài tập viết query trả lời câu hỏi sản phẩm →](/exercises/product-analytics/m3-answer-with-sql)

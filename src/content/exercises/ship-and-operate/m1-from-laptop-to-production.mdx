@@ -1,0 +1,104 @@
+---
+id: exercise-ops-001
+title: "Đưa app từ laptop lên production lần đầu"
+type: "exercise"
+track: ship-and-operate
+tags: [devops, ship-and-operate, deployment, environments, config, secrets, twelve-factor, solo-builder]
+estimatedMinutes: 25
+related: [lesson-ops-001, concept-you-build-it-you-run-it, concept-dev-staging-prod, concept-twelve-factor-app, concept-config-and-secrets, rubric-ship-and-operate]
+status: published
+---
+import Callout from '../../../components/content/Callout.astro';
+
+## Tình huống
+
+Bạn vừa hoàn thành MVP của một app **task management** — giúp cá nhân quản lý công việc hàng ngày. App dùng Node.js + Postgres, có API đơn giản và một frontend nhỏ.
+
+Cho đến giờ, app chỉ chạy trên máy local của bạn với database local. Tuần tới bạn muốn cho vài người bạn dùng thử.
+
+Trước khi deploy, bạn cần xây nền tảng vận hành đúng cách. Ba nhiệm vụ dưới đây giúp bạn làm điều đó.
+
+---
+
+## Nhiệm vụ 1 — Vẽ sơ đồ ba môi trường
+
+Vẽ ra (bằng tay, Excalidraw, hay bất cứ công cụ nào) sơ đồ ba môi trường cho app của bạn.
+
+Mỗi môi trường cần ghi rõ:
+
+- **Chạy ở đâu?** (máy local, Railway, Fly.io, Render, v.v.)
+- **Database loại gì?** (SQLite local, Postgres managed, v.v.)
+- **Ai truy cập?** (chỉ bạn, team, user thật)
+- **Data như thế nào?** (dữ liệu giả, anonymized, dữ liệu thật)
+
+Sau khi vẽ xong, trả lời:
+
+1. Staging của bạn có giống production không? Liệt kê những điểm *khác nhau* còn lại — và quyết định cái nào chấp nhận được, cái nào cần đồng nhất.
+2. Nếu staging dùng SQLite nhưng production dùng Postgres, điều gì có thể xảy ra khi deploy? Cho ít nhất một ví dụ lỗi cụ thể.
+
+<Callout title="Mẹo">
+Bắt đầu từ production rồi vẽ ngược lại: "Production của mình cần gì?" → "Staging cần mirror những gì?" → "Dev cần setup gì để không làm chậm development?" Thứ tự đó giúp tránh staging quá khác với prod.
+</Callout>
+
+---
+
+## Nhiệm vụ 2 — Liệt kê và phân loại config/secret cần tách
+
+Đọc lại codebase của app (hoặc dùng app task management tưởng tượng với các tính năng phổ biến). Lập danh sách **tất cả** giá trị cần tách khỏi code.
+
+Phân loại theo bảng:
+
+| Tên biến | Loại (Config / Secret) | Giá trị trên Dev | Giá trị trên Staging | Giá trị trên Prod |
+|---|---|---|---|---|
+| `DATABASE_URL` | Config | `postgresql://localhost/app_dev` | `postgresql://staging-db/app` | `postgresql://prod-db/app` |
+| `STRIPE_SECRET_KEY` | Secret | `sk_test_...` | `sk_test_...` | `sk_live_...` |
+| ... | ... | ... | ... | ... |
+
+Điền ít nhất **6 biến** — mix giữa config và secret.
+
+Sau đó trả lời:
+1. Biến nào khác nhau giữa các môi trường? Biến nào giống nhau?
+2. Secret nào nguy hiểm nhất nếu bị lộ? Tại sao?
+3. Bạn sẽ lưu chúng ở đâu trên production — và bằng cách nào để team mới biết cần set những biến gì?
+
+<Callout title="Cẩn thận">
+Kiểm tra `.gitignore` ngay bây giờ — trước khi làm nhiệm vụ này. Nếu `.env` chưa có trong `.gitignore`, thêm ngay và kiểm tra lịch sử commit xem đã lỡ commit file nào chứa giá trị thật chưa.
+</Callout>
+
+---
+
+## Nhiệm vụ 3 — Checklist 12-factor mini
+
+Đánh giá app của bạn (hoặc app task management tưởng tượng) theo 5 factor quan trọng nhất cho solo builder. Với mỗi factor, điền: ✅ Đã tuân thủ / ⚠️ Một phần / ❌ Chưa — và ghi một dòng giải thích ngắn.
+
+| Factor | Câu hỏi kiểm tra | Trạng thái | Ghi chú |
+|---|---|---|---|
+| **Config trong env** | App có đọc database URL, API key từ `os.environ` / `process.env` không — hay đang hardcode? | | |
+| **Stateless process** | App có lưu session trong RAM (ví dụ: `Map`, global variable) không? Nếu restart app, user có bị logout không? | | |
+| **Logs as streams** | App có ghi log ra stdout/stderr không — hay tự quản lý file log? | | |
+| **Dev/prod parity** | Loại database của dev có giống production không? Phiên bản có khớp không? | | |
+| **One codebase** | Có "branch đặc biệt cho production" không — hay cùng một commit được deploy lên mọi môi trường? | | |
+
+Sau khi điền xong, chọn **một** mục ⚠️ hoặc ❌ quan trọng nhất và viết 2-3 câu mô tả cụ thể bạn sẽ sửa gì.
+
+<Callout title="Mẹo">
+Không cần app đạt điểm hoàn hảo ngay. Mục tiêu là *biết* app đang ở đâu và *ưu tiên* sửa gì trước khi ship. Factor III (config trong env) và Factor VI (stateless) là hai cái cần sửa trước khi có user thật.
+</Callout>
+
+---
+
+## Tiêu chí đánh giá
+
+Tham khảo [Ship & Operate Rubric](/rubrics/ship-and-operate-rubric) để tự chấm.
+
+Với bài này, tập trung vào ba tiêu chí:
+
+| Tiêu chí | Câu hỏi để tự kiểm tra |
+|---|---|
+| Hiểu ba môi trường | Sơ đồ của bạn có cho thấy *sự khác biệt cụ thể* giữa các môi trường không — không chỉ tên? |
+| Tách config/secret đúng cách | Bảng config của bạn có phân biệt rõ secret vs config, và xác định được giá trị nào khác nhau giữa môi trường không? |
+| Đánh giá 12-factor trung thực | Mục "Ghi chú" của bạn có giải thích *cụ thể* tại sao đạt/không đạt — không phải chỉ tick checkbox? |
+
+<Callout title="Nhớ nhé">
+Bài tập này không có đáp án duy nhất. App task management tưởng tượng của mỗi người sẽ có kiến trúc khác nhau. Điều quan trọng là *quy trình suy nghĩ*: nhìn vào app, nhận ra rủi ro, và có kế hoạch cụ thể để xử lý trước khi user thật đụng vào.
+</Callout>

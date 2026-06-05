@@ -1,0 +1,79 @@
+---
+id: lesson-ops-001
+title: "Trước khi ship lần đầu: đặt nền tảng vận hành"
+type: "lesson"
+track: ship-and-operate
+module: foundations
+level: beginner
+tags: [devops, ship-and-operate, deployment, config, secrets, environments, solo-builder, ownership]
+prerequisites: [concept-you-build-it-you-run-it, concept-dev-staging-prod, concept-twelve-factor-app, concept-config-and-secrets]
+related: [exercise-ops-001, rubric-ship-and-operate]
+status: published
+---
+import Callout from '../../../components/content/Callout.astro';
+
+Bạn sắp deploy app lần đầu. Code chạy tốt trên máy local. Giờ chỉ cần "push lên là xong", đúng không?
+
+Không hẳn. "Chạy trên máy mình" và "chạy ổn định cho user thật" là hai thứ khác nhau. Lesson này giúp bạn đặt ba trụ cột nền tảng *trước* khi nhấn deploy — để lần ship đầu không trở thành cơn ác mộng vận hành.
+
+---
+
+## Trụ cột 1: Hiểu rằng bạn sẽ vận hành thứ mình xây
+
+[You Build It, You Run It](/concepts/you-build-it-you-run-it) không phải triết lý xa xỉ — với solo builder, đây là thực tế mặc định. Không có đội ops nhận bàn giao. Không có ai khác đọc log lúc 2 giờ sáng.
+
+Hậu quả thực tế: ngay từ khi viết code, bạn phải nghĩ đến *người vận hành* — mà người đó chính là bạn trong tương lai. Điều đó nghĩa là:
+
+- Error message rõ ràng, không phải `"Something went wrong"`.
+- Log có đủ context để hiểu lỗi xảy ra ở đâu, với dữ liệu nào.
+- Health check endpoint để biết app còn sống không.
+
+Bắt đầu với mindset này trước khi viết dòng code đầu tiên sẽ tiết kiệm cho bạn hàng giờ debug sau này.
+
+---
+
+## Trụ cột 2: Dựng ba môi trường trước khi có user
+
+[Dev, Staging, Production](/concepts/dev-staging-prod) là ba giai đoạn thử nghiệm tách biệt. Thứ tự thiết lập:
+
+**Dev (ngay hôm nay):** Máy local của bạn. Chạy `docker compose up` hoặc một script khởi động là đủ. Đảm bảo mọi người mới clone repo đều có thể chạy app trong 5 phút.
+
+**Staging (trước lần deploy đầu tiên):** Tạo một instance riêng trên Railway, Fly.io, hay Render. Dùng cùng loại database với production. Dùng dữ liệu giả. Chi phí thường rất thấp hoặc miễn phí ở tier nhỏ.
+
+**Production (khi sẵn sàng):** Domain thật, database thật, user thật.
+
+<Callout title="Mẹo">
+Quy tắc đơn giản cho flow deploy: code mới luôn đi qua staging trước. Nếu staging ổn sau 10-30 phút quan sát, mới merge vào production. Kỷ luật đơn giản này tránh được phần lớn sự cố "tưởng là thay đổi nhỏ".
+</Callout>
+
+---
+
+## Trụ cột 3: Config và secrets ra khỏi code ngay từ đầu
+
+Trước khi viết dòng code đầu tiên kết nối database hay gọi API bên ngoài, thiết lập ngay:
+
+1. File `.env` cho local development — và thêm nó vào `.gitignore` *ngay lập tức*.
+2. File `.env.example` với tên các biến (không có giá trị thật) để tài liệu hóa những gì cần set.
+3. Trên platform deployment (Railway, Fly, Render), set các biến môi trường qua UI — không phải file.
+
+[Config & Secrets Management](/concepts/config-and-secrets) giải thích tại sao đây là điều kiện tối thiểu — và tại sao xóa commit sau khi lỡ push không đủ để "an toàn lại".
+
+Kết hợp với [12-Factor App](/concepts/twelve-factor-app), nguyên tắc cốt lõi là: *app đọc config từ môi trường, không từ code*. Một codebase chạy trên dev, staging, và production mà không cần thay đổi một dòng code nào — chỉ khác environment variables.
+
+---
+
+## Kết nối lại: checklist trước khi ship
+
+Ba trụ cột này không mất nhiều thời gian thiết lập — nhưng thiếu bất kỳ cái nào, lần ship đầu sẽ phức tạp hơn cần thiết.
+
+| Trụ cột | Câu hỏi kiểm tra |
+|---|---|
+| Ownership | Bạn có biết cách xem logs của app trên production không? |
+| Ba môi trường | Staging có cùng loại database với production không? |
+| Config & Secrets | `.env` đã có trong `.gitignore` chưa? Secrets có được set trên platform — không phải trong code — không? |
+
+<Callout title="Nhớ nhé">
+Nền tảng vận hành không phải việc làm sau khi ship. Nó là thứ bạn thiết lập *trước* — và một khi đã có, nó chạy ngầm giúp bạn mỗi ngày.
+</Callout>
+
+Thực hành ngay với [bài tập đưa app từ laptop lên production →](/exercises/ship-and-operate/m1-from-laptop-to-production)

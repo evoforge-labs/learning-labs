@@ -1,0 +1,83 @@
+---
+id: track-ship-and-operate
+title: "Ship & Operate"
+type: "track"
+summary: "DevOps cho người tự build: đưa code lên production an toàn, nhìn thấy hệ thống, xử lý sự cố một mình và kiểm soát chi phí — giữ cho sản phẩm sống lúc 3 giờ sáng."
+tags: [devops, ci-cd, observability, reliability, operations, solo-builder]
+status: published
+---
+
+# Ship & Operate
+
+System Design dạy bạn **xây cái gì**. Track này dạy bạn **giữ cho nó sống** — khi nó đã chạy trên production, có user thật, và sập lúc 3 giờ sáng thì chỉ có mình bạn.
+
+Đây là DevOps gói gọn cho **builder một mình**: không phải để bạn thành SRE ở Google, mà để bạn ship được mỗi ngày mà không sợ, và khi có sự cố thì biết chính xác phải làm gì.
+
+## Outcome
+
+Sau track này, bạn chuyển từ:
+
+> Tôi deploy bằng cách kéo file lên server và cầu nguyện.
+
+sang:
+
+> Tôi có pipeline tự động ship code an toàn, nhìn thấy hệ thống qua log/metric, có runbook khi sự cố, và biết tiền cloud đang chảy đi đâu.
+
+## Track này luyện gì?
+
+- Tách môi trường dev/staging/prod, quản lý config & secret đúng cách.
+- Dựng CI/CD: test làm cổng chặn, deploy an toàn, rollback trong vài giây.
+- Nhìn thấy hệ thống: log có cấu trúc, metric, SLO, alert đúng lúc (không spam).
+- Xử lý sự cố một mình: on-call cho 1 người, postmortem không đổ lỗi, runbook, backup & restore.
+- Kiểm soát chi phí cloud và quy mô — biết khi nào *đừng* tối ưu.
+
+## Năm chặng từ cơ bản đến nâng cao
+
+1. **Nền tảng vận hành** — "you build it, you run it", môi trường, 12-factor, config & secret.
+2. **CI/CD & Phát hành** — pipeline, deploy strategy, rollback, feature flag.
+3. **Observability** — log có cấu trúc, golden signals, SLI/SLO/error budget, alerting.
+4. **Sự cố & độ tin cậy** — incident response, postmortem, runbook, backup, disaster recovery.
+5. **Chi phí & quy mô** — cost control, autoscaling, right-sizing, khi nào đừng tối ưu.
+
+Tra cứu nhanh mọi thuật ngữ ở trang [Glossary](/glossary).
+
+## Curriculum
+
+### Module 1 — Nền tảng vận hành
+- You build it, you run it
+- Môi trường dev / staging / prod
+- 12-Factor App
+- Config & Secrets
+
+### Module 2 — CI/CD & Phát hành
+- Continuous Integration
+- Continuous Delivery & Deployment
+- Deploy strategies (blue-green / canary / rolling)
+- Rollback & recovery
+- Feature flags
+
+### Module 3 — Observability
+- Observability (logs, metrics, traces) — *tái dùng từ System Design*
+- Structured logging
+- Golden signals
+- SLI / SLO / Error budget
+- Alerting (báo đúng lúc, không spam)
+
+### Module 4 — Sự cố & độ tin cậy
+- Incident response (on-call cho 1 người)
+- Blameless postmortem
+- Runbook
+- Backup & restore
+- Disaster recovery (RTO / RPO)
+
+### Module 5 — Chi phí & quy mô
+- Kiểm soát chi phí cloud (FinOps cho solo)
+- Autoscaling
+- Right-sizing
+- Khi nào *đừng* tối ưu
+
+Mỗi module có 1 lesson xâu chuỗi + 1 bài tập tình huống. Cuối track có **capstone**: viết một runbook + observability plan hoàn chỉnh cho một app thật.
+
+## First principle
+
+Bạn không thể vận hành thứ bạn không nhìn thấy, và không thể ngủ yên với thứ bạn không thể rollback. Tự động hóa cái lặp lại, đo cái quan trọng, viết ra cái bạn sẽ quên — rồi mới yên tâm ship.

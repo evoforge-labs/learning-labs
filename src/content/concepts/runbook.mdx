@@ -1,0 +1,69 @@
+---
+id: concept-runbook
+title: "Runbook"
+type: "concept"
+aliases: ["runbook", "tài liệu vận hành từng bước", "operations runbook", "sổ tay xử lý sự cố", "runbook vận hành", "hướng dẫn restart service"]
+tags: [reliability, runbook, devops, ship-and-operate, incident-response, documentation, operations]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Phi công không nhớ toàn bộ quy trình khẩn cấp trong đầu. Họ mở checklist. Ngay cả với hàng nghìn giờ bay.
+
+Kỹ sư vận hành hệ thống lúc 3 giờ sáng cũng cần làm y vậy.
+
+## Là gì
+
+**Runbook** là tài liệu từng bước hướng dẫn cách xử lý một tình huống vận hành cụ thể — restart service, restore database, xóa cache bị poisoned, handle memory leak. Viết khi đầu óc tỉnh táo, để dùng khi hoảng loạn.
+
+Runbook khác với documentation thông thường ở chỗ: nó **actionable**. Không giải thích tại sao (đó là việc của postmortem), chỉ nói *làm gì, theo thứ tự nào, kiểm tra gì để biết đã xong*.
+
+Một runbook tốt gồm:
+
+- **Tên sự cố / tình huống** — mô tả rõ khi nào dùng runbook này
+- **Triệu chứng nhận ra** — làm sao biết đây là tình huống cần runbook này
+- **Điều kiện tiên quyết** — cần access gì, tool gì trước khi bắt đầu
+- **Các bước thực hiện** — đánh số, cụ thể, không mơ hồ
+- **Kiểm tra kết quả** — làm sao biết đã thành công
+- **Rollback nếu thất bại** — làm gì nếu các bước trên không hiệu quả
+
+## Ví dụ thật
+
+**Runbook: Database connection pool exhausted**
+
+*Triệu chứng:* App trả về lỗi "too many connections", Postgres logs đầy `connection refused`.
+
+*Bước 1:* SSH vào server — `ssh deploy@your-server`
+
+*Bước 2:* Kiểm tra số connection hiện tại — `psql -c "SELECT count(*) FROM pg_stat_activity;"`
+
+*Bước 3:* Nếu > 80 connections, kill idle connections — `psql -c "SELECT pg_terminate_backend(pid) FROM pg_stat_activity WHERE state = 'idle' AND query_start < now() - interval '5 minutes';"`
+
+*Bước 4:* Restart app service nếu cần — `systemctl restart myapp`
+
+*Kiểm tra:* Error rate về 0 trên dashboard trong vòng 2 phút.
+
+*Root cause thường gặp:* Connection leak sau deploy — xem lại diff gần nhất, tìm chỗ connection không được đóng.
+
+<Callout title="Cẩn thận">
+Runbook có thể lỗi thời. Nếu infrastructure thay đổi nhưng runbook không được update, nó trở thành thứ nguy hiểm hơn là không có gì — vì bạn sẽ làm theo một quy trình sai và mất thêm thời gian. Thêm ngày "last verified" vào mỗi runbook và review định kỳ, ít nhất mỗi quý.
+</Callout>
+
+Runbook không chỉ cho sự cố khẩn cấp. Các tác vụ vận hành định kỳ cũng cần runbook: backup database thủ công, deploy lên production, rotate API keys, gia hạn SSL certificate. Mỗi thứ bạn làm nhiều hơn một lần và cần làm đúng — đều xứng đáng có runbook.
+
+<Callout title="Nhớ nhé">
+Runbook giỏi nhất là cái bạn viết **ngay sau** khi xử lý xong sự cố — lúc ký ức còn tươi. Bắt đầu đơn giản: một file markdown với 5-6 bước cho sự cố bạn hay gặp nhất. Không cần hoàn hảo — cần đủ để bạn lúc 3 giờ sáng mắt nhắm mắt mở vẫn đi đúng hướng.
+</Callout>
+
+## Đọc thêm
+
+- [What is a Runbook? — PagerDuty](https://www.pagerduty.com/resources/learn/what-is-a-runbook/) — Định nghĩa và cách viết runbook hiệu quả; có ví dụ template thực tế, phân biệt runbook với playbook.
+- [Runbooks and Playbooks — Atlassian](https://www.atlassian.com/incident-management/runbook) — Atlassian giải thích sự khác biệt giữa runbook (tactical) và playbook (strategic), kèm best practices viết tài liệu vận hành.
+- [Building Effective Runbooks — SRE Weekly](https://sreweekly.com/building-effective-runbooks/) — Bài viết thực tế từ cộng đồng SRE về những gì làm cho runbook hiệu quả thật sự, không phải lý thuyết suông.
+- [Ops Runbook Template — GitHub](https://github.com/jesseadams/ops-runbooks/tree/master) — Bộ template runbook mở trên GitHub; tham khảo cấu trúc và xem ví dụ runbook thực tế từ các ops team.
+
+## Tự kiểm tra
+
+1. Tại sao runbook nên được viết khi đầu óc tỉnh táo, không phải trong lúc xử lý sự cố thật?
+2. Sự khác biệt giữa runbook và một bài documentation thông thường là gì? Điều gì làm cho runbook "actionable"?
+3. Bạn đang vận hành một app web đơn giản. Liệt kê 3 tình huống cụ thể xứng đáng có runbook riêng.

@@ -1,0 +1,105 @@
+---
+id: concept-sql-joins
+title: "SQL JOIN"
+type: "concept"
+aliases: ["SQL JOIN", "nối bảng trong SQL", "INNER JOIN LEFT JOIN SQL", "SQL join hai bảng", "kết hợp bảng SQL"]
+tags: [sql, product-analytics, data, join, inner-join, left-join]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Bạn có danh sách khách hàng trong một sổ, và danh sách đơn hàng trong một sổ khác. Để biết *ai đã mua gì*, bạn phải tra từng tên một — nối thông tin từ hai sổ lại. SQL JOIN làm đúng điều đó, nhưng tự động, trong vài mili-giây.
+
+## Là gì
+
+**JOIN** là cách ghép hai bảng lại dựa trên một cột chung (thường là ID).
+
+Hai loại JOIN bạn sẽ dùng 95% thời gian:
+
+- **INNER JOIN** — chỉ lấy hàng có dữ liệu ở *cả hai* bảng. Như phần giao của hai vòng tròn.
+- **LEFT JOIN** — lấy *tất cả* hàng từ bảng trái, và ghép dữ liệu từ bảng phải nếu có. Nếu không có thì điền NULL.
+
+## Ví dụ thật
+
+Giả sử có hai bảng:
+
+**Bảng `users`:**
+| id | name  |
+|----|-------|
+| 1  | An    |
+| 2  | Bình  |
+| 3  | Chi   |
+
+**Bảng `events`:**
+| user_id | event_name |
+|---------|------------|
+| 1       | signup     |
+| 1       | activated  |
+| 2       | signup     |
+
+(Chi chưa có event nào.)
+
+**INNER JOIN — chỉ user đã có event:**
+
+```sql
+SELECT
+  users.name,
+  events.event_name
+FROM users
+INNER JOIN events ON users.id = events.user_id;
+```
+
+Kết quả: An + signup, An + activated, Bình + signup. Chi *không xuất hiện* vì không có event.
+
+**LEFT JOIN — tất cả user, kể cả chưa có event:**
+
+```sql
+SELECT
+  users.name,
+  events.event_name
+FROM users
+LEFT JOIN events ON users.id = events.user_id;
+```
+
+Kết quả: An + signup, An + activated, Bình + signup, Chi + NULL.
+
+Chi xuất hiện với `event_name = NULL`. Điều này rất hữu ích khi bạn muốn tìm *user chưa làm gì* — chính là những user cần chú ý nhất.
+
+**Đếm user chưa activate:**
+
+```sql
+SELECT COUNT(*) AS chua_activate
+FROM users
+LEFT JOIN events
+  ON users.id = events.user_id
+  AND events.event_name = 'activated'
+WHERE events.user_id IS NULL;
+```
+
+Query này đọc là: *"Lấy tất cả user, ghép với events khi event là activated, rồi lọc chỉ lấy những user không có hàng tương ứng."*
+
+<Callout title="Cẩn thận">
+Đừng nhầm `ON` và `WHERE` khi dùng LEFT JOIN. Điều kiện trong `ON` chạy *trước* khi join — bảng phải vẫn trả NULL nếu không khớp. Điều kiện trong `WHERE` chạy *sau* — nếu bạn viết `WHERE events.user_id IS NOT NULL`, bạn đã vô tình biến LEFT JOIN thành INNER JOIN mà không hay.
+</Callout>
+
+**Quy tắc chọn loại JOIN:**
+- Muốn chỉ lấy những gì *khớp ở cả hai bảng* → INNER JOIN
+- Muốn giữ lại *tất cả hàng* của bảng trái dù không có dữ liệu khớp → LEFT JOIN
+- Muốn tìm user *chưa làm gì* → LEFT JOIN rồi lọc `WHERE bảng_phải.id IS NULL`
+
+<Callout title="Nhớ nhé">
+INNER JOIN = phần giao. LEFT JOIN = tất cả bảng trái. Khi muốn tìm "ai chưa làm X", LEFT JOIN kết hợp `WHERE ... IS NULL` là pattern chuẩn trong product analytics.
+</Callout>
+
+## Đọc thêm
+
+- [SQL Joins — W3Schools](https://www.w3schools.com/sql/sql_join.asp) — Giải thích trực quan các loại JOIN với sơ đồ Venn và ví dụ chạy được; điểm bắt đầu tốt nhất cho người mới.
+- [Joins Between Tables — PostgreSQL Docs](https://www.postgresql.org/docs/current/tutorial-join.html) — Tài liệu chính thức PostgreSQL về JOIN, bao gồm inner và outer joins với ví dụ thực tế; ngắn và súc tích.
+- [SQL LEFT JOIN — Mode Analytics](https://mode.com/sql-tutorial/sql-left-join/index.html) — Hướng dẫn LEFT JOIN từ góc nhìn analytics, giải thích tại sao LEFT JOIN thường hữu ích hơn INNER JOIN khi phân tích hành vi user.
+- [SQL LEFT JOIN — W3Schools](https://www.w3schools.com/sql/sql_join_left.asp) — Tài liệu tham khảo nhanh cú pháp LEFT JOIN với ví dụ bảng Orders và Customers; dùng tra cứu khi cần.
+
+## Tự kiểm tra
+
+1. Bạn muốn tìm tất cả user chưa bao giờ đăng nhập sau ngày đăng ký. Bạn dùng INNER JOIN hay LEFT JOIN? Viết query phác thảo ra.
+2. Điều gì xảy ra nếu một user có 5 events và bạn JOIN bảng `users` với bảng `events`? Kết quả có bao nhiêu hàng cho user đó?
+3. Tại sao đặt điều kiện lọc trong `ON` thay vì `WHERE` lại cho kết quả khác nhau khi dùng LEFT JOIN?

@@ -1,0 +1,110 @@
+---
+id: concept-sql-aggregations
+title: "SQL Aggregations (COUNT, SUM, AVG, HAVING)"
+type: "concept"
+aliases: ["SQL aggregations", "SQL tổng hợp dữ liệu", "COUNT SUM AVG HAVING SQL", "hàm tổng hợp SQL", "SQL aggregate functions"]
+tags: [sql, product-analytics, data, aggregation, count, sum, avg, having, group-by]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Bạn có 10.000 đơn hàng và muốn biết: *tổng doanh thu tháng này là bao nhiêu? Đơn hàng trung bình bao nhiêu tiền? Ngày nào bán được nhiều nhất?* Thay vì cộng tay từng dòng, bạn dùng aggregate functions — SQL sẽ tính cho bạn trong chưa đầy một giây.
+
+## Là gì
+
+**Aggregate functions** là các hàm tính toán trên nhiều hàng và trả về một giá trị duy nhất cho mỗi nhóm.
+
+Bốn hàm bạn dùng nhiều nhất:
+
+- **COUNT(\*)** — đếm số hàng
+- **SUM(cột)** — tổng cộng
+- **AVG(cột)** — trung bình
+- **MAX / MIN** — giá trị lớn nhất / nhỏ nhất
+
+Thường đi kèm với **GROUP BY** để tính theo từng nhóm, và **HAVING** để lọc sau khi đã gộp.
+
+## Ví dụ thật
+
+Bảng `events`:
+
+| id | user_id | event_name | created_at  |
+|----|---------|------------|-------------|
+| 1  | 101     | purchase   | 2024-01-15  |
+| 2  | 102     | purchase   | 2024-01-15  |
+| 3  | 101     | purchase   | 2024-01-16  |
+| 4  | 103     | signup     | 2024-01-16  |
+
+**Đếm số lần mua hàng theo ngày:**
+
+```sql
+SELECT
+  DATE(created_at) AS ngay,
+  COUNT(*) AS so_lan_mua
+FROM events
+WHERE event_name = 'purchase'
+GROUP BY DATE(created_at)
+ORDER BY ngay;
+```
+
+Kết quả: 2024-01-15 có 2 lần mua, 2024-01-16 có 1 lần mua.
+
+**Đếm số event khác nhau của mỗi user:**
+
+```sql
+SELECT
+  user_id,
+  COUNT(DISTINCT event_name) AS so_loai_event
+FROM events
+GROUP BY user_id;
+```
+
+`COUNT(DISTINCT event_name)` đếm số *loại* event khác nhau — không phải tổng số event. User 101 có 1 loại (purchase), User 103 có 1 loại (signup).
+
+**HAVING — lọc sau khi gộp:**
+
+```sql
+SELECT
+  user_id,
+  COUNT(*) AS so_event
+FROM events
+GROUP BY user_id
+HAVING COUNT(*) >= 2;
+```
+
+Chỉ trả về user có từ 2 event trở lên. Không thể dùng `WHERE COUNT(*) >= 2` vì COUNT chưa tồn tại tại thời điểm WHERE chạy.
+
+<Callout title="Cẩn thận">
+**WHERE vs HAVING** — đây là lỗi phổ biến nhất. `WHERE` lọc từng hàng *trước* khi gộp; `HAVING` lọc từng nhóm *sau* khi gộp. Quy tắc đơn giản: nếu điều kiện có aggregate function (COUNT, SUM, AVG...) thì dùng `HAVING`. Nếu không thì dùng `WHERE`.
+</Callout>
+
+**Kết hợp cả WHERE và HAVING trong một query:**
+
+```sql
+SELECT
+  DATE(created_at) AS ngay,
+  COUNT(*) AS so_purchase
+FROM events
+WHERE event_name = 'purchase'          -- lọc trước khi gộp
+GROUP BY DATE(created_at)
+HAVING COUNT(*) >= 2                   -- lọc sau khi gộp
+ORDER BY ngay;
+```
+
+Query này tìm những ngày có từ 2 lượt mua trở lên.
+
+<Callout title="Nhớ nhé">
+COUNT + SUM + AVG đi với GROUP BY. HAVING lọc kết quả của GROUP BY. Nhớ: WHERE lọc hàng, HAVING lọc nhóm. Khi điều kiện nhắc đến COUNT hoặc SUM → dùng HAVING.
+</Callout>
+
+## Đọc thêm
+
+- [SQL COUNT, AVG, SUM — W3Schools](https://www.w3schools.com/sql/sql_count_avg_sum.asp) — Giải thích từng hàm tổng hợp với ví dụ chạy ngay trong trình duyệt; tài liệu tham khảo nhanh khi cần tra cú pháp.
+- [SQL HAVING Clause — W3Schools](https://www.w3schools.com/sql/sql_having.asp) — Tập trung vào sự khác biệt giữa WHERE và HAVING, kèm ví dụ so sánh trực tiếp; đọc ngay sau khi hiểu GROUP BY.
+- [Aggregate Functions — PostgreSQL Docs](https://www.postgresql.org/docs/current/tutorial-agg.html) — Tài liệu chính thức giải thích tại sao WHERE không dùng được với aggregate và vai trò của HAVING; ngắn, chính xác, đáng đọc.
+- [SQL GROUP BY — Mode Analytics](https://mode.com/resources/sql-tutorial/sql-group-by) — Hướng dẫn GROUP BY từ góc nhìn analytics thực tế, bao gồm các pattern phổ biến trong phân tích dữ liệu sản phẩm.
+
+## Tự kiểm tra
+
+1. Viết query tìm tất cả user có hơn 3 lần mua hàng trong tháng 1/2024. Bạn dùng WHERE hay HAVING ở đây?
+2. Sự khác biệt giữa `COUNT(*)` và `COUNT(user_id)` là gì khi cột `user_id` có thể NULL?
+3. Bạn muốn tìm ngày có doanh thu trung bình đơn hàng cao hơn 500.000 đồng. Điều kiện này đặt ở WHERE hay HAVING, và tại sao?

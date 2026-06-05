@@ -1,0 +1,95 @@
+---
+id: exercise-ops-004
+title: "Chuẩn bị cho sự cố: runbook, RTO/RPO, và postmortem"
+type: "exercise"
+track: ship-and-operate
+tags: [reliability, incident-response, runbook, postmortem, rto, rpo, backup, disaster-recovery, ship-and-operate]
+estimatedMinutes: 30
+related: [lesson-ops-004, concept-incident-response, concept-runbook, concept-blameless-postmortem, concept-backup-and-restore, concept-disaster-recovery, rubric-ship-and-operate]
+status: published
+---
+import Callout from '../../../components/content/Callout.astro';
+
+## Tình huống
+
+Bạn vừa launch một app web solo — có thể là SaaS nhỏ, booking tool, hay internal tool cho khách hàng. App đang có user thật. Bạn là người duy nhất vận hành.
+
+Cho đến lúc này, chiến lược sự cố của bạn là "hy vọng không có gì xảy ra". Đây là lúc thay đổi điều đó.
+
+---
+
+## Nhiệm vụ 1 — Viết runbook cho một sự cố thường gặp
+
+Chọn **một** trong ba tình huống sau (hoặc thay bằng sự cố thật từ app của bạn):
+
+- (A) App trả về lỗi 500 sau khi deploy
+- (B) Database không kết nối được từ app
+- (C) App chạy chậm bất thường, response time tăng gấp 5 lần
+
+Viết một **runbook** đầy đủ cho tình huống đó. Runbook cần có:
+
+1. **Tên sự cố** và **khi nào dùng runbook này** (triệu chứng nhận ra)
+2. **Điều kiện tiên quyết** — cần access gì, tool gì, credential ở đâu
+3. **Các bước xử lý** — đánh số rõ ràng, cụ thể đủ để ai cũng làm được (kể cả bạn lúc 3h sáng)
+4. **Cách kiểm tra đã xử lý xong** — làm sao biết sự cố đã được giải quyết
+5. **Rollback hoặc escalate nếu thất bại** — làm gì nếu các bước trên không hiệu quả
+
+<Callout title="Mẹo">
+Viết như thể người đọc không biết gì về hệ thống của bạn — và đang hoảng loạn. Câu lệnh cụ thể tốt hơn mô tả chung chung. "Chạy `systemctl restart myapp` và kiểm tra `systemctl status myapp`" tốt hơn "restart service".
+</Callout>
+
+---
+
+## Nhiệm vụ 2 — Xác định RTO và RPO cho app của bạn
+
+Suy nghĩ về app bạn đang hoặc sẽ vận hành (có thể là app giả định). Trả lời bốn câu hỏi sau:
+
+**Phân tích tác động:**
+- Nếu app down 1 giờ, tác động cụ thể là gì? (Mất doanh thu? Mất uy tín? Không ảnh hưởng gì?)
+- Nếu app down 8 giờ, tác động là gì?
+- Nếu mất dữ liệu của 1 giờ gần nhất, hậu quả là gì?
+- Nếu mất dữ liệu của 24 giờ gần nhất, hậu quả là gì?
+
+**Từ phân tích trên, xác định:**
+1. **RTO mục tiêu:** Tối đa bao nhiêu giờ downtime là chấp nhận được?
+2. **RPO mục tiêu:** Tối đa mất dữ liệu của bao nhiêu giờ là chấp nhận được?
+3. **Hàm ý backup:** Dựa vào RPO, bạn cần backup tần suất nào để đáp ứng mục tiêu đó?
+4. **Một khoảng trống:** Hiện tại setup của bạn có đáp ứng được RTO/RPO đó không? Khoảng trống lớn nhất là gì?
+
+<Callout title="Mẹo">
+Không có đáp án đúng duy nhất — RTO/RPO phụ thuộc vào tính chất app. Một blog cá nhân và một app thanh toán có mức chấp nhận rất khác nhau. Điều quan trọng là lý luận có căn cứ, không phải con số cụ thể.
+</Callout>
+
+---
+
+## Nhiệm vụ 3 — Outline postmortem cho sự cố giả định
+
+Tình huống giả định: **Hệ thống của bạn bị downtime 2 giờ** do bạn chạy lệnh database migration sai trên production, làm một bảng quan trọng bị mất data. Bạn phải restore từ backup, mất 2 giờ.
+
+Viết **outline postmortem** cho sự cố này — không cần đầy đủ chi tiết, chỉ cần đủ cấu trúc:
+
+1. **Timeline tóm tắt** — ít nhất 5 mốc thời gian từ lúc phát hiện đến lúc phục hồi (bạn tự tưởng tượng chi tiết hợp lý)
+2. **Root cause** — áp dụng kỹ thuật "5 Whys": bắt đầu từ "migration chạy sai" và hỏi "tại sao" ít nhất 3 lần
+3. **Action items** — ít nhất 3 việc cụ thể để ngăn sự cố tương tự tái diễn; mỗi item có tên việc và deadline ước lượng
+
+<Callout title="Mẹo">
+Để ý xem action items của bạn có đang sửa *triệu chứng* hay *nguyên nhân gốc*. "Cẩn thận hơn khi chạy migration" không phải action item tốt — không đo được, không tự động. "Thêm bước confirm tên database trước khi chạy migration script" tốt hơn nhiều.
+</Callout>
+
+---
+
+## Tiêu chí đánh giá
+
+Tham khảo [Ship & Operate Rubric](/rubrics/ship-and-operate-rubric) để tự chấm.
+
+Với bài này, tập trung vào:
+
+| Tiêu chí | Câu hỏi tự kiểm tra |
+|----------|---------------------|
+| Runbook actionable | Người khác đọc runbook của bạn có thể làm theo không, hay cần phải đoán thêm? |
+| RTO/RPO có căn cứ | Con số của bạn xuất phát từ phân tích tác động hay từ cảm tính "càng thấp càng tốt"? |
+| Postmortem đến root cause | Action items của bạn nhắm vào nguyên nhân gốc hay chỉ triệu chứng bề mặt? |
+
+<Callout title="Nhớ nhé">
+Bài tập này có giá trị nhất khi bạn dùng app thật của mình — không phải ví dụ giả định. Runbook bạn viết hôm nay có thể là thứ cứu bạn lúc 3 giờ sáng tháng tới.
+</Callout>

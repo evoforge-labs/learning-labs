@@ -1,0 +1,69 @@
+---
+id: concept-incident-response
+title: "Incident Response (on-call cho 1 người)"
+type: "concept"
+aliases: ["incident response", "xử lý sự cố hệ thống", "on-call engineer", "quy trình ứng phó sự cố", "severity levels incident", "khi hệ thống sập"]
+tags: [reliability, incident-response, on-call, devops, ship-and-operate, monitoring, alerting]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+3 giờ sáng. Điện thoại rung. App của bạn sập. Tim bạn đập nhanh, não còn mờ — và bạn phải ra quyết định ngay bây giờ.
+
+Đây chính xác là lúc bạn cần *quy trình*, không phải cần *thiên tài*.
+
+## Là gì
+
+**Incident response** là quy trình xử lý có cấu trúc khi hệ thống gặp sự cố — từ lúc phát hiện cho đến khi mọi thứ trở lại bình thường và bạn hiểu tại sao nó xảy ra.
+
+Quy trình gồm ba giai đoạn chính:
+
+**Phát hiện (Detect)** — Biết sự cố đang xảy ra trước khi user báo cáo. Đây là lý do cần alert từ monitoring, uptime check, error tracking. "User complain mình mới biết" là thất bại của observability.
+
+**Giảm thiểu (Mitigate)** — Làm cho tình trạng bớt tệ đi nhanh nhất có thể, dù chưa hiểu nguyên nhân. Rollback deploy, restart service, chuyển sang maintenance mode — bất cứ thứ gì giúp user bị ảnh hưởng ít hơn.
+
+**Khắc phục (Resolve)** — Tìm root cause và fix thật sự. Đây là việc làm khi đầu óc tỉnh táo, không phải lúc hoảng loạn.
+
+## Severity levels
+
+Phân loại sự cố giúp bạn quyết định nhanh mà không cần suy nghĩ:
+
+| Mức | Mô tả | Hành động |
+|-----|-------|-----------|
+| P1 | Toàn bộ app sập hoặc mất dữ liệu | Tất cả tay vào — ngay lập tức |
+| P2 | Tính năng chính bị hỏng, nhiều user bị ảnh hưởng | Xử lý trong vòng 1 giờ |
+| P3 | Tính năng phụ bị lỗi, ít user bị ảnh hưởng | Xử lý trong giờ làm việc |
+| P4 | Cosmetic bug, không ảnh hưởng chức năng | Backlog thông thường |
+
+## Ví dụ thật
+
+Bạn deploy version mới lúc 18h. Lúc 18h15, error rate tăng vọt lên 40%. Alert kích hoạt.
+
+**Giai đoạn phát hiện:** Nhận alert từ Sentry — loại lỗi `NullPointerException` tại checkout flow. Đây là P1.
+
+**Giảm thiểu ngay:** Không cần hiểu tại sao — rollback về version trước. Mất 3 phút. Error rate về 0.
+
+**Khắc phục:** Sau khi bình tĩnh lại, xem diff của deploy mới. Tìm ra bug. Fix và deploy lại sau 1 tiếng.
+
+Bạn chỉ có một mình — nhưng quy trình giúp bạn xử lý tuần tự, không bị loạn.
+
+<Callout title="Cẩn thận">
+Sai lầm phổ biến nhất: cố *hiểu nguyên nhân* trước khi *giảm thiểu tác động*. Khi P1 đang xảy ra, mỗi phút có thêm user bị ảnh hưởng. Rollback trước, điều tra sau. "Làm cho nó dừng" quan trọng hơn "hiểu tại sao" trong 10 phút đầu tiên.
+</Callout>
+
+<Callout title="Nhớ nhé">
+Ba bước không thể đảo ngược thứ tự: **Phát hiện → Giảm thiểu → Khắc phục**. Viết sẵn runbook cho sự cố thường gặp để khi hoảng loạn bạn chỉ cần đọc và làm theo, không cần nghĩ. Phân loại severity giúp bạn biết mình đang ở mức độ nào và cần phản ứng nhanh đến đâu.
+</Callout>
+
+## Đọc thêm
+
+- [Incident Management — PagerDuty Learning](https://www.pagerduty.com/resources/learn/incident-management/) — Hướng dẫn toàn diện về incident management từ PagerDuty; giải thích rõ các giai đoạn và cách xây dựng quy trình ngay cả khi chỉ có một người.
+- [On-Call Best Practices — Google SRE Book](https://sre.google/sre-book/being-on-call/) — Chương về on-call từ Google SRE Book; dù dành cho team lớn, các nguyên tắc về tâm lý và quy trình rất hữu ích cho solo builder.
+- [Incident Response for Solo Founders — Indie Hackers](https://www.indiehackers.com/post/how-to-handle-production-incidents-as-a-solo-founder-a8c35e0a6c) — Kinh nghiệm thực tế từ solo founder về cách xử lý sự cố khi chỉ có mình bạn; tập trung vào tự động hóa alert và runbook.
+- [How to Write a Severity Framework — Atlassian](https://www.atlassian.com/incident-management/kpi/severity-levels) — Atlassian giải thích cách định nghĩa severity levels thực tế; có template để bạn customize theo app của mình.
+
+## Tự kiểm tra
+
+1. Tại sao thứ tự "giảm thiểu trước, điều tra sau" lại quan trọng trong sự cố P1? Khi nào thứ tự này có thể bị đảo ngược?
+2. Nếu bạn không có monitoring và alert, bước "phát hiện" thường xảy ra như thế nào — và vấn đề của cách đó là gì?
+3. Mô tả sự khác biệt giữa P1 và P2 bằng ví dụ cụ thể từ một app bạn đang hoặc từng làm.

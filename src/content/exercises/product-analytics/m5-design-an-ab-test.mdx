@@ -1,0 +1,96 @@
+---
+id: exercise-pana-005
+title: "Thiết kế một A/B test từ đầu đến cuối"
+type: "exercise"
+track: product-analytics
+tags: [product-analytics, experimentation, ab-testing, statistics, sample-size, guardrail-metrics, hypothesis]
+estimatedMinutes: 30
+related: [lesson-pana-005, concept-ab-testing, concept-statistical-significance, concept-sample-size-and-power, concept-guardrail-metrics, rubric-product-analytics]
+status: published
+---
+import Callout from '../../../components/content/Callout.astro';
+
+## Tình huống
+
+Bạn là product manager của **Taskly** — một app quản lý công việc cá nhân. App hiện có 4.000 user đăng ký mới mỗi tháng (khoảng 130 user/ngày).
+
+Đội thiết kế vừa đề xuất đổi nút CTA trên trang landing page: từ "Bắt đầu miễn phí" (màu xanh dương nhạt) sang "Dùng thử ngay — miễn phí" (màu cam, to hơn 20%). Lý do: họ tin rằng copy và màu sắc mới urgency hơn.
+
+Conversion rate hiện tại từ visitor landing page sang đăng ký là **3.2%**. Landing page có khoảng 8.000 visitor mỗi tháng.
+
+Trước khi triển khai cho toàn bộ user, bạn quyết định chạy A/B test. Nhiệm vụ của bạn là thiết kế thí nghiệm đó.
+
+---
+
+## Nhiệm vụ 1 — Đặt hypothesis và xác định metrics
+
+**1a. Viết hypothesis đầy đủ** theo cấu trúc:
+
+> *"Nếu [thay đổi cụ thể], thì [primary metric] sẽ [thay đổi theo hướng nào] vì [lý do có thể sai]."*
+
+**1b. Xác định primary metric.** Đây là thứ bạn muốn đo trực tiếp — không phải "thành công chung chung." Giải thích tại sao bạn chọn metric đó thay vì các metric khác.
+
+**1c. Chọn 2-3 guardrail metrics.** Với mỗi guardrail, giải thích:
+- Nó đo cái gì?
+- Tại sao nó có thể bị ảnh hưởng tiêu cực bởi thay đổi này?
+- Ngưỡng nào là "vi phạm" (ví dụ: tăng hơn X% thì dừng test)?
+
+<Callout title="Mẹo">
+Nghĩ về vòng đời sau khi user nhấn nút: họ đăng ký xong thì làm gì? Có bước nào có thể bị ảnh hưởng gián tiếp không? Ví dụ: nếu CTA mới thu hút user ít liên quan hơn, activation rate có thể giảm dù conversion rate tăng.
+</Callout>
+
+---
+
+## Nhiệm vụ 2 — Ước lượng sample size và tiêu chí dừng
+
+**2a. Xác định MDE (Minimum Detectable Effect) của bạn.**
+
+Với Taskly ở giai đoạn này, thay đổi nào trên conversion rate là đủ nhỏ để bạn không quan tâm đến? Thay đổi nào là đủ lớn để xứng đáng triển khai? Hãy đặt MDE của bạn và giải thích lý do kinh doanh đằng sau con số đó.
+
+**2b. Ước lượng sample size cần thiết** dựa trên:
+- Baseline conversion rate: 3.2%
+- MDE bạn đã chọn ở trên
+- Power: 80%, significance: 95%
+
+Dùng [Evan Miller's calculator](https://www.evanmiller.org/ab-testing/sample-size.html) hoặc tương đương. Ghi lại kết quả: cần bao nhiêu visitor mỗi nhóm?
+
+**2c. Tính thời gian chạy test.** Với 8.000 visitor/tháng (và bạn chỉ test 50% lưu lượng cho mỗi nhóm), test cần chạy bao nhiêu tuần để đủ sample? Thời gian đó có thực tế không?
+
+**2d. Viết tiêu chí dừng rõ ràng:**
+- Điều kiện dừng bình thường (đủ sample và thời gian)
+- Điều kiện dừng sớm (nếu có): guardrail metric nào, ở ngưỡng nào thì dừng ngay?
+
+<Callout title="Mẹo">
+Nếu thời gian tính ra quá dài (ví dụ 4-6 tháng), có hai hướng: tăng MDE (chấp nhận chỉ phát hiện hiệu ứng lớn hơn) hoặc tăng % lưu lượng vào test. Cả hai đều có trade-off — hãy viết ra trade-off đó thay vì chỉ chọn con số nhỏ nhất có vẻ "đủ."
+</Callout>
+
+---
+
+## Nhiệm vụ 3 — Kịch bản kết quả và quyết định
+
+Sau khi test chạy đủ thời gian, bạn nhận được ba kịch bản kết quả sau. Với mỗi kịch bản, hãy **nêu quyết định của bạn và lý do**:
+
+**Kịch bản A:** Conversion rate nhóm B: 3.8% (tăng 0.6%). p-value: 0.03. CI 95%: [+0.1%, +1.1%]. Tất cả guardrail metrics: bình thường.
+
+**Kịch bản B:** Conversion rate nhóm B: 4.1% (tăng 0.9%). p-value: 0.01. CI 95%: [+0.3%, +1.5%]. Nhưng activation rate 7 ngày giảm 18% (guardrail vi phạm).
+
+**Kịch bản C:** Conversion rate nhóm B: 3.5% (tăng 0.3%). p-value: 0.21. CI 95%: [−0.2%, +0.8%]. Guardrail metrics: bình thường.
+
+<Callout title="Nhớ nhé">
+Không có kịch bản nào là "đáp án sai" nếu lý luận của bạn rõ ràng. Một quyết định tốt không chỉ là "rollout" hay "không rollout" — mà là lý do cụ thể dựa trên dữ liệu, không phải cảm tính hay áp lực nhóm.
+</Callout>
+
+---
+
+## Tiêu chí đánh giá
+
+Tham khảo [Product Analytics Rubric](../../rubrics/rubric-product-analytics) để tự chấm.
+
+Với bài này, tập trung vào:
+
+| Tiêu chí | Câu hỏi để tự kiểm tra |
+|---|---|
+| Hypothesis rõ ràng và có thể bác bỏ | Hypothesis của bạn có thể sai không? Nếu không thể sai, nó không phải hypothesis — nó là assumption. |
+| Lựa chọn metrics có lý | Primary metric có đo trực tiếp điều bạn muốn tối ưu không? Guardrail metrics có che phủ được rủi ro thật không? |
+| Sample size có căn cứ | MDE của bạn có lý do kinh doanh không, hay chọn ngẫu nhiên? Thời gian chạy test có thực tế không? |
+| Quyết định từ dữ liệu | Với mỗi kịch bản, bạn có xem cả p-value, CI, và guardrail metrics không — hay chỉ nhìn một con số? |

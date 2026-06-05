@@ -1,0 +1,114 @@
+---
+id: concept-window-functions
+title: "Window Functions"
+type: "concept"
+aliases: ["window functions SQL", "window function trong SQL", "hàm cửa sổ SQL", "ROW_NUMBER OVER SQL", "running total SQL", "rank trong SQL"]
+tags: [sql, product-analytics, data, window-functions, row-number, rank, running-total]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Hãy tưởng tượng bạn đang chấm điểm thi cho cả lớp. GROUP BY giống như gộp tất cả học sinh lại thành một dòng "điểm trung bình lớp". Window functions giống như xếp hạng từng học sinh *trong khi vẫn giữ nguyên thông tin của từng người*. Bạn vừa có bảng đầy đủ, vừa biết ai đứng thứ mấy.
+
+## Là gì
+
+**Window functions** tính toán trên một "cửa sổ" (window) các hàng liên quan đến hàng hiện tại — mà *không gộp* chúng thành một hàng duy nhất.
+
+Sự khác biệt cốt lõi so với GROUP BY:
+- GROUP BY: 10 hàng → 3 hàng (mỗi nhóm 1 hàng)
+- Window function: 10 hàng → vẫn 10 hàng, nhưng mỗi hàng có thêm cột tính toán
+
+Cú pháp cơ bản:
+
+```sql
+hàm_tính_toán() OVER (
+  PARTITION BY cột_nhóm
+  ORDER BY cột_sắp_xếp
+)
+```
+
+- `PARTITION BY` — chia dữ liệu thành các nhóm độc lập (như GROUP BY nhưng không gộp)
+- `ORDER BY` bên trong OVER — xác định thứ tự trong mỗi nhóm
+
+## Ví dụ thật
+
+Bảng `events`:
+
+| user_id | event_name | created_at          |
+|---------|------------|---------------------|
+| 101     | signup     | 2024-01-10 08:00    |
+| 101     | activated  | 2024-01-10 09:30    |
+| 101     | purchase   | 2024-01-12 14:00    |
+| 102     | signup     | 2024-01-11 10:00    |
+| 102     | purchase   | 2024-01-13 16:00    |
+
+**Tìm event đầu tiên của mỗi user (first event per user):**
+
+```sql
+SELECT *
+FROM (
+  SELECT
+    user_id,
+    event_name,
+    created_at,
+    ROW_NUMBER() OVER (
+      PARTITION BY user_id
+      ORDER BY created_at ASC
+    ) AS thu_tu
+  FROM events
+) t
+WHERE thu_tu = 1;
+```
+
+`ROW_NUMBER()` đánh số thứ tự từ 1 trong mỗi nhóm `user_id`, sắp xếp theo `created_at`. Lấy hàng số 1 là lấy event sớm nhất. Không cần subquery phức tạp, không cần self-join.
+
+**Running total — tổng lũy kế số event theo ngày:**
+
+```sql
+SELECT
+  DATE(created_at) AS ngay,
+  COUNT(*) AS event_ngay_do,
+  SUM(COUNT(*)) OVER (
+    ORDER BY DATE(created_at)
+  ) AS tong_luy_ke
+FROM events
+GROUP BY DATE(created_at)
+ORDER BY ngay;
+```
+
+Cột `tong_luy_ke` cộng dồn từng ngày — hữu ích để vẽ đường tăng trưởng tích lũy.
+
+**Xếp hạng user theo số lượng purchase:**
+
+```sql
+SELECT
+  user_id,
+  COUNT(*) AS so_purchase,
+  RANK() OVER (ORDER BY COUNT(*) DESC) AS hang
+FROM events
+WHERE event_name = 'purchase'
+GROUP BY user_id;
+```
+
+<Callout title="Cẩn thận">
+`ROW_NUMBER()` luôn cho số thứ tự liên tục (1, 2, 3...). `RANK()` cho cùng số nếu bằng điểm rồi nhảy (1, 2, 2, 4). `DENSE_RANK()` cho cùng số nếu bằng điểm nhưng không nhảy (1, 2, 2, 3). Chọn sai loại có thể dẫn đến kết quả không như mong đợi — đặc biệt khi dùng để lọc top N.
+</Callout>
+
+Window functions thường chạy chậm hơn GROUP BY trên bảng lớn. Nếu chỉ cần tổng hợp đơn giản, dùng GROUP BY. Dùng window functions khi bạn cần giữ chi tiết từng hàng *đồng thời* có phép tính theo nhóm.
+
+<Callout title="Nhớ nhé">
+Window functions = tính toán theo nhóm mà không mất chi tiết từng hàng. Ba use case phổ biến nhất: (1) tìm first/last event per user với ROW_NUMBER, (2) running total với SUM OVER, (3) xếp hạng với RANK. Tất cả dùng cú pháp `hàm() OVER (PARTITION BY ... ORDER BY ...)`.
+</Callout>
+
+## Đọc thêm
+
+- [Window Functions — PostgreSQL Docs](https://www.postgresql.org/docs/current/tutorial-window.html) — Tài liệu chính thức PostgreSQL giải thích window functions từ cơ bản, với ví dụ lương nhân viên theo phòng ban; ngắn gọn và chính xác về cú pháp.
+- [SQL Window Functions — Mode Analytics](https://mode.com/sql-tutorial/sql-window-functions/index.html) — Hướng dẫn window functions từ góc nhìn analytics, bao gồm running totals, ranking và các pattern phổ biến trong product analytics.
+- [How to Use ROW_NUMBER OVER() — LearnSQL](https://learnsql.com/blog/row-number-over-in-sql/) — Giải thích chi tiết ROW_NUMBER với nhiều ví dụ thực tế, bao gồm cách tìm first record per group; phù hợp khi mới học window functions.
+- [SQL Window Functions: Partitions and Ranking — LearnSQL](https://learnsql.com/blog/common-sql-window-functions-partitions-ranking-functions/) — So sánh ROW_NUMBER, RANK và DENSE_RANK với ví dụ rõ ràng; đọc khi cần chọn đúng hàm xếp hạng.
+
+## Tự kiểm tra
+
+1. Sự khác biệt cốt lõi giữa window functions và GROUP BY là gì? Khi nào bạn chọn cái nào?
+2. Bạn muốn tìm purchase đầu tiên của mỗi user. Viết phác thảo query dùng ROW_NUMBER.
+3. `RANK()` và `DENSE_RANK()` khác nhau như thế nào khi có hai user cùng điểm? Cái nào bạn nên dùng khi muốn lấy "top 3 user"?

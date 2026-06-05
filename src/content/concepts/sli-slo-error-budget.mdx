@@ -1,0 +1,52 @@
+---
+id: concept-sli-slo-error-budget
+title: "SLI, SLO & Error Budget"
+type: "concept"
+aliases: ["sli-slo-error-budget", "service level indicator", "service level objective", "error budget", "ngân sách lỗi sre", "sli slo sla phân biệt", "mục tiêu độ tin cậy dịch vụ"]
+tags: [observability, sre, reliability, ship-and-operate, uptime, service-level]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Một hãng hàng không cam kết "bay đúng giờ 85% chuyến bay." Không phải 100% — vì họ biết 100% là không thực tế và cố đạt 100% sẽ tốn kém vô lý. Thay vào đó, họ đo tỷ lệ thực tế, đặt mục tiêu thực tế, và dùng "ngân sách trễ giờ" còn lại để cải thiện khi cần.
+
+Phần mềm hoạt động theo cách tương tự — và SLI, SLO, Error Budget là những công cụ để làm điều đó.
+
+## Là gì
+
+**SLI (Service Level Indicator)** là chỉ số đo lường cụ thể về chất lượng dịch vụ. Nó phải là một con số đo được. Ví dụ: tỷ lệ request trả về trong vòng 500ms, tỷ lệ request thành công (không phải lỗi 5xx), độ khả dụng của trang chủ tính theo phút.
+
+**SLO (Service Level Objective)** là mục tiêu bạn đặt ra cho SLI. Ví dụ: *"99,5% request phải trả về trong vòng 500ms"* hoặc *"Error rate phải dưới 0,1% trong mọi cửa sổ 30 ngày."* SLO là thỏa thuận nội bộ giữa team engineering và phần còn lại của tổ chức.
+
+**Error Budget (Ngân sách lỗi)** là phần "được phép sai" còn lại. Nếu SLO là 99,5% availability trong 30 ngày, bạn được phép down tổng cộng 0,5% của 30 ngày — khoảng 3,6 giờ. Đó là ngân sách lỗi. Bạn có thể "tiêu" nó vào deploy rủi ro, thử nghiệm mới, hoặc sự cố ngoài ý muốn.
+
+Khi ngân sách lỗi còn nhiều: deploy tự do, thử tính năng mới. Khi ngân sách lỗi gần cạn: tạm dừng deploy mới, tập trung ổn định hệ thống.
+
+## Ví dụ thật
+
+App SaaS của bạn có SLO: *"API /checkout phải thành công ít nhất 99,9% trong 30 ngày"*. Trong 30 ngày qua, hệ thống down 45 phút vì incident lớn. 30 ngày = 43.200 phút; 0,1% = 43,2 phút — bạn đã tiêu vượt ngân sách.
+
+Thay vì deploy tính năng mới ngay, team bạn ưu tiên: tìm nguyên nhân gốc rễ của incident, viết post-mortem, và cải thiện khả năng phục hồi. Chỉ khi ngân sách được "nạp lại" vào đầu tháng mới, bạn tiếp tục ship feature.
+
+Error budget biến "reliability vs. velocity" từ xung đột cảm tính thành quyết định dựa trên dữ liệu.
+
+<Callout title="Cẩn thận">
+100% uptime là mục tiêu sai. Không chỉ vì không thể đạt được — mà vì theo đuổi 100% làm bạn sợ thay đổi. Mọi deploy đều có rủi ro down nhỏ. Nếu SLO là 100%, bạn không bao giờ dám deploy. Error budget cho phép bạn ship nhanh và đáng tin cậy — không phải chọn một trong hai.
+</Callout>
+
+<Callout title="Nhớ nhé">
+SLI là cái bạn đo. SLO là mục tiêu bạn đặt. Error budget là khoảng trống giữa thực tế và mục tiêu — và khoảng trống đó cho bạn quyền tự do để đổi mới. Bắt đầu với 1-2 SLO quan trọng nhất, không cần đo tất cả mọi thứ ngay từ đầu.
+</Callout>
+
+## Đọc thêm
+
+- [SLOs, SLIs, SLAs — Google SRE Workbook](https://sre.google/workbook/implementing-slos/) — Chương thực hành từ Google SRE Workbook về cách implement SLO; bao gồm ví dụ chọn SLI phù hợp và cách tính error budget.
+- [Error Budgets — Google SRE Book](https://sre.google/sre-book/embracing-risk/) — Chương "Embracing Risk" giải thích triết lý đằng sau error budget và tại sao reliability 100% không phải mục tiêu đúng đắn.
+- [SLO Fundamentals — Atlassian](https://www.atlassian.com/incident-management/kpis/sla-vs-slo-vs-sli) — Giải thích ngắn gọn sự khác nhau giữa SLA (cam kết với khách hàng), SLO (mục tiêu nội bộ), và SLI (chỉ số đo lường).
+- [Defining SLOs for Your Service — Honeycomb](https://www.honeycomb.io/blog/slos-and-error-budgets) — Hướng dẫn thực tế chọn SLI đúng và thiết lập SLO hợp lý cho app nhỏ; góc nhìn của một công ty observability.
+
+## Tự kiểm tra
+
+1. Phân biệt SLI, SLO và SLA. Điều gì xảy ra khi bạn vi phạm SLA với khách hàng mà không có SLO nội bộ?
+2. App của bạn có SLO availability 99,5% trong 30 ngày. Tính ngân sách lỗi theo giờ. Nếu trong tuần đầu tiên hệ thống đã down 3 giờ, bạn nên làm gì?
+3. Tại sao target 100% uptime lại phản tác dụng với tốc độ phát triển sản phẩm? Giải thích bằng cơ chế error budget.

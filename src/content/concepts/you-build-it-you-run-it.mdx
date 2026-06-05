@@ -1,0 +1,52 @@
+---
+id: concept-you-build-it-you-run-it
+title: "You Build It, You Run It"
+type: "concept"
+aliases: ["you build it you run it", "YBIYRI", "full service ownership devops", "dev tự vận hành dịch vụ", "dev on-call chính service mình viết", "ownership văn hóa vận hành"]
+tags: [devops, ship-and-operate, ownership, reliability, solo-builder, culture]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Hãy tưởng tượng bạn là đầu bếp — bạn nấu xong, ném đĩa qua ô cửa bếp, rồi thôi. Nếu khách phàn nàn món mặn quá, hay nguội lạnh, người phục vụ mới biết. Đầu bếp không bao giờ nghe feedback. Bạn có nghĩ đầu bếp đó sẽ tiến bộ không?
+
+Đó là mô hình dev-vs-ops truyền thống. "You Build It, You Run It" lật ngược lại: đầu bếp tự mang đĩa ra bàn, và nghe trực tiếp khách nói gì.
+
+## Là gì
+
+**You Build It, You Run It (YBIYRI)** là văn hóa vận hành trong đó team (hoặc người) xây dựng một dịch vụ cũng chính là người vận hành, theo dõi, và sửa lỗi nó trên production.
+
+Không có "ném qua tường" cho ops. Không có phòng vận hành riêng nhận bàn giao. Dev viết code → dev deploy → dev nhận alert khi hệ thống hỏng.
+
+Câu nói gốc từ Werner Vogels, CTO của Amazon năm 2006: *"You build it, you run it. This brings developers into contact with the day-to-day operation of their software."*
+
+## Ví dụ thật
+
+**Mô hình cũ (throw-it-over-the-wall):** Dev viết xong tính năng, bàn giao tài liệu cho ops. Khi app crash lúc 2 giờ sáng, ops gọi dev dậy hỏi. Dev không hiểu production environment, ops không hiểu code. Cả hai mất 2 tiếng để tìm ra vấn đề mà lẽ ra dev biết ngay.
+
+**Mô hình YBIYRI:** Dev deploy tính năng mới, tự đặt alert cho service mình viết. 2 giờ sáng alert báo, dev dậy — họ biết chính xác code nào có thể lỗi, log ở đâu, cần rollback gì. Sửa xong trong 20 phút.
+
+**Với solo builder** thì YBIYRI là mặc định — không có ops team để ném qua tường. Bạn tự build, tự deploy, tự chịu trách nhiệm. Hiểu điều này từ đầu giúp bạn viết code có ý thức hơn: đặt log đúng chỗ, xử lý lỗi rõ ràng, không giả định "ai đó sẽ lo phần vận hành".
+
+<Callout title="Cẩn thận">
+YBIYRI không có nghĩa là dev phải trực 24/7 một mình. Nó có nghĩa là **ownership** — người xây dựng phải *hiểu* service của mình đang chạy thế nào, và *chịu trách nhiệm* khi nó hỏng. Với team lớn, rotation on-call là giải pháp. Với solo builder, đây đơn giản là thực tế bạn phải chấp nhận và chuẩn bị cho nó.
+</Callout>
+
+Hậu quả thực tế của YBIYRI: bạn sẽ bắt đầu viết code khác đi. Log có context hơn. Error message rõ nghĩa hơn. Health check endpoint bạn sẽ thêm từ ngày đầu. Không phải vì ai yêu cầu — mà vì chính bạn sẽ là người đọc chúng lúc 2 giờ sáng.
+
+<Callout title="Nhớ nhé">
+Người viết code cũng là người nhận alert. Đây không phải hình phạt — đây là cơ chế feedback nhanh nhất để viết software đáng tin cậy hơn.
+</Callout>
+
+## Đọc thêm
+
+- [What is You Build It You Run It? — Equal Experts](https://www.equalexperts.com/blog/our-thinking/what-is-you-build-it-you-run-it/) — Bài viết nền tảng giải thích triết lý YBIYRI, tại sao nó ra đời, và khác gì mô hình ops truyền thống; phù hợp để đọc đầu tiên.
+- [You Build It You Run It: Full Service Ownership Explained — Upstat](https://upstat.io/blog/you-build-it-you-run-it) — Giải thích cụ thể "full service ownership" nghĩa là gì trong thực tế, kèm ví dụ về on-call và feedback loop giữa dev và production.
+- [You Build It, You Run It Playbook — Equal Experts](https://playbooks.equalexperts.com/you-build-it-you-run-it/what-is-you-build-it-you-run-it) — Playbook chi tiết về cách triển khai YBIYRI ở team, từ shared on-call đến full ownership; hữu ích khi bạn muốn đi sâu hơn.
+- [You Build It You Run It: DevOps on Steroids — Codesphere](https://codesphere.com/articles/you-build-it-you-run-it) — Góc nhìn thực hành về lý do YBIYRI tạo ra software chất lượng cao hơn, với ví dụ tình huống developer nhận on-call chính service mình viết.
+
+## Tự kiểm tra
+
+1. Vì sao dev nhận alert cho chính service mình viết lại giúp code *chất lượng hơn* — không chỉ là "biết lỗi nhanh hơn"?
+2. Với một solo builder, "You Build It, You Run It" khác gì so với một team lớn áp dụng nguyên tắc này?
+3. Kể tên 2-3 thói quen viết code cụ thể mà YBIYRI khuyến khích — và giải thích tại sao mỗi thói quen đó hữu ích khi vận hành production.

@@ -1,0 +1,57 @@
+---
+id: concept-right-sizing
+title: "Right-Sizing"
+type: "concept"
+aliases: ["right-sizing", "right sizing instance", "chọn đúng kích thước máy", "instance sizing", "over-provisioning", "đo tải rồi chỉnh", "tối ưu instance size"]
+tags: [ship-and-operate, cost, cloud, infra, performance, devops, solo-builder]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Bạn mua một chiếc xe tải để chở một chiếc laptop đi làm mỗi ngày. Xe chạy được, không sai — nhưng bạn đang trả tiền xăng, bãi đỗ, và bảo hiểm cho năng lực mình không bao giờ dùng tới.
+
+Right-sizing là chọn đúng chiếc xe cho đúng nhu cầu — không bé quá mà cũng không to thừa.
+
+## Là gì
+
+**Right-sizing** là quá trình chọn kích thước instance (CPU, RAM, loại máy) dựa trên mức sử dụng *thực tế đã đo*, không phải theo cảm giác "cho an toàn" hay "phòng khi cần".
+
+Nguyên tắc cốt lõi: **đo trước, chỉnh sau**.
+
+Over-provisioning — chọn instance to hơn cần — là lỗi phổ biến nhất. Nó đến từ tâm lý "thà thừa còn hơn thiếu". Kết quả: bạn trả tiền cho CPU đang ngủ 90% thời gian và RAM không ai dùng đến.
+
+Quy trình right-sizing thực tế:
+
+1. **Chạy với instance nhỏ vừa đủ** — bắt đầu thấp hơn bạn nghĩ cần.
+2. **Đo utilization thực tế trong 1-2 tuần** — CPU average, CPU peak, memory average, memory peak.
+3. **So sánh với ngưỡng lành mạnh** — CPU average dưới 40%, memory average dưới 60% là dấu hiệu bạn đang over-provision.
+4. **Điều chỉnh xuống một bậc** — nếu số liệu cho phép. Đo lại.
+
+Đây không phải việc làm một lần — load thay đổi theo thời gian, bạn nên review 1-2 lần/năm.
+
+**Database là trường hợp đặc biệt.** Database cần RAM nhiều hơn CPU vì buffer pool. Một Postgres nhỏ với 1 GB RAM hoạt động tốt cho 99% solo app — nhưng nếu query set lớn hơn RAM, bạn sẽ thấy disk I/O tăng đột biến trước khi thấy CPU tăng. Đo đúng chỉ số cho đúng workload.
+
+## Ví dụ thật
+
+App backend Node.js trên DigitalOcean Droplet 4 vCPU / 8 GB RAM, tốn 48 USD/tháng. Sau khi bật monitoring 2 tuần: CPU average là 4%, memory average là 12%. Downsize xuống 1 vCPU / 2 GB RAM (12 USD/tháng) — app chạy không thay đổi về performance, tiết kiệm 36 USD/tháng (75% hóa đơn compute). Traffic peak vẫn xử lý được vì app vốn không compute-heavy.
+
+<Callout title="Cẩn thận">
+Đừng right-size dựa trên số liệu của một ngày bình thường mà bỏ qua ngày peak. Nếu traffic có chu kỳ (ví dụ: mỗi tuần có ngày cao điểm gấp 5 lần bình thường), right-sizing phải dựa trên peak, không phải average. Kết hợp right-sizing với autoscaling để có cả hai lợi ích.
+</Callout>
+
+<Callout title="Nhớ nhé">
+Right-sizing không phải về "mua rẻ nhất có thể" — mà về "trả đúng cho những gì bạn dùng". Bắt đầu nhỏ, đo thật, điều chỉnh có căn cứ. Một instance nhỏ đúng workload bao giờ cũng hiệu quả hơn instance to theo cảm tính.
+</Callout>
+
+## Đọc thêm
+
+- [AWS Compute Optimizer](https://aws.amazon.com/compute-optimizer/) — Công cụ AWS phân tích utilization lịch sử và gợi ý instance type phù hợp; ví dụ thực tế về right-sizing tự động dựa trên dữ liệu.
+- [Right Sizing — Google Cloud Docs](https://cloud.google.com/compute/docs/instances/apply-machine-type-recommendations-for-instances) — GCP hướng dẫn cách xem recommendation right-sizing tự động cho VM; áp dụng được ngay cho bất kỳ workload nào trên GCP.
+- [DigitalOcean Monitoring — DigitalOcean Docs](https://docs.digitalocean.com/products/monitoring/) — Hướng dẫn bật monitoring miễn phí trên DigitalOcean để theo dõi CPU/RAM/disk; phù hợp cho solo builder dùng Droplet.
+- [Why Overprovisioning Costs You More — InfoQ](https://www.infoq.com/articles/cloud-cost-optimization/) — Bài phân tích tại sao over-provisioning phổ biến và các pattern để tránh; có số liệu thực tế từ survey doanh nghiệp.
+
+## Tự kiểm tra
+
+1. Bạn đang chạy một Postgres trên instance 4 GB RAM. CPU luôn dưới 10% nhưng disk I/O lại cao bất thường. Đây có phải tín hiệu để downsize RAM không? Tại sao?
+2. Quy trình right-sizing gồm mấy bước? Tại sao bước "đo thực tế trước" lại không thể bỏ qua?
+3. Right-sizing và autoscaling giải quyết hai vấn đề khác nhau — bạn mô tả sự khác biệt đó như thế nào?

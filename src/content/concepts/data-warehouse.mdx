@@ -1,0 +1,72 @@
+---
+id: concept-data-warehouse
+title: "Data Warehouse"
+type: "concept"
+aliases: ["data warehouse", "kho dữ liệu phân tích", "OLAP vs OLTP", "BigQuery Snowflake data warehouse", "tách db analytics khỏi production", "kho dữ liệu"]
+tags: [sql, product-analytics, data, data-warehouse, olap, oltp, bigquery, snowflake]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Nhà hàng có hai khu vực tách biệt: bếp (nơi nấu nướng liên tục) và kho lạnh (nơi lưu trữ nguyên liệu để kiểm kê). Bạn không vào bếp đang phục vụ khách để đếm xem còn bao nhiêu kg thịt — bạn vào kho. Data warehouse là cái kho lạnh đó, tách ra khỏi database đang phục vụ user.
+
+## Là gì
+
+**Data warehouse** là hệ thống lưu trữ dữ liệu được thiết kế riêng cho *phân tích*, không phải cho *giao dịch*.
+
+Hai khái niệm cần phân biệt:
+
+**OLTP (Online Transaction Processing)** — database sản phẩm của bạn. Xử lý hàng nghìn request nhỏ mỗi giây: đọc một profile, ghi một order, update một session. Tối ưu cho tốc độ và tính nhất quán của từng giao dịch.
+
+**OLAP (Online Analytical Processing)** — data warehouse. Xử lý ít query hơn, nhưng mỗi query có thể quét hàng triệu hàng: "Tỷ lệ retention 7 ngày của cohort tháng 1?" Tối ưu cho scan toàn bảng và tính toán tổng hợp.
+
+## Ví dụ thật
+
+Bạn có app với 100.000 user, dùng Postgres. Bạn muốn chạy query phân tích:
+
+```sql
+SELECT
+  DATE_TRUNC('week', created_at) AS tuan,
+  COUNT(DISTINCT user_id) AS dau
+FROM events
+WHERE created_at >= '2024-01-01'
+GROUP BY 1
+ORDER BY 1;
+```
+
+Nếu chạy query này trực tiếp trên Postgres production, nó phải scan toàn bộ bảng `events` — có thể hàng triệu dòng. Trong lúc đó, Postgres bận scan cho bạn, tất cả request của user thật (API calls, page loads) phải chờ. Với 100.000 user, điều này có thể gây timeout hoặc slowdown nghiêm trọng.
+
+**Giải pháp:** Tách dữ liệu sang một hệ thống phân tích riêng.
+
+Các lựa chọn phổ biến:
+- **Postgres read replica** — bản sao chỉ đọc của Postgres production. Đơn giản nhất để bắt đầu, chạy query nặng trên replica thay vì primary.
+- **BigQuery** (Google) — serverless, tính tiền theo lượng dữ liệu scan, rất phù hợp khi dữ liệu lớn và query không thường xuyên.
+- **Snowflake** — cloud data warehouse mạnh, tách riêng storage và compute, phổ biến trong doanh nghiệp.
+- **DuckDB** — chạy local, tuyệt vời cho prototype và dataset vừa; không cần server.
+
+<Callout title="Cẩn thận">
+Đừng chạy query phân tích nặng trên database production — dù bạn nghĩ nó "nhanh thôi". Một query scan 10 triệu dòng có thể lock bảng và làm chậm toàn bộ app của user thật. Ngay cả khi bạn dùng `EXPLAIN ANALYZE` và thấy nó chạy 3 giây trên máy dev — trên production với concurrent load, 3 giây đó có thể là 30 giây.
+</Callout>
+
+**Khi nào cần data warehouse?**
+
+Với startup nhỏ (dưới vài trăm nghìn hàng), read replica Postgres là đủ. Khi dữ liệu vượt vài chục triệu hàng hoặc bạn cần nhiều người phân tích đồng thời, chuyển sang BigQuery hoặc Snowflake hợp lý hơn.
+
+Thực tế phổ biến: copy dữ liệu từ production DB sang data warehouse mỗi đêm (ETL pipeline) hoặc real-time (Change Data Capture). Bảng trong warehouse có thể khác cấu trúc so với production — được tối ưu cho query dạng analytical (ví dụ: lưu theo cột thay vì theo hàng).
+
+<Callout title="Nhớ nhé">
+OLTP = database sản phẩm, tối ưu cho giao dịch nhanh. OLAP = data warehouse, tối ưu cho query phân tích chậm mà sâu. Đừng chạy query nặng trên production. Bắt đầu bằng Postgres read replica; chuyển sang BigQuery/Snowflake khi dữ liệu lớn hơn.
+</Callout>
+
+## Đọc thêm
+
+- [OLAP vs OLTP — Snowflake](https://www.snowflake.com/en/fundamentals/olap-vs-oltp-the-differences/) — Snowflake giải thích sự khác biệt giữa OLAP và OLTP từ góc nhìn thực hành; bao gồm bảng so sánh rõ ràng về cấu trúc lưu trữ và use case.
+- [OLTP vs OLAP: Key Differences — Tinybird](https://www.tinybird.co/blog/oltp-vs-olap) — Giải thích chi tiết với ví dụ kiến trúc, bao gồm khi nào nên chọn cái nào và tại sao chúng không thể thay thế nhau.
+- [OLAP vs OLTP: Key Differences Explained — ThoughtSpot](https://www.thoughtspot.com/data-trends/data-modeling/oltp-vs-olap) — Bài viết toàn diện về sự khác biệt kiến trúc, bao gồm column-store vs row-store và ảnh hưởng đến hiệu năng query analytics.
+- [Simple Comparison of OLTP vs OLAP — InterWorks](https://interworks.com/blog/2024/09/24/simple-comparison-of-oltp-vs-olap-systems/) — So sánh dễ hiểu với ví dụ thực tế, phù hợp cho người mới tiếp cận khái niệm data warehouse lần đầu.
+
+## Tự kiểm tra
+
+1. Tại sao chạy query analytics nặng trên database production lại nguy hiểm? Điều gì thực sự xảy ra ở tầng kỹ thuật?
+2. Sự khác biệt giữa OLTP và OLAP là gì? Cho ví dụ một query điển hình của mỗi loại.
+3. Khi nào bạn nên dùng Postgres read replica thay vì BigQuery/Snowflake? Yếu tố nào quyết định việc chuyển đổi?

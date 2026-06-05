@@ -1,0 +1,55 @@
+---
+id: concept-identity-resolution
+title: "Identity Resolution (Anonymous → Known)"
+type: "concept"
+aliases: ["identity resolution analytics", "anonymous to known user", "nối user ẩn danh đã đăng nhập", "anonymous id user id alias analytics", "liên kết danh tính người dùng"]
+tags: [analytics, instrumentation, product-analytics, identity, user-tracking, funnel]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Khách vào cửa hàng, nhìn quanh, rồi ra. Hôm sau họ quay lại, đăng ký thẻ thành viên. Bây giờ bạn biết tên họ — nhưng chuyến thăm hôm qua? Trong hệ thống, đó là hai người lạ hoàn toàn khác nhau.
+
+Đó là bài toán identity resolution: làm sao gộp hai hành trình đó lại thành một người duy nhất.
+
+## Là gì
+
+Khi user lần đầu vào app mà chưa đăng nhập, analytics tool tự sinh ra một **anonymous ID** — chuỗi ngẫu nhiên như `anon_a8f3c2`. Mọi hành động trước khi đăng nhập gắn vào ID này.
+
+Khi user đăng ký hoặc đăng nhập, bạn gọi hàm **identify** với **user ID** thật từ database. Nếu không làm gì thêm, bạn có hai profile riêng biệt trong analytics: profile anon và profile user.
+
+**Alias** là thao tác nối hai ID đó lại thành một. Sau khi alias, mọi hành động trước và sau đăng nhập đều thuộc về cùng một người.
+
+## Ví dụ thật
+
+User A vào landing page (anonymous: `anon_x1`), đọc tính năng, bấm pricing, rồi sign up. Tại thời điểm sign up, bạn gọi:
+
+```js
+analytics.alias("user_42", "anon_x1")
+analytics.identify("user_42", { email: "a@example.com", plan: "free" })
+```
+
+Giờ funnel của bạn thấy: user này đọc pricing trước khi đăng ký. Không có alias, bạn chỉ thấy: có người đăng ký. Toàn bộ journey trước đó biến mất.
+
+**Tại sao quan trọng cho funnel?** Nếu bạn muốn biết "bước nào trên landing page dẫn đến conversion" — bạn cần hành trình từ lúc họ còn ẩn danh. Không có identity resolution, funnel chỉ bắt đầu được từ sau đăng nhập.
+
+<Callout title="Cẩn thận">
+Thứ tự gọi `alias` và `identify` quan trọng và khác nhau tùy tool. Segment yêu cầu `alias` trước `identify` ở nhiều destination. Đọc kỹ tài liệu của tool bạn dùng. Ngoài ra: dùng database ID làm user ID, không dùng email — email có thể đổi, ID database thì không.
+</Callout>
+
+<Callout title="Nhớ nhé">
+Ba thứ cần nhớ: anonymous ID (trước đăng nhập), user ID (sau đăng nhập), alias (cầu nối hai cái). Gọi alias tại thời điểm sign up — đó là cơ hội duy nhất để nối hai hành trình lại.
+</Callout>
+
+## Đọc thêm
+
+- [Best Practices for Identifying Users — Segment Docs](https://segment.com/docs/connections/spec/best-practices-identify/) — Hướng dẫn chính thức của Segment về cách dùng identify và alias đúng cách; bao gồm cả trường hợp server-side identification.
+- [Spec: Alias — Segment Docs](https://segment.com/docs//connections/spec/alias/) — Tài liệu kỹ thuật về Alias call: khi nào dùng, thứ tự gọi, và cách hoạt động với các destination khác nhau.
+- [Anonymous ID: Definition and Identity Resolution — Saber](https://www.saber.app/glossary/anonymous-id) — Giải thích rõ ràng anonymous ID là gì và cách nó liên kết với identity resolution trong product analytics.
+- [Identity Resolution for Digital Analytics — Hightouch Blog](https://hightouch.com/blog/identity-resolution-for-digital-analytics) — Phân tích tại sao identity resolution quan trọng với digital analytics hiện đại và các cách tiếp cận thực tế.
+
+## Tự kiểm tra
+
+1. User vào app của bạn 3 lần trước khi đăng ký. Nếu không có identity resolution, analytics tool ghi nhận bao nhiêu "người dùng" khác nhau? Hệ quả là gì cho funnel analysis?
+2. Sự khác biệt giữa `identify` và `alias` là gì? Bạn gọi chúng vào lúc nào trong user journey?
+3. Tại sao dùng email làm user ID là không tốt? Dùng cái gì thay thế?

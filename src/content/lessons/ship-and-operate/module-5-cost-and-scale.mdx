@@ -1,0 +1,85 @@
+---
+id: lesson-ops-005
+title: "Giữ chi phí trong tầm kiểm soát khi lớn lên"
+type: "lesson"
+track: ship-and-operate
+module: cost-scale
+level: intermediate
+tags: [ship-and-operate, cost, cloud, autoscaling, right-sizing, finops, performance, solo-builder]
+prerequisites: [concept-cloud-cost-control, concept-autoscaling, concept-right-sizing, concept-when-not-to-optimize]
+related: [exercise-ops-005, rubric-ship-and-operate]
+status: published
+---
+import Callout from '../../../components/content/Callout.astro';
+
+App của bạn đang lớn lên. Đó là tin tốt. Nhưng đi kèm với đó là một bài toán mới: chi phí cloud bắt đầu leo thang, và bạn không chắc mình đang tiêu tiền vào đâu.
+
+Lesson này xâu chuỗi bốn công cụ tư duy của Module 5 thành một cách tiếp cận nhất quán: **nhìn thấy trước, hành động sau, và biết khi nào không nên làm gì**.
+
+## Bước 1 — Có visibility trước khi làm bất cứ thứ gì
+
+Quy tắc đầu tiên của [cloud cost control](/concepts/cloud-cost-control): đừng tối ưu thứ bạn chưa nhìn thấy rõ.
+
+Trước khi cắt bất kỳ resource nào, hãy mở billing dashboard của provider và trả lời:
+
+- Dịch vụ nào đang tốn nhiều nhất?
+- Có resource nào đang chạy mà không có traffic không (idle)?
+- Có egress cost không? Từ đâu?
+- Hóa đơn tháng này khác tháng trước ở điểm nào?
+
+Nếu bạn dùng nhiều dịch vụ, tag resource theo môi trường (prod/staging/dev) — điều đó giúp bạn thấy ngay staging đang tốn bao nhiêu so với production.
+
+Đặt budget alert ngay — ở mức 80% ngân sách kỳ vọng. Bạn muốn biết sớm, không phải cuối tháng.
+
+## Bước 2 — Right-size trước khi autoscale
+
+Khi đã có visibility, câu hỏi đầu tiên là: **instance hiện tại có đúng kích thước không?**
+
+[Right-sizing](/concepts/right-sizing) là bước rẻ nhất và nhanh nhất để giảm chi phí. Nếu CPU average của bạn đang là 5% và memory average là 15%, bạn đang trả tiền cho tài nguyên không dùng. Downsize xuống một bậc — đo lại — nếu vẫn ổn, giảm thêm.
+
+Quy trình: đo 1-2 tuần → so sánh average và peak → điều chỉnh có căn cứ.
+
+<Callout title="Nhớ nhé">
+Right-sizing và autoscaling không thay thế nhau — chúng bổ sung nhau. Right-sizing đặt baseline đúng. Autoscaling xử lý biến động. Làm right-sizing trước để autoscaling không scale từ một baseline đã lãng phí.
+</Callout>
+
+## Bước 3 — Autoscale để xử lý biến động, không phải để thay thế tư duy
+
+[Autoscaling](/concepts/autoscaling) phù hợp nhất khi traffic không đều: có giờ cao điểm rõ ràng, có ngày spike bất thường, hoặc có môi trường chỉ dùng một phần thời gian.
+
+Hai nguyên tắc thực tế:
+
+**Đặt max instances.** Autoscaling không giới hạn mặc định có thể tạo ra hóa đơn bất ngờ khi có spike bất thường (DDoS, bug vòng lặp, viral traffic). Luôn đặt giới hạn trên.
+
+**Scale-to-zero cho môi trường không production.** Staging và dev environment không cần chạy 24/7. Scale-to-zero cho chúng tiết kiệm đáng kể — cold start vài giây là chấp nhận được khi không phải user thật.
+
+Nếu bạn đang dùng [caching](/concepts/caching) hoặc [load balancing](/concepts/load-balancing), autoscaling kết hợp tốt với cả hai: cache giảm số request thật đến backend, load balancer phân phối đều qua các instance mới scale lên.
+
+## Bước 4 — Biết khi nào không nên tối ưu
+
+Đây là bước quan trọng nhất và thường bị bỏ qua nhất.
+
+[Premature optimization trong vận hành](/concepts/when-not-to-optimize) tốn thời gian kỹ sư — tài nguyên đắt hơn tiền cloud nhiều. Trước khi bắt đầu bất kỳ công việc tối ưu nào, hỏi:
+
+- Có bằng chứng thật không? (con số, không phải cảm giác)
+- ROI là bao nhiêu? (tiết kiệm được bao nhiêu USD/tháng so với công bỏ ra)
+- Vấn đề này có tự biến mất khi kiến trúc thay đổi trong quý tới không?
+
+Nếu hóa đơn cloud hiện tại là 30 USD/tháng và bạn dự kiến có thể giảm xuống 25 USD bằng cách dành 2 ngày tối ưu — đó không phải ROI tốt. Hai ngày đó đáng ra dùng để nói chuyện với user.
+
+[Latency cost optimization](/concepts/latency-cost-optimization) cũng tuân thủ nguyên tắc này: đo latency thật trước khi tối ưu, và chỉ tối ưu khi latency đang gây ra vấn đề thực sự (user phàn nàn, conversion drop, error rate tăng).
+
+## Kết nối lại
+
+Bốn bước trên không phải checklist làm một lần — mà là vòng lặp:
+
+1. **Visibility** — biết tiền chảy đi đâu
+2. **Right-sizing** — trả đúng cho những gì bạn dùng
+3. **Autoscaling** — linh hoạt với biến động, không lãng phí lúc nhàn rỗi
+4. **Không tối ưu vội** — bảo vệ thời gian kỹ sư
+
+<Callout title="Nhớ nhé">
+Chi phí cloud không phải kẻ thù. Chi phí không minh bạch mới là kẻ thù. Khi bạn nhìn thấy rõ, bạn có thể ra quyết định đúng — và biết khi nào không cần làm gì cả.
+</Callout>
+
+Thực hành ngay với [bài tập tìm thủ phạm chi phí →](/exercises/ship-and-operate/m5-cut-your-cloud-bill)

@@ -1,0 +1,54 @@
+---
+id: concept-when-not-to-optimize
+title: "When NOT to Optimize"
+type: "concept"
+aliases: ["when not to optimize", "premature optimization ops", "tối ưu vội vàng vận hành", "khi nào không tối ưu", "optimize có bằng chứng", "chi phí kỹ sư vs chi phí máy", "đừng tối ưu sớm"]
+tags: [ship-and-operate, cost, performance, engineering-mindset, solo-builder, trade-off]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Bạn dành 3 ngày tối ưu một hệ thống cache phức tạp. Kết quả: response time giảm từ 120ms xuống 80ms. Không ai than chậm cả — và hóa đơn cloud của bạn chỉ giảm 2 USD/tháng.
+
+Ba ngày đó đáng giá bao nhiêu?
+
+## Là gì
+
+**Premature optimization trong vận hành** là tối ưu trước khi có bằng chứng rằng điều đó thực sự cần thiết — dựa trên cảm giác, giả định, hoặc nỗi lo chưa có căn cứ.
+
+Donald Knuth nói về code: "Premature optimization is the root of all evil." Với chi phí cloud và vận hành, nguyên tắc này càng đúng hơn.
+
+Ba câu hỏi để hỏi trước khi tối ưu:
+
+**1. Có bằng chứng thật không?** — Latency thật bao nhiêu ms? Chi phí thật bao nhiêu USD/tháng? User thật có phàn nàn không? Nếu không có con số cụ thể, bạn đang tối ưu cảm giác, không phải vấn đề.
+
+**2. Chi phí kỹ sư là bao nhiêu?** — Tối ưu không miễn phí. Mỗi giờ bạn dành để tối ưu là một giờ không dùng để ship tính năng, fix bug thật, hay nghỉ ngơi. Với solo builder, thời gian là tài nguyên đắt nhất — đắt hơn cả tiền cloud.
+
+**3. Vấn đề sẽ tự giải quyết không?** — Đôi khi điểm nghẽn hiện tại sẽ biến mất khi bạn refactor kiến trúc trong quý tới. Tối ưu nó bây giờ là đổ công vào thứ sẽ bị ném đi.
+
+Khi nào nên tối ưu: khi bạn có **bằng chứng** (chi phí vượt ngân sách, latency gây user churn, lỗi tăng đột biến) và **tính toán ROI** (tiết kiệm bao nhiêu so với công bỏ ra).
+
+## Ví dụ thật
+
+Solo founder dành 2 tuần thiết kế hệ thống sharding database vì "sau này sẽ cần". Thực tế: app có 300 user, QPS peak là 8. Postgres đơn giản không index nào còn xử lý được thoải mái lên 10.000 QPS. Hai tuần đó đáng ra dùng để nói chuyện với user và ship tính năng họ yêu cầu.
+
+<Callout title="Cẩn thận">
+Có một loại "tối ưu" nguy hiểm hơn: tối ưu để cảm thấy productive khi thực ra bạn đang trốn tránh việc khó hơn (nói chuyện với user, viết copy, làm marketing). Nếu thấy bản thân tối ưu liên tục mà không có số liệu thúc đẩy — dừng lại và tự hỏi đang né tránh điều gì.
+</Callout>
+
+<Callout title="Nhớ nhé">
+Nguyên tắc: **tối ưu khi có bằng chứng, không tối ưu khi có lo lắng**. Đo → xác định bottleneck thật → tính ROI → rồi mới tối ưu. Và nhớ: chi phí 1 giờ kỹ sư thường cao hơn chi phí 1 tháng server nhỏ.
+</Callout>
+
+## Đọc thêm
+
+- [Premature Optimization — Wiki C2](https://wiki.c2.com/?PrematureOptimization) — Trang gốc thảo luận về câu nói nổi tiếng của Knuth; nhiều góc nhìn từ cộng đồng kỹ sư về khi nào optimization có hại.
+- [The YAGNI Principle — Martin Fowler](https://martinfowler.com/bliki/Yagni.html) — Martin Fowler giải thích "You Aren't Gonna Need It": đừng build (hay tối ưu) những thứ bạn chưa cần; bài viết ngắn, ảnh hưởng lớn.
+- [Make It Work, Make It Right, Make It Fast — Stack Overflow Blog](https://stackoverflow.blog/2021/11/08/make-it-work-make-it-right-make-it-fast/) — Thứ tự ưu tiên kinh điển trong engineering; giải thích tại sao "fast" luôn đến sau "work" và "right".
+- [The Danger of Premature Optimization — Hacker Noon](https://hackernoon.com/the-danger-of-premature-optimization-in-software-development) — Ví dụ thực tế về các trường hợp tối ưu sớm gây hại; bao gồm cả chi phí kỹ sư thường bị bỏ qua.
+
+## Tự kiểm tra
+
+1. App của bạn response time là 300ms. User chưa phàn nàn, không có churn. Bạn có nên tối ưu không? Cần thêm thông tin gì để quyết định?
+2. Tại sao "chi phí kỹ sư" lại quan trọng hơn "chi phí máy" trong phần lớn quyết định tối ưu của solo builder?
+3. Phân biệt hai tình huống: (a) tối ưu vì hóa đơn cloud tháng này tăng 60% không rõ lý do, và (b) tối ưu vì bạn nghĩ "kiến trúc hiện tại trông không đẹp". Tình huống nào có bằng chứng thật?

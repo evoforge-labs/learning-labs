@@ -1,0 +1,86 @@
+---
+id: track-product-analytics
+title: "Product Analytics & Instrumentation"
+type: "track"
+summary: "Đo sản phẩm cho người tự build: gắn tracking đúng, viết SQL để tự trả lời câu hỏi, đọc funnel/cohort/retention, và chạy A/B test để quyết định bằng dữ liệu thay vì cảm tính."
+tags: [analytics, instrumentation, metrics, sql, experimentation, solo-builder]
+status: published
+---
+
+# Product Analytics & Instrumentation
+
+Các track khác của bạn liên tục *nhắc tới* số liệu — North Star, AARRR, retention, churn — nhưng chưa bao giờ dạy bạn cách *thật sự đo*. Track này đóng vòng lặp đó.
+
+Đây là analytics cho **builder một mình**: từ việc gắn event đúng cách, viết SQL để tự trả lời câu hỏi, đến đọc funnel/cohort và chạy thí nghiệm — để bạn quyết định bằng *bằng chứng*, không phải linh cảm.
+
+## Outcome
+
+Sau track này, bạn chuyển từ:
+
+> Tôi nghĩ feature này hữu ích, chắc user thích.
+
+sang:
+
+> Tôi đo được bao nhiêu % user dùng feature này, họ giữ chân ra sao sau 7 ngày, và A/B test cho thấy phiên bản mới tăng conversion 12% (p < 0.05).
+
+## Track này luyện gì?
+
+- Phân biệt vanity metric với actionable metric; thiết kế tracking plan trước khi gắn code.
+- Gắn instrumentation: event + property, client-side vs server-side, chọn công cụ, lo về privacy.
+- Viết SQL đủ dùng để tự trả lời câu hỏi sản phẩm — không cần đợi ai.
+- Đọc funnel, cohort, retention curve, segmentation.
+- Chạy A/B test đúng: significance, sample size, guardrail metric — và đọc dashboard.
+
+## Năm chặng từ cơ bản đến nâng cao
+
+1. **Nền tảng analytics** — tại sao đo, vanity vs actionable, event vs pageview, tracking plan.
+2. **Instrumentation** — event & property, client/server-side, công cụ, identity, privacy.
+3. **SQL cho founder** — SELECT/WHERE/GROUP BY, JOIN, hàm tổng hợp, window function, data warehouse.
+4. **Phân tích hành vi** — funnel, cohort, retention curve, segmentation.
+5. **Thử nghiệm & quyết định** — A/B test, significance, sample size, guardrail, dashboard.
+
+Tra cứu nhanh mọi thuật ngữ ở trang [Glossary](/glossary).
+
+## Curriculum
+
+### Module 1 — Nền tảng analytics
+- Tại sao đo & data-informed decisions
+- Vanity vs actionable metrics
+- Event vs pageview
+- Tracking plan (taxonomy)
+- North Star Metric — *tái dùng*
+- AARRR funnel — *tái dùng*
+
+### Module 2 — Instrumentation
+- Event tracking (event & property)
+- Client-side vs server-side tracking
+- Bối cảnh công cụ analytics (PostHog / GA4 / Amplitude)
+- Identity resolution (anonymous → known)
+- Privacy & consent
+
+### Module 3 — SQL cho founder
+- SQL cơ bản (SELECT / WHERE / GROUP BY)
+- SQL JOIN
+- Hàm tổng hợp (aggregations)
+- Window functions
+- Data warehouse
+
+### Module 4 — Phân tích hành vi
+- Funnel analysis
+- Cohort analysis
+- Retention curve
+- User segmentation
+- Churn — *tái dùng*
+
+### Module 5 — Thử nghiệm & quyết định
+- A/B testing
+- Ý nghĩa thống kê (statistical significance)
+- Sample size & power
+- Guardrail metrics
+- Dashboards & reporting
+
+Mỗi module có 1 lesson xâu chuỗi + 1 bài tập tình huống. Cuối track có **capstone**: thiết kế tracking plan đầy đủ + một thí nghiệm A/B cho một feature thật.
+
+## First principle
+
+Đo cái dẫn tới hành động, không đo cái để khoe. Một con số chỉ đáng đo nếu nó có thể *thay đổi* quyết định tiếp theo của bạn.

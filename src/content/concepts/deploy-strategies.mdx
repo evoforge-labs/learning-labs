@@ -1,0 +1,60 @@
+---
+id: concept-deploy-strategies
+title: "Deploy Strategies (Blue-Green, Canary, Rolling)"
+type: "concept"
+aliases: ["deploy strategies", "blue-green deployment", "canary deployment", "rolling deployment", "chiến lược triển khai không downtime", "zero-downtime deploy"]
+tags: [ci-cd, devops, deployment, reliability, ship-and-operate, blue-green, canary, rolling]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Khi bạn sơn lại cầu trên đường cao tốc, không ai đóng cầu hai tháng. Họ sơn từng làn một, chuyển xe sang làn kia, sơn xong lại chuyển về. Xe vẫn chạy trong suốt quá trình.
+
+Deploy phần mềm cũng vậy: vấn đề không phải "có deploy không" mà là "deploy mà không làm gián đoạn user".
+
+## Là gì
+
+Ba chiến lược phổ biến nhất để đưa version mới lên mà không gây downtime:
+
+**Blue-Green** — bạn duy trì hai môi trường giống hệt nhau: Blue đang chạy production, Green là version mới. Khi Green đã sẵn sàng, chuyển toàn bộ traffic sang Green trong vài giây (đổi DNS hoặc load balancer). Nếu có lỗi, chuyển lại sang Blue ngay lập tức.
+
+Ưu điểm: rollback gần như tức thì. Nhược điểm: tốn gấp đôi tài nguyên khi đang deploy, và mọi user đều dùng version mới cùng lúc.
+
+**Canary** — version mới chỉ nhận một phần nhỏ traffic trước (ví dụ: 5%). Nếu sau 30 phút không có lỗi, tăng dần lên 20%, 50%, 100%. Nếu có lỗi, rút lui về 0% ngay.
+
+Tên lấy từ "canary in a coal mine" — thợ mỏ thả chim canary xuống hầm để phát hiện khí độc trước khi người xuống.
+
+**Rolling** — cập nhật từng instance server một. Lúc deploy đang chạy, một nửa instance chạy version cũ, một nửa chạy version mới. Tài nguyên không tăng, nhưng phải chấp nhận hai version cùng tồn tại một lúc.
+
+## Ví dụ thật
+
+| Tình huống | Chiến lược phù hợp |
+|---|---|
+| Solo builder, app nhỏ, muốn rollback nhanh | Blue-Green trên Railway/Fly.io với swap environment |
+| App có nhiều user, muốn test feature mới an toàn | Canary kết hợp feature flag |
+| Nhiều server, muốn tiết kiệm tài nguyên | Rolling update |
+| Thay đổi schema database không tương thích | Blue-Green (deploy migration riêng trước) |
+
+<Callout title="Mẹo">
+Với solo builder dùng Fly.io, Railway, hoặc Render: platform đã xử lý rolling update cho bạn mặc định. Blue-Green có thể giả lập bằng cách dùng hai app tách biệt và đổi domain. Đừng over-engineer — biết *tên* chiến lược quan trọng hơn tự build từ đầu.
+</Callout>
+
+<Callout title="Cẩn thận">
+Rolling update nguy hiểm khi có thay đổi database schema không backward-compatible. Nếu version mới cần cột `email_verified` nhưng version cũ viết vào database mà không có cột đó — bạn sẽ gặp lỗi trong suốt thời gian rolling. Luôn viết migration theo kiểu expand-then-contract: thêm trước, xóa sau.
+</Callout>
+
+<Callout title="Nhớ nhé">
+Blue-Green: toàn bộ traffic chuyển cùng lúc, rollback tức thì. Canary: thử trên một phần nhỏ user trước. Rolling: cập nhật từng server một, không tốn thêm tài nguyên. Solo builder: Blue-Green hoặc Rolling là đủ — Canary khi app đủ lớn để đo được.
+</Callout>
+
+## Đọc thêm
+
+- [BlueGreenDeployment — Martin Fowler](https://martinfowler.com/bliki/BlueGreenDeployment.html) — Martin Fowler giải thích Blue-Green từ góc nhìn nguyên lý; ngắn, rõ, và là nguồn định nghĩa gốc.
+- [Canary releases — Martin Fowler](https://martinfowler.com/bliki/CanaryRelease.html) — Giải thích chiến lược Canary với sơ đồ traffic routing; tại sao nó an toàn hơn deploy all-at-once.
+- [Kubernetes deployment strategies — Container Solutions](https://blog.container-solutions.com/kubernetes-deployment-strategies) — So sánh chi tiết Rolling, Blue-Green, Canary và một số chiến lược nâng cao; có code example với Kubernetes.
+
+## Tự kiểm tra
+
+1. Tại sao Rolling update lại nguy hiểm khi thay đổi database schema? Bạn sẽ giải quyết điều này như thế nào?
+2. Bạn là solo builder, app có 500 user đang online. Bạn muốn deploy một thay đổi lớn trong lúc vẫn có thể rollback ngay nếu cần — chiến lược nào phù hợp nhất và tại sao?
+3. Canary deployment cần điều kiện gì để phát huy tác dụng? Nếu app không có metric/monitoring, Canary có hiệu quả không?

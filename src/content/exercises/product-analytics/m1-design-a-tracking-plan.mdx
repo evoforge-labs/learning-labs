@@ -1,0 +1,107 @@
+---
+id: exercise-pana-001
+title: "Thiết kế tracking plan cho app mới"
+type: "exercise"
+track: product-analytics
+tags: [product-analytics, tracking-plan, north-star, metrics, events, instrumentation]
+estimatedMinutes: 30
+related: [lesson-pana-001, concept-data-informed-decisions, concept-vanity-vs-actionable-metrics, concept-events-vs-pageviews, concept-tracking-plan, concept-north-star-metric, rubric-product-analytics]
+status: published
+---
+import Callout from '../../../components/content/Callout.astro';
+
+## Tình huống
+
+Bạn vừa launch **Focusly** — app giúp người dùng làm việc tập trung theo phương pháp Pomodoro (25 phút làm / 5 phút nghỉ), kèm tính năng ghi lại task hoàn thành và xem báo cáo năng suất tuần.
+
+App mới hoàn toàn. Chưa có một dòng tracking code nào.
+
+Bạn có một buổi chiều trước khi engineer bắt đầu sprint tiếp theo. Đây là lúc để quyết định đo gì — và gọi tên thế nào.
+
+---
+
+## Nhiệm vụ 1 — Chọn North Star Metric
+
+Focusly tạo ra giá trị cho user bằng cách giúp họ hoàn thành công việc thực sự, không phải chỉ "ngồi vào máy tính."
+
+**Câu hỏi để trả lời:**
+
+1. North Star Metric của Focusly nên là gì? Đề xuất một metric duy nhất phản ánh "user đang nhận được giá trị từ app."
+2. Tại sao metric bạn chọn tốt hơn các lựa chọn thay thế dưới đây?
+   - Tổng số lần mở app
+   - Tổng số user đăng ký
+   - Số Pomodoro hoàn thành mỗi tuần trên mỗi active user
+   - Số task được đánh dấu hoàn thành
+
+3. Bạn sẽ đo North Star đó ở tần suất nào (daily, weekly, monthly)? Tại sao?
+
+<Callout title="Gợi ý">
+North Star tốt thường là metric phản ánh core user action lặp đi lặp lại — không phải signup (đó là Acquisition), không phải revenue (đó là kết quả). Hỏi: "Nếu user này dùng app thành công, họ sẽ làm gì nhiều hơn?"
+</Callout>
+
+---
+
+## Nhiệm vụ 2 — Phân biệt vanity vs actionable
+
+Giả sử sau tháng đầu, team Focusly có bảng số liệu sau:
+
+| Metric | Giá trị |
+|---|---|
+| Tổng lượt download | 8.500 |
+| Tổng lượt mở app (all-time) | 42.000 |
+| Số review 5 sao trên App Store | 127 |
+| % user hoàn thành ít nhất 1 Pomodoro trong ngày đầu | 34% |
+| DAU / MAU ratio | 22% |
+| Số user quay lại tuần thứ 2 (Week-2 retention) | 18% |
+| Tổng thời gian app đã chạy (giờ) | 6.200 giờ |
+
+**Bài làm:**
+
+1. Phân loại từng metric vào **Vanity** hoặc **Actionable**. Với mỗi metric Actionable, viết một câu: "Nếu số này [tăng/giảm 20%], team sẽ làm gì cụ thể?"
+
+2. Từ danh sách trên, chọn **3 metric** bạn sẽ đặt lên main dashboard mà mọi thành viên team nhìn mỗi sáng. Giải thích lý do.
+
+3. Với metric Vanity, có cách nào biến nó thành Actionable không? Chọn một metric Vanity trong bảng và đề xuất cách chuyển đổi.
+
+---
+
+## Nhiệm vụ 3 — Viết tracking plan mini (5 events)
+
+Bạn cần xây tracking plan cho sprint đầu tiên của Focusly. Engineer sẽ implement đúng 5 events — không nhiều hơn.
+
+**Yêu cầu:**
+
+Viết tracking plan cho **5 events quan trọng nhất** trong user journey của Focusly. Format cho mỗi event:
+
+```
+Event Name: <object_action, snake_case>
+Trigger: <Khi nào event này được gọi — mô tả bằng tiếng Việt>
+Properties: <Danh sách properties kèm type và ví dụ giá trị>
+Owner: <Frontend / Backend / Cả hai>
+Câu hỏi nó trả lời: <Quyết định nào dữ liệu này hỗ trợ?>
+```
+
+<Callout title="Gợi ý">
+Bắt đầu từ user journey: user mở app lần đầu → thiết lập session → bắt đầu Pomodoro → hoàn thành Pomodoro → xem báo cáo. Mỗi bước chuyển quan trọng là một event candidate. Chọn 5 event phủ được nhiều câu hỏi nhất.
+</Callout>
+
+**Naming convention bắt buộc:** Dùng `object_action` — noun trước, verb sau. Ví dụ: `pomodoro_started`, `session_completed`, `report_viewed`. Không dùng camelCase hay PascalCase.
+
+**Lưu ý MDX:** Nếu viết tay, tránh dùng dấu `<` trực tiếp trước chữ — dùng "nhỏ hơn" hoặc đặt trong backtick thay thế.
+
+---
+
+## Tiêu chí đánh giá
+
+Tham khảo rubric của track Product Analytics để tự chấm. Với bài này, tập trung vào:
+
+| Tiêu chí | Câu hỏi tự kiểm tra |
+|---|---|
+| North Star có phản ánh giá trị thực không? | Metric bạn chọn có thể tăng giả tạo (cheat) mà không tạo giá trị cho user không? |
+| Phân biệt vanity/actionable có chuẩn không? | Với mỗi actionable metric, bạn có nêu hành động cụ thể không — hay chỉ "điều tra thêm"? |
+| Tracking plan có dùng được không? | Engineer có thể đọc và implement đúng mà không cần hỏi thêm không? |
+| Naming convention có nhất quán không? | Tất cả event có theo cùng một format không? Có event nào dùng cách đặt tên khác không? |
+
+<Callout title="Nhớ nhé">
+Không có đáp án duy nhất đúng — nhưng có nhiều đáp án rõ ràng là sai (metric không đo được, event không có trigger rõ ràng, naming không nhất quán). Mục tiêu là tập quy trình tư duy, không phải đoán đáp án.
+</Callout>

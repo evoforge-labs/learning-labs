@@ -1,0 +1,53 @@
+---
+id: concept-ab-testing
+title: "A/B Testing"
+type: "concept"
+aliases: ["A/B testing", "thử nghiệm A/B", "split test", "thí nghiệm ngẫu nhiên sản phẩm", "control vs variant", "randomized experiment"]
+tags: [product-analytics, experimentation, ab-testing, decision-making, statistics]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Hãy nghĩ đến một quán phở muốn đổi công thức nước dùng. Nếu họ đổi toàn bộ nồi từ hôm nay, rồi doanh thu thay đổi — họ không biết tại sao: do công thức mới, do thời tiết lạnh, hay do vừa có quán cạnh tranh mở? A/B testing giải quyết đúng vấn đề đó: **đổi một thứ, đo sự khác biệt, giữ mọi thứ còn lại như nhau**.
+
+## Là gì
+
+**A/B testing** là cách chia người dùng thành hai nhóm ngẫu nhiên — nhóm **control** (A) thấy phiên bản hiện tại, nhóm **variant** (B) thấy thay đổi mới — rồi đo xem nhóm nào đạt kết quả tốt hơn theo một metric đã định trước.
+
+Ba thành phần cốt lõi:
+
+- **Randomization (ngẫu nhiên hoá):** Người dùng được gán vào nhóm ngẫu nhiên, không phải theo giờ đăng ký hay vị trí địa lý. Nếu không random, nhóm B có thể tình cờ gồm toàn user trả phí — kết quả sẽ sai lệch.
+- **Control:** Nhóm không thay đổi gì. Đây là đường baseline để so sánh.
+- **Variant:** Nhóm nhận đúng một thay đổi bạn muốn kiểm tra. Chỉ một — nếu đổi cả màu nút lẫn câu chữ cùng lúc, bạn không biết thứ nào tạo ra khác biệt.
+
+## Ví dụ thật
+
+Đội product muốn tăng tỉ lệ hoàn thành onboarding. Họ nghĩ: "Nếu rút checklist từ 7 bước còn 4 bước thì user sẽ không bỏ giữa chừng." Thay vì triển khai cho toàn bộ người dùng, họ chạy A/B test:
+
+- Nhóm A (50% user mới): onboarding 7 bước như cũ.
+- Nhóm B (50% user mới): onboarding 4 bước rút gọn.
+
+Sau 2 tuần, tỉ lệ hoàn thành onboarding của nhóm B cao hơn 12 điểm phần trăm. Kết quả có ý nghĩa thống kê — họ tự tin rollout cho toàn bộ user.
+
+Không cần cãi nhau trong cuộc họp. Không cần đoán mò. Data quyết định.
+
+<Callout title="Cẩn thận">
+Đừng thay đổi variant **trong khi test đang chạy**. Và đừng dừng test sớm chỉ vì nhìn vào dashboard thấy B đang "thắng" — kết quả sớm rất hay bị nhiễu. Hãy xác định trước thời gian chạy và sample size tối thiểu, rồi mới nhìn kết quả sau khi đạt đủ.
+</Callout>
+
+<Callout title="Nhớ nhé">
+A/B test hiệu quả cần ba thứ: randomization để nhóm công bằng, chỉ một thay đổi mỗi test để biết nguyên nhân, và metric định trước để không bị "đào" kết quả đẹp. Thiếu một trong ba, kết quả mất tin cậy.
+</Callout>
+
+## Đọc thêm
+
+- [A/B Testing Guide — Optimizely](https://www.optimizely.com/optimization-glossary/ab-testing/) — Giải thích A/B testing từ cơ bản đến thực hành, có ví dụ từ các công ty lớn; phù hợp để bắt đầu.
+- [Trustworthy Online Controlled Experiments — Kohavi et al. (excerpt)](https://experimentguide.com/) — Website đi kèm cuốn sách kinh điển về thí nghiệm online; tóm tắt những bài học từ Microsoft, Amazon, Google.
+- [A/B Testing at Scale — Netflix Tech Blog](https://netflixtechblog.com/its-all-a-bout-testing-the-netflix-experimentation-platform-4e1ca458c15b) — Netflix chia sẻ cách họ chạy hàng trăm thí nghiệm song song; giúp bạn thấy A/B testing trong thực tế production.
+- [How to Run A/B Tests — Google Analytics Help](https://support.google.com/analytics/answer/1745152) — Hướng dẫn thực hành từ Google Analytics về cách thiết lập và đọc kết quả A/B test.
+
+## Tự kiểm tra
+
+1. Tại sao cần phân nhóm ngẫu nhiên thay vì chia theo ngày (user đăng ký sáng vào nhóm A, chiều vào nhóm B)?
+2. Team bạn đổi đồng thời màu nút CTA và câu chữ trên nút, rồi chạy A/B test. Nếu kết quả tốt hơn, bạn có thể kết luận điều gì — và điều gì bạn **không** thể kết luận?
+3. Khi nào thì A/B testing **không** phù hợp?

@@ -1,0 +1,72 @@
+---
+id: lesson-pana-002
+title: "Gắn đo thật vào sản phẩm mà vẫn tôn trọng privacy"
+type: "lesson"
+track: product-analytics
+module: instrumentation
+level: beginner
+tags: [product-analytics, instrumentation, event-tracking, client-side, server-side, identity-resolution, privacy, consent]
+prerequisites: [concept-event-tracking, concept-client-vs-server-side-tracking, concept-analytics-tools-landscape, concept-identity-resolution, concept-privacy-and-consent]
+related: [exercise-pana-002, rubric-product-analytics]
+status: published
+---
+import Callout from '../../../components/content/Callout.astro';
+
+Biết cần đo gì là module trước. Module này là lúc bạn thực sự gắn code vào sản phẩm — và làm đúng từ đầu.
+
+"Đúng từ đầu" nghĩa là: không mất data vì ad-blocker, không nhầm lẫn anonymous user với logged-in user, và không vi phạm privacy user.
+
+## Bốn bước gắn instrumentation
+
+### 1. Chọn công cụ trước, gắn sau
+
+Đừng viết một dòng tracking code trước khi biết tool bạn dùng. Tool quyết định SDK, SDK quyết định API, API quyết định cách bạn gọi `track()`, `identify()`, `alias()`.
+
+Với solo builder, [landscape công cụ analytics](/concepts/analytics-tools-landscape) không phức tạp: **PostHog** gộp được product analytics + session replay + feature flags trong một nền tảng với free tier 1M event/tháng. Đó là điểm khởi đầu hợp lý nhất.
+
+### 2. Gắn event đúng chuẩn
+
+[Event tracking](/concepts/event-tracking) có hai thứ cần nhất quán: tên event và properties. Đặt convention trước (ví dụ: `Object Action` hoặc `snake_case`), viết vào tracking plan, và dùng ngay từ event đầu tiên.
+
+```js
+// Tốt: nhất quán, có context
+analytics.track("Checkout Started", {
+  cart_value: 250000,
+  item_count: 2,
+  source: "product_page"
+})
+
+// Không tốt: thiếu property, không rõ nguồn
+analytics.track("checkout")
+```
+
+### 3. Quyết định client-side hay server-side cho từng event
+
+Không phải mọi event đều cần cùng một phương pháp. Xem [client-side vs server-side tracking](/concepts/client-vs-server-side-tracking) để chọn đúng.
+
+Quy tắc thực hành:
+
+- Event UX thông thường (click, hover, page view) → client-side: nhanh, dễ, không có PII.
+- Event business-critical (payment, signup, subscription) → server-side: chính xác, không bị ad-blocker, không rủi ro PII.
+
+### 4. Nối hành trình user từ ẩn danh sang đã đăng nhập
+
+Ngay khi user sign up hoặc login, bạn phải gọi alias + identify. Không làm bước này thì mọi hành vi trước sign up bị mất — funnel bị cắt đứt ở giữa.
+
+Xem cách làm chi tiết tại [identity resolution](/concepts/identity-resolution).
+
+## Privacy không phải optional
+
+Trước khi deploy bất kỳ tracking script nào, có hai thứ bắt buộc:
+
+**Consent trước khi track:** Nếu bạn có user ở EU, analytics script phải bị chặn cho đến khi user đồng ý. Không phải "tốt có thì tốt" — đây là luật.
+
+**Không gửi PII vào analytics tool:** Email, tên, số điện thoại không được đi vào PostHog, Amplitude hay bất kỳ tool bên thứ ba nào như event property thông thường. Dùng database ID thay thế.
+
+Xem đầy đủ tại [privacy & consent](/concepts/privacy-and-consent).
+
+<Callout title="Nhớ nhé">
+Thứ tự triển khai đúng: chọn tool → viết tracking plan → cài SDK → gắn event (client-side trước, server-side cho business-critical) → gọi identify/alias tại sign up → kiểm tra consent flow. Bỏ qua bước nào thì dữ liệu sẽ thiếu, sai, hoặc gây rủi ro pháp lý.
+</Callout>
+
+Thực hành ngay với [bài tập gắn tracking cho một feature thật →](/exercises/product-analytics/m2-instrument-a-feature)

@@ -1,0 +1,48 @@
+---
+id: concept-statistical-significance
+title: "Statistical Significance"
+type: "concept"
+aliases: ["statistical significance", "ý nghĩa thống kê", "p-value thống kê", "confidence interval thử nghiệm", "phân biệt tín hiệu nhiễu thống kê", "khi nào tin kết quả A/B test"]
+tags: [product-analytics, experimentation, statistics, ab-testing, p-value, decision-making]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Bạn tung đồng xu 10 lần, ra 7 lần sấp. Đồng xu bị gian lận hay chỉ là may rủi bình thường? Statistical significance là công cụ để trả lời đúng câu hỏi đó — **khác biệt bạn quan sát được là thật, hay chỉ là ngẫu nhiên may mắn?**
+
+## Là gì
+
+Khi chạy A/B test, nhóm B gần như luôn cho kết quả khác nhóm A — dù chỉ là do dao động ngẫu nhiên trong sample nhỏ. **Statistical significance** là ngưỡng để phán: "Khác biệt này đủ lớn và đủ nhất quán để không thể giải thích bằng may rủi."
+
+Hai khái niệm cốt lõi:
+
+**p-value** — xác suất bạn quan sát thấy khác biệt lớn như vậy (hoặc lớn hơn), *giả sử thực ra không có khác biệt thật*. p dưới 0.05 nghĩa là: nếu không có gì thay đổi, xác suất thấy kết quả này chỉ là 5% — đủ hiếm để nghi ngờ "có gì đó thật đang xảy ra."
+
+**Confidence interval (CI)** — khoảng ước tính của hiệu ứng thật. "Tỉ lệ chuyển đổi tăng từ 3% đến 7%, với CI 95%" nghĩa là: bạn 95% chắc chắn con số thật nằm trong khoảng đó.
+
+## Ví dụ thật
+
+Nhóm A có conversion rate 4.2%, nhóm B có 4.8%. Nghe có vẻ tốt hơn — nhưng chạy mới được 3 ngày với 800 user mỗi nhóm. p-value là 0.31 — nghĩa là khác biệt này hoàn toàn có thể xảy ra do ngẫu nhiên. Bạn **chưa nên** kết luận gì.
+
+Chờ thêm 2 tuần, đủ 5.000 user mỗi nhóm. Lúc này p-value là 0.02, CI 95% cho thấy tăng từ 0.3% đến 0.9%. Bây giờ mới đủ cơ sở để quyết định.
+
+<Callout title="Cẩn thận">
+**Đừng dừng test sớm khi thấy p dưới 0.05.** Đây là lỗi phổ biến nhất. Nếu bạn check kết quả liên tục và dừng ngay khi "đẹp", tỉ lệ báo dương tính giả (false positive) thực tế có thể lên đến 30-50%, dù p-value hiển thị là 0.05. Xác định sample size và thời gian chạy **trước khi bắt đầu**, rồi mới nhìn kết quả.
+</Callout>
+
+<Callout title="Nhớ nhé">
+p dưới 0.05 không có nghĩa là "kết quả đúng 95%". Nó nghĩa là: nếu thực ra không có khác biệt, xác suất thấy dữ liệu như thế này chỉ là 5%. Luôn kết hợp p-value với confidence interval và kích thước hiệu ứng thực tế — con số có ý nghĩa kinh doanh không, hay chỉ ý nghĩa thống kê?
+</Callout>
+
+## Đọc thêm
+
+- [Statistical Significance — Khan Academy](https://www.khanacademy.org/math/statistics-probability/significance-tests-one-sample) — Giải thích p-value và significance test bằng ngôn ngữ cực kỳ dễ hiểu, có bài tập; điểm khởi đầu tốt nhất cho người không có nền toán.
+- [The p-value Problem — Nature](https://www.nature.com/articles/d41586-019-00874-8) — Bài viết trên tạp chí khoa học Nature về việc cộng đồng khoa học đang dùng sai p-value như thế nào; đọc để hiểu giới hạn của công cụ này.
+- [Peeking at A/B Tests — Evan Miller](https://www.evanmiller.org/how-not-to-run-an-ab-test.html) — Bài viết kinh điển giải thích vì sao "nhìn dashboard liên tục rồi dừng sớm" là sai; có hình minh hoạ rõ ràng.
+- [Confidence Intervals — Statistics How To](https://www.statisticshowto.com/probability-and-statistics/confidence-interval/) — Giải thích confidence interval từ khái niệm đến cách đọc, không cần nền toán nâng cao.
+
+## Tự kiểm tra
+
+1. p-value 0.04 có nghĩa là gì bằng ngôn ngữ thường? Bạn có thể kết luận gì — và **không thể** kết luận gì?
+2. Bạn đang chạy A/B test. Sau ngày thứ 3, dashboard hiển thị p dưới 0.05. Bạn nên làm gì?
+3. Sự khác biệt giữa "significant về mặt thống kê" và "significant về mặt kinh doanh" là gì? Cho ví dụ khi hai điều này không đi cùng nhau.

@@ -1,0 +1,96 @@
+---
+id: exercise-pana-002
+title: "Gắn tracking cho tính năng checkout"
+type: "exercise"
+track: product-analytics
+tags: [product-analytics, instrumentation, event-tracking, client-side, server-side, privacy, tracking-plan]
+estimatedMinutes: 30
+related: [lesson-pana-002, concept-event-tracking, concept-client-vs-server-side-tracking, concept-identity-resolution, concept-privacy-and-consent, rubric-product-analytics]
+status: published
+---
+import Callout from '../../../components/content/Callout.astro';
+
+## Tình huống
+
+Bạn đang build một app bán khóa học online. Tính năng **checkout** vừa được hoàn thiện: user chọn khóa học, điền thông tin thanh toán, xác nhận đơn hàng.
+
+PM (chính là bạn) muốn trả lời ba câu hỏi:
+1. Bao nhiêu % user bắt đầu checkout nhưng không hoàn thành?
+2. Bước nào trong checkout có tỷ lệ bỏ cao nhất?
+3. Phương thức thanh toán nào được chọn nhiều nhất?
+
+Bạn cần thiết kế instrumentation cho tính năng này trước khi gắn code.
+
+---
+
+## Nhiệm vụ 1 — Liệt kê event và properties
+
+Từ user flow checkout dưới đây, thiết kế danh sách event cần track:
+
+**User flow:**
+1. User bấm "Mua ngay" từ trang khóa học
+2. Trang checkout mở ra, hiển thị tóm tắt đơn hàng
+3. User chọn phương thức thanh toán (MoMo, VNPAY, thẻ quốc tế)
+4. User nhập thông tin thanh toán
+5. User bấm "Xác nhận thanh toán"
+6. Hệ thống xử lý — thành công hoặc thất bại
+7. User được chuyển đến trang "Cảm ơn" hoặc thấy thông báo lỗi
+
+**Yêu cầu:**
+- Đặt tên event theo convention `Object Action` (ví dụ: `Checkout Started`)
+- Mỗi event cần ít nhất 2 properties có ý nghĩa
+- Giải thích ngắn tại sao event/property đó cần thiết để trả lời được câu hỏi của PM
+
+<Callout title="Mẹo">
+Bắt đầu từ câu hỏi cần trả lời, không phải từ user flow. Câu hỏi "bước nào có tỷ lệ bỏ cao nhất" cần event cho mỗi bước — nếu thiếu event ở bước nào thì bước đó thành điểm mù.
+</Callout>
+
+---
+
+## Nhiệm vụ 2 — Client-side hay server-side?
+
+Với danh sách event bạn vừa tạo, phân loại từng event:
+
+**Điền vào bảng (bạn tự vẽ hoặc viết dạng danh sách):**
+
+| Event | Client-side / Server-side | Lý do |
+|---|---|---|
+| Checkout Started | ? | ? |
+| Payment Method Selected | ? | ? |
+| Payment Completed | ? | ? |
+| Checkout Abandoned | ? | ? |
+
+Giải thích quyết định của bạn. Với event nào bạn không chắc, nêu rõ điều gì khiến bạn do dự.
+
+<Callout title="Mẹo">
+Hai câu hỏi để phân loại: (1) Event này có chứa thông tin nhạy cảm không? (2) Nếu mất event này vì ad-blocker, hệ quả là gì? Nếu mất thì rất nghiêm trọng → server-side.
+</Callout>
+
+---
+
+## Nhiệm vụ 3 — Một lưu ý privacy
+
+Nhìn lại event và properties bạn thiết kế ở Nhiệm vụ 1.
+
+1. Có property nào là PII (tên, email, số điện thoại, số thẻ) không? Nếu có, bạn xử lý thế nào?
+2. App của bạn dự định mở rộng ra thị trường Singapore và Thái Lan. Điều đó có thay đổi gì về yêu cầu consent không?
+3. Viết một câu tóm tắt policy tracking của app: "Chúng tôi chỉ thu thập..." — đủ cụ thể để user hiểu mà không phải đọc lại 10 lần.
+
+<Callout title="Nhớ nhé">
+Privacy không phải thứ bạn thêm vào sau. Khi thiết kế event, đặt câu hỏi ngay: "Nếu data này bị leak, user có bị hại không?" Nếu có — bỏ property đó ra, hoặc hash/anonymize trước khi gửi.
+</Callout>
+
+---
+
+## Tiêu chí đánh giá
+
+Tham khảo [Product Analytics Rubric](/rubrics/product-analytics-rubric) để tự chấm.
+
+Với bài này, tập trung vào:
+
+| Tiêu chí | Câu hỏi để tự kiểm tra |
+|---|---|
+| Event design | Event của bạn có đủ để trả lời 3 câu hỏi của PM không? |
+| Property quality | Properties có cụ thể, không chứa PII, và thực sự hữu ích để phân tích không? |
+| Client/server decision | Quyết định phân loại có logic rõ ràng, không phải đoán mò? |
+| Privacy awareness | Bạn chủ động loại bỏ PII khỏi event design, không đợi ai nhắc? |

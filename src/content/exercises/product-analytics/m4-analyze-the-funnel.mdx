@@ -1,0 +1,111 @@
+---
+id: exercise-pana-004
+title: "Đọc funnel và cohort để tìm vấn đề sản phẩm"
+type: "exercise"
+track: product-analytics
+tags: [product-analytics, funnel, cohort, retention, segmentation, behavior]
+estimatedMinutes: 30
+related: [lesson-pana-004, concept-funnel-analysis, concept-cohort-analysis, concept-retention-curve, concept-user-segmentation, rubric-product-analytics]
+status: published
+---
+import Callout from '../../../components/content/Callout.astro';
+
+## Tình huống
+
+Bạn vừa gia nhập team sản phẩm của **Taskly** — một SaaS quản lý công việc cho nhóm nhỏ (dưới 20 người). Taskly vừa qua giai đoạn early access và hiện có 2.400 workspace đã đăng ký trong 6 tháng qua.
+
+CEO lo lắng: "User đăng ký nhiều nhưng ít ai dùng thật sự. Conversion lên paid thấp hơn kỳ vọng."
+
+Bạn được giao nhiệm vụ đọc data và đề xuất hướng cải thiện. Dưới đây là toàn bộ data bạn có.
+
+---
+
+## Dữ liệu bạn nhận được
+
+### Funnel onboarding (7 ngày kể từ signup)
+
+Đây là funnel từ lúc workspace được tạo đến khi nâng cấp paid, đo trên toàn bộ 2.400 workspace:
+
+| Bước | Tên bước | Số workspace | Tỉ lệ so với bước trước |
+|---|---|---|---|
+| 1 | Tạo workspace | 2.400 | — |
+| 2 | Mời ít nhất 1 thành viên | 1.680 | 70% |
+| 3 | Tạo ít nhất 3 task | 840 | 50% |
+| 4 | Assign task cho thành viên | 336 | 40% |
+| 5 | Đánh dấu ít nhất 1 task hoàn thành | 134 | 40% |
+| 6 | Nâng cấp lên paid | 54 | 40% |
+
+### Cohort retention table (D-30, theo tháng đăng ký)
+
+Retention D-30 của các workspace đã mời ít nhất 1 thành viên (đã qua bước 2):
+
+| Cohort | Workspace còn active D-30 |
+|---|---|
+| Tháng 1 (tháng đầu) | 58% |
+| Tháng 2 | 54% |
+| Tháng 3 | 47% |
+| Tháng 4 | 39% |
+| Tháng 5 | 31% |
+| Tháng 6 (tháng gần nhất) | 24% |
+
+### Thông tin bổ sung
+
+- Taskly ra mắt tính năng "Task Templates" vào đầu tháng 4.
+- Tháng 5 và 6 chạy paid ads mạnh, acquisition tăng gấp đôi so với tháng 1-3.
+- Team không thay đổi onboarding flow trong suốt 6 tháng.
+
+---
+
+## Nhiệm vụ 1 — Xác định bước rớt lớn nhất trong funnel
+
+Nhìn vào bảng funnel trên:
+
+1. **Tính số người dùng thực sự mất đi ở mỗi bước** (không phải tỉ lệ % — mà là số workspace tuyệt đối).
+2. **Xác định bước nào mất nhiều workspace nhất.** Đây là điểm nghẽn ưu tiên số 1.
+3. **Giải thích tại sao** bước đó lại là ưu tiên hơn bước có tỉ lệ drop-off % cao nhất (bước 3 → 4 hay bước 4 → 5).
+
+<Callout title="Mẹo">
+Tỉ lệ % drop-off và số người tuyệt đối mất đi có thể chỉ ra hai bước khác nhau. Ví dụ: bước có tỉ lệ 50% drop-off ở đầu funnel mất nhiều người hơn bước 60% drop-off ở cuối funnel vì lượng người ở đầu funnel lớn hơn nhiều.
+</Callout>
+
+---
+
+## Nhiệm vụ 2 — Đọc cohort retention table và rút ra một insight
+
+Nhìn vào bảng cohort retention D-30:
+
+1. **Mô tả xu hướng bạn thấy.** Retention đang đi theo hướng nào?
+2. **Đặt ra một giả thuyết** giải thích tại sao cohort tháng 4, 5, 6 có retention thấp hơn đáng kể so với tháng 1-3. Dùng thông tin bổ sung đã cung cấp để hỗ trợ giả thuyết.
+3. **Nếu giả thuyết của bạn đúng**, team cần làm gì để kiểm chứng trước khi đưa ra quyết định?
+
+<Callout title="Mẹo">
+Có ít nhất hai luồng giải thích khác nhau cho sự giảm retention này — một liên quan đến chất lượng user acquisition, một liên quan đến trải nghiệm sản phẩm. Hãy xem xét cả hai trước khi chọn giả thuyết.
+</Callout>
+
+---
+
+## Nhiệm vụ 3 — Đề xuất một segment đáng đào sâu
+
+Hiện tại team chưa segment data theo bất kỳ chiều nào. Dựa vào những gì bạn thấy từ funnel và cohort:
+
+1. **Đề xuất một segment cụ thể** bạn muốn tạo ra và phân tích riêng. Ví dụ: "workspace mời thành viên trong 24h đầu vs sau 24h" hay "workspace từ paid ads vs organic".
+2. **Giải thích** tại sao segment đó có thể cho insight hữu ích hơn nhìn toàn bộ.
+3. **Nếu segment đó cho kết quả như bạn giả định**, đề xuất một thay đổi sản phẩm cụ thể bạn sẽ thực hiện.
+
+---
+
+## Tiêu chí đánh giá
+
+Tham khảo [Product Analytics Rubric](/rubrics/product-analytics-rubric) để tự chấm.
+
+Với bài này, tập trung vào:
+
+| Tiêu chí | Câu hỏi để tự kiểm tra |
+|---|---|
+| Đọc funnel đúng | Bạn dùng số tuyệt đối hay tỉ lệ % để xác định điểm nghẽn? Lý luận có rõ ràng không? |
+| Đọc cohort có chiều sâu | Giả thuyết của bạn có phân biệt được "vấn đề acquisition" vs "vấn đề sản phẩm" không? |
+| Segment có mục đích | Segment bạn đề xuất có dẫn đến một hành động cụ thể không, hay chỉ là "thú vị để biết"? |
+
+<Callout title="Nhớ nhé">
+Bài này không có đáp án duy nhất — nhất là ở phần giả thuyết và segment. Điều quan trọng là lập luận của bạn có căn cứ từ data, không phải cảm tính. Một giả thuyết sai nhưng có thể kiểm chứng được tốt hơn một kết luận đúng mà không giải thích được tại sao.
+</Callout>

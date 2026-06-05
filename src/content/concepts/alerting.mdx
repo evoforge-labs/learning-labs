@@ -1,0 +1,66 @@
+---
+id: concept-alerting
+title: "Alerting (báo đúng lúc, không spam)"
+type: "concept"
+aliases: ["alerting", "cảnh báo hệ thống", "alert fatigue", "symptom based alerting", "alert đúng lúc không spam", "thiết kế cảnh báo actionable"]
+tags: [observability, alerting, monitoring, reliability, ship-and-operate, sre]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Hãy tưởng tượng một văn phòng mà còi báo cháy kêu mỗi lần ai đó nướng bánh mì. Ban đầu mọi người chạy ra ngoài. Sau một tuần, mọi người ngồi yên và… bỏ qua. Đến khi có đám cháy thật, không ai phản ứng.
+
+Đó là alert fatigue — và nó là nguyên nhân của những sự cố nghiêm trọng nhất trong thực tế.
+
+## Là gì
+
+**Alerting** là cơ chế tự động thông báo cho người trực khi hệ thống cần sự can thiệp của con người. Từ khóa quan trọng nhất: **cần sự can thiệp của con người**.
+
+Một alert tốt phải thỏa mãn ba điều kiện:
+1. **Actionable** — người nhận biết phải làm gì ngay lập tức
+2. **Urgent** — nếu không xử lý ngay, hệ thống hoặc user sẽ bị ảnh hưởng
+3. **Không thể tự giải quyết** — hệ thống không tự phục hồi được
+
+**Alert fatigue** xảy ra khi có quá nhiều alert không actionable. Đội của bạn bắt đầu snooze, ignore, hoặc "train themselves" để không phản ứng với alert — kể cả alert thật sự quan trọng.
+
+**Symptom-based alert** là alert dựa trên triệu chứng mà user đang trải nghiệm — ví dụ: "error rate endpoint /checkout vượt 5%". Đây là cách alert đúng: bạn biết user đang bị ảnh hưởng.
+
+**Cause-based alert** là alert dựa trên nguyên nhân nội bộ — ví dụ: "CPU vượt 80%". Nguy hiểm hơn vì CPU 80% có thể không ảnh hưởng gì đến user, hoặc có thể là dấu hiệu của 10 vấn đề khác nhau. Cause-based alert nên là điểm bắt đầu điều tra, không phải lý do để gọi điện lúc 3 giờ sáng.
+
+## Ví dụ thật
+
+Hai cách alert cho cùng một tình huống database chậm:
+
+**Alert dựa trên nguyên nhân (kém hiệu quả):**
+- Database query time trung bình vượt 200ms → Alert
+- Connection pool trên 70% → Alert
+- Disk I/O trên 60% → Alert
+
+Ba alert, mỗi cái kêu riêng, thường kêu cùng lúc, không cái nào nói rõ user có bị ảnh hưởng không.
+
+**Alert dựa trên triệu chứng (hiệu quả):**
+- Error rate của /api/\* vượt 2% trong 5 phút liên tiếp → Alert (user đang bị lỗi)
+- Latency p99 của /checkout vượt 3 giây → Alert (user đang chờ quá lâu)
+
+Hai alert, cả hai đều nói thẳng: user đang bị ảnh hưởng, cần con người vào xử lý ngay.
+
+<Callout title="Cẩn thận">
+Alert phải đi kèm **runbook** — tài liệu ngắn giải thích: alert này nghĩa là gì, kiểm tra gì trước, cách xử lý phổ biến nhất là gì. Nếu người trực phải Google hoặc hỏi đồng nghiệp mỗi khi thấy alert, alert đó chưa hoàn chỉnh. Và alert lúc 3 giờ sáng mà không có runbook là công thức tạo ra quyết định sai dưới áp lực.
+</Callout>
+
+<Callout title="Nhớ nhé">
+Quy tắc vàng: nếu một alert không cần ai hành động ngay lập tức, nó không nên là alert — hãy để nó thành một dashboard hoặc daily report. Ít alert hơn, đúng lúc hơn, có runbook đi kèm — đó là alerting tốt.
+</Callout>
+
+## Đọc thêm
+
+- [Alerting on What Matters — Google SRE Book](https://sre.google/sre-book/practical-alerting/) — Chương từ Google SRE Book về triết lý alerting: chỉ alert khi cần hành động, tránh symptom-based vs cause-based confusion.
+- [My Philosophy on Alerting — Rob Ewaschuk](https://docs.google.com/document/d/199PqyG3UsyXlwieHaqbGiWVa8eMWi8zzAn0YfcApr8Q/edit) — Tài liệu nội bộ Google được công bố; một trong những bài viết chuẩn mực nhất về thiết kế alert; ngắn gọn và thực tế.
+- [Reducing Alert Fatigue — PagerDuty](https://www.pagerduty.com/resources/learn/alert-fatigue/) — PagerDuty giải thích alert fatigue với số liệu thực tế và các kỹ thuật giảm thiểu; phù hợp cho team đang bị ngợp bởi alert.
+- [SRE Fundamentals: Alerting Best Practices — Grafana](https://grafana.com/blog/2020/09/18/how-i-learn-alerting-rules/) — Hướng dẫn viết alert rules trong Grafana theo hướng symptom-based; ví dụ cụ thể với PromQL.
+
+## Tự kiểm tra
+
+1. Phân biệt symptom-based alert và cause-based alert. Cho ví dụ về một alert cause-based mà bạn nên chuyển thành symptom-based.
+2. Alert fatigue hình thành như thế nào và hệ quả nguy hiểm nhất của nó là gì?
+3. Bạn nhận được yêu cầu thêm alert cho "CPU vượt 90%". Bạn sẽ hỏi những câu gì trước khi quyết định có nên thêm alert đó không?

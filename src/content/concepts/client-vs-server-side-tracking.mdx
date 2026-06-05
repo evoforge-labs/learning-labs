@@ -1,0 +1,57 @@
+---
+id: concept-client-vs-server-side-tracking
+title: "Client-Side vs Server-Side Tracking"
+type: "concept"
+aliases: ["client-side tracking", "server-side tracking", "đo ở trình duyệt vs server", "ad-blocker analytics", "tracking phía client phía server"]
+tags: [analytics, instrumentation, product-analytics, client-side, server-side, privacy, accuracy]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Hai người bán hàng ở chợ. Một người đứng ở cổng đếm khách vào — nhưng nhiều khách đeo mũ che mặt nên bị bỏ qua. Người kia đứng ở quầy thu tiền — ai mua hàng đều phải đi qua, không trốn được.
+
+Client-side tracking là người đứng ở cổng. Server-side tracking là người ở quầy thu tiền.
+
+## Là gì
+
+**Client-side tracking** — đo ngay trên trình duyệt hoặc thiết bị của user. Một đoạn JavaScript chạy trong browser, ghi lại hành động rồi gửi thẳng lên công cụ analytics (PostHog, GA4, Amplitude).
+
+**Server-side tracking** — đo tại server của bạn. Khi user thực hiện hành động, backend của bạn ghi lại và gửi event lên công cụ analytics — user không biết, browser không can thiệp.
+
+## Đánh đổi thực tế
+
+**Ad-blocker và browser privacy:** Khoảng 25–30% user cài ad-blocker hoặc dùng trình duyệt như Brave/Firefox với strict mode. Những này chặn script analytics chạy trên browser — data client-side bị mất âm thầm, bạn không hay. Server-side tracking không bị ảnh hưởng vì request đi từ server của bạn, không phải từ browser user.
+
+**Độ chính xác:** Client-side nhanh và dễ gắn, nhưng có thể bỏ sót 20–30% event. Server-side gần như không mất data vì mọi request đều đi qua backend bạn kiểm soát.
+
+**Dữ liệu nhạy cảm:** Thông tin thanh toán, PII (tên, email, số điện thoại) không nên bao giờ đi qua client-side tracking — quá dễ bị lộ. Gắn event thanh toán ở server là bắt buộc.
+
+**Chi phí triển khai:** Client-side: thêm vài dòng JS, xong trong 10 phút. Server-side: cần sửa backend, deploy lại, phức tạp hơn nhiều.
+
+## Ví dụ thật
+
+Bạn có tính năng checkout. Quyết định hợp lý:
+
+- `page_viewed`, `button_clicked` → **client-side**: không nhạy cảm, muốn có rich context từ browser (kích thước màn hình, referrer).
+- `payment_completed`, `order_created` → **server-side**: dữ liệu quan trọng, không được mất, có PII.
+
+<Callout title="Mẹo">
+Với solo builder mới bắt đầu: dùng client-side trước cho tốc độ. Khi bạn thấy data bị lệch so với số đơn hàng thật trong database — đó là lúc chuyển event business-critical sang server-side.
+</Callout>
+
+<Callout title="Nhớ nhé">
+Client-side: nhanh, dễ, nhưng ad-blocker làm mất data. Server-side: chính xác hơn, an toàn hơn cho PII, nhưng cần effort kỹ thuật. Hành động bình thường → client-side. Hành động quan trọng có dữ liệu nhạy cảm → server-side.
+</Callout>
+
+## Đọc thêm
+
+- [Server-Side vs Client-Side Tracking — Snowplow Blog](https://snowplow.io/blog/server-side-vs-client-side-tracking) — So sánh chi tiết hai phương pháp, phân tích khi nào nên dùng cái nào, kèm kiến trúc thực tế.
+- [Server-Side Tracking Improves Accuracy and Bypasses Ad Blockers — DataShouts](https://datashouts.com/how-server-side-tracking-improves-data-accuracy-and-bypasses-ad-blockers/) — Giải thích cơ chế ad-blocker chặn analytics và cách server-side tracking khắc phục vấn đề này.
+- [Client vs Server-Side Tracking — Tealium](https://tealium.com/resource/fundamentals/client-vs-server-side-tracking/) — Tổng quan từ Tealium về hai mô hình tracking với focus vào privacy compliance và data accuracy.
+- [What Is Server-Side Tracking — Matomo Blog](https://matomo.org/blog/2025/07/what-is-server-side-tracking/) — Hướng dẫn thực hành server-side tracking từ Matomo, bao gồm cả góc nhìn privacy-first.
+
+## Tự kiểm tra
+
+1. Tại sao ad-blocker chặn được client-side tracking nhưng không chặn được server-side tracking?
+2. Bạn đang build app bán khóa học online. Hãy phân loại 3 event sau: `lesson_video_played`, `purchase_completed`, `coupon_code_applied` — cái nào nên là client-side, cái nào nên là server-side? Giải thích lý do.
+3. Một team chỉ dùng client-side tracking thấy số "checkout_completed" trong PostHog thấp hơn số đơn hàng thực trong database 25%. Nguyên nhân có thể là gì và cách khắc phục?
