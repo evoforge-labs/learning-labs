@@ -93,6 +93,7 @@ const payload = JSON.stringify({ nodes, edges, typeColors: TYPE_HEX, trackColors
 
   let running: any = null;       // stop the physics sim when leaving the page
   let cy: any = null;
+  let selectedNode: any = null;  // node whose peek panel is open (persistent highlight)
   const hiddenTypes = new Set<string>();
 
   function renderGraph() {
@@ -119,6 +120,7 @@ const payload = JSON.stringify({ nodes, edges, typeColors: TYPE_HEX, trackColors
         { selector: 'edge.faded', style: { opacity: 0.05 } },
         { selector: '.km-hidden', style: { display: 'none' } },
         { selector: 'node.match', style: { 'border-width': 3, 'border-color': '#6366f1' } },
+        { selector: 'node.km-selected', style: { 'border-width': 3, 'border-color': '#6366f1' } },
       ],
     });
 
@@ -138,16 +140,21 @@ const payload = JSON.stringify({ nodes, edges, typeColors: TYPE_HEX, trackColors
   }
 
   function wireControls() {
-    // hover highlight
-    cy.on('mouseover', 'node', (evt: any) => {
-      const nb = evt.target.closedNeighborhood();
-      cy.elements().addClass('faded');
-      nb.removeClass('faded');
+    // hover highlight (temporary) — restores the selected node's highlight on out
+    cy.on('mouseover', 'node', (evt: any) => fadeExcept(evt.target));
+    cy.on('mouseout', 'node', () => {
+      if (selectedNode) fadeExcept(selectedNode);
+      else cy.elements().removeClass('faded');
     });
-    cy.on('mouseout', 'node', () => cy.elements().removeClass('faded'));
 
-    // click node -> peek panel (no immediate navigation)
-    cy.on('tap', 'node', (evt: any) => showPeek(evt.target.data()));
+    // click node -> keep it selected (persistent neighborhood highlight) + peek panel
+    cy.on('tap', 'node', (evt: any) => {
+      selectedNode = evt.target;
+      cy.nodes().removeClass('km-selected');
+      selectedNode.addClass('km-selected');
+      fadeExcept(selectedNode);
+      showPeek(selectedNode.data());
+    });
     cy.on('tap', (evt: any) => { if (evt.target === cy) hidePeek(); });
 
     // legend = filter
@@ -198,6 +205,12 @@ const payload = JSON.stringify({ nodes, edges, typeColors: TYPE_HEX, trackColors
     toggle?.addEventListener('click', () => panel?.classList.toggle('km-collapsed'));
   }
 
+  // Fade everything except the given node and its closed neighbourhood.
+  function fadeExcept(node: any) {
+    cy.elements().addClass('faded');
+    node.closedNeighborhood().removeClass('faded');
+  }
+
   function applyFilter() {
     cy.batch(() => {
       cy.nodes().forEach((n: any) => {
@@ -217,7 +230,11 @@ const payload = JSON.stringify({ nodes, edges, typeColors: TYPE_HEX, trackColors
     (document.getElementById('km-peek-link') as HTMLAnchorElement).href = d.url || '#';
     peek.classList.remove('hidden');
   }
-  function hidePeek() { document.getElementById('km-peek')?.classList.add('hidden'); }
+  function hidePeek() {
+    document.getElementById('km-peek')?.classList.add('hidden');
+    selectedNode = null;
+    if (cy) { cy.nodes().removeClass('km-selected'); cy.elements().removeClass('faded'); }
+  }
 
   document.addEventListener('astro:before-swap', () => { running?.stop?.(); running = null; cy = null; });
   document.addEventListener('astro:page-load', renderGraph);
