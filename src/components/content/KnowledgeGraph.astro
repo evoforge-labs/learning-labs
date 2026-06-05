@@ -114,13 +114,13 @@ const payload = JSON.stringify({ nodes, edges, typeColors: TYPE_HEX, trackColors
         ...edges.map((e: any, i: number) => ({ data: { id: `e${i}`, source: e.source, target: e.target } })),
       ],
       style: [
-        { selector: 'node', style: { 'background-color': 'data(colorType)', label: 'data(label)', color: '#a1a1aa', 'font-size': 10, 'text-valign': 'bottom', 'text-margin-y': 4, 'transition-property': 'opacity', 'transition-duration': '0.15s' } },
-        { selector: 'edge', style: { width: 1.5, 'line-color': '#a1a1aa66', 'curve-style': 'bezier', 'transition-property': 'opacity', 'transition-duration': '0.15s' } },
+        { selector: 'node', style: { 'background-color': 'data(colorType)', label: 'data(label)', color: '#a1a1aa', 'font-size': 10, 'text-valign': 'bottom', 'text-margin-y': 4, 'transition-property': 'opacity', 'transition-duration': 150 } },
+        { selector: 'edge', style: { width: 1.5, 'line-color': '#a1a1aa66', 'curve-style': 'bezier', 'transition-property': 'opacity', 'transition-duration': 150 } },
         { selector: '.faded', style: { opacity: 0.12 } },
         { selector: 'edge.faded', style: { opacity: 0.05 } },
         { selector: '.km-hidden', style: { display: 'none' } },
-        { selector: 'node.match', style: { 'border-width': 3, 'border-color': '#6366f1' } },
-        { selector: 'node.km-selected', style: { 'border-width': 3, 'border-color': '#6366f1' } },
+        // search match + selected node share the same ring
+        { selector: 'node.match, node.km-selected', style: { 'border-width': 3, 'border-color': '#6366f1' } },
       ],
     });
 
