@@ -31,7 +31,7 @@ edges:
   - source: concept-product-discovery
     target: lesson-product-001
     rel: supports
-  - source: concept-problem-vs-solution
+  - source: concept-problem-vs-feature
     target: exercise-product-001
     rel: trains
   - source: concept-user-pain
@@ -52,3 +52,8 @@ edges:
   - source: rubric-product-thinking
     target: exercise-product-010
     rel: evaluates
+  # --- Cross-links between related concepts ---
+  # north-star is a specific kind of success metric
+  - source: concept-success-metric
+    target: concept-north-star-metric
+    rel: specializes

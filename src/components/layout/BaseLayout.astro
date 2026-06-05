@@ -8,6 +8,7 @@ import { ClientRouter } from 'astro:transitions';
 import Header from './Header.astro';
 import BottomNav from './BottomNav.astro';
 import Drawer from './Drawer.astro';
+import Sidebar from './Sidebar.astro';
 interface Props { title: string; }
 const { title } = Astro.props;
 ---
@@ -37,7 +38,12 @@ const { title } = Astro.props;
   <body class="bg-zinc-50 text-zinc-800 dark:bg-zinc-950 dark:text-zinc-200 antialiased pb-16 lg:pb-0">
     <Header />
     <Drawer />
-    <slot />
+    <aside class="hidden lg:block fixed left-0 top-14 bottom-0 w-60 overflow-y-auto border-r border-zinc-200 dark:border-zinc-800 p-4">
+      <Sidebar />
+    </aside>
+    <div class="lg:pl-60">
+      <slot />
+    </div>
     <BottomNav />
   </body>
 </html>

@@ -38,6 +38,15 @@ const trackLessons = d.type === 'track'
   ? (await getAll('lessons') as any[]).filter((x) => x.data.track === entry.id).sort(byId) : [];
 const trackExercises = d.type === 'track'
   ? (await getAll('exercises') as any[]).filter((x) => x.data.track === entry.id).sort(byId) : [];
+
+// Prev/next within a track so lessons read as a continuous course (easy -> expert).
+let prevLesson: any = null, nextLesson: any = null;
+if (d.type === 'lesson') {
+  const sibs = (await getAll('lessons') as any[]).filter((x) => x.data.track === d.track).sort(byId);
+  const i = sibs.findIndex((x) => x.data.id === d.id);
+  if (i > 0) prevLesson = sibs[i - 1];
+  if (i >= 0 && i < sibs.length - 1) nextLesson = sibs[i + 1];
+}
 ---
 <ReadingLayout title={d.title} kicker={kicker} trackLabel={trackLabel}
   headings={headings.filter((h: any) => h.depth === 2).map((h: any) => ({ text: h.text, slug: h.slug }))}>
@@ -94,4 +103,20 @@ const trackExercises = d.type === 'track'
     </div>
   )}
   {related.length > 0 && <div class="anim"><RelatedLinks ids={related} title="Related · từ frontmatter" /></div>}
+  {(prevLesson || nextLesson) && (
+    <nav class="anim mt-12 grid grid-cols-2 gap-3">
+      {prevLesson ? (
+        <a href={`/lessons/${prevLesson.id}`} class="rounded-xl border border-zinc-200 dark:border-zinc-800 p-4 hover:border-brand/50">
+          <div class="text-[11px] uppercase tracking-wider text-zinc-400">← Bài trước</div>
+          <div class="mt-1 text-sm font-medium text-zinc-800 dark:text-zinc-200">{prevLesson.data.title}</div>
+        </a>
+      ) : <span></span>}
+      {nextLesson ? (
+        <a href={`/lessons/${nextLesson.id}`} class="rounded-xl border border-zinc-200 dark:border-zinc-800 p-4 hover:border-brand/50 text-right">
+          <div class="text-[11px] uppercase tracking-wider text-zinc-400">Bài tiếp →</div>
+          <div class="mt-1 text-sm font-medium text-zinc-800 dark:text-zinc-200">{nextLesson.data.title}</div>
+        </a>
+      ) : <span></span>}
+    </nav>
+  )}
 </ReadingLayout>
