@@ -1,0 +1,111 @@
+---
+id: exercise-solo-005
+title: "Đọc phễu, bịt chỗ rò, tăng bền"
+type: "exercise"
+track: solo-founder
+tags: [indie, founder, growth, aarrr, churn, cac-ltv, growth-loops, retention, metrics, sustainability]
+estimatedMinutes: 30
+related: [lesson-solo-005, concept-aarrr-funnel, concept-churn, concept-cac-ltv, concept-growth-loops, rubric-solo-founder]
+status: published
+---
+import Callout from '../../../components/content/Callout.astro';
+
+## Tình huống
+
+Bạn đang là founder duy nhất của **InvoiceFlow** — một SaaS giúp freelancer tạo và gửi invoice chuyên nghiệp, nhắc nợ tự động, và theo dõi thanh toán. Sản phẩm đã chạy được 14 tháng.
+
+**Số liệu tháng vừa rồi:**
+
+| Chỉ số | Số liệu |
+|--------|---------|
+| Lượt signup mới | 380 |
+| Người dùng tạo invoice đầu tiên trong 48h | 76 (20%) |
+| Người dùng còn active sau 30 ngày | 38 (50% của activated) |
+| Người giới thiệu user mới | 4 |
+| Người nâng cấp lên paid ($19/tháng) | 22 |
+| Tổng khách paid đầu tháng | 210 |
+| Khách paid rời bỏ trong tháng | 21 |
+| Chi phí chạy Facebook Ads tháng này | $600 |
+| Khách mới từ ads | 10 (trong tổng 22 khách mới paid) |
+
+**Tình hình tổng quan**: MRR hiện tại = $3.990, tăng từ $3.610 tháng trước. Nghe có vẻ tăng trưởng — nhưng bạn cảm thấy có gì đó không ổn. Revenue tăng chậm dù lượng signup đang cao nhất từ trước đến nay.
+
+---
+
+## Task 1 — Map AARRR và tìm chỗ rò lớn nhất (10 phút)
+
+Dùng số liệu trên, điền tỷ lệ chuyển đổi cho từng tầng:
+
+- **Acquisition → Activation**: trong 380 signup, bao nhiêu % activate (tạo invoice đầu tiên trong 48h)?
+- **Activation → Retention**: trong số activated, bao nhiêu % còn active sau 30 ngày?
+- **Retention → Referral**: trong số retained, bao nhiêu % giới thiệu người khác?
+- **Activation → Revenue**: trong số activated, bao nhiêu % chuyển thành paid?
+
+Sau khi có các con số, trả lời:
+
+1. Tầng nào đang rò nhiều nhất (tỷ lệ chuyển đổi thấp nhất)?
+2. Nếu bạn chỉ được fix MỘT tầng trong tháng tới, bạn chọn tầng nào và tại sao?
+3. Giả sử bạn tăng tỷ lệ Activation từ 20% lên 35% — không làm gì khác — doanh thu cuối phễu sẽ thay đổi thế nào? (Ước tính đơn giản.)
+
+<Callout title="Gợi ý">
+Đừng chọn tầng bạn *thích* fix — hãy chọn tầng có tỷ lệ chuyển đổi thấp nhất *và* impact lớn nhất nếu cải thiện. Tầng đầu phễu rò thì lãng phí nhiều nhất vì nó ảnh hưởng toàn bộ phần còn lại.
+</Callout>
+
+---
+
+## Task 2 — Fix churn hay boost acquisition trước? (10 phút)
+
+Tính toán và lập luận:
+
+**Phần A — Tính churn rate và CAC**
+
+- Churn rate tháng này của InvoiceFlow là bao nhiêu? (Dùng số liệu khách paid đầu tháng và số rời bỏ.)
+- CAC của kênh Facebook Ads là bao nhiêu? (Chi phí ads / khách mới từ ads.)
+- LTV hiện tại là bao nhiêu? (Gợi ý: với churn rate bạn vừa tính, khách paid trung bình ở lại bao nhiêu tháng? LTV = $19 × số tháng đó.)
+- Tỷ lệ LTV:CAC của kênh ads là bao nhiêu?
+
+**Phần B — Quyết định**
+
+Với các con số trên, trả lời:
+
+1. Mô hình unit economics hiện tại có khỏe không? Bạn có nên tăng ngân sách ads không?
+2. Nếu bạn giảm churn từ mức hiện tại xuống còn 5%/tháng — không làm gì khác — LTV thay đổi thế nào? Tỷ lệ LTV:CAC mới là bao nhiêu?
+3. Dựa trên phân tích: bạn nên ưu tiên fix churn hay boost acquisition trước? Lập luận bằng số, không phải cảm tính.
+
+<Callout title="Cẩn thận">
+"Tăng acquisition" và "fix churn" không phải lựa chọn nhị phân mãi mãi — nhưng với solo founder có bandwidth hữu hạn, phải chọn một cái làm trước. Lựa chọn sai có thể lãng phí hàng tháng công sức.
+</Callout>
+
+---
+
+## Task 3 — Đề xuất một growth loop bền vững (10 phút)
+
+InvoiceFlow đang phụ thuộc vào Facebook Ads — một kênh tốn tiền và có thể bị tắt bất cứ lúc nào (policy thay đổi, CPM tăng). Bạn cần một growth loop mà bạn — một solo founder — có thể vận hành bền vững mà không cần tuyển thêm người.
+
+Thiết kế một loop cụ thể cho InvoiceFlow:
+
+1. **Tên loop**: content loop, referral loop, hay viral loop?
+2. **Cơ chế**: mô tả chi tiết một chu kỳ của loop — bắt đầu từ đâu, qua các bước nào, và output trở thành input như thế nào.
+3. **Điều kiện cần**: bạn cần xây dựng gì (tính năng, nội dung, workflow) để loop này hoạt động?
+4. **Chỉ số đo loop**: bạn sẽ biết loop đang hoạt động bằng cách đo chỉ số nào?
+5. **Giới hạn bandwidth**: một mình bạn có thể duy trì loop này không quá X giờ/tuần — X là bao nhiêu theo ước tính của bạn?
+
+<Callout title="Gợi ý">
+InvoiceFlow có một lợi thế tự nhiên: mỗi invoice được gửi đi là một tờ rơi tiềm năng. Khách hàng nhận invoice từ freelancer → thấy "Powered by InvoiceFlow" → tò mò → signup. Đây có thể là hạt giống của loop. Bạn có thể xây gì trên đó?
+</Callout>
+
+---
+
+## Tiêu chí đánh giá
+
+Xem rubric đầy đủ tại [Solo Founder Rubric](../../rubrics/solo-founder-rubric).
+
+| Tiêu chí | Trọng số |
+|----------|----------|
+| Phân tích AARRR đúng số, xác định đúng tầng rò và lý giải impact nếu fix | 35% |
+| Tính CAC/LTV/churn chính xác; quyết định fix churn vs acquisition có căn cứ số học | 35% |
+| Loop được thiết kế khả thi, có cơ chế rõ, có chỉ số đo, và realistic với solo founder | 30% |
+
+<Callout title="Nhớ nhé">
+Không có đáp án duy nhất đúng ở Task 3 — loop tốt nhất là loop bạn thực sự có thể duy trì. Một loop đơn giản mà chạy là tốt hơn một loop phức tạp mà không bao giờ được vận hành. Lập luận của bạn phải nhất quán với ràng buộc của solo founder: băng thông hữu hạn, không có team, không có budget vô hạn.
+</Callout>

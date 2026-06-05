@@ -1,0 +1,64 @@
+---
+id: concept-pricing-tiers
+title: "Bậc giá & Đóng gói (Pricing Tiers)"
+type: "concept"
+aliases: ["pricing tiers", "bậc giá", "gói giá", "bảng giá 3 bậc", "good better best pricing", "pricing plans"]
+tags: [pricing, monetization, indie, founder, business, saas, solo-builder, value-pricing]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Bạn vào rạp mua bắp rang. Có ba size: nhỏ $4, vừa $7, lớn $8. Bạn nhìn thấy size vừa và lớn chỉ cách nhau $1 — bạn chọn lớn. Tự nhiên. Không cần ai thuyết phục.
+
+Đó là thiết kế pricing tiers đang làm việc.
+
+## Là gì
+
+**Pricing tiers** (bậc giá) là cách bạn đóng gói sản phẩm thành nhiều phiên bản — mỗi phiên bản phục vụ một nhóm khách hàng khác nhau với mức giá và tính năng khác nhau. Cấu trúc phổ biến nhất là **Good / Better / Best** — ba bậc, từ cơ bản đến đầy đủ.
+
+Mục tiêu không chỉ là "bán nhiều tier" — mà là giúp *mỗi khách hàng tìm được tier phù hợp với mình*, và khiến tier bạn muốn họ chọn trông hấp dẫn nhất.
+
+## Ví dụ thật
+
+| Tier | Tên | Giá/tháng | Value metric |
+|------|-----|-----------|-------------|
+| Good | Starter | $29 | 1 dự án, 500 records |
+| Better | Pro | $79 | 10 dự án, 10,000 records |
+| Best | Agency | $199 | Không giới hạn, API access |
+
+Ba kỹ thuật trong bảng trên:
+
+**Value metric** — bạn charge theo thứ gì co giãn theo mức độ sử dụng: số dự án, số user, số records, số email gửi. Khi khách lớn lên, họ tự nhiên muốn upgrade. Đừng charge theo "tính năng" nếu có thể charge theo usage.
+
+**Anchor tier** — gói Agency $199 ở đây không phải để bán nhiều. Nó ở đó để gói Pro $79 trông rẻ hơn. Đây là **decoy effect**: khi có lựa chọn rõ ràng "quá mắc", lựa chọn ở giữa bỗng trông hợp lý.
+
+**Giá thật sự bạn muốn bán** là tier giữa. Hầu hết khách sẽ chọn nó.
+
+<Callout title="Mẹo">
+Indie founder thường chỉ làm 1 tier "flat" vì dễ. Nhưng flat pricing bỏ mất khách hàng sẵn sàng trả nhiều hơn — và cũng đẩy đi khách hàng nhỏ muốn bắt đầu rẻ. Ba tier giúp bạn giữ cả hai.
+</Callout>
+
+## Cẩn thận với một số bẫy
+
+Nhiều founder nhét tất cả tính năng vào tier cao nhất rồi "khóa" tier thấp bằng cách remove tính năng. Cách tốt hơn: các tier không chỉ khác nhau về tính năng — mà khác nhau về *giới hạn usage* và *dịch vụ đi kèm* (ưu tiên support, onboarding, v.v.).
+
+<Callout title="Cẩn thận">
+Đừng tạo tier chỉ để có vẻ có nhiều lựa chọn. Nếu tier Starter quá hạn chế đến mức người dùng thật không thể dùng được, nó không còn là "Good" nữa — nó là mồi nhử. Điều đó phá vỡ niềm tin.
+</Callout>
+
+<Callout title="Nhớ nhé">
+Tier đắt nhất là anchor, tier rẻ nhất là cửa vào, tier giữa là nơi bạn muốn mọi người đến. Thiết kế ngược từ tier giữa.
+</Callout>
+
+## Đọc thêm
+
+- [Pricing strategy guide — Paddle](https://www.paddle.com/resources/pricing-strategy) — Giải thích value metric, customer segmentation, và cách test pricing tier cho SaaS.
+- [Startup pricing 101 — Y Combinator Library](https://www.ycombinator.com/library/6h-the-art-of-pricing) — YC chia sẻ cách founder nên đóng gói và neo giá từ những ngày đầu.
+- [Value-based pricing — Paddle](https://www.paddle.com/resources/value-based-pricing) — Nền tảng lý thuyết để hiểu tại sao bạn cần xác định value metric trước khi tạo tier.
+- [SaaS metrics guide — Paddle](https://www.paddle.com/resources/saas-metrics) — Cách đo lường hiệu quả của pricing tiers qua các chỉ số như ARPU và Net Revenue Retention.
+
+## Tự kiểm tra
+
+1. "Decoy effect" trong pricing tiers nghĩa là gì? Tại sao tier đắt nhất đôi khi không phải để bán?
+2. Sự khác biệt giữa "charge theo tính năng" và "charge theo value metric" là gì? Cái nào tốt hơn cho SaaS, tại sao?
+3. Bạn đang làm tool quản lý email marketing. Đề xuất một value metric phù hợp và thiết kế 3 tier ngắn gọn.

@@ -1,0 +1,62 @@
+---
+id: concept-freemium
+title: "Freemium"
+type: "concept"
+aliases: ["freemium model", "free tier", "miễn phí có giới hạn", "free plan", "freemium pricing"]
+tags: [pricing, freemium, monetization, indie, founder, saas, business, solo-builder]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Bạn vào siêu thị, thấy nhân viên đứng phát thử xúc xích. Bạn ăn miễn phí, thấy ngon, mua cả gói. Đó là freemium — free tier là cái xúc xích thử, không phải sản phẩm chính.
+
+Vấn đề xảy ra khi bạn quên mất điều đó và nghĩ rằng mình đang bán xúc xích miễn phí.
+
+## Là gì
+
+**Freemium** là mô hình bạn cung cấp bản miễn phí với tính năng hoặc giới hạn nhất định, và charge cho bản nâng cao. Mục tiêu của free tier **không phải là phục vụ người dùng mãi mãi** — mà là để họ *trải nghiệm giá trị thật*, rồi convert sang trả tiền.
+
+Freemium chỉ hoạt động khi hai điều kiện cùng đúng:
+1. **Chi phí phục vụ user miễn phí thấp** (không tốn thêm nhiều khi thêm 1 user)
+2. **Có trigger rõ ràng để upgrade** (giới hạn cứng, tính năng quan trọng bị khóa, hoặc dùng nhiều hơn cần trả thêm)
+
+## Ví dụ thật
+
+Slack: miễn phí cho team nhỏ với 90 ngày tin nhắn. Khi team cần tìm lại tin nhắn cũ, họ phải trả. Trigger rõ: bạn thấy "tin nhắn bị ẩn" và biết chính xác tại sao cần upgrade.
+
+Notion: miễn phí cho cá nhân, charge khi cần team feature (share workspace, permission). Trigger rõ: muốn làm việc nhóm thì phải trả.
+
+Cả hai đều có: chi phí biên thấp (thêm 1 user miễn phí không tốn nhiều) + trigger rõ ràng.
+
+<Callout title="Cẩn thận">
+Với indie founder, freemium là con dao hai lưỡi. Nếu free tier quá hào phóng, bạn sẽ phục vụ hàng nghìn người miễn phí, tốn support time, server cost — mà không có ai convert. Bạn không phải Slack, không có $10M để đốt cho user acquisition.
+</Callout>
+
+## Khi nào freemium KHÔNG phù hợp với indie
+
+- Khi mỗi user tốn tiền thật (AI API, storage, compute)
+- Khi sản phẩm cần onboarding tay — free user sẽ gửi support ticket nhưng không bao giờ trả tiền
+- Khi trigger upgrade không rõ — user dùng mãi free mà không có lý do cụ thể để upgrade
+
+Thay thế tốt hơn cho indie: **free trial có thời hạn** (14 ngày trial rồi phải trả) hoặc **freemium giới hạn rất cứng** (chỉ 1 project, không thể import data).
+
+<Callout title="Mẹo">
+Nếu bạn muốn thử freemium, hãy hỏi: "Nếu 10,000 người dùng free mãi không trả, tôi có chịu được không?" Nếu không, freemium chưa phải lúc — hoặc cần giới hạn cứng hơn nhiều.
+</Callout>
+
+<Callout title="Nhớ nhé">
+Freemium là kênh acquisition, không phải kênh monetization. Đo thành công bằng conversion rate từ free sang paid — không phải số user miễn phí.
+</Callout>
+
+## Đọc thêm
+
+- [Freemium model guide — Paddle](https://www.paddle.com/resources/freemium) — Phân tích chi tiết freemium là acquisition strategy, không phải pricing strategy, kèm case study Dropbox, Slack, Spotify.
+- [Recurring revenue guide — Paddle](https://www.paddle.com/resources/recurring-revenue) — Giúp bạn hiểu các chỉ số cần theo dõi khi kết hợp freemium với subscription (MRR, conversion rate).
+- [Pricing strategy guide — Paddle](https://www.paddle.com/resources/pricing-strategy) — So sánh freemium với trial và các mô hình khác, giúp bạn chọn đúng cho sản phẩm cụ thể.
+- [Subscription billing 101 — Stripe](https://stripe.com/resources/more/subscription-billing-101) — Giải thích freemium trong bối cảnh subscription model, kèm các mô hình billing phù hợp.
+
+## Tự kiểm tra
+
+1. Hai điều kiện để freemium hoạt động hiệu quả là gì? Lấy ví dụ một sản phẩm thỏa và một sản phẩm không thỏa.
+2. Sự khác biệt giữa "free trial 14 ngày" và "freemium plan" là gì? Khi nào nên chọn cái nào?
+3. Bạn build một SaaS dùng OpenAI API để tóm tắt email. Freemium có phù hợp không? Giải thích tại sao.

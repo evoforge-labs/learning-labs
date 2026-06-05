@@ -1,0 +1,69 @@
+---
+id: concept-mrr-arr
+title: "MRR & ARR (Doanh thu định kỳ)"
+type: "concept"
+aliases: ["MRR", "ARR", "monthly recurring revenue", "annual recurring revenue", "doanh thu định kỳ", "recurring revenue metrics"]
+tags: [mrr, metrics, saas, revenue, subscription, monetization, indie, founder, business, solo-builder]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Cân nặng của bạn hôm nay là 70kg. Tháng sau 71kg. Tháng sau nữa 69kg. Nhìn từng ngày thì rối — nhưng nhìn xu hướng theo tháng, bạn biết mình đang tiến hay lùi.
+
+MRR là cân nặng của SaaS — con số bạn xem mỗi tháng để biết business đang đi đâu.
+
+## Là gì
+
+**MRR — Monthly Recurring Revenue:** Tổng doanh thu định kỳ bạn nhận được mỗi tháng từ khách đang trả tiền. Nếu bạn có 50 khách trả $29/tháng, MRR = $1,450.
+
+**ARR — Annual Recurring Revenue:** MRR × 12. Dùng để nói chuyện với investor hoặc so sánh với công ty SaaS khác. ARR = $17,400 trong ví dụ trên.
+
+Hai con số này chỉ tính **recurring** — không tính phí setup một lần, không tính lifetime deal, không tính tư vấn.
+
+## Ví dụ thật
+
+Bạn có:
+- 30 khách gói $29/tháng → $870
+- 15 khách gói $79/tháng → $1,185
+- 2 khách gói $199/tháng → $398
+
+**MRR = $2,453. ARR = $29,436.**
+
+Tháng sau, 3 khách $29 rời đi (churn), nhưng 1 khách upgrade từ $29 lên $79. Net thay đổi: -$87 + $50 = **-$37 MRR**. Tháng đó bạn co lại.
+
+Đây là lý do MRR cần được phân tích thành 5 loại:
+
+- **New MRR:** từ khách mới
+- **Expansion MRR:** từ upgrade / mua thêm
+- **Churn MRR:** từ khách hủy (dấu âm)
+- **Contraction MRR:** từ downgrade (dấu âm)
+- **Net New MRR = New + Expansion - Churn - Contraction**
+
+<Callout title="Mẹo">
+Với indie founder, Expansion MRR là tín hiệu tốt nhất: khách hàng hiện tại trả thêm tiền vì thấy giá trị. Nếu bạn chỉ grow bằng New MRR mà không có Expansion, đó là dấu hiệu pricing tiers chưa hoạt động tốt.
+</Callout>
+
+## Tại sao MRR quan trọng hơn "tổng doanh thu"
+
+Một tháng bạn có $5,000 từ 3 lifetime deal. Tháng sau $0. Tổng doanh thu nhìn đẹp, nhưng MRR là $0 — vì không có gì tái diễn. MRR buộc bạn trung thực về *sức khỏe thật* của business.
+
+<Callout title="Cẩn thận">
+Sai lầm phổ biến: tính annual subscription vào MRR theo đúng giá năm thay vì chia 12. Nếu khách trả $240/năm, MRR của họ là $20 — không phải $240. Sai số này làm con số trông tốt hơn thực tế.
+</Callout>
+
+<Callout title="Nhớ nhé">
+MRR là nhịp tim của SaaS. Tháng nào nó tăng — bạn đang lớn. Tháng nào nó giảm — có vấn đề cần giải quyết. Đừng chỉ nhìn tổng, hãy hiểu *tại sao* nó thay đổi.
+</Callout>
+
+## Đọc thêm
+
+- [Monthly Recurring Revenue (MRR) guide — Paddle](https://www.paddle.com/resources/monthly-recurring-revenue) — Giải thích chi tiết các loại MRR, cách tính đúng, và 5 sai lầm phổ biến nhất khi tính MRR.
+- [Annual Recurring Revenue (ARR) guide — Paddle](https://www.paddle.com/resources/annual-recurring-revenue) — Sự khác biệt ARR vs MRR, cách tính ARR đúng, và những gì nên/không nên tính vào ARR.
+- [ARR guide — Stripe](https://stripe.com/resources/more/arr) — Giải thích ARR từ góc độ thực chiến, kèm hạn chế của metric này và cách kết hợp với chỉ số khác.
+- [SaaS metrics guide — Paddle](https://www.paddle.com/resources/saas-metrics) — Hướng dẫn toàn diện về 10 SaaS metrics quan trọng nhất, trong đó MRR/ARR là nền tảng.
+
+## Tự kiểm tra
+
+1. Bạn có 20 khách trả $49/tháng và 5 khách trả $99/tháng. MRR của bạn là bao nhiêu? ARR là bao nhiêu?
+2. Tháng này bạn có 3 khách mới ($29 mỗi người), 1 khách upgrade từ $29 lên $79, và 2 khách hủy ($29 mỗi người). Net New MRR thay đổi thế nào?
+3. Tại sao tính một annual subscription $240 vào MRR như $240 thay vì $20 là sai? Ảnh hưởng gì đến quyết định business?

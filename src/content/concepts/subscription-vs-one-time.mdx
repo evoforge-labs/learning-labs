@@ -1,0 +1,61 @@
+---
+id: concept-subscription-vs-one-time
+title: "Thuê bao vs Mua đứt"
+type: "concept"
+aliases: ["subscription vs one-time", "thuê bao", "mua đứt", "recurring payment", "one-time payment", "subscription model"]
+tags: [pricing, subscription, monetization, indie, founder, saas, revenue, business, solo-builder]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Netflix hay mua đĩa DVD? Spotify hay mua album? Câu trả lời đã thay đổi hoàn toàn trong vòng 10 năm — không phải vì người ta thích "thuê" hơn, mà vì *giá trị liên tục* đi kèm thuê bao tốt hơn nhiều so với mua đứt một lần.
+
+Với sản phẩm của bạn, câu hỏi cũng tương tự.
+
+## Là gì
+
+**Subscription (thuê bao):** Khách hàng trả định kỳ (tháng/năm) để dùng sản phẩm. Bạn nhận **recurring revenue** — doanh thu dự đoán được, tích lũy theo thời gian.
+
+**One-time (mua đứt):** Khách trả một lần, dùng mãi. Bạn nhận tiền ngay, nhưng mỗi tháng lại phải tìm khách mới.
+
+Không có cái nào "đúng" tuyệt đối — nhưng chúng có trade-off rất khác nhau.
+
+## Ví dụ thật
+
+Một developer làm tool chuyển đổi PDF cho desktop. Họ có hai lựa chọn:
+
+- **Mua đứt $49:** Thu $49 ngay. Nhưng khi mọi khách đã mua, doanh thu về 0. Mỗi tháng phải tìm sóng mới.
+- **Subscription $9/tháng:** Thu chậm hơn (cần ~5.5 tháng để hòa vốn). Nhưng sau đó mỗi tháng tiền vẫn về, kể cả khi bạn ngủ.
+
+Với SaaS có **giá trị liên tục** (dữ liệu luôn cập nhật, tính năng mới ra thường xuyên, sync qua nhiều thiết bị), subscription hợp lý. Khách hàng cũng quen trả định kỳ cho những thứ họ dùng mỗi ngày.
+
+Với tool **một lần dùng xong** (converter, template, plugin), mua đứt đôi khi tự nhiên hơn — và tránh cảm giác "tại sao tôi phải trả mãi cho cái này?".
+
+<Callout title="Mẹo">
+Một cách trung gian ngày càng phổ biến: **lifetime deal** — mua một lần, dùng mãi. Tốt để thu tiền nhanh ban đầu, nhưng hãy cẩn thận: bạn đang bán nghĩa vụ support vĩnh viễn với giá một lần. Đặt giới hạn rõ ràng (VD: lifetime cho v1, không bao gồm major upgrade).
+</Callout>
+
+## Tại sao SaaS ưa subscription
+
+Subscription không chỉ tốt cho bạn — nó tốt cho khách hàng khi sản phẩm liên tục cải thiện. Nhưng nó yêu cầu bạn phải *liên tục tạo ra giá trị* — nếu tháng này tool không hữu ích, khách hủy. Churn (tỷ lệ khách rời đi) là con số bạn phải theo dõi sát.
+
+<Callout title="Cẩn thận">
+Đừng chọn subscription chỉ vì "nghe hay hơn". Nếu sản phẩm của bạn không có lý do để dùng mỗi tháng, khách sẽ cảm thấy bị "vắt kiệt". Điều đó dẫn đến churn cao và reputation xấu.
+</Callout>
+
+<Callout title="Nhớ nhé">
+Subscription = cam kết hai chiều. Khách cam kết trả đều. Bạn cam kết tạo giá trị đều. Nếu chỉ một phía giữ cam kết, model này sẽ vỡ.
+</Callout>
+
+## Đọc thêm
+
+- [Subscription billing 101 — Stripe](https://stripe.com/resources/more/subscription-billing-101) — Giải thích toàn diện về subscription billing: các mô hình giá, lợi ích, và cách triển khai kỹ thuật.
+- [Recurring revenue guide — Paddle](https://www.paddle.com/resources/recurring-revenue) — Phân tích các loại recurring revenue, các chỉ số cần theo dõi (MRR, ARR, ARPU, LTV).
+- [Pricing strategy guide — Paddle](https://www.paddle.com/resources/pricing-strategy) — So sánh subscription vs các mô hình khác, kèm hướng dẫn chọn value metric phù hợp.
+- [Startup pricing 101 — Y Combinator Library](https://www.ycombinator.com/library/6h-the-art-of-pricing) — Góc nhìn của YC về khi nào nên dùng recurring vs one-time cho early-stage startup.
+
+## Tự kiểm tra
+
+1. Tại sao subscription model đòi hỏi bạn phải chú ý đến "churn" nhiều hơn one-time model?
+2. Một tool tạo logo AI cho designer: subscription $15/tháng hay mua đứt $79 — cái nào phù hợp hơn và tại sao?
+3. "Lifetime deal" có lợi thế gì cho indie founder khi mới launch? Rủi ro tiềm ẩn nào cần cân nhắc?

@@ -1,0 +1,48 @@
+---
+id: concept-churn
+title: "Churn (Tỷ lệ rời bỏ)"
+type: "concept"
+aliases: ["churn rate", "tỷ lệ rời bỏ", "customer churn", "subscriber churn", "monthly churn"]
+tags: [indie, founder, business, metrics, churn, retention, sustainability, growth]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Bạn đang đổ nước vào một cái xô — nhưng cái xô bị thủng. Càng đổ nhanh, bạn cảm thấy ổn. Nhưng thực ra nước đang chảy ra gần bằng tốc độ bạn đổ vào. Thêm khách hàng mới mà không bịt chỗ rò? Bạn đang chạy tại chỗ trong khi cạn dần ngân sách.
+
+## Là gì
+
+**Churn** là tỷ lệ khách hàng (hoặc doanh thu) mà bạn mất đi trong một kỳ nhất định. Công thức cơ bản:
+
+> Churn rate = Số khách mất đi trong tháng / Tổng khách đầu tháng × 100%
+
+Nếu đầu tháng bạn có 100 khách, cuối tháng còn 93 — churn rate là 7%.
+
+Tại sao churn lại nguy hiểm đến vậy? Vì nó **giới hạn quy mô tối đa** mà bạn có thể đạt được. Nếu churn 10%/tháng, mô hình của bạn về lý thuyết sẽ ổn định ở mức: số khách mới mỗi tháng = 10% tổng khách. Muốn lớn hơn mốc đó? Không thể — trừ khi bịt lỗ trước.
+
+## Ví dụ thật
+
+Một indie SaaS có 200 khách, churn 8%/tháng, và mỗi tháng kéo được 20 khách mới. Nghe có vẻ tăng trưởng — nhưng 200 × 8% = 16 khách rời đi mỗi tháng. Net growth thực = 20 - 16 = 4 khách/tháng. Nếu churn tăng lên 10%, thì 200 × 10% = 20 rời đi — net growth về 0, mặc dù vẫn đang "thu hút khách".
+
+Churn thường do ba nguyên nhân: sản phẩm không còn phù hợp, cạnh tranh rẻ hơn/tốt hơn, hoặc khách hàng không đạt được giá trị họ kỳ vọng (activation thất bại). Nhóm thứ ba thường bị bỏ qua — và thường là nhóm lớn nhất.
+
+<Callout title="Cẩn thận">
+Đừng nhìn vào tổng số khách hàng để đánh giá sức khỏe. Một startup có 1.000 khách mà churn 15%/tháng đang tệ hơn startup 200 khách với churn 2%/tháng — về mặt unit economics lẫn triển vọng dài hạn.
+</Callout>
+
+<Callout title="Nhớ nhé">
+Với indie SaaS bootstrapped, churn nên là việc bạn fix *trước* khi đổ tiền vào acquisition. Mỗi đồng bạn chi để kéo khách mới trong khi churn còn cao là đồng tiền đang chảy ra xô thủng. Xem thêm: [Retention](/concepts/retention).
+</Callout>
+
+## Đọc thêm
+
+- [SaaS Churn — Baremetrics](https://baremetrics.com/blog/saas-churn): Giải thích chi tiết về churn trong SaaS, cách phân loại (voluntary vs. involuntary churn), và benchmark theo ngành.
+- [Understanding Churn and How to Reduce It — Indie Hackers](https://www.indiehackers.com/post/understanding-churn-and-how-to-reduce-it-8e524e91cc): Indie founder chia sẻ cách phân tích nguyên nhân churn và các tactics giảm churn thực tế không cần team lớn.
+- [How to Reduce Churn — Baremetrics](https://baremetrics.com/blog/reduce-churn): Hướng dẫn thực hành giảm churn với chiến lược cụ thể từ phân tích exit survey đến dunning management.
+- [Retention & Engagement — Reforge](https://www.reforge.com/blog/retention-engagement-growth): Framework phân tích retention và churn theo vòng đời người dùng; giúp xác định đúng chỗ rò trong sản phẩm.
+
+## Tự kiểm tra
+
+1. Indie SaaS của bạn có 150 khách đầu tháng, thu hút thêm 25 khách mới, và mất 18 khách. Churn rate là bao nhiêu? Net growth là bao nhiêu?
+2. Churn 5%/tháng nghe có vẻ nhỏ — nhưng trong một năm, nó tương đương với bao nhiêu phần trăm khách hàng rời bỏ? (Gợi ý: tính lũy kế 12 tháng.)
+3. Tại sao việc fix churn lại quan trọng hơn tăng acquisition trong giai đoạn đầu của một indie SaaS? Liên hệ với khái niệm LTV và CAC.
