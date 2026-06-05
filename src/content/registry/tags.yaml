@@ -168,6 +168,31 @@ tags:
   - rag-evaluation
   - agent-evaluation
   - llmops
+  - ai-assisted-development
+  - agentic-coding
+  - coding-agents
+  - dev-workflow
+  - spec-driven
+  - pair-programming
+  - code-review
+  - tdd
+  - debugging
+  - code-smells
+  - claude-md
+  - agents-md
+  - slash-commands
+  - skills
+  - subagents
+  - worktrees
+  - plan-mode
+  - context-management
+  - token-budget
+  - cost
+  - agent-security
+  - developer-productivity
+  - verification
+  - refactoring
+  - orchestration
   - prompt-caching
   - cost-optimization
   - fine-tuning

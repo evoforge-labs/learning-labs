@@ -1,0 +1,50 @@
+---
+id: concept-debugging-with-agents
+title: "Debugging with AI Agents"
+type: "concept"
+aliases: ["debug với agent", "AI debugging", "sửa bug với agent", "debugging decay"]
+tags: [ai-engineering, debugging, agents, agentic-coding, quality, context-management]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Có một bẫy khi debug cùng agent: bạn thấy lần đầu agent không fix được, bạn giải thích thêm. Lần hai vẫn sai, bạn paste thêm error log. Lần ba agent có vẻ tự tin hơn nhưng lỗi mới xuất hiện. Context của phiên giờ đầy lý giải sai + giải pháp thất bại — và agent tiếp tục *xây lên đống đó*. Bạn không đang debug nữa, bạn đang chất đống suy luận lỗi.
+
+## Là gì
+
+**Debugging Decay Index** (2026) đo hiện tượng hiệu quả debug của agent *tụt* 60-80% sau 2-3 lần thử thất bại trong cùng một phiên. Mỗi lần fail, context nhồi thêm error message + giải thích bịa — agent lần sau không bắt đầu từ đầu mà từ *đống lỗi tích lũy*. Càng nhiều lần thử, model càng drift xa nguyên nhân thực.
+
+Quy tắc thực chiến từ đây: **dừng sau 2-3 lần, reset phiên mới với mô tả gọn.**
+
+## Ví dụ thật
+
+Bug: API trả 500 khi gọi `/users/:id` với ID không tồn tại.
+
+**Sai:** Paste stack trace lần 1 → agent sửa null check → còn lỗi → paste log lần 2 → agent thêm try/catch → lỗi khác → lần 3... Sau 5 lần, code thêm 3 tầng defensive wrapper, bug gốc vẫn còn.
+
+**Đúng:**
+1. Viết test fail tái hiện đúng bug: `GET /users/99999 nên trả 404, đang trả 500`.
+2. Cho agent chạy test, đọc kết quả, fix.
+3. Nếu 2-3 lần agent không xong → đóng phiên, mở phiên mới, prompt gọn: *"GET /users/:id với ID không tồn tại trả 500 thay vì 404. File liên quan: `user.controller.ts`, `user.service.ts`. Fix và verify bằng test."*
+
+Test suite là nền tảng: nó cho agent tín hiệu rõ ràng "đúng/sai" thay vì agent đoán từ mô tả.
+
+<Callout title="Cẩn thận">
+Đừng nhồi thêm error log vào phiên đang thất bại. Mỗi lần nhồi, agent "học" từ context sai nhiều hơn. Reset sớm hơn bao giờ hết tốt hơn giải thích thêm.
+</Callout>
+
+<Callout title="Nhớ nhé">
+Luật cứng: **dừng sau 2-3 lần thất bại, reset phiên mới với mô tả gọn + test fail tái hiện bug**. Không reset = cộng thêm entropy, không trừ.
+</Callout>
+
+## Đọc thêm
+
+- [The Debugging Decay Index — arXiv 2506.18403](https://arxiv.org/abs/2506.18403) — Nghiên cứu 2026 đo lường hiệu quả debug của code LLM giảm qua từng lần thử; giải thích tại sao iterative debugging với context tích lũy phản tác dụng.
+- [Simon Willison — Agentic Engineering](https://simonwillison.net/tags/agentic-engineering/) — Bài "Thoughts on slowing the fuck down" và các bài 2026 về cách agent code compounds mistakes — thực tiễn reset phiên thay vì nhồi context.
+- [Best Practices — Claude Code Docs](https://code.claude.com/docs/en/best-practices) — Phần "Address root causes, not symptoms" và "Course-correct early and often": hướng dẫn chính thức về khi nào dùng `/clear` và `/rewind` để reset thay vì tiếp tục sai hướng.
+
+## Tự kiểm tra
+
+1. "Debugging Decay" xảy ra vì cơ chế nào? Tại sao context tích lũy error lại làm agent tệ hơn thay vì thông minh hơn?
+2. Agent đã thử sửa bug 3 lần, mỗi lần fix thêm một tầng try/catch. Bug vẫn còn. Bạn làm gì tiếp theo?
+3. Tại sao viết test fail tái hiện bug *trước* khi debug quan trọng hơn mô tả bug bằng lời?

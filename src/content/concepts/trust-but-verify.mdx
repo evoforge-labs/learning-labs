@@ -1,0 +1,52 @@
+---
+id: concept-trust-but-verify
+title: "Trust but Verify"
+type: "concept"
+aliases: ["trust but verify", "tin tưởng nhưng kiểm chứng", "verify agent output"]
+tags: [agentic-coding, dev-workflow, verification, ai-assisted-development, quality]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Bạn thuê thợ sơn nhà. Bạn không đứng nhìn từng nét cọ — nhưng khi xong, bạn không chỉ hỏi "anh sơn xong chưa?" rồi trả tiền. Bạn đi xem: góc khuất có đều không, màu có đúng không, sàn có bị dính sơn không. Bạn *tin tưởng* họ làm — nhưng bạn *kiểm chứng* kết quả bằng mắt thấy tay sờ.
+
+Làm việc với coding agent cũng đòi hỏi đúng cái đó.
+
+## Là gì
+
+**Trust but verify** trong agentic coding có nghĩa: để agent làm việc tự chủ, nhưng *cho nó một check tự chạy được* — và yêu cầu *bằng chứng* thay vì lời tuyên bố "đã xong".
+
+Ba lớp verify:
+1. **Check tự động trong vòng lặp**: test, build, lint — agent chạy rồi tự sửa trước khi dừng
+2. **Bằng chứng cụ thể**: bạn xem test output thực tế, không phải nghe "test pass rồi"
+3. **Review của bạn**: đọc diff, kiểm tra logic — agent có thể pass test mà vẫn sai business logic
+
+## Ví dụ thật
+
+Cách sai: *"Thêm input validation cho form đăng ký."* — Agent báo "xong rồi". Bạn merge.
+
+Cách đúng: *"Thêm input validation. Viết test cho các trường hợp: email không hợp lệ, password quá ngắn, username trùng. Chạy test và cho tôi xem output."*
+
+Bây giờ agent có một check tự chạy được. Nếu test fail, nó biết phải sửa. Khi nó dừng, bạn có *bằng chứng* — test output thật — không phải lời hứa.
+
+Claude Code gọi đây là "give Claude something to verify against" — và note rằng đây là sự khác biệt giữa session bạn phải ngồi canh và session bạn có thể bỏ đi làm việc khác.
+
+<Callout title="Mẹo">
+Khi giao task, hãy kết thúc prompt bằng: *"Chạy [test/build/lệnh cụ thể] và cho tôi xem output."* Câu này biến agent từ "báo cáo tự đánh giá" thành "trình bằng chứng". Bạn review bằng chứng — không phải code thô từ đầu.
+</Callout>
+
+<Callout title="Nhớ nhé">
+Cho agent một check tự chạy được → nó tự sửa trước khi dừng. Yêu cầu bằng chứng → bạn review nhanh hơn và chính xác hơn.
+</Callout>
+
+## Đọc thêm
+
+- [Best practices for Claude Code — Anthropic](https://code.claude.com/docs/en/best-practices) — Mục "Give Claude a way to verify its work": chiến lược cụ thể từ test cases đến screenshot so sánh UI — cách biến agent thành vòng lặp tự đóng.
+- [Harness engineering for coding agent users — Martin Fowler](https://martinfowler.com/articles/harness-engineering.html) — Tư duy về harness như "guides + sensors": sensors (test, lint, build) là cơ chế feedback cho agent tự sửa — bài viết April 2026.
+- [My LLM coding workflow going into 2026 — Addy Osmani](https://addyosmani.com/blog/ai-coding-workflow/) — Workflow thực chiến: review nhiều lớp, commit nhỏ để dễ revert, và tại sao developer vẫn là người "chịu trách nhiệm cuối".
+
+## Tự kiểm tra
+
+1. Agent báo "tôi đã thêm xử lý lỗi cho API call". Bạn sẽ hỏi gì để có *bằng chứng* thay vì chỉ nghe lời tuyên bố?
+2. Test pass nhưng code vẫn sai — điều này có thể xảy ra như thế nào? Lớp verify nào của bạn bắt được trường hợp này?
+3. Tại sao "give the agent a check it can run" lại quan trọng hơn "review kỹ output của agent"?

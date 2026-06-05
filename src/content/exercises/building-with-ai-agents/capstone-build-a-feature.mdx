@@ -1,0 +1,62 @@
+---
+id: exercise-bswa-007
+title: "Capstone: Dùng agent build một feature end-to-end"
+type: "exercise"
+track: building-with-ai-agents
+tags: [ai-assisted-development, agentic-coding, dev-workflow, spec-driven, tdd, code-review]
+estimatedMinutes: 120
+related: [lesson-bswa-005, concept-spec-driven-development, concept-plan-then-execute, concept-tdd-with-agents, concept-verification-before-completion, concept-reviewing-ai-code, rubric-building-with-ai-agents]
+status: published
+---
+import Callout from '../../../components/content/Callout.astro';
+
+Đây là bài tổng hợp cả track. Bạn sẽ thực sự **dùng một coding agent (Claude Code/Cursor) để build một feature nhỏ nhưng thật** — và áp dụng đúng quy trình "on the loop" của cả 6 module, chứ không vibe-code.
+
+## Tình huống
+
+Chọn **một feature nhỏ có thật** trong một dự án của bạn (hoặc một dự án mẫu), ví dụ:
+
+- Thêm endpoint export CSV cho một danh sách.
+- Thêm tính năng "đánh dấu yêu thích" với lưu trạng thái.
+- Viết một CLI command mới có validate input.
+
+Yêu cầu: feature phải **đủ nhỏ để xong trong 1-2 giờ** nhưng **đủ thật để có test, có edge case, có thể sai**.
+
+<Callout title="Nhớ nhé">
+Điểm cao không thuộc về "agent viết xong nhanh nhất" — mà về việc bạn *dựng đúng quy trình* để output đáng tin: có spec, có check tự chạy, có review bắt được lỗi. Bạn là kỹ sư chịu trách nhiệm cho mọi dòng được merge.
+</Callout>
+
+## Nhiệm vụ
+
+Đi qua 6 bước, ghi lại *bạn đã làm gì và vì sao* ở mỗi bước.
+
+### Bước 1 — Spec & chỉ dẫn (M1, M2)
+- Viết một **spec ngắn** cho feature: hành vi test được, scope, boundary "Always/Ask/Never" ([concept-spec-driven-development](/concepts/spec-driven-development)).
+- Nêu feature này thuộc loại nên giao agent hay nên tự làm phần nào ([concept-when-to-use-agents](/concepts/when-to-use-agents)).
+- Bạn thêm/sửa gì trong CLAUDE.md để agent không làm sai ([concept-agent-instructions-file](/concepts/agent-instructions-file))?
+
+### Bước 2 — Plan (M5)
+- Dùng **plan mode**: cho agent đọc codebase và đề xuất kế hoạch *trước khi sửa* ([concept-plan-then-execute](/concepts/plan-then-execute)). Dán/ghi lại bản plan và *bạn đã sửa gì* trong plan đó.
+
+### Bước 3 — Implement theo mẩu (M2, M5)
+- Chia thành các mẩu nhỏ test được ([concept-breaking-down-tasks](/concepts/breaking-down-tasks)); lặp tinh chỉnh từng mẩu, sửa hướng sớm ([concept-iterative-refinement](/concepts/iterative-refinement)).
+
+### Bước 4 — TDD & Verify (M4)
+- Ràng buộc agent bằng test ([concept-tdd-with-agents](/concepts/tdd-with-agents)); đưa cho agent một **check tự chạy được** và yêu cầu nó show *bằng chứng* pass ([concept-verification-before-completion](/concepts/verification-before-completion)).
+- Nếu debug quá 2-3 lần không xong, bạn làm gì ([concept-debugging-with-agents](/concepts/debugging-with-agents))?
+
+### Bước 5 — Review (M4)
+- Tự review (hoặc dùng reviewer subagent ở context mới) ([concept-reviewing-ai-code](/concepts/reviewing-ai-code)). Liệt kê **mọi "AI code smell"** bạn tìm thấy và đã xử lý thế nào ([concept-ai-code-smells](/concepts/ai-code-smells)).
+
+### Bước 6 — Nhìn lại (M6)
+- Nếu cả team làm thế này: 1 điều bạn rút ra về **cost/context** ([concept-managing-agent-context](/concepts/managing-agent-context), [concept-dev-cost-token-budget](/concepts/dev-cost-token-budget)) và 1 rủi ro **security/injection** cần để ý ([concept-agent-security-risks](/concepts/agent-security-risks)).
+
+## Sản phẩm nộp
+
+1. Feature chạy được + test pass (kèm bằng chứng: output test/lệnh).
+2. Spec + bản plan đã duyệt.
+3. Một đoạn ghi chú "review notes": smells tìm thấy, chỗ bạn phải sửa tay, chỗ bạn từ chối thứ agent đề xuất.
+
+## Tiêu chí đánh giá
+
+Xem [Building with AI Agents Rubric](../../rubrics/building-with-ai-agents-rubric). Hai chỗ quan trọng nhất: **có cơ chế verify tự chạy** (Bước 4) và **review có kỷ luật bắt được smell** (Bước 5). Một feature "agent bảo xong" mà bạn không tự chứng minh được nó đúng, hoặc merge mà không đọc, sẽ bị chấm thấp dù nó "chạy được trên máy tôi".

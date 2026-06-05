@@ -1,0 +1,118 @@
+---
+id: exercise-bswa-004
+title: "Review một PR do agent sinh ra"
+type: "exercise"
+track: building-with-ai-agents
+tags: [ai-engineering, code-review, tdd, verification, debugging, agents, agentic-coding, quality]
+estimatedMinutes: 30
+related:
+  - lesson-bswa-004
+  - concept-reviewing-ai-code
+  - concept-ai-code-smells
+  - concept-verification-before-completion
+  - rubric-building-with-ai-agents
+status: published
+---
+import Callout from '../../../components/content/Callout.astro';
+
+## Tình huống
+
+Agent vừa tạo một PR thêm chức năng **"xuất báo cáo chi tiêu ra file"** cho app quản lý tài chính nội bộ. Đây là mô tả diff:
+
+---
+
+**File thay đổi: `src/services/expense.service.ts`**
+
+Agent thêm method `exportExpenses()`:
+
+```typescript
+import { PDFExporter } from 'pdf-export-toolkit';
+import { ExportStrategy } from '../interfaces/IExportStrategy';
+import { ExpenseRepository } from '../repositories/IExpenseRepository';
+
+export class ExpenseService {
+  constructor(
+    private readonly repo: ExpenseRepository,
+    private readonly exporter: PDFExporter = new PDFExporter()
+  ) {}
+
+  async exportExpenses(userId: string, format: 'pdf' | 'csv'): Promise<Buffer> {
+    const expenses = await this.repo.findByUser(userId);
+    const strategy: ExportStrategy = ExportStrategyFactory.create(format);
+    return strategy.export(expenses);
+  }
+}
+```
+
+**File thêm mới: `src/interfaces/IExportStrategy.ts`** — interface `ExportStrategy` với method `export()`.
+
+**File thêm mới: `src/factories/ExportStrategyFactory.ts`** — factory chọn strategy theo format.
+
+**File thay đổi: `src/services/auth.service.ts`** — agent "tiện tay" refactor phần xử lý token sang `TokenUtils`.
+
+**Test thêm: `src/services/expense.service.spec.ts`**
+
+```typescript
+it('should export expenses', async () => {
+  const result = await service.exportExpenses('user-1', 'pdf');
+  expect(result).toBeDefined();
+});
+```
+
+---
+
+<Callout title="Mẹo">
+Đừng đọc code và hỏi "trông đúng không". Đọc với mục tiêu: *"mùi nào tôi thấy, và làm sao kiểm chứng từng cái?"*
+</Callout>
+
+## Nhiệm vụ
+
+### Nhiệm vụ 1 — Nhận diện AI Code Smells (12 phút)
+
+Đọc diff và liệt kê các "AI code smell" bạn nghi ngờ. Với **mỗi mùi**:
+
+1. Nêu tên mùi (từ danh sách 5 mùi trong [concept-ai-code-smells](/concepts/ai-code-smells)).
+2. Chỉ ra chỗ cụ thể trong diff.
+3. Mô tả cách kiểm chứng: bạn chạy lệnh gì, tra cứu gì, hay hỏi ai để xác nhận đây thực sự là vấn đề?
+
+Ít nhất 3 mùi khác nhau. Mùi phải cụ thể — không phải "code dài" hay "khó đọc".
+
+### Nhiệm vụ 2 — Viết "check tự chạy" (10 phút)
+
+Bạn muốn agent (hoặc CI) có thể tự verify diff này thực sự đúng trước khi merge. Hãy thiết kế verification cho PR này:
+
+1. **Test cần thêm hoặc sửa:** Test hiện tại (`expect(result).toBeDefined()`) có phát hiện lỗi thực không? Viết lại hoặc bổ sung ít nhất 1 test case thực sự có thể fail khi tính năng hỏng.
+
+2. **Check tự chạy:** Viết prompt bạn sẽ dùng để yêu cầu agent tự verify PR này. Prompt phải bao gồm: (a) lệnh check cụ thể, (b) kết quả mong đợi, (c) yêu cầu show output thật thay vì chỉ nói "pass".
+
+3. **Hallucinated API check:** `pdf-export-toolkit` nghe hợp lý — nhưng bạn chưa biết nó có thật không. Mô tả quy trình 2 bước bạn làm để kiểm chứng package này trước khi approve PR.
+
+### Nhiệm vụ 3 — Khi agent debug thất bại (8 phút)
+
+Giả sử sau khi merge, xuất hiện bug: `exportExpenses()` trả về Buffer rỗng với format CSV. Bạn giao agent sửa. Agent thử 3 lần:
+
+- **Lần 1:** Thêm `console.log` debug, báo "đã xác định vấn đề ở ExportStrategyFactory".
+- **Lần 2:** Sửa factory, bug vẫn còn. Agent thêm null check.
+- **Lần 3:** Thêm try/catch bao quanh toàn bộ method, báo "đã xử lý edge case".
+
+Buffer CSV vẫn rỗng. Bạn làm gì tiếp theo? Trả lời:
+
+1. Đây có phải lúc thử lần 4 không? Tại sao?
+2. Trước khi mở phiên mới, bạn cần viết gì để phiên mới bắt đầu đúng chỗ?
+3. Prompt mở đầu phiên mới của bạn trông như thế nào? (Gọn, có test fail, có file liên quan.)
+
+<Callout title="Cẩn thận">
+Không có đáp án duy nhất đúng — đánh giá theo lập luận nhất quán và thực tế. Xem [Building with AI Agents Rubric](../../rubrics/building-with-ai-agents-rubric) để biết tiêu chí cụ thể.
+</Callout>
+
+## Tiêu chí tự đánh giá
+
+Sau khi hoàn thành, kiểm tra:
+
+- [ ] Liệt kê được ít nhất 3 AI code smell khác nhau với chứng cứ cụ thể từ diff?
+- [ ] Giải thích được tại sao test `expect(result).toBeDefined()` không đủ?
+- [ ] Viết được ít nhất 1 test case có thể fail khi tính năng thực sự hỏng?
+- [ ] Prompt verify yêu cầu agent show output thật, không chỉ "nói" kết quả?
+- [ ] Mô tả được quy trình kiểm tra package `pdf-export-toolkit` có thật không?
+- [ ] Quyết định reset phiên sau 3 lần thất bại và giải thích được tại sao?
+- [ ] Prompt phiên mới gọn, có test fail tái hiện bug, có file liên quan?

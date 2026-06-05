@@ -1,0 +1,60 @@
+---
+id: lesson-bswa-001
+title: "Agent là cộng sự, bạn là kỹ sư chịu trách nhiệm"
+type: "lesson"
+track: building-with-ai-agents
+module: mindset
+level: beginner
+tags: [ai-assisted-development, agentic-coding, dev-workflow, mindset, coding-agents]
+prerequisites: [concept-ai-assisted-development, concept-agentic-coding, concept-when-to-use-agents, concept-trust-but-verify, concept-agent-as-collaborator]
+related: [exercise-bswa-001, rubric-building-with-ai-agents]
+status: published
+---
+import Callout from '../../../components/content/Callout.astro';
+
+Một sự thật đáng ngạc nhiên: hai developer dùng cùng agent, cùng model — nhưng người thứ nhất ship code tốt hơn hẳn người thứ hai. Lý do không phải prompt. Lý do là **tư duy**.
+
+Module này không dạy bạn cách dùng tool. Nó dạy bạn cách *nghĩ* về mối quan hệ giữa bạn và agent — vì tư duy đó quyết định mọi thứ còn lại.
+
+## Agentic coding khác autocomplete ở đâu?
+
+[Agentic coding](/concepts/agentic-coding) là khi agent *chạy code nó viết*. Vòng lặp: thu thập context → hành động → xem kết quả → lặp lại. Đây không phải chatbot gợi ý code — agent thực sự mở file, chạy test, đọc lỗi, sửa lại.
+
+Điều này tạo ra sức mạnh lớn, và rủi ro lớn tương ứng. Agent có thể làm nhiều hơn bạn kỳ vọng — đúng cả hai nghĩa.
+
+## Giao gì, giữ gì?
+
+[Bộ lọc](/concepts/when-to-use-agents) không phải "việc lớn hay nhỏ" — mà là hai câu hỏi:
+
+- **Verify được không?** Có test tự chạy, build pass/fail rõ ràng, output so sánh được?
+- **Cần phán đoán gì agent thiếu context?** Logic nghiệp vụ phức tạp, yêu cầu mơ hồ, security-critical?
+
+Nếu verify được và không cần phán đoán phức tạp — giao đi. Còn lại — bạn tham gia trực tiếp.
+
+<Callout title="Mẹo">
+Khi không chắc có nên giao không, thử hỏi: "Nếu agent làm sai, tôi biết ngay không?" Nếu không biết — chưa nên giao.
+</Callout>
+
+## Trust but verify: đừng chỉ nhận "xong rồi"
+
+[Trust but verify](/concepts/trust-but-verify) là nguyên tắc vận hành cốt lõi. Ba bước:
+
+1. **Cho agent một check tự chạy được** — test, build, lint. Agent sẽ tự sửa trước khi dừng.
+2. **Yêu cầu bằng chứng** — không phải "tôi đã làm xong", mà là "đây là test output".
+3. **Bạn review bằng chứng** — nhanh và chính xác hơn review code thô từ đầu.
+
+Đây là cách bạn để agent làm việc tự chủ *mà không mất quyền kiểm soát chất lượng*.
+
+## Vị trí đúng: on the loop
+
+[Agent là cộng sự](/concepts/agent-as-collaborator), không phải nhân viên cần giám sát từng bước, cũng không phải hộp đen nhận input trả output.
+
+Vị trí đúng của bạn là **"on the loop"**: bạn quyết định giao gì, thiết kế check để verify, review kết quả — và chịu trách nhiệm toàn bộ những gì agent ship. Agent thực thi; bạn là kỹ sư kiến trúc và chủ sở hữu chất lượng.
+
+Kỹ năng của bạn không bớt đi khi dùng agent. Nó chuyển hướng: từ "viết code" sang "biết khi nào agent sai, tại sao, và làm gì tiếp theo".
+
+<Callout title="Nhớ nhé">
+AI trải khắp SDLC, nhưng chất lượng là lựa chọn của bạn. Dùng agent đúng cách = giao đúng việc + verify có hệ thống + đứng on the loop.
+</Callout>
+
+Thực hành ngay với [bài phân loại task →](/exercises/building-with-ai-agents/m1-when-to-delegate)

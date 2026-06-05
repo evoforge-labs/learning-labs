@@ -1,0 +1,58 @@
+---
+id: concept-slash-commands-and-skills
+title: "Slash Commands & Skills"
+type: "concept"
+aliases: ["slash command", "skill", "custom command", "SKILL.md", "/skill", "claude skills"]
+tags: [building-with-ai-agents, skills, slash-commands, workflow, productivity, claude-code, context-management]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Hãy nghĩ về skill như một công thức nấu ăn được đóng gói sẵn: thay vì mỗi lần nấu phở phải nhớ lại từng bước, bạn chỉ cần nói "nấu phở" và đầu bếp biết phải làm gì. CLAUDE.md là thực đơn luôn trên bàn — còn skill là công thức chi tiết chỉ lấy ra khi cần.
+
+## Là gì
+
+**Skill** trong Claude Code là file `SKILL.md` đặt trong `.claude/skills/<tên>/`. Khi bạn gõ `/tên-skill`, Claude nạp nội dung skill đó vào context và thực hiện workflow được mô tả trong đó.
+
+Tại sao không chỉ dùng CLAUDE.md? Vì CLAUDE.md **nạp mỗi session** — nếu nhồi tất cả workflow vào đó, context ngốn token ngay từ đầu dù bạn không cần dùng hết. Skill nạp **theo nhu cầu**: chỉ khi bạn gọi `/deploy-staging` thì nội dung của workflow deploy mới vào context.
+
+Phân biệt skill với subagent:
+- **Skill**: kiến thức và workflow, chạy trong context chính của session hiện tại
+- **Subagent**: một "nhân viên" riêng với context window độc lập (xem [concept-subagents-for-dev](/concepts/subagents-for-dev))
+
+Slash command là cách gọi skill: `/fix-issue 1234`, `/code-review`, `/deploy-staging`. Trước kia "custom command" và "skill" là hai thứ riêng — từ 2025 đã hợp nhất, cả hai đều dùng cùng cơ chế.
+
+## Ví dụ thật
+
+Bạn review code PR mỗi ngày và luôn phải nhớ: đọc diff → kiểm tra test coverage → check security pattern. Thay vì nhắc lại mỗi lần, bạn tạo:
+
+```markdown
+<!-- .claude/skills/pr-review/SKILL.md -->
+---
+name: pr-review
+description: Review a pull request diff for correctness, security, and test coverage
+---
+Review the current git diff:
+1. Run `git diff main` to see changes
+2. Check if new code paths have test coverage
+3. Look for hardcoded secrets or SQL injection patterns
+4. Summarize findings as: APPROVE / REQUEST_CHANGES with bullet points
+```
+
+Từ đó: `/pr-review` → Claude biết chính xác phải làm gì, không cần bạn mô tả lại.
+
+<Callout title="Nhớ nhé">
+Skill phù hợp nhất với workflow bạn lặp lại nhiều lần nhưng chỉ dùng một phần thời gian. Nếu bạn cần làm gì đó mỗi session mọi lúc — đặt vào CLAUDE.md. Nếu chỉ thỉnh thoảng — đặt vào skill để giữ CLAUDE.md ngắn gọn.
+</Callout>
+
+## Đọc thêm
+
+- [Extend Claude with skills — Claude Code Docs](https://code.claude.com/docs/en/skills) — Tài liệu chính thức: cách tạo SKILL.md, frontmatter options, invocation control, chạy skill trong subagent — bắt đầu ở đây.
+- [Best practices for Claude Code](https://code.claude.com/docs/en/best-practices) — Phần "Create skills" và "Write an effective CLAUDE.md" giải thích khi nào dùng skill vs CLAUDE.md — có bảng so sánh rõ ràng.
+- [Claude Code Plugins — Anthropic Blog](https://claude.com/blog/claude-code-plugins) — Plugins là cách đóng gói và chia sẻ skill cho cả team hoặc cộng đồng — hiểu plugin giúp bạn tái sử dụng skill của người khác thay vì tự viết từ đầu.
+
+## Tự kiểm tra
+
+1. Bạn có một workflow kiểm tra lint → typecheck → build mỗi khi chuẩn bị commit. Bạn nên đặt workflow này vào CLAUDE.md hay tạo skill `/pre-commit`? Tại sao?
+2. Khi bạn gọi `/pr-review`, nội dung SKILL.md được nạp vào đâu — context của session hiện tại hay context riêng?
+3. Phân biệt skill và subagent: cả hai đều "làm việc thay bạn" — điểm khác nhau cốt lõi về context là gì?

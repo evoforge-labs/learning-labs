@@ -1,0 +1,59 @@
+---
+id: concept-ai-code-review-culture
+title: "AI Code Review Culture"
+type: "concept"
+aliases: ["ai code review culture", "văn hóa review AI", "review khi AI viết code", "người review agent", "ai-generated code review"]
+tags: [ai-code-review, team-culture, human-oversight, building-with-ai-agents, code-review, accountability]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Hãy tưởng tượng một nhà thầu xây dựng rất giỏi nhưng chưa bao giờ thấy bản vẽ của bạn, không biết đất nền có quirk gì, và sẽ không chịu trách nhiệm pháp lý nếu tường đổ. Bạn vẫn cần người ký nghiệm thu. Với code do agent viết, người ký nghiệm thu đó là bạn.
+
+## Là gì
+
+**AI Code Review Culture** là bộ nguyên tắc và thói quen để team vừa dùng agent AI viết code hiệu quả, vừa giữ được chất lượng và trách nhiệm rõ ràng.
+
+Nguyên tắc cốt lõi: **người thiết kế môi trường + intent + feedback loop; agent viết code**. Không phải ngược lại.
+
+Ba trụ cột:
+
+**1. Người thiết kế, agent thực thi**
+Bạn quyết định kiến trúc, chọn pattern, định nghĩa test cases. Agent viết code theo quyết định đó. Khi agent đề xuất thiết kế, bạn phải hiểu đủ để đồng ý hoặc bác bỏ — không chỉ click Accept.
+
+**2. Pattern writer/reviewer**
+Team chia hai vai rõ ràng trong mỗi task: *writer* (agent viết code) và *reviewer* (người — hoặc agent khác trong session riêng — review không biết context ban đầu). Reviewer từ fresh context phát hiện lỗi mà writer bỏ qua vì quá quen với ý định gốc.
+
+**3. Trách nhiệm sở hữu**
+Quy tắc đơn giản: **đừng commit code bạn không giải thích được**. Nếu có ai hỏi "tại sao làm vậy?" mà bạn không trả lời được, code đó chưa sẵn sàng merge. AI-generated không phải lý do miễn trách.
+
+## Ví dụ thật
+
+Sau khi agent viết xong một feature, reviewer không chỉ hỏi "code có chạy không?" mà hỏi:
+
+- Có edge case nào agent không cover không?
+- Logic này có khớp với intent ban đầu không, hay agent đã "drift" sang hướng khác?
+- Có pattern nào mới được tạo ra sẽ gây khó cho người maintain sau không?
+- Có gì agent viết mà tôi không tự viết được (tức là tôi không hiểu)?
+
+Câu hỏi cuối cùng là quan trọng nhất. Nếu câu trả lời là "có", reviewer cần dừng lại và hiểu trước khi approve.
+
+<Callout title="Cẩn thận">
+Agent có thể tăng volume code lên 3–5x. Nếu team chỉ đo số PR hay số dòng code, áp lực review sẽ tăng theo — và chất lượng review sẽ giảm. Thiết lập feedback loop (automated tests, linter, type check) để agent tự verify trước khi đưa sang người.
+</Callout>
+
+<Callout title="Nhớ nhé">
+Human oversight là *không thể bỏ*, không phải vì agent không giỏi — mà vì agent không hiểu context business, không chịu trách nhiệm, và không biết những gì bạn *không* nói. Người review giữ cho intent và implementation luôn khớp nhau.
+</Callout>
+
+## Đọc thêm
+
+- [How far can we push AI autonomy in code generation? — Martin Fowler](https://martinfowler.com/articles/pushing-ai-autonomy.html) — Nghiên cứu thực tế từ Thoughtworks: AI có thể generate code chạy được, nhưng vẫn tạo ra "unwanted features" và "false success" — lý do tại sao human oversight không thể bỏ qua.
+- [An Effective AI Coding Workflow — Addy Osmani](https://addyosmani.com/blog/ai-coding-workflow/) — Workflow thực chiến từ Addy Osmani: đọc code từng dòng trước khi merge, dùng AI-assisted review như lớp bổ sung, và tại sao version control kỷ luật là nền tảng của mọi quy trình AI-assisted.
+- [Reviewing AI-generated code](/concepts/reviewing-ai-code) — Concept trong track này: kỹ thuật review cụ thể, "code smells" của AI-generated code, và checklist thực hành.
+
+## Tự kiểm tra
+
+1. Tại sao pattern "writer/reviewer" trong hai session riêng biệt lại hiệu quả hơn một người vừa viết vừa review?
+2. Bạn nhận được một PR với 500 dòng code do agent viết. Bạn hiểu khoảng 80%. Bạn có nên approve không? Giải thích lý do.
+3. Agent tăng tốc độ viết code lên 5x. Điều gì xảy ra với quy trình review nếu team không thay đổi cách làm việc?

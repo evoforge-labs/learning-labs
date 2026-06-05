@@ -1,0 +1,76 @@
+---
+id: concept-git-worktrees-with-agents
+title: "Git Worktrees with Agents"
+type: "concept"
+aliases: ["git worktrees", "worktrees", "parallel agent sessions", "worktree isolation", "claude worktree"]
+tags: [building-with-ai-agents, claude-code, git, worktrees, parallel, isolation, workflow]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Hãy tưởng tượng hai đầu bếp cùng nấu trong một bếp nhỏ, với một thớt, một dao, và một bếp lửa. Họ liên tục va vào nhau — người này đặt tô xuống chỗ người kia đang cắt. Kết quả là hỗn loạn.
+
+Worktree là cách đưa mỗi đầu bếp vào một bếp riêng — cùng một "thực đơn" (repo), nhưng không gian làm việc hoàn toàn tách biệt.
+
+## Là gì
+
+**Git worktree** là một thư mục làm việc riêng biệt, có branch riêng, nhưng chia sẻ cùng một repository history với checkout chính của bạn. Với Claude Code, mỗi worktree chạy một phiên agent hoàn toàn độc lập.
+
+Lệnh cơ bản:
+
+```bash
+claude --worktree feature-auth
+```
+
+Lệnh này tạo một worktree mới tại `.claude/worktrees/feature-auth/`, trên một branch mới `worktree-feature-auth`, và khởi động Claude trong đó. Chạy lại với tên khác trong một terminal khác để có phiên song song thứ hai:
+
+```bash
+claude --worktree bugfix-123
+```
+
+Hai agent giờ làm việc song song, mỗi agent trong thư mục riêng — không đụng file của nhau, không conflict.
+
+**`.worktreeinclude`** — file đặc biệt ở project root, dùng cú pháp `.gitignore`. Những file match pattern trong này (và đang bị gitignore) sẽ được tự động copy vào mỗi worktree mới. Dùng để copy `.env`, `.env.local`, `config/secrets.json` mà không cần làm thủ công:
+
+```text
+.env
+.env.local
+config/secrets.json
+```
+
+## Ví dụ thật
+
+Bạn đang làm một feature lớn kéo dài 2 ngày. Sếp nhắn: "Có bug production, fix gấp."
+
+Không có worktree: bạn phải stash, checkout branch khác, fix bug, commit, checkout lại, unstash — mất thời gian và dễ mất context feature đang làm.
+
+Với worktree:
+
+```bash
+# Terminal 1 — feature đang chạy, không đụng vào
+claude --worktree feature-payment
+
+# Terminal 2 — mở worktree mới để fix bug
+claude --worktree hotfix-null-pointer
+```
+
+Agent trong terminal 2 fix bug xong, bạn merge, xong. Agent terminal 1 vẫn đang chạy feature của nó, context nguyên vẹn.
+
+<Callout title="Mẹo">
+Thêm `.claude/worktrees/` vào `.gitignore` để nội dung worktree không hiện ra là untracked file trong checkout chính. Khi worktree session kết thúc mà không có thay đổi, Claude tự xóa worktree đó — bạn không phải dọn thủ công.
+</Callout>
+
+<Callout title="Nhớ nhé">
+Worktree giải quyết vấn đề *file conflict* giữa các agent song song — mỗi agent có không gian riêng. Đây không phải agent điều phối nhau (đó là agent teams hay dynamic workflows) — đây chỉ là cách chạy nhiều phiên Claude Code độc lập mà không đụng nhau.
+</Callout>
+
+## Đọc thêm
+
+- [Run parallel sessions with worktrees — Claude Code Docs](https://code.claude.com/docs/en/worktrees) — Tài liệu chính thức đầy đủ: cú pháp `--worktree`, `.worktreeinclude`, cách dọn worktree, và cách isolate subagent trong worktree riêng.
+- [Common Workflows: Run parallel sessions with worktrees — Claude Code Docs](https://code.claude.com/docs/en/common-workflows#run-parallel-sessions-with-worktrees) — Recipe ngắn gọn: chạy hai terminal song song, mỗi cái một worktree, thực tế hàng ngày.
+
+## Tự kiểm tra
+
+1. Không có worktree, bạn gặp vấn đề gì khi muốn chạy hai phiên Claude Code song song trên cùng một repo?
+2. `.worktreeinclude` dùng để làm gì? Tại sao không chỉ copy file `.env` thủ công vào worktree?
+3. Worktree và agent teams/dynamic workflows giải quyết vấn đề gì khác nhau? Khi nào worktree là đủ, khi nào cần điều phối thực sự?

@@ -1,0 +1,58 @@
+---
+id: concept-iterative-refinement
+title: "Iterative Refinement (Lặp tinh chỉnh)"
+type: "concept"
+aliases: ["iterative refinement", "lặp tinh chỉnh", "incremental development", "course correction", "one thing at a time"]
+tags: [building-with-ai-agents, claude-code, workflow, iteration, context-management, feedback-loop]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Hãy tưởng tượng bạn đặt hàng một bàn làm việc. Thay vì gặp thợ mộc, trao đổi yêu cầu, và nhận bàn thành phẩm — bạn viết một email dài 3 trang mô tả chi tiết mọi thứ rồi chờ 2 tuần. Kết quả thường là: bàn ra đời, nhưng màu sai, chân cao hơn 5cm so với ý bạn, và cái ngăn kéo lại ở bên trái.
+
+Giao tiếp một lần, một khối lớn — đó là cái罠 phổ biến nhất khi làm việc với agent.
+
+## Là gì
+
+**Iterative refinement** là cách làm việc với agent theo từng bước nhỏ, với vòng phản hồi ngắn — thay vì dump một task khổng lồ rồi chờ output cuối cùng.
+
+Nguyên tắc cốt lõi:
+- **Một việc mỗi lần** — đừng yêu cầu agent vừa refactor vừa thêm feature vừa viết test trong cùng một lượt
+- **Sửa hướng sớm** — nhấn `Esc` để dừng agent ngay khi thấy nó đi sai hướng; `/rewind` để quay về checkpoint trước
+- **Reset khi bị mắc kẹt** — nếu agent fail cùng một lỗi 2 lần liên tiếp, đừng tiếp tục sửa trong cùng phiên. Chạy `/clear` và viết lại prompt tốt hơn với bài học từ những lần thất bại
+
+Vì sao cần làm từng bước nhỏ? Một-shot yêu cầu lớn thường cho ra code "như 10 developer không nói chuyện với nhau" — mỗi phần nhìn hợp lý nhưng không ăn khớp với nhau.
+
+## Ví dụ thật
+
+Bạn cần thêm authentication vào một REST API. Thay vì prompt:
+
+> "Thêm JWT auth, refresh token, rate limiting, và viết test đầy đủ cho toàn bộ hệ thống"
+
+Làm theo bước:
+
+1. "Thêm JWT middleware cho route `/api/users`" → xem kết quả, chạy test
+2. "Bây giờ thêm refresh token flow" → review, test
+3. "Thêm rate limiting cho auth endpoint" → review
+
+Sau mỗi bước bạn có thể thấy agent đang đi đúng không, redirect nếu cần, và commit một checkpoint sạch. Nếu bước 2 có vấn đề, bạn chỉ cần `/rewind` — không mất công bước 1.
+
+<Callout title="Cẩn thận">
+Dừng sớm quan trọng hơn bạn nghĩ. Khi agent bắt đầu đi sai hướng, mỗi bước tiếp theo nó làm sẽ làm bối cảnh bị "nhiễm" thêm bởi hướng sai đó. Esc sau 30 giây đúng lúc tiết kiệm hơn nhiều so với undoing 10 phút work.
+</Callout>
+
+<Callout title="Nhớ nhé">
+Hai lần fail cùng lỗi trong một phiên là tín hiệu để reset, không phải để thử lần thứ ba. `/clear` và viết prompt tốt hơn — đây không phải bỏ cuộc, đây là học từ thất bại.
+</Callout>
+
+## Đọc thêm
+
+- [Best Practices: Course-correct early and often — Claude Code Docs](https://code.claude.com/docs/en/best-practices#course-correct-early-and-often) — Tài liệu chính thức: cách dùng `Esc`, `/rewind`, `/clear`, và khi nào nên reset session thay vì tiếp tục sửa.
+- [My LLM coding workflow going into 2026 — Addy Osmani](https://addyosmani.com/blog/ai-coding-workflow/) — Bài viết thực chiến về lý do tại sao incremental + human oversight thắng hẳn over one-shot lớn trong thực tế hàng ngày.
+- [Agentic Engineering — Simon Willison](https://simonwillison.net/tags/agentic-engineering/) — Bộ sưu tập bài viết thực tế về làm việc với coding agent: patterns nào work, patterns nào không, và cái gì khiến agentic workflow thực sự hiệu quả trong sản xuất.
+
+## Tự kiểm tra
+
+1. Tại sao yêu cầu agent làm nhiều thứ cùng lúc (one-shot lớn) thường cho kết quả kém hơn làm từng bước nhỏ?
+2. Agent của bạn liên tục mắc cùng một lỗi sau 2 lần thử sửa. Bước tiếp theo là gì và tại sao không phải tiếp tục sửa trong cùng phiên?
+3. Phân biệt khi nào dùng `Esc` (dừng giữa chừng) vs `/rewind` (quay về checkpoint) vs `/clear` (reset hoàn toàn)?

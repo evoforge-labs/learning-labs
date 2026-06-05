@@ -1,0 +1,57 @@
+---
+id: concept-agents-in-teams
+title: "Agents in Teams"
+type: "concept"
+aliases: ["agents in teams", "agent trong team", "CLAUDE.md team", "AGENTS.md team", "chuẩn chung agent"]
+tags: [agents-in-teams, team, claude-md, agents-md, onboarding, monorepo, building-with-ai-agents]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Hãy nghĩ đến một nhân viên mới vào team. Bạn không muốn giải thích lại từ đầu mỗi ngày: "code style của mình là thế này, test chạy lệnh này, branch đặt tên theo kiểu kia." Bạn viết một tài liệu onboarding một lần, ai cũng đọc. Agent hoạt động theo đúng nguyên tắc đó.
+
+## Là gì
+
+**Agents in Teams** là bộ quy ước và chuẩn chung để nhiều người trong một team có thể dùng agent AI (như Claude Code) theo cách nhất quán — cùng style, cùng quy trình, cùng hiểu codebase.
+
+Công cụ trung tâm là **CLAUDE.md** (hoặc AGENTS.md — tên file tương đương được hơn 15 coding agent chính thức đọc vào năm 2026). Đây không phải README thông thường. Đây là **tài liệu onboarding cho agent**: agent đọc nó khi bắt đầu mỗi session, không phải người.
+
+File này thường chứa:
+
+- Lệnh build/test/lint cụ thể của project
+- Quy tắc code style không tự suy được từ code
+- Quy ước đặt tên branch, PR, commit
+- Các gotcha và quirk đặc thù của repo
+- Paths quan trọng và kiến trúc cấp cao
+
+Độ dài lý tưởng: **200–500 dòng**. Quá dài, agent bỏ qua những phần quan trọng vì bị "chôn vùi". Quá ngắn, agent phải đoán và thường đoán sai.
+
+## Ví dụ thật
+
+**Monorepo với nhiều package**: Team dùng cấu trúc phân tầng —
+
+- `CLAUDE.md` ở root: quy tắc chung toàn repo (commit convention, CI, shared tooling)
+- `packages/api/CLAUDE.md`: quy tắc riêng cho service API (framework, auth pattern, migration workflow)
+- `packages/web/CLAUDE.md`: quy tắc riêng cho frontend (component naming, styling, state management)
+
+Khi agent làm việc trong `packages/api/`, nó tự động nạp cả root và sub-CLAUDE.md — không cần bạn chỉ định.
+
+**Khởi động từ đầu**: Chạy `/init` trong Claude Code để agent tự phân tích codebase và sinh bản nháp CLAUDE.md. Bạn review, cắt bỏ những gì agent đã tự biết, giữ lại những gì thật sự cần nhắc.
+
+Hãy kiểm tra định kỳ: nếu agent hay hỏi những câu mà CLAUDE.md đã trả lời, tức là cách diễn đạt chưa rõ. Nếu agent làm đúng mà không cần nhắc, hãy xóa dòng đó để file gọn hơn.
+
+<Callout title="Nhớ nhé">
+CLAUDE.md là "source of truth" của team — check vào git để mọi người (và mọi agent) đọc cùng một phiên bản. Treat nó như code: review khi có PR, cập nhật khi convention thay đổi, và cắt bỏ những gì thừa.
+</Callout>
+
+## Đọc thêm
+
+- [Best practices — Claude Code Docs](https://code.claude.com/docs/en/best-practices) — Hướng dẫn chính thức từ Anthropic về CLAUDE.md: những gì nên/không nên đưa vào, cú pháp `@import`, và cấu trúc phân tầng cho monorepo. Có bảng so sánh rõ ràng.
+- [AGENTS.md Complete Guide for Engineering Teams (2026) — BuildBetter](https://blog.buildbetter.ai/agents-md-complete-guide-for-engineering-teams-in-2026/) — Hướng dẫn thực chiến về AGENTS.md: cấu trúc, ví dụ template, và cách duy trì file theo thời gian khi codebase thay đổi.
+- [Security — Claude Code Docs](https://code.claude.com/docs/en/security) — Phần "Team security": cách dùng managed settings để enforce chuẩn chung toàn tổ chức qua version control, bổ sung cho CLAUDE.md.
+
+## Tự kiểm tra
+
+1. Tại sao CLAUDE.md được mô tả là "tài liệu onboarding cho agent" thay vì README thông thường? Hai loại này khác nhau ở điểm gì?
+2. Team bạn có monorepo gồm backend và frontend. Bạn sẽ tổ chức CLAUDE.md như thế nào? Thông tin gì nên ở root, thông tin gì nên ở từng package?
+3. Nếu agent liên tục hỏi lại những câu mà CLAUDE.md đã trả lời, đó là dấu hiệu của vấn đề gì và bạn sẽ làm gì?

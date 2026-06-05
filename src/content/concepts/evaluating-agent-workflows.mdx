@@ -1,0 +1,62 @@
+---
+id: concept-evaluating-agent-workflows
+title: "Evaluating Agent Workflows"
+type: "concept"
+aliases: ["evaluating agent workflows", "đo lường AI dev", "đánh giá quy trình agent", "AI developer productivity metrics", "code churn AI"]
+tags: [evaluating-agent-workflows, metrics, code-quality, developer-productivity, code-churn, building-with-ai-agents]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Khi agent bắt đầu viết phần lớn code, bảng metrics quen thuộc của team bắt đầu nói dối. Số dòng code tăng vọt, số PR nhiều hơn, velocity trông cao hơn bao giờ hết — nhưng sau 3 tháng, tech debt tăng theo. Đếm sản lượng mà không đo độ bền là cân nhầm cân.
+
+## Là gì
+
+**Evaluating Agent Workflows** là cách đo lường thực sự xem AI-assisted development có giúp team tốt hơn không — không chỉ nhanh hơn, mà còn *bền* hơn.
+
+Năm chiều đo cần theo dõi:
+
+| Chiều | Metric cụ thể | Lưu ý |
+|---|---|---|
+| **Adoption** | % dev dùng agent thường xuyên | Đừng ép — track tự nhiên |
+| **Tỷ lệ AI** | % code do AI generate được merge | Baseline để so sánh chiều khác |
+| **Velocity** | PR cycle time (open → merge) | Giảm = tốt; tăng = review bị quá tải |
+| **Chất lượng** | Code churn (% code bị rewrite ≤2 tuần), code clone | Quan trọng nhất — xem bên dưới |
+| **Cost/ROI** | Token cost per PR, engineer hour saved | Gắn vào observability |
+
+**Tại sao chất lượng là chiều quan trọng nhất?**
+
+Nghiên cứu từ nhiều team thực tế ghi nhận: khi dùng AI coding assistant, **code churn và code clone có xu hướng tăng** — agent viết code chạy được nhưng hay bị rewrite sớm, hoặc copy-paste pattern thay vì abstract đúng cách. Nếu chỉ đo velocity, bạn sẽ không thấy tín hiệu này cho đến khi tech debt đã tích lũy.
+
+**Code churn** = % dòng code bị xóa hoặc sửa trong vòng 2 tuần sau khi merge. Churn cao = code "tạm", không chín muồi. Với AI-generated code, churn thường cao hơn code viết tay trong giai đoạn đầu dùng agent.
+
+## Ví dụ thật
+
+Team A sau 2 tháng dùng Claude Code:
+- PR volume tăng 60% ✓
+- PR cycle time giảm 25% ✓
+- Code churn tăng từ 8% lên 22% ✗ ← alarm signal
+
+Phân tích: agent viết code nhanh nhưng không hiểu context business đủ sâu → nhiều đoạn code phải rewrite sau khi review thực tế với khách hàng. Giải pháp: cải thiện spec trước khi giao cho agent ([concept-spec-driven-development](/concepts/spec-driven-development)), không phải dừng dùng agent.
+
+Đây là lý do cần đo *cả tốc độ lẫn độ bền*, không chỉ một trong hai.
+
+<Callout title="Cẩn thận">
+Số dòng code là metric gây hiểu lầm nhất khi có agent — agent có thể tăng volume 3–5x mà không tăng giá trị. Đừng dùng nó làm KPI cho AI adoption. Hãy dùng cycle time, churn rate, và cost/PR thay thế.
+</Callout>
+
+<Callout title="Nhớ nhé">
+Đo 5 chiều: adoption, tỷ lệ AI, velocity, chất lượng (churn + clone), cost/ROI. Luôn bao gồm ít nhất một metric độ bền. Xem thêm framework đánh giá tổng quát tại [LLM Evals](/concepts/llm-evals).
+</Callout>
+
+## Đọc thêm
+
+- [AI and Code Quality: A Research Roundup — GitClear](https://www.gitclear.com/coding_on_copilot_data_shows_ais_downward_pressure_on_code_quality) — Phân tích dữ liệu thực tế từ hàng triệu commit: AI coding assistant có tương quan với tỷ lệ code churn và code duplication tăng — lý do tại sao "đo nhanh thôi chưa đủ".
+- [How Do AI Agents Spend Your Money? — Microsoft Research](https://www.microsoft.com/en-us/research/publication/how-do-ai-agents-spend-your-money-analyzing-and-predicting-token-consumption-in-agentic-coding-tasks/) — Nghiên cứu về token consumption trong agentic coding: cơ sở để tính cost/ROI thực tế, không phải ước đoán.
+- [LLM Evals](/concepts/llm-evals) — Concept nền về framework đo lường AI pipeline: từ grader đến eval dataset — nguyên tắc tương tự áp dụng cho đo lường workflow.
+
+## Tự kiểm tra
+
+1. Tại sao số dòng code là metric gây hiểu lầm khi team bắt đầu dùng agent? Metric nào thay thế được tốt hơn?
+2. "Code churn" là gì và tại sao nó là tín hiệu cảnh báo quan trọng khi AI generate phần lớn code?
+3. Team bạn thấy velocity tăng 40% sau 2 tháng dùng agent. Bạn cần đo thêm gì để biết đây có thực sự là cải thiện bền vững không?

@@ -1,0 +1,55 @@
+---
+id: concept-prompting-for-code
+title: "Prompting for Code"
+type: "concept"
+aliases: ["prompting code", "prompt cho code", "viết prompt để code", "code prompting", "hướng dẫn agent code"]
+tags: [ai-assisted-development, agentic-coding, prompt-engineering, dev-workflow, coding-agents]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Khi nhờ đồng nghiệp sửa bug, bạn không chỉ nói *"sửa bug đi"*. Bạn mở file ra chỉ đúng chỗ, kể lại triệu chứng, và cho xem log lỗi. Agent AI cũng cần đúng thứ đó — nhưng bạn phải chủ động cung cấp, không ai làm thay.
+
+## Là gì
+
+**Prompting for code** là kỹ thuật viết lệnh cho coding agent theo cách giúp agent hiểu đúng context, scope, và tiêu chí thành công — để bạn cần sửa ít nhất sau lần đầu.
+
+Khác với [prompt engineering](/concepts/prompt-engineering) tổng quát, prompting cho code đặc thù ở chỗ: bạn đang làm việc trong một codebase cụ thể, với pattern có sẵn, constraint kỹ thuật thật, và có thể đo được kết quả (build pass, test xanh).
+
+Ba nguyên tắc cốt lõi:
+
+**1. Scope cụ thể** — file nào, function nào, ràng buộc gì. "Thêm validation vào `src/api/orders.ts`, không dùng thư viện ngoài, không đổi interface hiện có."
+
+**2. Trỏ tới nguồn** — thay vì mô tả, chỉ thẳng vào: `@src/api/users.ts` làm ví dụ pattern, git history giải thích tại sao code cũ lại vậy, log lỗi chính xác.
+
+**3. Tả triệu chứng, không phải nhãn** — "người dùng báo login thất bại sau khi session hết hạn, xem `src/auth/` phần token refresh" hiệu quả hơn "fix login bug".
+
+## Ví dụ thật
+
+Prompt mơ hồ:
+> *"Thêm tests cho module payment."*
+
+Prompt hiệu quả hơn:
+> *"Viết test cho `processRefund()` trong `src/payments/refund.ts`. Test case: (1) refund thành công trả về transaction ID, (2) số tiền âm ném ra InvalidAmountError, (3) order không tồn tại ném ra NotFoundError. Xem `src/payments/charge.test.ts` để làm ví dụ về pattern test hiện tại. Chạy test sau khi viết."*
+
+Lần đầu đã làm đúng, không cần vòng sửa thêm.
+
+<Callout title="Mẹo">
+Khi muốn agent *không* làm gì đó, dùng "ưu tiên X" thay vì "đừng làm Y". Ví dụ: "ưu tiên giữ nguyên API interface" hiệu quả hơn "đừng đổi API". Agent phản hồi với hướng đi rõ hơn là với lệnh cấm mơ hồ.
+</Callout>
+
+<Callout title="Nhớ nhé">
+Prompt tốt nhất trỏ thẳng vào nguồn sự thật — file, git log, error message — thay vì mô tả lại bằng ngôn ngữ. Ít chữ hơn, nhiều ngữ cảnh hơn.
+</Callout>
+
+## Đọc thêm
+
+- [Best Practices: Provide specific context in your prompts — Claude Code](https://code.claude.com/docs/en/best-practices) — Tài liệu chính thức của Anthropic: bảng so sánh prompt mơ hồ vs cụ thể cho 4 tình huống thực tế (tests, debugging, patterns, bug fix) — rất thực tiễn cho dùng hàng ngày.
+- [Best Practices for Using Copilot to Work on Tasks — GitHub Docs](https://docs.github.com/en/copilot/how-tos/agents/copilot-coding-agent/best-practices-for-using-copilot-to-work-on-tasks) — GitHub khuyến nghị cụ thể hoá scope, thêm acceptance criteria, và chỉ rõ file cần thay đổi — áp dụng được cho mọi coding agent.
+- [Prompt Engineering for Copilot Chat — GitHub Docs](https://docs.github.com/en/copilot/concepts/prompting/prompt-engineering) — Nguyên tắc decompose task, cung cấp ví dụ, và dùng clean codebase làm context để agent hoạt động tốt hơn.
+
+## Tự kiểm tra
+
+1. Bạn có bug: "nút Submit đôi khi không phản hồi". Viết một prompt hiệu quả — bao gồm scope, triệu chứng, và cách verify kết quả.
+2. Tại sao trỏ trực tiếp vào file (`@src/auth/token.ts`) lại hiệu quả hơn mô tả bằng chữ ("file xử lý token trong thư mục auth")?
+3. Khi nào thì nên để prompt rộng và mở (thay vì rất cụ thể)?

@@ -1,0 +1,74 @@
+---
+id: concept-agent-permissions-sandbox
+title: "Permission & Sandbox cho coding agent"
+type: "concept"
+aliases: ["permission", "sandbox", "agent permission", "allow deny", "auto mode", "bypassPermissions"]
+tags: [building-with-ai-agents, permissions, sandbox, safety, claude-code, auto-mode, security]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Hãy nghĩ về hệ thống permission như bảo vệ tòa nhà: bạn có thể đặt biển "Tự do vào" ở cửa trước, bảo vệ ở tầng 3, và khóa hẳn phòng server. Agent biết cửa nào được đi qua, cửa nào phải gõ trước, cửa nào không được lại gần.
+
+## Là gì
+
+Claude Code có 3 lớp kiểm soát:
+
+**Lớp 1 — Permission rules (allow/ask/deny):** Bạn khai báo tường minh những gì agent được làm.
+- `allow`: agent làm không cần hỏi (`Bash(npm run test)`)
+- `ask`: agent hỏi bạn mỗi lần trước khi làm
+- `deny`: agent không được dùng tool đó — deny ưu tiên tuyệt đối, không rule nào override được
+
+**Lớp 2 — Permission modes:** Chế độ vận hành tổng thể của session.
+- `default`: hỏi lần đầu với mỗi tool mới
+- `plan`: chỉ đọc, không sửa file — dùng để explore trước khi làm
+- `acceptEdits`: tự động chấp nhận sửa file trong working directory
+- `auto`: classifier riêng duyệt từng lệnh thay bạn — phù hợp cho phiên chạy không giám sát
+- `bypassPermissions`: bỏ qua mọi prompt — chỉ dùng trong container/VM cô lập
+
+**Lớp 3 — OS Sandbox:** Cách ly filesystem và network ở cấp hệ điều hành (macOS Seatbelt, Linux bubblewrap). Agent có thể làm gì trong working directory nhưng không chạm được ra ngoài.
+
+## Ví dụ thật
+
+Setup hợp lý cho một repo thực tế:
+
+```json
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm run *)",
+      "Bash(git status)",
+      "Bash(git diff *)",
+      "Bash(git add *)",
+      "Bash(git commit *)"
+    ],
+    "deny": [
+      "Bash(git push *)",
+      "Bash(rm -rf *)",
+      "Read(.env)"
+    ]
+  }
+}
+```
+
+Agent tự chạy test, tự commit — nhưng không push và không đọc secrets. Khi bạn muốn agent chạy một tác vụ dài hơi (ví dụ: sửa 50 file test), bật `auto` mode: một classifier model riêng sẽ duyệt từng lệnh và block những gì trông có vẻ nguy hiểm (scope escalation, infrastructure lạ), còn việc thường thì tự chạy.
+
+<Callout title="Cẩn thận">
+`bypassPermissions` bỏ qua tất cả — kể cả ghi vào `.git/config` hay `.claude/`. Chỉ dùng bên trong Docker container hoặc VM cô lập, không bao giờ trên máy cá nhân đang có data thật.
+</Callout>
+
+<Callout title="Nhớ nhé">
+Deny rule thắng mọi rule khác — nếu bạn deny một tool ở bất kỳ scope nào (managed, project, user), không ai override được. Bắt đầu bằng deny những gì tuyệt đối không muốn agent đụng vào, rồi mới mở rộng allow.
+</Callout>
+
+## Đọc thêm
+
+- [Configure permissions — Claude Code Docs](https://code.claude.com/docs/en/permissions) — Tài liệu đầy đủ về permission rules, syntax, wildcard, permission mode — đọc phần "Permission rule syntax" để hiểu `Bash(npm run *)` nghĩa là gì.
+- [Configure the sandboxed Bash tool — Claude Code Docs](https://code.claude.com/docs/en/sandboxing) — Cách bật sandbox, cấu hình filesystem và network restriction — phần "How sandboxing works" giải thích tại sao OS-level isolation mạnh hơn chỉ dùng deny rule.
+- [Claude Code Plugins — Anthropic Blog](https://claude.com/blog/claude-code-plugins) — Cách permission áp dụng khi bạn install plugin từ marketplace — quan trọng khi team dùng managed settings.
+
+## Tự kiểm tra
+
+1. Bạn muốn agent tự chạy `npm run build` và `npm run test` nhưng không bao giờ được chạy `npm publish`. Bạn viết permission rules như thế nào?
+2. Khi nào bạn dùng `auto` mode thay vì `default` mode? Điểm khác biệt về trải nghiệm là gì?
+3. Tại sao chỉ dùng deny rule mà không bật sandbox vẫn chưa đủ an toàn với script Python hoặc Node chạy bên trong Bash?

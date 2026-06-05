@@ -1,0 +1,48 @@
+---
+id: concept-coding-agents-landscape
+title: "Landscape công cụ coding agent (2026)"
+type: "concept"
+aliases: ["coding agent", "AI coding tool", "coding tool landscape", "claude code", "cursor", "aider", "công cụ coding AI"]
+tags: [building-with-ai-agents, coding-agents, tools, landscape, claude-code, cursor, hybrid-stack, byom]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Hãy nghĩ về các công cụ coding agent như những loại phương tiện giao thông: xe đạp, xe máy, ô tô, và xe buýt — mỗi loại phù hợp với địa hình khác nhau. Không có loại nào "tốt nhất" mọi lúc. Câu hỏi là bạn đang đi đâu.
+
+## Là gì
+
+Công cụ coding agent là phần mềm bọc LLM lại để có thể đọc file, chạy lệnh, sửa code, và lặp lại — thay vì chỉ trả lời câu hỏi. Năm 2026 có hơn 30 công cụ như vậy, chia thành 4 nhóm chính:
+
+| Nhóm | Ví dụ nổi bật | Phù hợp khi |
+|------|---------------|-------------|
+| **CLI agent** | Claude Code, Aider, Gemini CLI, Codex | Task đa-file phức tạp, tự động hóa, CI |
+| **AI IDE** | Cursor, Windsurf, Kiro | Làm việc cần thấy UI, inline suggestion |
+| **IDE extension** | GitHub Copilot, Cline, Continue | Giữ nguyên IDE hiện tại, thêm AI |
+| **Cloud agent** | Devin, OpenHands, Jules | Task dài giờ không giám sát, có VM riêng |
+
+## Ví dụ thật
+
+Hybrid stack là pattern phổ biến nhất ở team thực tế năm 2026: dùng **Cursor hoặc Windsurf** cho việc hằng ngày (sửa bug, viết feature nhỏ, refactor nhanh) — vì UI quen thuộc và inline diff tiện. Dùng **Claude Code CLI** khi task cần đọc nhiều file, chạy test, hoặc làm việc nhiều vòng lặp phức tạp — vì Claude Code được tối ưu cho agentic loop dài hơi và có permission system chặt hơn.
+
+Điểm khác biệt quan trọng: **BYOM (Bring Your Own Model)**. Một số tool như Aider và Cline cho phép bạn cắm bất kỳ LLM nào (Gemini, GPT-4o, Claude…). Cursor và Windsurf bundle model riêng. Claude Code là sản phẩm của Anthropic nên chạy trên Claude. Chọn tool cũng là chọn ai kiểm soát model bạn dùng.
+
+<Callout title="Cẩn thận">
+Đừng dùng nhiều tool cùng lúc trên cùng một file mà không có git commit checkpoint. Hai agent sửa cùng file → conflict khó debug hơn bạn nghĩ.
+</Callout>
+
+<Callout title="Nhớ nhé">
+Hybrid stack (IDE agent + CLI agent) không phải phức tạp hóa — đó là cách dùng đúng công cụ cho đúng việc. Bắt đầu với một tool quen tay, thêm tool thứ hai khi bạn thấy rõ gap của cái đầu.
+</Callout>
+
+## Đọc thêm
+
+- [Coding Agents Benchmark — Artificial Analysis](https://artificialanalysis.ai/agents/coding) — Bảng so sánh 30+ coding agent: loại, giá, BYOM support, khả năng — cập nhật thường xuyên, nguồn dữ liệu thực tế tốt nhất hiện có.
+- [Agentic Engineering — Simon Willison](https://simonwillison.net/tags/agentic-engineering/) — Ghi chép thực chiến từ một kỹ sư dùng agent hằng ngày: pattern nào hoạt động, cảnh báo gì cần nhớ, khi nào agent làm hại hơn giúp.
+- [Cursor Agent Overview](https://cursor.com/docs/agent/overview) — Tài liệu chính thức về Cursor Agent: cách hoạt động, tools có sẵn, checkpoint và rollback — ví dụ tốt về AI IDE làm gì khác CLI agent.
+
+## Tự kiểm tra
+
+1. Bạn cần refactor một module lớn (20 file, cần đọc test + sửa + chạy test lại nhiều vòng). Bạn chọn nhóm công cụ nào và vì sao?
+2. BYOM có ý nghĩa gì với một team có chính sách bảo mật không muốn data ra khỏi cloud provider của mình?
+3. Hybrid stack thường gặp vấn đề gì nếu bạn không có git commit checkpoint thường xuyên?

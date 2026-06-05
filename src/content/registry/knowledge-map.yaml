@@ -1016,3 +1016,298 @@ edges:
   - source: rubric-ai-engineering
     target: exercise-aieng-008
     rel: evaluates
+
+  # --- Building with AI Agents: M2 Instructing (lesson-bswa-002 / exercise-bswa-002) ---
+  # Theory progression: M1 Mindset → M2 Instructing
+  - source: lesson-bswa-001
+    target: lesson-bswa-002
+    rel: leads-to
+  # M2 concept → concept progression
+  - source: concept-spec-driven-development
+    target: concept-prompting-for-code
+    rel: leads-to
+  - source: concept-prompting-for-code
+    target: concept-breaking-down-tasks
+    rel: leads-to
+  - source: concept-breaking-down-tasks
+    target: concept-agent-feedback-loop
+    rel: leads-to
+  - source: concept-agent-feedback-loop
+    target: concept-agent-instructions-file
+    rel: leads-to
+  # Concepts support lesson
+  - source: concept-spec-driven-development
+    target: lesson-bswa-002
+    rel: supports
+  - source: concept-prompting-for-code
+    target: lesson-bswa-002
+    rel: supports
+  - source: concept-breaking-down-tasks
+    target: lesson-bswa-002
+    rel: supports
+  - source: concept-agent-feedback-loop
+    target: lesson-bswa-002
+    rel: supports
+  - source: concept-agent-instructions-file
+    target: lesson-bswa-002
+    rel: supports
+  # Concepts train exercise
+  - source: concept-spec-driven-development
+    target: exercise-bswa-002
+    rel: trains
+  - source: concept-breaking-down-tasks
+    target: exercise-bswa-002
+    rel: trains
+  - source: concept-agent-instructions-file
+    target: exercise-bswa-002
+    rel: trains
+  - source: rubric-building-with-ai-agents
+    target: exercise-bswa-002
+    rel: evaluates
+  # Cross-track reuse: M2 draws on existing concepts
+  - source: concept-agent-harness
+    target: lesson-bswa-002
+    rel: supports
+  - source: concept-subagents-for-dev
+    target: concept-breaking-down-tasks
+    rel: supports
+
+  # --- Building with AI Agents: M1 Mindset ---
+  - source: concept-ai-assisted-development
+    target: concept-agentic-coding
+    rel: leads-to
+  - source: concept-agentic-coding
+    target: concept-when-to-use-agents
+    rel: leads-to
+  - source: concept-when-to-use-agents
+    target: concept-trust-but-verify
+    rel: leads-to
+  - source: concept-trust-but-verify
+    target: concept-agent-as-collaborator
+    rel: leads-to
+  - source: concept-ai-agent
+    target: concept-agentic-coding
+    rel: supports
+  - source: concept-agent-harness
+    target: concept-agentic-coding
+    rel: supports
+  - source: concept-agentic-coding
+    target: lesson-bswa-001
+    rel: supports
+  - source: concept-when-to-use-agents
+    target: lesson-bswa-001
+    rel: supports
+  - source: concept-when-to-use-agents
+    target: exercise-bswa-001
+    rel: trains
+  - source: concept-trust-but-verify
+    target: exercise-bswa-001
+    rel: trains
+  - source: rubric-building-with-ai-agents
+    target: exercise-bswa-001
+    rel: evaluates
+
+  # --- BSWA: M3 Tools & Harness ---
+  - source: lesson-bswa-002
+    target: lesson-bswa-003
+    rel: leads-to
+  - source: concept-coding-agents-landscape
+    target: concept-agent-permissions-sandbox
+    rel: leads-to
+  - source: concept-agent-permissions-sandbox
+    target: concept-slash-commands-and-skills
+    rel: leads-to
+  - source: concept-slash-commands-and-skills
+    target: concept-subagents-for-dev
+    rel: leads-to
+  - source: concept-subagents-for-dev
+    target: concept-mcp-for-dev
+    rel: leads-to
+  - source: concept-mcp
+    target: concept-mcp-for-dev
+    rel: supports
+  - source: concept-agent-harness
+    target: concept-subagents-for-dev
+    rel: supports
+  - source: concept-multi-agent
+    target: concept-subagents-for-dev
+    rel: supports
+  - source: concept-agent-permissions-sandbox
+    target: lesson-bswa-003
+    rel: supports
+  - source: concept-subagents-for-dev
+    target: lesson-bswa-003
+    rel: supports
+  - source: concept-agent-permissions-sandbox
+    target: exercise-bswa-003
+    rel: trains
+  - source: concept-slash-commands-and-skills
+    target: exercise-bswa-003
+    rel: trains
+  - source: concept-subagents-for-dev
+    target: exercise-bswa-003
+    rel: trains
+  - source: rubric-building-with-ai-agents
+    target: exercise-bswa-003
+    rel: evaluates
+
+  # --- BSWA: M4 Quality ---
+  - source: lesson-bswa-003
+    target: lesson-bswa-004
+    rel: leads-to
+  - source: concept-reviewing-ai-code
+    target: concept-tdd-with-agents
+    rel: leads-to
+  - source: concept-tdd-with-agents
+    target: concept-ai-code-smells
+    rel: leads-to
+  - source: concept-ai-code-smells
+    target: concept-verification-before-completion
+    rel: leads-to
+  - source: concept-verification-before-completion
+    target: concept-debugging-with-agents
+    rel: leads-to
+  - source: concept-trust-but-verify
+    target: concept-verification-before-completion
+    rel: leads-to
+  - source: concept-llm-evals
+    target: concept-verification-before-completion
+    rel: supports
+  - source: concept-reviewing-ai-code
+    target: lesson-bswa-004
+    rel: supports
+  - source: concept-verification-before-completion
+    target: lesson-bswa-004
+    rel: supports
+  - source: concept-reviewing-ai-code
+    target: exercise-bswa-004
+    rel: trains
+  - source: concept-ai-code-smells
+    target: exercise-bswa-004
+    rel: trains
+  - source: concept-verification-before-completion
+    target: exercise-bswa-004
+    rel: trains
+  - source: rubric-building-with-ai-agents
+    target: exercise-bswa-004
+    rel: evaluates
+
+  # --- BSWA: M5 Workflow ---
+  - source: lesson-bswa-004
+    target: lesson-bswa-005
+    rel: leads-to
+  - source: concept-plan-then-execute
+    target: concept-iterative-refinement
+    rel: leads-to
+  - source: concept-iterative-refinement
+    target: concept-managing-agent-context
+    rel: leads-to
+  - source: concept-managing-agent-context
+    target: concept-git-worktrees-with-agents
+    rel: leads-to
+  - source: concept-git-worktrees-with-agents
+    target: concept-orchestrating-large-tasks
+    rel: leads-to
+  - source: concept-context-engineering
+    target: concept-managing-agent-context
+    rel: supports
+  - source: concept-context-window
+    target: concept-managing-agent-context
+    rel: supports
+  - source: concept-multi-agent
+    target: concept-orchestrating-large-tasks
+    rel: supports
+  - source: concept-agentic-workflows
+    target: concept-orchestrating-large-tasks
+    rel: supports
+  - source: concept-plan-then-execute
+    target: lesson-bswa-005
+    rel: supports
+  - source: concept-orchestrating-large-tasks
+    target: lesson-bswa-005
+    rel: supports
+  - source: concept-plan-then-execute
+    target: exercise-bswa-005
+    rel: trains
+  - source: concept-managing-agent-context
+    target: exercise-bswa-005
+    rel: trains
+  - source: concept-orchestrating-large-tasks
+    target: exercise-bswa-005
+    rel: trains
+  - source: rubric-building-with-ai-agents
+    target: exercise-bswa-005
+    rel: evaluates
+
+  # --- BSWA: M6 Team & Scale ---
+  - source: lesson-bswa-005
+    target: lesson-bswa-006
+    rel: leads-to
+  - source: concept-agents-in-teams
+    target: concept-ai-code-review-culture
+    rel: leads-to
+  - source: concept-ai-code-review-culture
+    target: concept-dev-cost-token-budget
+    rel: leads-to
+  - source: concept-dev-cost-token-budget
+    target: concept-agent-security-risks
+    rel: leads-to
+  - source: concept-agent-security-risks
+    target: concept-prompt-injection-in-dev
+    rel: leads-to
+  - source: concept-prompt-injection-in-dev
+    target: concept-evaluating-agent-workflows
+    rel: leads-to
+  - source: concept-agent-instructions-file
+    target: concept-agents-in-teams
+    rel: leads-to
+  - source: concept-reviewing-ai-code
+    target: concept-ai-code-review-culture
+    rel: supports
+  - source: concept-prompt-injection
+    target: concept-prompt-injection-in-dev
+    rel: specializes
+  - source: concept-agent-permissions-sandbox
+    target: concept-agent-security-risks
+    rel: supports
+  - source: concept-llm-evals
+    target: concept-evaluating-agent-workflows
+    rel: supports
+  - source: concept-agents-in-teams
+    target: lesson-bswa-006
+    rel: supports
+  - source: concept-agent-security-risks
+    target: lesson-bswa-006
+    rel: supports
+  - source: concept-agents-in-teams
+    target: exercise-bswa-006
+    rel: trains
+  - source: concept-agent-security-risks
+    target: exercise-bswa-006
+    rel: trains
+  - source: concept-evaluating-agent-workflows
+    target: exercise-bswa-006
+    rel: trains
+  - source: rubric-building-with-ai-agents
+    target: exercise-bswa-006
+    rel: evaluates
+
+  # --- BSWA Capstone (exercise-bswa-007) ---
+  - source: concept-spec-driven-development
+    target: exercise-bswa-007
+    rel: trains
+  - source: concept-plan-then-execute
+    target: exercise-bswa-007
+    rel: trains
+  - source: concept-tdd-with-agents
+    target: exercise-bswa-007
+    rel: trains
+  - source: concept-verification-before-completion
+    target: exercise-bswa-007
+    rel: trains
+  - source: concept-reviewing-ai-code
+    target: exercise-bswa-007
+    rel: trains
+  - source: rubric-building-with-ai-agents
+    target: exercise-bswa-007
+    rel: evaluates

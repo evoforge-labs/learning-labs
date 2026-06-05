@@ -1,0 +1,74 @@
+---
+id: lesson-bswa-005
+title: "Quy trình: plan, lặp, quản context, chạy việc lớn"
+type: "lesson"
+track: building-with-ai-agents
+module: workflow
+level: advanced
+tags: [building-with-ai-agents, workflow, plan-mode, iterative, context-management, worktrees, orchestration, large-tasks]
+prerequisites: [concept-plan-then-execute, concept-iterative-refinement, concept-managing-agent-context, concept-git-worktrees-with-agents, concept-orchestrating-large-tasks]
+related: [exercise-bswa-005, rubric-building-with-ai-agents]
+status: published
+---
+import Callout from '../../../components/content/Callout.astro';
+
+Bốn module trước bạn đã có công cụ, harness, và kỹ năng review. Module này thread tất cả lại thành một **quy trình làm việc** — từ khi mở terminal đến khi task lớn nhất cũng xong gọn.
+
+## 1 — Plan trước, code sau
+
+Sai lầm phổ biến nhất: gõ yêu cầu vào agent rồi chờ. Agent bắt đầu viết code ngay lập tức, bạn nhìn vào màn hình, và 10 phút sau nó ra một hướng hoàn toàn sai.
+
+[Plan-then-execute](/concepts/plan-then-execute) tách giai đoạn *khám phá* ra khỏi giai đoạn *thực thi*. Trong plan mode, agent đọc file và đề xuất kế hoạch — không sửa gì cả. Bạn đọc kế hoạch, chỉnh nếu cần, rồi mới duyệt.
+
+Dùng khi: thay đổi ảnh hưởng nhiều file, bạn chưa chắc về cách tiếp cận, hoặc đây là codebase không quen. Bỏ qua khi: task nhỏ, rõ ràng, một file.
+
+## 2 — Lặp từng mảnh nhỏ, sửa hướng sớm
+
+Kể cả có kế hoạch tốt, agent vẫn có thể đi lạc. [Iterative refinement](/concepts/iterative-refinement) là kỷ luật giữ vòng phản hồi ngắn:
+
+- Làm **một việc mỗi lần** — không giao cả list task trong một lượt
+- Nhấn **`Esc` ngay** khi thấy agent đi sai hướng — đừng chờ nó xong rồi mới sửa
+- Hai lần fail cùng lỗi = tín hiệu để `/clear` và viết prompt mới, không phải thử lần thứ ba
+
+Một session bị "nhiễm" bởi nhiều hướng sai còn tệ hơn bắt đầu lại từ đầu với prompt tốt hơn.
+
+## 3 — Quản context như quản RAM
+
+[Managing agent context](/concepts/managing-agent-context) là thứ phân biệt người dùng agent giỏi và người dùng agent thường.
+
+Ba hành động cần biến thành thói quen:
+
+- **`/clear`** giữa các task không liên quan — context cũ của task trước chỉ làm nhiễu task mới
+- **`/compact [chỉ dẫn]`** khi context ~70-75% đầy và muốn tiếp tục — compact với chỉ dẫn cụ thể giữ lại thông tin đúng
+- **Subagent cho điều tra** — khi cần khám phá nhiều file, delegate cho subagent để context chính không bị ngập
+
+Quan trọng không kém: **ghi state ra ngoài** — kế hoạch, quyết định, lệnh test — vào file. Agent phiên sau đọc file đó, không cần context phiên cũ.
+
+## 4 — Worktree khi cần song song
+
+Đôi khi bạn cần làm hai việc cùng lúc: feature đang chạy dở, bug production khẩn cấp xuất hiện.
+
+[Git worktrees](/concepts/git-worktrees-with-agents) cho phép hai phiên Claude Code chạy song song trong hai thư mục riêng biệt, trên hai branch riêng — không đụng file của nhau. Một lệnh:
+
+```bash
+claude --worktree hotfix-urgent
+```
+
+Worktree mới, branch mới, agent riêng. Feature đang chạy ở terminal kia không bị ảnh hưởng.
+
+## 5 — Chọn đúng cơ chế khi task vượt một cuộc hội thoại
+
+Không phải mọi task đều fit trong một phiên. Khi migration 500 file hay audit toàn repo, bạn cần [orchestrate task lớn hơn](/concepts/orchestrating-large-tasks).
+
+Chọn theo quy mô:
+
+- **Task tuần tự nhiều bước phụ thuộc** → một phiên là đủ
+- **Vài task song song, kết quả báo về** → subagent
+- **Nhiều task peer cần phối hợp** → agent teams (experimental)
+- **Hàng trăm task lặp lại** → dynamic workflow (`ultracode` keyword)
+
+<Callout title="Nhớ nhé">
+Quy trình không phải luật cứng nhắc — đó là framework để bạn tự điều chỉnh. Task nhỏ: skip plan, iterate nhanh, không cần worktree. Task lớn: plan trước, lặp từng bước, quản context kỹ, chọn đúng cơ chế orchestrate. Điều quan trọng là biết *tại sao* mỗi bước tồn tại — không phải làm theo vì có trong sách.
+</Callout>
+
+Thực hành ngay với [bài refactor lớn qua nhiều agent →](/exercises/building-with-ai-agents/m5-plan-and-iterate)

@@ -1,0 +1,93 @@
+---
+id: lesson-bswa-006
+title: "Khi cả team dùng agent ở quy mô"
+type: "lesson"
+track: building-with-ai-agents
+module: team
+level: advanced
+tags: [building-with-ai-agents, team, claude-md, code-review, cost, security, prompt-injection, metrics]
+prerequisites: [concept-agents-in-teams, concept-ai-code-review-culture, concept-dev-cost-token-budget, concept-agent-security-risks, concept-prompt-injection-in-dev, concept-evaluating-agent-workflows]
+related: [exercise-bswa-006, rubric-building-with-ai-agents]
+status: published
+---
+import Callout from '../../../components/content/Callout.astro';
+
+Một người dùng agent giỏi thì dễ. Cả team dùng agent nhất quán — mỗi người có style khác nhau, deadline khác nhau, và quyền truy cập hệ thống khác nhau — thì cần thêm một lớp: quy ước chung, văn hóa review, kiểm soát chi phí, và bảo mật. Module này thread tất cả lại.
+
+## 1 — Chuẩn chung qua CLAUDE.md: onboarding cho agent
+
+Trước khi team mở rộng việc dùng agent, cần một nguồn sự thật chung. Không phải wiki, không phải Slack pinned message — mà là **CLAUDE.md** (hoặc AGENTS.md) — file mà mọi coding agent chính thức đọc khi bắt đầu session.
+
+[Agents in Teams](/concepts/agents-in-teams) giải thích tại sao đây là "tài liệu onboarding cho agent", không phải người. File này chứa những thứ agent không tự suy được từ code: lệnh test cụ thể, quy ước đặt tên branch, các gotcha của codebase, pattern nên dùng và tránh.
+
+Nguyên tắc thực hành:
+
+- **Check vào git** để cả team review, cập nhật, và mọi agent đọc cùng phiên bản
+- **Giữ 200–500 dòng** — quá dài, agent bỏ qua phần quan trọng
+- **Monorepo**: phân tầng — root CLAUDE.md cho quy tắc chung, sub-CLAUDE.md trong từng package cho quy tắc riêng
+- **`/init`** để sinh bản nháp từ codebase hiện có; bạn review, cắt thừa
+
+Dùng [concept-agent-instructions-file](/concepts/agent-instructions-file) để hiểu sâu hơn về cú pháp `@import` và cách chia nhỏ file khi nội dung phức tạp.
+
+## 2 — Văn hóa review: người thiết kế, agent thực thi
+
+Khi agent viết phần lớn code, áp lực review tăng theo — nhưng chất lượng review thường lại giảm vì cảm giác "AI đã kiểm tra rồi." Đây là cái bẫy nguy hiểm nhất.
+
+[AI Code Review Culture](/concepts/ai-code-review-culture) đặt ra nguyên tắc rõ ràng: **người thiết kế môi trường + intent + feedback loop; agent viết code**. Trách nhiệm sở hữu vẫn ở người — không commit code bạn không giải thích được.
+
+Pattern hiệu quả trong thực tế:
+
+- **Writer/Reviewer trong session riêng**: agent viết ở session A; reviewer — người hoặc agent khác trong session B fresh context — review mà không biết intent ban đầu. Fresh context phát hiện lỗi mà writer bỏ qua.
+- **Automated feedback loop trước người**: test, linter, type check phải pass trước khi đến tay reviewer người. Đừng để reviewer người làm việc mà CI có thể làm.
+- **Câu hỏi review cốt lõi**: "Có phần nào trong code này tôi không tự viết được?" — nếu có, reviewer cần hiểu trước khi approve.
+
+## 3 — Kiểm soát cost và token: routing và hygiene
+
+Agent chạy nhiều phiên dài với model mạnh nhất mỗi ngày = hóa đơn tăng theo cấp số nhân. Với team 5 người, một số ít task "nặng" mà không quản lý có thể chiếm 60–70% tổng chi phí.
+
+[Dev Cost & Token Budget](/concepts/dev-cost-token-budget) chỉ ra hai đòn bẩy chính:
+
+**Model routing** — phân loại task trước khi chạy:
+- Việc đơn giản (boilerplate, rename, format, câu hỏi nhanh) → model nhỏ (rẻ hơn ~8–10x)
+- Việc phức tạp (debug khó, thiết kế kiến trúc, security review) → model mạnh
+
+**Session hygiene** — dọn dẹp context đúng lúc:
+- `/clear` sau mỗi task hoàn chỉnh — đừng để session "drift" qua nhiều task
+- Subagent để khám phá code thay vì nhét vào main session
+- Đo token usage thực tế theo task trước khi optimize — đừng đoán
+
+Lưu ý: cùng một task có thể chênh tới ~30x token giữa các lần chạy. Đo thực nghiệm, không dựa vào ước lượng.
+
+## 4 — Bảo mật: quyền agent và prompt injection
+
+Agent có quyền chạy lệnh, đọc file, và truy cập mạng — bề mặt tấn công mở rộng theo từng quyền được cấp. Trong môi trường team, nguy cơ còn cao hơn vì agent xử lý input từ nhiều nguồn: ticket, comment PR, kết quả tool.
+
+**Least-privilege** — chỉ mở tool agent thực sự cần:
+
+[Agent Security Risks](/concepts/agent-security-risks) liệt kê bốn lớp kiểm soát: allowlist tool theo task, dùng auto mode classifier (thay vì bypass hoàn toàn), protected paths không auto-approve, và `bypassPermissions` chỉ trong container cô lập.
+
+**Prompt injection trong dev workflow** — mối đe dọa đặc thù:
+
+[Prompt Injection in Dev Workflow](/concepts/prompt-injection-in-dev) giải thích tại sao lệnh độc hại không cần ai gõ vào terminal — nó ẩn trong file repo, mô tả ticket, comment PR, hoặc kết quả MCP tool. Agent đọc nội dung đó hợp lệ và bị dẫn dắt.
+
+Phòng vệ ở tầng hạ tầng: scan input, lọc output, allowlist egress — không giải quyết được chỉ bằng prompt tốt hơn. Xem thêm [concept-prompt-injection](/concepts/prompt-injection) để hiểu cơ chế cơ bản.
+
+<Callout title="Cẩn thận">
+Auto mode không phải giải pháp hoàn hảo cho mọi nguy cơ — nó là một lớp trong hệ thống phòng vệ nhiều tầng. Least-privilege + auto mode + human approval cho hành động quan trọng = phòng vệ đủ sâu cho team thực tế.
+</Callout>
+
+## 5 — Đo lường: tốc độ và độ bền, không chỉ đếm dòng code
+
+Khi agent viết nhiều code hơn, bảng metrics cũ không còn trung thực. Số dòng code tăng vọt — nhưng đó không phải thành tích, đó chỉ là output volume.
+
+[Evaluating Agent Workflows](/concepts/evaluating-agent-workflows) đề xuất năm chiều: adoption, tỷ lệ AI-generated code, velocity (cycle time), chất lượng (code churn + clone), và cost/ROI.
+
+Metric quan trọng nhất thường bị bỏ qua: **code churn** — tỷ lệ code bị rewrite trong 2 tuần sau khi merge. Nghiên cứu ghi nhận churn và code clone có xu hướng *tăng* khi AI generate phần lớn code — tức là code nhanh nhưng không chín muồi.
+
+Quy tắc thực hành: luôn bao gồm ít nhất một metric độ bền trong dashboard theo dõi. Velocity tăng mà churn cũng tăng = cảnh báo, không phải chiến thắng.
+
+<Callout title="Nhớ nhé">
+Năm trụ cột khi đưa agent vào team: (1) chuẩn chung qua CLAUDE.md, (2) văn hóa review giữ con người chịu trách nhiệm, (3) kiểm soát cost bằng routing và hygiene, (4) bảo mật least-privilege và chống injection, (5) đo cả tốc độ lẫn độ bền. Thiếu một trụ cột, phần còn lại sẽ lung lay.
+</Callout>
+
+Thực hành ngay với [bài đưa agent vào team an toàn và đo được →](/exercises/building-with-ai-agents/m6-team-and-cost)

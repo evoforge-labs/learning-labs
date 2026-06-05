@@ -1,0 +1,61 @@
+---
+id: lesson-bswa-004
+title: "Đừng merge mù: chất lượng với code AI"
+type: "lesson"
+track: building-with-ai-agents
+module: quality
+level: intermediate
+tags: [ai-engineering, code-review, tdd, verification, debugging, agents, agentic-coding, quality]
+prerequisites:
+  - concept-reviewing-ai-code
+  - concept-tdd-with-agents
+  - concept-ai-code-smells
+  - concept-verification-before-completion
+  - concept-debugging-with-agents
+related:
+  - exercise-bswa-004
+  - rubric-building-with-ai-agents
+status: published
+---
+import Callout from '../../../components/content/Callout.astro';
+
+Code do agent sinh trông sạch. Đó chính là cái bẫy — không phải vì nó xấu, mà vì bạn sẽ đọc lướt thay vì đọc kỹ. Module này là bản đồ để bạn không bị lừa bởi "trông có vẻ đúng".
+
+## Bẫy đầu tiên: code AI đọc trơn tru không có nghĩa là đúng
+
+[AI Code Smells](/concepts/ai-code-smells) là những dấu hiệu cảnh báo đặc trưng của code do agent sinh: hallucinated API (gọi method không tồn tại), scope creep âm thầm (tự sửa file ngoài yêu cầu), over-abstraction (thêm tầng không ai cần), plausible-but-wrong (đúng cú pháp, sai edge case), và cognitive debt (bạn merge code mình không thực sự hiểu).
+
+Biện pháp đơn giản nhất chống cognitive debt: **tự thiết kế kiến trúc, để agent chỉ implement**. Khi bạn biết tại sao mỗi thứ ở đó, code agent không còn là hộp đen.
+
+## Ràng buộc trước khi agent bắt đầu: TDD
+
+[TDD với agent](/concepts/tdd-with-agents) không phải về quy trình — mà về ngữ cảnh bạn cấp. Nghiên cứu TDAD 2026 cho thấy cấp cho agent *danh sách test bị ảnh hưởng* giảm regression 70%. Nhồi *chỉ dẫn quy trình* TDD dài dòng mà không kèm context test cụ thể? Tệ hơn baseline.
+
+Thực chiến: mở phiên từ thư mục `tests/`, viết test fail trước, rồi prompt agent implement để test đó pass — kèm danh sách test hiện có không được phá.
+
+## Review: đọc khác đi, không phải đọc nhiều hơn
+
+[Reviewing AI code](/concepts/reviewing-ai-code) hiệu quả không phải về thời gian đọc — mà về *điểm nhìn vào đâu*. Checklist riêng cho code AI:
+
+- Verify từng import và API call có tồn tại không
+- Chạy test xem nó thật sự fail khi tính năng hỏng không
+- Từ chối mọi thay đổi ngoài scope task
+- Dùng reviewer subagent ở phiên mới — không bias bởi context của phiên viết code
+
+## Bắt agent show bằng chứng, không tuyên bố
+
+[Verification before completion](/concepts/verification-before-completion) là thói quen yêu cầu agent chạy một check và show output thật — không phải nói "đã xong". Dạng đơn giản nhất: thêm vào cuối prompt *"sau đó chạy `npm test` và paste kết quả"*. Từ đó leo thang lên /goal, Stop hook, hoặc verification subagent tùy task.
+
+Nguyên tắc: agent show **bằng chứng** (output lệnh), không phải lời khẳng định.
+
+## Khi debug thất bại: dừng trước khi quá muộn
+
+[Debugging với agent](/concepts/debugging-with-agents) có một cạm bẫy riêng: mỗi lần thử thất bại nhồi thêm lỗi + giải thích bịa vào context, làm agent lần sau tệ hơn. Đây là Debugging Decay.
+
+Luật cứng: **dừng sau 2-3 lần, reset phiên mới với mô tả gọn + test fail tái hiện bug**. Reset sớm luôn thắng nhồi context.
+
+<Callout title="Nhớ nhé">
+Luồng chất lượng: viết test trước (ràng buộc agent) → biết 5 mùi để review đúng chỗ → yêu cầu bằng chứng verify thay vì lời khẳng định → dừng debug sau 2-3 lần, reset phiên mới. Đây là vòng lặp giữ bạn không merge mù.
+</Callout>
+
+Thực hành ngay với [Review một PR do agent sinh ra →](/exercises/building-with-ai-agents/m4-review-ai-code)
