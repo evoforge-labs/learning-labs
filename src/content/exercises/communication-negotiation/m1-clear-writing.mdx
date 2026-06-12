@@ -1,0 +1,80 @@
+---
+id: exercise-comm-001
+title: "Viết lại: từ mơ hồ đến rõ ràng"
+type: "exercise"
+track: communication-negotiation
+tags: [communication, writing, bluf, plain-language, async]
+estimatedMinutes: 30
+related: [lesson-comm-001, concept-bluf, concept-pyramid-principle, concept-plain-language, concept-async-writing, rubric-communication-negotiation]
+status: published
+---
+import Callout from '../../../components/content/Callout.astro';
+
+## Tình huống
+
+Bạn là Engineering Lead tại **Nexus** — một startup SaaS B2B 15 người đang chạy sprint thứ 8. Team hiện đang cần approval ngân sách cho một công cụ monitoring mới, cần thông báo về một sự cố production cuối tuần, và cần sync async với một teammates ở Đà Lạt.
+
+---
+
+## Nhiệm vụ 1 — Rewrite bằng BLUF
+
+Email dưới đây được gửi từ một engineer lên bạn (Engineering Lead) và tiếp tục lên CEO:
+
+> "Chào anh, em muốn báo cáo về sự cố xảy ra vào chiều thứ Bảy. Team em đã nhận được alert lúc 15:30 và bắt đầu điều tra. Sau khoảng 2 tiếng điều tra, em phát hiện root cause là do một config thay đổi bị push nhầm trong deploy tối thứ Sáu. Em đã rollback và service đã restore lúc 17:45. Tổng downtime là 2 tiếng 15 phút. Không có data loss. Em đã thêm thêm monitoring để sớm phát hiện vấn đề tương tự. Anh nghĩ sao về quy trình hiện tại?"
+
+Viết lại email này theo format BLUF phù hợp để forward lên CEO (người bận, đọc email trên điện thoại):
+- Câu BLUF đầu tiên phải có đủ thông tin để CEO biết severity và status.
+- Phần body ngắn gọn — 3-5 bullet points tối đa.
+- Câu cuối: next step hoặc action item rõ ràng (không phải câu hỏi mở).
+
+<Callout title="Mẹo">
+CEO cần biết: điều gì xảy ra, ảnh hưởng thế nào, đã giải quyết chưa, và bước tiếp theo là gì. Không cần biết chi tiết kỹ thuật. BLUF nên trả lời tất cả trong một câu.
+</Callout>
+
+---
+
+## Nhiệm vụ 2 — Cấu trúc bằng Pyramid Principle
+
+Bạn cần gửi email đề nghị CEO approve ngân sách $800/tháng cho DataDog (monitoring tool). Dưới đây là thông tin bạn có:
+
+- Hiện tại team dùng CloudWatch free tier — thiếu custom dashboard và alerting thông minh.
+- Tháng trước có 3 sự cố — mỗi sự cố team mất trung bình 90 phút để diagnose vì thiếu visibility.
+- DataDog sẽ giảm MTTD (Mean Time to Detect) xuống ước tính ~85% theo case study từ company tương tự.
+- 3 sự cố × 90 phút × salary trung bình engineer = ~$1,500 lost productivity/tháng.
+- Competitor đang dùng DataDog.
+- Free trial 2 tuần có thể setup ngay.
+
+Viết email theo Pyramid Principle:
+1. Câu BLUF / khuyến nghị ở đầu.
+2. 3 lý do chính (không phải tất cả thông tin trên — chọn 3 mạnh nhất).
+3. Call-to-action cụ thể ở cuối.
+
+Sau khi viết, trả lời: tại sao bạn chọn 3 lý do đó mà không phải những lý do khác?
+
+---
+
+## Nhiệm vụ 3 — Viết async message đầy đủ
+
+Bạn cần teammate Lan (đang làm remote ở Đà Lạt, múi giờ lệch 0 nhưng thường offline 8am-12pm) review một pull request quan trọng. PR này fix bug critical ảnh hưởng đến billing — nếu không merge trước 5pm hôm nay, khách hàng sẽ bị charged sai tháng này.
+
+Viết Slack message đầy đủ theo framework async writing — message này phải:
+- Cung cấp đủ context để Lan hiểu stakes mà không cần hỏi lại.
+- Nêu rõ action cần làm và deadline cụ thể.
+- Anticipate ít nhất một câu hỏi mà Lan có thể có và trả lời trước.
+- Không dài quá 150 từ.
+
+<Callout title="Nhớ nhé">
+Một async message tốt là message mà người đọc có thể bắt đầu làm việc ngay sau khi đọc — không cần mở thêm tab nào, không cần hỏi thêm câu nào.
+</Callout>
+
+---
+
+## Tiêu chí đánh giá
+
+Tham khảo [Communication & Negotiation Rubric](/rubrics/communication-negotiation-rubric) để tự chấm.
+
+| Tiêu chí | Câu hỏi tự kiểm tra |
+|---|---|
+| BLUF hiệu quả | Câu đầu tiên có đủ để người đọc bận nhất hiểu và hành động không? |
+| Pyramid logic | Ba lý do bạn chọn có tóm tắt được argument tổng thể không? |
+| Async completeness | Message có đủ để Lan bắt đầu mà không cần hỏi gì thêm không? |

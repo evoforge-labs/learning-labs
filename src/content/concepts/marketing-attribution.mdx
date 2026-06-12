@@ -1,0 +1,56 @@
+---
+id: concept-marketing-attribution
+title: "Marketing Attribution (Quy kết marketing)"
+type: "concept"
+aliases: ["marketing attribution", "attribution model", "first-touch attribution", "last-touch attribution", "multi-touch attribution", "quy kết kênh marketing"]
+tags: [founder, marketing, growth, analytics, attribution, metrics, growth-marketing]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Khách hàng của bạn đọc blog từ Google → thấy ad trên Facebook hai tuần sau → một người bạn giới thiệu → rồi click vào email newsletter để đăng ký. Kênh nào "đáng công"? Câu trả lời phụ thuộc vào *mô hình attribution* bạn chọn — và mỗi mô hình kể một câu chuyện khác nhau.
+
+## Là gì
+
+**Marketing attribution** là quá trình xác định kênh marketing nào đã đóng góp vào việc chuyển đổi một khách hàng — để bạn biết đầu tư vào đâu mang lại nhiều giá trị nhất.
+
+Ba mô hình phổ biến nhất:
+
+- **First-touch attribution** — 100% credit cho điểm chạm đầu tiên (Google blog). Tốt để hiểu kênh nào tạo awareness.
+- **Last-touch attribution** — 100% credit cho điểm chạm cuối cùng trước khi convert (email newsletter). Tốt để hiểu kênh nào đóng deal.
+- **Multi-touch attribution** — chia credit cho nhiều điểm chạm. Linear (chia đều), time-decay (gần cuối hành trình được nhiều hơn), hay position-based (đầu và cuối được nhiều, giữa ít hơn).
+
+## Thực tế với indie founder
+
+Hầu hết indie founder không có hệ thống attribution phức tạp — và không cần. Điều thực dụng nhất: **hỏi khách hàng trực tiếp**. "Bạn biết đến chúng mình qua đâu?" trong quá trình onboarding thường cho insight tốt hơn nhiều so với pixel tracking không đầy đủ.
+
+Khi có đủ data: bắt đầu với last-touch (dễ setup, cho biết kênh nào đang close) rồi bổ sung first-touch sau (để biết awareness đến từ đâu). Multi-touch phức tạp hơn — dành cho khi bạn đang scale và cần tối ưu budget lớn.
+
+## Ví dụ thật
+
+Một SaaS có 50 khách mới trong tháng. Theo last-touch: 40% từ Google Organic, 30% từ email, 20% từ direct, 10% từ social. Có vẻ Google Organic là kênh tốt nhất.
+
+Nhưng hỏi khách: "Bạn biết đến chúng mình qua đâu?" → 60% nhắc đến "một bài blog" (first-touch). Và 25% nhắc đến "người bạn giới thiệu" — không hề xuất hiện trong data tracking.
+
+Attribution model không nắm được toàn bộ hành trình. Dữ liệu tracking + câu hỏi trực tiếp là bộ đôi thực dụng nhất.
+
+<Callout title="Cẩn thận">
+Đừng cắt budget một kênh chỉ vì nó không được credit trong last-touch model. Kênh đầu phễu (SEO, content, social) thường tạo awareness quan trọng nhưng không "close" deal. Cắt chúng có thể làm cạn pipeline mà bạn không nhận ra ngay.
+</Callout>
+
+<Callout title="Nhớ nhé">
+Attribution không phải sự thật tuyệt đối — nó là *lăng kính* bạn chọn để hiểu dữ liệu. Dùng nhiều lăng kính, kết hợp với câu hỏi thực tế từ khách, để ra quyết định đầu tư marketing tốt hơn.
+</Callout>
+
+## Đọc thêm
+
+- [First Touch vs Last Touch Attribution — RedTrack](https://www.redtrack.io/blog/first-touch-vs-last-touch-attribution/): So sánh chi tiết hai mô hình attribution cơ bản; hướng dẫn chọn mô hình phù hợp theo mục tiêu marketing.
+- [Multi-Touch Attribution: What It Is and How to Use It — Marketing Evolution](https://www.marketingevolution.com/marketing-essentials/multi-touch-attribution): Giải thích đầy đủ các biến thể multi-touch với ưu nhược điểm từng loại; hữu ích khi bạn sẵn sàng đi sâu hơn.
+- [Marketing Attribution Models 2026: Multi-Touch vs Last Click — Marketing Mary](https://www.marketingmary.ai/blog/marketing-attribution-models-guide): So sánh tất cả các mô hình attribution phổ biến năm 2026 với hướng dẫn chọn theo giai đoạn và loại startup.
+- [A Practical Guide to Last-Touch and Multi-Touch Attribution — CACM](https://cacm.acm.org/blogcacm/a-practical-guide-to-last-touch-and-multi-touch-attribution/): Hướng dẫn kỹ thuật thực chiến về implement attribution; phù hợp khi bạn muốn build tracking infrastructure.
+
+## Tự kiểm tra
+
+1. Một công ty chỉ dùng last-touch attribution để quyết định budget. Họ có thể bị ảnh hưởng xấu thế nào — kênh nào có thể bị undervalue?
+2. Tại sao "hỏi khách hàng trực tiếp" đôi khi cho data attribution tốt hơn pixel tracking?
+3. Với một startup giai đoạn sớm với 20-30 khách/tháng, mô hình attribution nào đủ và thực dụng nhất để bắt đầu?

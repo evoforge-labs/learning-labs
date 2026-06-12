@@ -1,0 +1,62 @@
+---
+id: concept-async-writing
+title: "Async Writing (Viết cho giao tiếp bất đồng bộ)"
+type: "concept"
+aliases: ["async writing", "viết async", "viết cho remote team", "giao tiếp bất đồng bộ văn bản", "async communication writing"]
+tags: [communication, writing, async, remote-work, productivity, documentation]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Khi gặp nhau trực tiếp, bạn có thể nói một câu mơ hồ rồi người kia hỏi lại ngay. Bạn điều chỉnh, giải thích thêm, xong trong 30 giây. Viết async không có lợi thế đó: bạn viết lúc 10 giờ sáng, người kia đọc lúc 5 giờ chiều, và nếu không hiểu — cả hai mất một ngày chờ nhau.
+
+Viết async giỏi là **tự anticipate những gì người kia sẽ hỏi, rồi trả lời trước**.
+
+## Là gì
+
+**Async writing** là kỹ năng viết văn bản (email, Slack message, tài liệu, PR comment, design doc) sao cho người đọc có thể hiểu đầy đủ và hành động *mà không cần hỏi lại* — dù họ đọc ở múi giờ khác, thời điểm khác.
+
+Async không có nghĩa là viết dài. Nó có nghĩa là viết *đủ*: đủ context để hiểu, đủ rõ để hành động, đủ cụ thể để không cần clarification.
+
+Ba yếu tố của async writing tốt:
+1. **Context đầy đủ** — người đọc không cần biết "chuyện trước" để hiểu message.
+2. **Hành động rõ ràng** — ai cần làm gì, đến bao giờ? Không để người đọc tự đoán.
+3. **Anticipated questions** — liệt kê những câu hỏi dễ nảy sinh và trả lời trước.
+
+## Ví dụ thật
+
+**Async kém:**
+> "Bạn nghĩ sao về proposal hôm qua? Anh muốn nghe ý kiến trước khi quyết định."
+
+*Vấn đề:* Proposal nào? Quyết định gì? Cần ý kiến theo hướng nào? Khi nào cần?
+
+**Async tốt:**
+> "Về proposal redesign onboarding flow (link: ...) — mình cần biết: (1) Bạn có concern nào về technical feasibility không? (2) Estimate effort cho backend changes là bao nhiêu? Mình cần quyết định trước thứ Sáu để đưa vào sprint tới."
+
+<Callout title="Cẩn thận">
+Async writing không thay thế hoàn toàn sync communication. Khi cần alignment nhanh, brainstorm, hoặc xử lý conflict cảm xúc — meeting hoặc call vẫn hiệu quả hơn. Async giỏi là biết khi nào dùng async, khi nào cần sync.
+</Callout>
+
+**Framework 5W1H nhanh cho async message:**
+- **What**: Bạn cần gì / đang nói về gì?
+- **Why**: Tại sao quan trọng?
+- **Who**: Ai liên quan / ai cần hành động?
+- **When**: Deadline?
+- **Where**: Link tài liệu, PR, context liên quan.
+- **How**: Hành động cụ thể cần làm là gì?
+
+<Callout title="Nhớ nhé">
+Mỗi lần bạn viết async tốt, bạn tặng người kia thời gian. Mỗi lần bạn viết thiếu context, bạn lấy thời gian của cả hai — và tạo ra một vòng lặp hỏi-đáp không cần thiết.
+</Callout>
+
+## Đọc thêm
+
+- [How to embrace asynchronous communication for remote work — GitLab Handbook](https://handbook.gitlab.com/handbook/company/culture/all-remote/asynchronous/) — GitLab — công ty remote-first lớn nhất thế giới — chia sẻ toàn bộ playbook async communication, bao gồm khi nào dùng và khi nào không nên.
+- [Mastering Asynchronous Communication — DigitalOcean](https://www.digitalocean.com/resources/articles/asynchronous-communication) — Giải thích sự khác biệt async vs sync và các best practice viết message đầy đủ context cho distributed teams.
+- [The Art of Async: Remote Guide to Team Communication — Twist](https://twist.com/remote-work-guides/remote-team-communication) — Hướng dẫn thực hành xây dựng culture async communication cho team, kèm ví dụ cụ thể từng loại tin nhắn.
+
+## Tự kiểm tra
+
+1. Bạn cần nhờ một teammate ở múi giờ khác review một pull request trước ngày mai. Viết một async message đầy đủ theo framework 5W1H.
+2. Vì sao "viết nhiều hơn" không tự động bằng "viết async tốt hơn"? Điều gì thực sự quyết định chất lượng của một async message?
+3. Liệt kê ba tình huống mà async communication kém hiệu quả hơn sync — và giải thích lý do.

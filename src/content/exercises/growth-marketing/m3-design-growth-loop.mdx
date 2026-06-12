@@ -1,0 +1,84 @@
+---
+id: exercise-growth-003
+title: "Thiết kế growth loop và viral mechanism cho sản phẩm"
+type: "exercise"
+track: growth-marketing
+tags: [founder, growth, growth-loops, viral-coefficient, product-led-growth, referral, growth-marketing]
+estimatedMinutes: 30
+related: [lesson-growth-003, concept-growth-loops, concept-viral-coefficient, concept-product-led-growth, concept-referrals-and-word-of-mouth, rubric-growth-marketing]
+status: published
+---
+import Callout from '../../../components/content/Callout.astro';
+
+## Tình huống
+
+Bạn build **MeetSnap** — tool tạo meeting notes tự động cho team nhỏ (2-10 người). User join meeting, MeetSnap tự record và tóm tắt action items sau cuộc họp. Notes được share tự động cho người tham gia và lưu lại để tra cứu.
+
+Hiện tại MeetSnap có 200 users, tất cả đến từ paid acquisition (Google Ads). K-factor hiện tại: 0.05 (chỉ 1/20 user giới thiệu người khác). Bạn muốn giảm phụ thuộc vào paid và tăng K-factor lên ít nhất 0.3.
+
+---
+
+## Nhiệm vụ 1 — Phân tích viral loop tự nhiên tiềm năng
+
+MeetSnap có một số cơ chế sản phẩm có thể tạo ra viral loop tự nhiên:
+
+- Meeting notes được share cho tất cả người tham gia — kể cả người **chưa dùng MeetSnap**.
+- Khi user gửi notes cho khách hàng bên ngoài (external attendee), khách nhận được email với footer.
+- User có thể share meeting summary lên Slack/Notion của team.
+
+Phân tích **ba cơ chế trên** theo góc độ viral loop:
+1. Mỗi cơ chế tạo ra "exposure" như thế nào cho người chưa dùng MeetSnap?
+2. Conversion path từ "thấy MeetSnap" đến "đăng ký" qua mỗi cơ chế là gì?
+3. Cơ chế nào có K-factor tiềm năng cao nhất? Tại sao?
+
+---
+
+## Nhiệm vụ 2 — Thiết kế một PLG feature
+
+Bạn muốn nhúng viral loop sâu hơn vào sản phẩm theo hướng PLG. Đề xuất **một feature cụ thể** có thể:
+
+- Giúp người chưa dùng MeetSnap trải nghiệm giá trị sản phẩm **trước khi đăng ký**.
+- Tạo ra lý do tự nhiên để user share sản phẩm — không cần incentive.
+- Phù hợp với cách người thật sự dùng sản phẩm (không phải gượng ép).
+
+Mô tả feature của bạn:
+- Tên và mô tả ngắn (2-3 câu)
+- Cơ chế viral: ai share → ai thấy → hành trình đến signup
+- Ước tính K-factor có thể đạt được nếu feature hoạt động tốt (và giải thích logic tính)
+
+<Callout title="Mẹo">
+Viral loop tốt nhất thường đến từ việc sản phẩm "tràn ra ngoài" một cách tự nhiên trong quá trình dùng — như Calendly link, Loom video, hay Canva design. MeetSnap có gì "tràn ra ngoài" khi user dùng nó?
+</Callout>
+
+---
+
+## Nhiệm vụ 3 — Thiết kế referral trigger đúng thời điểm
+
+Bạn muốn tăng referral rate từ 5% lên 15% mà không cần feature phức tạp — chỉ cần hỏi đúng lúc.
+
+Xác định **hai thời điểm cụ thể** trong hành trình người dùng MeetSnap mà user có khả năng giới thiệu cao nhất (khi họ đang happy nhất), và thiết kế trigger tương ứng:
+
+Với mỗi thời điểm:
+- Mô tả chính xác trigger event (ví dụ: "user lần đầu nhận feedback tích cực từ khách về notes")
+- Viết **một câu hỏi/message** cụ thể sẽ gửi cho user ở thời điểm đó
+- Giải thích tại sao timing này tăng khả năng họ respond tích cực
+
+<Callout title="Cẩn thận">
+Tránh trigger "mọi user sau 7 ngày đăng ký" — đây là timing dựa trên calendar, không phải hành vi. User chưa thấy giá trị sau 7 ngày sẽ không giới thiệu ai. Trigger tốt là trigger dựa trên **hành vi thành công cụ thể**.
+</Callout>
+
+---
+
+## Tiêu chí đánh giá
+
+Tham khảo [Growth & Marketing Rubric](/rubrics/growth-marketing-rubric).
+
+| Tiêu chí | Câu hỏi tự kiểm tra |
+|---|---|
+| Loop analysis đúng cơ chế | Bạn có xác định được conversion path thực tế, không chỉ exposure? |
+| PLG feature có logic | Feature tạo ra viral loop tự nhiên hay phải ép người dùng share? |
+| Referral trigger dựa trên hành vi | Trigger của bạn dựa trên calendar hay dựa trên kết quả cụ thể người dùng đạt được? |
+
+<Callout title="Nhớ nhé">
+K-factor không phải con số bạn "chọn" — nó là kết quả của cơ chế sản phẩm và behavior người dùng. Bạn không thể force viral, nhưng có thể thiết kế để viral dễ xảy ra hơn.
+</Callout>

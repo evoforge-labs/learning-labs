@@ -1,0 +1,61 @@
+---
+id: concept-audience-first-thinking
+title: "Audience-First Thinking (Tư duy ưu tiên người nghe)"
+type: "concept"
+aliases: ["audience-first thinking", "tư duy người nghe trước", "know your audience communication", "empathy in presentation", "tư duy empathy người nghe"]
+tags: [communication, presentation, empathy, storytelling, persuasion]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Bạn chuẩn bị một buổi thuyết trình technical architecture cho CEO. Bạn có 20 slide chi tiết về các trade-off kỹ thuật, sequence diagram, và benchmark performance. CEO nghe 5 phút, rồi hỏi: "Ý bạn là sản phẩm này có scale được không, và mất bao lâu để ra?"
+
+Bạn đã có câu trả lời đó — nhưng nó nằm ở slide 17.
+
+Đó là giao tiếp "bắt đầu từ mình". Audience-first thinking lật ngược lại: **bắt đầu từ câu hỏi người kia đang có trong đầu, không phải thông tin bạn muốn chia sẻ**.
+
+## Là gì
+
+**Audience-first thinking** là thói quen bắt đầu mọi nội dung giao tiếp — slide, email, tài liệu, cuộc trò chuyện — bằng cách đặt mình vào vị trí người nhận: *Họ biết gì rồi? Họ quan tâm đến điều gì? Họ cần biết gì để ra quyết định?*
+
+Không phải "Tôi có gì để chia sẻ?" — mà là "Họ cần nhận được gì?"
+
+Ba câu hỏi cốt lõi trước khi tạo nội dung:
+1. **Who** — Đây là ai? Technical hay non-technical? Quyết định hay thực thi?
+2. **What do they know?** — Baseline knowledge của họ là gì? Tôi cần giải thích bao nhiêu?
+3. **What do they need to do?** — Sau khi nghe/đọc xong, họ cần làm gì hoặc quyết định gì?
+
+## Ví dụ thật
+
+Cùng một chủ đề "kết quả A/B test tháng này" — nhưng người nghe khác nhau:
+
+**Cho Engineering team:**
+> "Test variant B tăng p95 latency lên 200ms — khuyến nghị rollback và xem lại query N+1 ở endpoint /feed."
+
+**Cho CEO:**
+> "Test tháng này thất bại — tỉ lệ chuyển đổi không đổi nhưng performance bị ảnh hưởng. Chúng ta sẽ rollback và re-test sau khi fix technical issue. Không ảnh hưởng đến Q3 target."
+
+Cùng sự thật, khác cách đóng khung vì người nghe khác nhau cần thông tin khác.
+
+<Callout title="Cẩn thận">
+Audience-first không có nghĩa là nói những gì người ta muốn nghe. Có những lúc bạn phải truyền đạt tin xấu hay ý kiến trái chiều. Audience-first giúp bạn làm điều đó *theo cách người kia có thể tiếp nhận*, không phải tránh né nó.
+</Callout>
+
+**Công cụ nhanh — "So what?" test:**
+Sau mỗi câu hoặc đoạn, hỏi: "Nếu người nghe đặt câu hỏi 'So what?' về phần này — tôi có trả lời được không?" Nếu không — đó là dấu hiệu của nội dung viết cho mình, không phải cho họ.
+
+<Callout title="Nhớ nhé">
+Người nghe không quan tâm đến những gì bạn biết. Họ quan tâm đến những gì họ cần biết. Khoảng cách giữa hai điều đó là lý do hầu hết giao tiếp thất bại.
+</Callout>
+
+## Đọc thêm
+
+- [Create a Presentation Your Audience Will Care About — HBR](https://hbr.org/2012/10/create-presentations-an-audien) — Nancy Duarte giải thích tại sao phần lớn presentations thất bại vì người trình bày đặt mình vào vị trí trung tâm, không phải người nghe.
+- [How Experts Can Help a General Audience Understand Their Ideas — HBR](https://hbr.org/2016/09/how-experts-can-help-a-general-audience-understand-their-ideas) — Nghiên cứu Harvard về "curse of knowledge" — tại sao người biết nhiều thường giao tiếp kém hiệu quả hơn, và cách khắc phục.
+- [8 Ways You Can Improve Your Communication Skills — Harvard DCE](https://professional.dce.harvard.edu/blog/8-ways-you-can-improve-your-communication-skills/) — Tám chiến lược từ Harvard Extension School, đặc biệt phần về audience awareness và tailoring message.
+
+## Tự kiểm tra
+
+1. Bạn phải trình bày kết quả kỹ thuật của một sprint cho cả Engineering team lẫn Product team cùng lúc. Bạn sẽ cấu trúc thông tin như thế nào để phù hợp với cả hai?
+2. "Curse of knowledge" là gì và nó liên quan đến audience-first thinking như thế nào?
+3. Mô tả một tình huống thực tế mà bạn hoặc ai đó giao tiếp tốt về mặt nội dung nhưng thất bại về audience-first. Điều gì có thể làm khác đi?

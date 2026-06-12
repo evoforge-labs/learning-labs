@@ -1,0 +1,56 @@
+---
+id: concept-viral-coefficient
+title: "Viral Coefficient (Hệ số lan truyền)"
+type: "concept"
+aliases: ["viral coefficient", "k-factor", "hệ số lan truyền", "k factor", "viral growth", "tăng trưởng lan truyền"]
+tags: [founder, growth, growth-loops, viral, metrics, product-led-growth, growth-marketing]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Hãy tưởng tượng bạn mắc bệnh cúm. Trung bình mỗi người bị cúm lây cho 1,3 người khác — và con số đó đủ để tạo ra dịch. Nếu con số đó chỉ là 0,8 — dịch sẽ tự tắt.
+
+Sản phẩm viral hoạt động theo cùng cơ chế. Hệ số K (K-factor hay viral coefficient) đo mỗi người dùng hiện tại kéo được bao nhiêu người dùng mới.
+
+## Là gì
+
+**Viral coefficient (K)** = Số lời mời trung bình mỗi người dùng gửi × Tỷ lệ chuyển đổi của lời mời đó.
+
+Ví dụ: mỗi user gửi 5 lời mời, 20% trong số đó đăng ký → K = 5 × 0.2 = **1.0**.
+
+Khi K > 1: mỗi người dùng kéo thêm hơn một người — tăng trưởng exponential, tự nuôi được. Khi K < 1: tăng trưởng vẫn có nhưng không tự lan — cần bổ sung từ kênh khác. Khi K = 0: không ai giới thiệu ai.
+
+Thực tế: K > 1 bền vững là **cực hiếm** và thường chỉ xảy ra theo đợt ngắn. Hầu hết sản phẩm khỏe mạnh có K = 0.3–0.7 — đủ để giảm đáng kể CAC và tăng tốc acquisition.
+
+## Vì sao quan trọng với founder
+
+Nếu sản phẩm có K = 0.5, mỗi 100 người bạn kéo vào qua ads sẽ tự kéo thêm 50 người nữa mà bạn không tốn thêm chi phí. Đó là 50% "bonus" trên mọi đồng bạn bỏ vào paid acquisition.
+
+Cải thiện K từ 0.1 lên 0.3 — tức mỗi 10 user kéo thêm 3 thay vì 1 — có thể giảm effective CAC của bạn xuống đáng kể mà không cần tăng budget.
+
+## Ví dụ thật
+
+Dropbox tặng thêm 500MB dung lượng cho cả người mời và người được mời. Cơ chế đơn giản đó tạo ra K cao và là lý do chính Dropbox tăng trưởng nhanh với rất ít chi phí ads trong giai đoạn đầu.
+
+Với SaaS B2B: mỗi invoice bạn gửi cho khách hàng có watermark "Powered by X" với link — mỗi invoice là một lần exposure miễn phí cho người nhận. Đây là viral loop tự nhiên nhúng trong sản phẩm.
+
+<Callout title="Mẹo">
+Viral loop tự nhiên (nhúng vào sản phẩm) bền vững hơn referral program có incentive. Nếu người dùng chia sẻ sản phẩm chỉ vì muốn thưởng, họ sẽ ngừng khi thưởng hết. Nếu họ chia sẻ vì đó là cách họ dùng sản phẩm (như gửi invoice, chia sẻ tài liệu), loop sẽ tự duy trì.
+</Callout>
+
+<Callout title="Nhớ nhé">
+Đừng cố optimize K trước khi sản phẩm có retention tốt. Viral loop kéo người vào nhanh — nhưng nếu người dùng rời bỏ ngay sau khi vào, K cao chỉ tăng tốc churn, không tạo ra tăng trưởng thật.
+</Callout>
+
+## Đọc thêm
+
+- [K-Factor: Measuring Product Virality — Gilion](https://www.gilion.com/basics/k-factor): Giải thích K-factor với công thức, ví dụ từ Slack và Instagram, và cách cải thiện viral coefficient của sản phẩm.
+- [Viral Coefficient Calculator & Guide — LaunchList](https://getlaunchlist.com/blog/viral-coefficient-k-factor-guide): Hướng dẫn toàn diện 2026 về tính toán và cải thiện K-factor; kèm calculator thực tế.
+- [Viral Loop — Andrew Chen](https://andrewchen.com/viral-loop/): Bài phân tích gốc về cơ chế viral từ góc độ kỹ thuật và tâm lý; giải thích vì sao một số sản phẩm viral tự nhiên hơn sản phẩm khác.
+- [Viral Coefficient | SaaS Formula — Wall Street Prep](https://www.wallstreetprep.com/knowledge/viral-coefficient/): Phân tích tài chính về K-factor và ảnh hưởng trực tiếp đến unit economics của SaaS.
+
+## Tự kiểm tra
+
+1. Tính K-factor trong tình huống: mỗi user gửi 4 invites, 25% convert. K bằng bao nhiêu? Tăng trưởng này là viral hay sub-viral?
+2. Tại sao K > 1 bền vững là hiếm? Và tại sao K = 0.4 vẫn có giá trị thực sự với growth của sản phẩm?
+3. Sự khác biệt giữa viral loop nhúng trong sản phẩm (như watermark hoặc "invite to view") và referral program có thưởng là gì? Cái nào bền vững hơn và tại sao?

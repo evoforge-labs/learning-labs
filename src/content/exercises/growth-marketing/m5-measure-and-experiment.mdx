@@ -1,0 +1,95 @@
+---
+id: exercise-growth-005
+title: "Thiết kế growth experiment và attribution plan"
+type: "exercise"
+track: growth-marketing
+tags: [founder, growth, channel-product-fit, attribution, growth-experiment, analytics, growth-marketing]
+estimatedMinutes: 35
+related: [lesson-growth-005, concept-channel-product-fit, concept-marketing-attribution, concept-growth-experiment, rubric-growth-marketing]
+status: published
+---
+import Callout from '../../../components/content/Callout.astro';
+
+## Tình huống
+
+Bạn build **DocuSend** — tool giúp freelancer và consultant gửi proposal và contract cho khách hàng, với e-signature và payment link tích hợp. Pricing: $39/tháng.
+
+Sau 4 tháng, DocuSend có 150 paid users. Bạn đang chạy ba kênh marketing song song:
+
+| Kênh | Chi phí/tháng | Khách mới/tháng | Ghi chú |
+|---|---|---|---|
+| Google Ads | $800 | 15 | Click nhiều, nhưng nhiều người rời ngay sau sign up |
+| SEO/Content | $0 (thời gian) | 8 | Traffic chậm nhưng retention tốt hơn |
+| Linkedin organic | $0 | 4 | Post của bạn đang build small following |
+
+Thêm data: khi hỏi khách onboarding "bạn biết DocuSend qua đâu?", 40% nhắc đến "đọc bài blog của anh/chị", 30% "Google", 20% "LinkedIn", 10% "bạn bè giới thiệu".
+
+---
+
+## Nhiệm vụ 1 — Phân tích channel-product fit
+
+Dựa trên data trên (số lượng khách, chi phí, và câu trả lời onboarding survey), phân tích channel-product fit của từng kênh:
+
+1. **Google Ads**: Tại sao khách từ kênh này rời sớm? Điều đó nói lên gì về channel-product fit? (Hint: search intent mismatch?)
+
+2. **SEO/Content**: Tại sao retention tốt hơn mặc dù số lượng thấp hơn? Đây có phải channel-product fit tốt không?
+
+3. **Discrepancy**: Last-touch tracking cho thấy Google Ads là kênh lớn nhất (15 khách). Nhưng 40% user nói biết DocuSend qua blog. Điều này cho thấy vấn đề gì với cách bạn đang đánh giá kênh?
+
+4. **Quyết định**: Nếu bạn phải double down vào một kênh trong 90 ngày tới — bạn chọn kênh nào và tại sao?
+
+---
+
+## Nhiệm vụ 2 — Xây attribution plan thực dụng
+
+Dựa trên data và discrepancy phát hiện ở Nhiệm vụ 1, thiết kế một **attribution plan đơn giản** phù hợp với quy mô hiện tại của DocuSend (150 paid users, ~27 users mới/tháng).
+
+Plan cần bao gồm:
+
+- **Onboarding question**: câu hỏi cụ thể bạn sẽ hỏi mọi user mới ngay khi sign up (và tại sao câu đó tốt hơn "bạn biết chúng tôi từ đâu?")
+- **UTM tracking**: 3-4 UTM parameter bạn sẽ setup ngay cho kênh paid và email
+- **Review cadence**: bạn sẽ review attribution data bao lâu một lần, và quyết định gì từ data đó
+- **Giới hạn tự nhận**: một điều attribution plan của bạn sẽ *không* nắm được chính xác — và cách bạn compensate
+
+---
+
+## Nhiệm vụ 3 — Thiết kế growth experiment với ICE scoring
+
+DocuSend có một vấn đề: free trial conversion rate chỉ 12% (chỉ 12% trial users upgrade paid sau 14 ngày). Bạn có 5 ý tưởng để cải thiện:
+
+**A.** Thêm video onboarding 3 phút hướng dẫn tạo proposal đầu tiên
+
+**B.** Gửi email day-3 với template "Proposal mẫu cho [ngành]" tùy theo ngành user chọn khi sign up
+
+**C.** Thêm live chat support trong trial period
+
+**D.** Giảm thời gian trial từ 14 ngày xuống 7 ngày (tạo urgency)
+
+**E.** Redesign pricing page với "ROI calculator" (bạn gửi được X proposals/tháng, tiết kiệm Y giờ)
+
+Với mỗi ý tưởng, chấm điểm ICE (1-10 mỗi tiêu chí):
+- **Impact**: nếu thắng, ảnh hưởng đến conversion rate bao nhiêu?
+- **Confidence**: bạn tự tin bao nhiêu % nó sẽ work (dựa trên gì)?
+- **Ease**: implement mất bao lâu và khó không?
+
+Tính ICE score và chọn **một experiment** để chạy tuần tới. Viết hypothesis đúng format: *"Nếu chúng ta [làm gì], [metric] sẽ [thay đổi thế nào] vì [lý do]."*
+
+<Callout title="Cẩn thận">
+ICE score là hướng dẫn, không phải oracle. Nếu ý tưởng có ICE thấp nhưng bạn có strong conviction từ user research — vẫn có thể ưu tiên. Document lý do bạn override.
+</Callout>
+
+---
+
+## Tiêu chí đánh giá
+
+Tham khảo [Growth & Marketing Rubric](/rubrics/growth-marketing-rubric).
+
+| Tiêu chí | Câu hỏi tự kiểm tra |
+|---|---|
+| Channel-product fit analysis đúng | Bạn giải thích được *tại sao* fit hoặc không, không chỉ đọc con số? |
+| Attribution plan thực dụng | Plan có phù hợp với quy mô hiện tại không, hay over-engineered? |
+| Hypothesis đúng format | Hypothesis có rõ ràng: hành động → metric → lý do causality? |
+
+<Callout title="Nhớ nhé">
+Growth không phải một sprint — là một quá trình học liên tục. Founder nào build được thói quen "quan sát → hypothesis → experiment → learn" sẽ tiếp tục improve ngay cả khi không biết trước câu trả lời đúng.
+</Callout>

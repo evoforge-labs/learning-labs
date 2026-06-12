@@ -1,0 +1,56 @@
+---
+id: concept-growth-experiment
+title: "Growth Experiment (Thử nghiệm tăng trưởng)"
+type: "concept"
+aliases: ["growth experiment", "thử nghiệm tăng trưởng", "ICE framework", "growth process", "experiment loop", "growth testing"]
+tags: [founder, growth, experimentation, metrics, analytics, growth-marketing, ab-testing]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Không ai biết trước điều gì sẽ grow sản phẩm. Mọi chiến lược growth thành công đều bắt đầu bằng hàng chục hoặc hàng trăm thử nghiệm nhỏ — phần lớn thất bại, một ít thắng, và những cái thắng đó được scale. Đây không phải mô tả may rủi — đây là **quy trình có hệ thống**.
+
+## Là gì
+
+**Growth experiment** là một thử nghiệm có kiểm soát để kiểm tra xem một thay đổi cụ thể có cải thiện một metric growth cụ thể hay không. Nó có năm bước:
+
+1. **Quan sát** — xác định metric nào đang kém, tầng nào trong phễu đang rò rỉ.
+2. **Giả thuyết** — "Nếu chúng ta làm X, metric Y sẽ tăng Z% vì lý do W."
+3. **Ưu tiên** — dùng framework ICE (Impact × Confidence × Ease) để chọn thử nghiệm nào chạy trước.
+4. **Chạy** — implement thay đổi, đặt time-box rõ ràng (thường 1-2 tuần).
+5. **Đánh giá** — đo kết quả, rút ra learning, quyết định scale/iterate/abandon.
+
+**ICE scoring** (do Sean Ellis — người đặt ra thuật ngữ "growth hacking" — phát triển): chấm điểm 1-10 cho mỗi thử nghiệm trên ba tiêu chí: Impact (nếu thắng, ảnh hưởng bao lớn?), Confidence (bạn tự tin bao nhiêu phần trăm nó sẽ thắng?), Ease (dễ implement bao nhiêu?). Nhân ba điểm lại → chọn cái ICE cao nhất chạy trước.
+
+## Ví dụ thật
+
+Một SaaS thấy activation rate chỉ 15% (chỉ 15% người sign up dùng tính năng chính trong 48h). Giả thuyết: "Nếu thêm checklist onboarding 3 bước vào lần đầu đăng nhập, activation rate sẽ tăng lên 25% vì người dùng không biết bắt đầu từ đâu."
+
+ICE score: Impact = 8 (activation ảnh hưởng lớn đến retention), Confidence = 7 (có data từ user interview), Ease = 6 (2-3 ngày dev). Tổng: 336. Cao nhất trong backlog → chạy trước.
+
+Kết quả sau 2 tuần: activation rate tăng lên 22% — không đạt 25% nhưng cải thiện đáng kể. Scale checklist đó, và tiếp tục iterate.
+
+<Callout title="Cẩn thận">
+Lỗi phổ biến nhất: chạy nhiều thay đổi cùng lúc. Nếu bạn thay headline + redesign form + thêm testimonial trong một sprint, bạn không biết cái gì đã tạo ra sự khác biệt. Mỗi thử nghiệm phải test **một thay đổi** để biết chính xác nguyên nhân.
+</Callout>
+
+<Callout title="Mẹo">
+Thất bại trong growth experiment không phải thất bại thật — là learning. Thử nghiệm cho thấy "không hiệu quả" dạy bạn điều quan trọng về hành vi người dùng. Ghi lại lý do thất bại để không lặp lại cùng giả thuyết sai.
+</Callout>
+
+<Callout title="Nhớ nhé">
+Growth đến từ velocity của experiments, không phải từ một ý tưởng thiên tài. Team nào chạy được nhiều experiments chất lượng hơn trong cùng khoảng thời gian sẽ thắng về dài hạn.
+</Callout>
+
+## Đọc thêm
+
+- [ICE Framework: How (NOT) to Score/Prioritize Growth Experiments — Ward van Gasteren](https://growwithward.com/ice-prioritization-framework/): Hướng dẫn thực dụng về ICE từ một growth consultant thực chiến; kèm cả những sai lầm phổ biến khi dùng ICE.
+- [Growth Experiments: A Simple Framework — The Growth Mind (Substack)](https://thegrowthmind.substack.com/p/growth-experiments-a-simple-framework): Framework xây dựng và track growth experiments từ đầu; phù hợp cho solo founder và small team.
+- [ICE Scoring Model — ProductPlan](https://www.productplan.com/glossary/ice-scoring-model/): Định nghĩa và ví dụ ICE scoring rõ ràng; tốt để làm reference khi cần giải thích framework với team.
+- [Growth Experimentation Framework — Startup Growth Tactics](https://www.startupgrowthtactics.com/guides/growth-experiments): Hướng dẫn toàn diện về quy trình thử nghiệm growth từ hypothesis đến measurement; kèm template và ví dụ thực tế.
+
+## Tự kiểm tra
+
+1. Viết một growth experiment hypothesis đúng format: "Nếu chúng ta làm X, metric Y sẽ thay đổi thế nào vì lý do Z." Chọn một vấn đề growth cụ thể và viết hypothesis cho nó.
+2. Ba ý tưởng growth với ICE: (A) Impact 9, Confidence 4, Ease 2; (B) Impact 6, Confidence 7, Ease 8; (C) Impact 8, Confidence 6, Ease 5. Cái nào có ICE score cao nhất? Bạn sẽ chạy cái nào trước?
+3. Tại sao chạy nhiều thay đổi cùng lúc trong một experiment lại làm hỏng kết quả? Giải thích vấn đề causality.

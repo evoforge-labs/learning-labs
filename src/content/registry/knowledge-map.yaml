@@ -1972,3 +1972,75 @@ edges:
   - source: rubric-founder-sales
     target: exercise-sales-006
     rel: evaluates
+
+  # --- Growth & Marketing for Founders ---
+  # Cross-links between related concepts
+  - source: concept-positioning
+    target: concept-messaging
+    rel: leads-to
+  - source: concept-growth-loops
+    target: concept-viral-coefficient
+    rel: leads-to
+  - source: concept-product-led-growth
+    target: concept-viral-coefficient
+    rel: supports
+  - source: concept-paid-acquisition
+    target: concept-cac-ltv
+    rel: supports
+  - source: concept-copywriting-fundamentals
+    target: concept-landing-page-conversion
+    rel: supports
+  - source: concept-channel-product-fit
+    target: concept-go-to-market
+    rel: supports
+  - source: concept-growth-experiment
+    target: concept-ab-testing
+    rel: specializes
+  - source: concept-statistical-significance
+    target: concept-growth-experiment
+    rel: supports
+  - source: concept-marketing-attribution
+    target: concept-north-star-metric
+    rel: supports
+  - source: concept-content-marketing
+    target: concept-organic-vs-paid
+    rel: supports
+  - source: concept-search-intent
+    target: concept-content-marketing
+    rel: supports
+
+  # --- Communication & Negotiation ---
+  # Cross-links between related concepts
+  - source: concept-async-writing
+    target: concept-sync-vs-async
+    rel: supports
+  - source: concept-active-listening
+    target: concept-selling-is-helping
+    rel: supports
+  - source: concept-active-listening
+    target: concept-discovery-call
+    rel: leads-to
+  - source: concept-batna
+    target: concept-interest-based-negotiation
+    rel: supports
+  - source: concept-batna
+    target: concept-zopa
+    rel: leads-to
+  - source: concept-anchoring-negotiation
+    target: concept-zopa
+    rel: supports
+  - source: concept-interest-based-negotiation
+    target: concept-conditional-concessions
+    rel: leads-to
+  - source: concept-async-writing
+    target: concept-email-negotiation
+    rel: leads-to
+  - source: concept-storytelling-structure
+    target: concept-pitch-narrative
+    rel: leads-to
+  - source: concept-active-listening
+    target: concept-feedback-giving-receiving
+    rel: supports
+  - source: concept-feedback-giving-receiving
+    target: concept-difficult-conversations
+    rel: leads-to
