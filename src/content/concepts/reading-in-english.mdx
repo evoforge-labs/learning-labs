@@ -1,0 +1,51 @@
+---
+id: concept-reading-in-english
+title: "Reading in English (Source, Not Translation)"
+type: "concept"
+aliases: ["reading in English", "đọc tiếng Anh nguồn", "read the docs", "primary source English"]
+tags: [thinking, english, learning, leverage]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Bản dịch changelog luôn trễ và luôn lệch một tính từ. Tính từ đó đôi khi là "deprecated" hay "not for production". Bạn ship.
+
+Đọc Anh không phải để văn chương. Là để đứng *cùng thời điểm* với người viết nguồn.
+
+## Là gì (cơ bản)
+
+**Reading in English** là kỹ năng đòn bẩy cao nhất trong bốn kỹ năng, với builder: docs, RFC, issue, paper, ToS, error message.
+
+Không cần hiểu 100%. Cần: câu *hành động* (must / do not / breaking), ví dụ code, bảng tham số. Bỏ được mỹ từ.
+
+[Information diet](/concepts/information-diet): nguồn ít chế biến = docs hãng, không thread dịch lại.
+
+## Ví dụ thật
+
+Lỗi 403. Blog tiếng Việt đoán "sai key". Docs gốc: *scope* thiếu `write:orders`. 8 phút đọc xong. 2 giờ Facebook group chưa xong.
+
+## Nâng cao
+
+Cách đọc kỹ thuật: (1) tiêu đề + TL;DR, (2) example, (3) warning/callout, (4) mới đọc prose. Đừng đọc tuyến tính như tiểu thuyết.
+
+Từ điển ngay chỗ — 1 click. Không chép sổ 50 từ/ngày. Từ sống khi gặp lần 3 trong docs thật.
+
+<Callout title="Góc kỹ thuật">
+Siêu nâng cao: paper/RFC đọc theo IMRaD / section: abstract → conclusion → figures → method nếu còn nghi. Không "đọc hết PDF". i18n docs (tiếng Việt của hãng) thường là lớp marketing; phần *limit* nằm ở English. Anki chỉ cho *thuật ngữ bạn đã vấp 3 lần*, không phải list TOEIC. Đọc 15 phút/ngày docs bạn *đang dùng* đánh 2 giờ khóa "Academic Reading".
+</Callout>
+
+<Callout title="Nhớ nhé">
+Nguồn gốc trước bản dịch. Example trước prose. Câu must/do-not trước tính từ.
+</Callout>
+
+## Đọc thêm
+
+- [EF EPI](https://www.ef.com/wwen/epi/) — Đọc hiểu là cửa vào mọi hạng kỹ năng Anh quốc gia.
+- [Information Diet](/concepts/information-diet) — Docs gốc = ít chế biến; thread dịch = Doritos.
+- [Feynman Technique](/concepts/feynman-technique) — Đọc xong, giải thích lại bằng tiếng Việt *một* ý — đó là test hiểu, không phải dịch word-by-word.
+
+## Tự kiểm tra
+
+1. Changelog hoặc docs bạn sống nhờ tuần này: bạn mở bản Anh hay bản dịch trước?
+2. Chọn một error message tiếng Anh hôm nay. Câu nào là hành động? Bạn có nhảy sang group hỏi trước khi đọc không?
+3. (Siêu) Thiết kế 15 phút đọc/ngày: URL cụ thể (docs bạn đang dùng), không phải "tin tức Anh ngữ".

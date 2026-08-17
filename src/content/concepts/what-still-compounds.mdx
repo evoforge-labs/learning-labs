@@ -1,0 +1,53 @@
+---
+id: concept-what-still-compounds
+title: "What Still Compounds When AI Is Cheap"
+type: "concept"
+aliases: ["what still compounds", "cái gì vẫn lãi kép khi AI rẻ", "judgment over execution", "taste as scarce skill", "career in the AI era"]
+tags: [thinking, compounding, leverage, judgment, taste, high-agency, ai-assisted-development]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Năm năm trước, viết được một CRUD app là lợi thế. Hôm nay một người mô tả được app đó là có bản nháp. Chi phí *làm ra thứ có hình* đang rơi. Não bạn vẫn giữ bản đồ cũ: "mình sẽ thắng vì mình thực thi được."
+
+Bản đồ đó đang hết hạn. Câu đúng lúc này: *cái gì vẫn trả lãi khi thực thi gần như miễn phí?*
+
+## Là gì
+
+Khi AI làm rẻ generate — code, chữ, ảnh, bản nháp — tài khoản lãi kép chuyển từ **bàn tay** sang **cái đầu chọn**.
+
+Những thứ *vẫn* compound:
+
+- **Judgment** — biết việc nào đáng làm, cược nào bỏ. Naval: leverage là hệ số nhân của phán đoán.
+- **Taste** — biết cái nào *đáng* ship khi ai cũng generate được 10 biến thể. (Bạn đã có [design taste](/concepts/design-taste-and-critique) cho UI; đây là taste cho *hướng đi*.)
+- **Trust / uy tín đã kiểm chứng** — người ta thuê *người chịu trách nhiệm*, không thuê một transcript.
+- **Quan hệ dài** — intro, khách cũ, người từng thấy bạn giao hàng.
+- **Câu hỏi gốc** — AI trả lời giỏi; nó hiếm khi tự đặt đúng vấn đề.
+- **[High agency](/concepts/high-agency)** — quyết định gọi ai, bỏ constraint nào, ship khi nào.
+- **[Specific knowledge](/concepts/specific-knowledge)** ở mép — thứ chưa có trong training data: khách của *bạn*, tiếng của *bạn*, miền vừa mới mở.
+
+Những thứ *khấu hao nhanh*: nhớ cú pháp, viết boilerplate, tóm tắt tài liệu công khai, làm bản nháp "trông được". Học chúng như nghề — không như dụng cụ — là đầu tư vào tài khoản đang rò.
+
+## Ví dụ thật
+
+Hai ứng viên. A thuộc mọi API của model. B gửi một eval set 40 case từ khách thật, chỉ ra model fail ở chỗ nào, và quyết định *không* ship vì groundedness dưới ngưỡng. Năm 2023 A được nhận. Năm 2026 B mới là người bạn muốn cầm cần gạt.
+
+<Callout title="Cẩn thận">
+"AI làm rẻ thực thi" không có nghĩa bạn được phép lười tay. Judgment không compound nếu bạn không iterate trên thế giới thật. Ngồi lý thuyết về taste mà không ship — bạn đang làm intellectual không có skin in the game, thứ Taleb cảnh báo.
+</Callout>
+
+<Callout title="Nhớ nhé">
+Mỗi giờ học, hỏi: skill này còn đắt khi generate đã rẻ? Nếu không — dùng AI làm hộ, dành giờ cho thứ vẫn đắt: chọn, chịu trách nhiệm, và quan hệ.
+</Callout>
+
+## Đọc thêm
+
+- [Judgment Is the Decisive Skill — Naval](https://nav.al/judgment) — Ở thời đòn bẩy gần vô hạn, phán đoán (và track record chịu trách nhiệm) là skill quyết định.
+- [What is High Agency?](https://whatishighagency.com/) — Cate Hall: intelligence đang rẻ; bottleneck chuyển từ "làm được" sang "thấy và dùng các bậc tự do".
+- [When AI Adds Value](/concepts/when-ai-adds-value) — Cùng một ranh giới, nhưng từ phía *sản phẩm*: khi nào thêm AI, khi nào đừng — đọc cạnh bài này.
+
+## Tự kiểm tra
+
+1. Chọn 5 kỹ năng bạn đang đầu tư. Đánh dấu: còn đắt / đang rẻ / đã rẻ. Bạn sẽ *cắt* skill nào tuần này?
+2. Taste khác "mình thích" chỗ nào? Làm sao *đo* taste — không phải cảm giác?
+3. Vì sao chỉ ngồi tinh chỉnh prompt mà không gặp khách là cách chắc chắn để judgment *không* compound?

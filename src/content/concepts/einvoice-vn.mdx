@@ -1,0 +1,51 @@
+---
+id: concept-einvoice-vn
+title: "E-Invoice Vietnam"
+type: "concept"
+aliases: ["hóa đơn điện tử", "HĐĐT", "hóa đơn có mã cơ quan thuế", "einvoice VN"]
+tags: [solo-founder, vn-tax, einvoice, legal-entity, founder]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Khách công ty không mua "file PDF bạn tự thiết kế". Họ mua *chứng từ* hệ thống thuế nhận. Không có hóa đơn đúng, kế toán họ không được ghi chi phí — họ không trả bạn, dù thích sản phẩm.
+
+Hóa đơn điện tử không phải giấy đẹp. Là dòng dữ liệu vào cơ quan thuế.
+
+## Là gì (cơ bản)
+
+**Hóa đơn điện tử (HĐĐT)**: hóa đơn lập, gửi, lưu trên hệ thống, thường **có mã của cơ quan thuế** hoặc khởi tạo từ máy tính tiền kết nối dữ liệu thuế.
+
+Cục Thuế trên Cổng TTĐT (dẫn NĐ 68/2026): hộ / cá nhân kinh doanh có doanh thu tính thuế GTGT **từ 1 tỷ đồng/năm trở lên** *bắt buộc* dùng HĐĐT có mã hoặc HĐĐT máy tính tiền. Dưới 1 tỷ: không bắt buộc dạng đó — nhưng khách B2B vẫn có thể *đòi* hóa đơn hợp lệ. "Không bắt buộc" ≠ "không cần để bán".
+
+## Ví dụ thật
+
+Bạn hộ, doanh thu 600 triệu, bán cho công ty phần mềm. Họ xin hóa đơn để hạch toán. Bạn gửi screenshot chuyển khoản. Họ im. Tháng sau mua đối thủ có MST và HĐĐT. Bạn mất deal không vì giá.
+
+## Nâng cao
+
+Nhiều điểm bán: một MST, ghi *địa chỉ từng điểm* trên từng hóa đơn — hệ thống gợi ý tờ khai theo địa lý (Cục Thuế). Mua của hộ dưới 500 triệu thường không có hóa đơn: bên mua lập **bảng kê** theo mẫu Thông tư 152/2025/TT-BTC (tên, CCCD, hàng, giá, thanh toán) và giữ chứng từ.
+
+<Callout title="Góc kỹ thuật">
+HĐĐT có mã = cơ quan thuế cấp mã trước khi hóa đơn có giá trị. Máy tính tiền kết nối = dữ liệu đẩy về thuế, tờ khai gợi ý. NĐ 141/2026 sửa NĐ 68: khi doanh thu lũy kế vượt ngưỡng, đăng ký HĐĐT trong thời hạn quy định (thường tính bằng ngày kể từ hết kỳ) — đừng đợi hết năm. Bán trên sàn: sàn có thể khấu trừ/nộp thay; hóa đơn vẫn phải khớp đơn. Giả hóa đơn / mua bán hóa đơn là tội, không phải "thủ thuật VAT".
+</Callout>
+
+<Callout title="Cẩn thận">
+Lab không thay thế đại lý thuế. Ngưỡng 1 tỷ và mẫu bảng kê lấy từ Cổng TTĐT / NĐ 68 / TT 152 — đối chiếu trước khi đăng ký.
+</Callout>
+
+<Callout title="Nhớ nhé">
+Hóa đơn là ngôn ngữ kế toán khách. Không nói được ngôn ngữ đó = tự loại khỏi B2B Việt Nam.
+</Callout>
+
+## Đọc thêm
+
+- [Lưu ý HĐĐT cho hộ / cá nhân KD — Cục Thuế, Cổng TTĐT](https://xaydungchinhsach.chinhphu.vn/luu-y-khi-su-dung-hoa-don-dien-tu-cho-ho-kinh-doanh-ca-nhan-kinh-doanh-119260317100724355.htm) — Ngưỡng 1 tỷ/năm; nhiều địa điểm một MST.
+- [Bảng kê khi mua của hộ dưới 500 triệu — Cục Thuế](https://xaydungchinhsach.chinhphu.vn/ho-kinh-doanh-mua-hang-tu-ca-nhan-kinh-doanh-co-doanh-thu-duoi-500-trieu-dong-nam-khong-hoa-don-co-duoc-phep-lap-bang-ke-mua-hang-119260312204259799.htm) — TT 152/2025/TT-BTC: mẫu bảng kê + giữ chứng từ thanh toán.
+- [Toàn văn NĐ 68/2026/NĐ-CP](https://xaydungchinhsach.chinhphu.vn/toan-van-nghi-dinh-68-2026-nd-cp-quy-dinh-ve-chinh-sach-thue-quan-ly-thue-voi-ho-kinh-doanh-119260306102906789.htm) — Chương III: khai, nộp, hóa đơn điện tử.
+
+## Tự kiểm tra
+
+1. Doanh thu 800 triệu, khách công ty đòi hóa đơn. "Dưới 1 tỷ nên không cần HĐĐT" đủ để giữ deal không — vì sao?
+2. HĐĐT khác file PDF tự xuất chỗ nào?
+3. (Siêu) Bạn mua service của freelancer không hóa đơn. Muốn ghi chi phí: thiếu gì trên bảng kê TT 152?

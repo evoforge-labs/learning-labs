@@ -1,0 +1,51 @@
+---
+id: concept-when-not-to-interview
+title: "When Not to Interview"
+type: "concept"
+aliases: ["khi nào đừng phỏng vấn", "don't listen to users usability", "observe don't ask"]
+tags: [design, ux, research, interview]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Não thích phỏng vấn. Rẻ, lịch sự, ra quote đẹp. Nhiều việc *không* trả lời bằng miệng: cửa có tìm thấy không, chữ có đọc được không, họ *làm gì* lúc 23h.
+
+Nielsen (*First Rule of Usability? Don't Listen to Users*): hỏi "bạn sẽ dùng?" = họ đoán tương lai + muốn làm bạn vui. Nhìn tay.
+
+## Là gì (cơ bản)
+
+**When not to interview**: đừng phỏng vấn khi câu hỏi là *hành vi trên UI* hoặc *tương lai giả*.
+
+Phỏng vấn (Mom Test) khi: chuyện *đã xảy ra* trong đời — tiền, công việc, lần cuối họ khổ.
+
+Test / diary / log khi: cửa, tần suất, lúc nào.
+
+Ba tín hiệu cấm phỏng vấn: "bạn có thích…?", "bạn sẽ trả…?", "nếu có nút này…?".
+
+## Ví dụ thật
+
+Bạn hỏi 10 người "SSO có quan trọng không?". 10 gật. Không ai cấu hình SSO khi bạn ship — vì miệng nói "quan trọng", tay không có việc hôm đó. Đúng câu: xem log / diary "lần cuối bạn đăng nhập chỗ làm thế nào". Hoặc ngồi nhìn họ thử.
+
+## Nâng cao
+
+Một nghiên cứu một lưỡi dao. Trộn Mom Test + usability trong cùng 40 phút = cả hai bẩn: họ kể ý kiến, bạn cứu UI, không ai học.
+
+<Callout title="Góc kỹ thuật">
+Nielsen 2001: user không phải designer; verbal preference ≠ performance. Krug (*Don't Make Me Think* / *Rocket Surgery*): 3–5 người nhìn, hàng tháng, hơn một nghiên cứu lớn. Exception: phỏng vấn *sau* test về *chuyện vừa xảy ra* ("lúc anh kẹt, anh định làm gì") — đó là probe, không phải ý kiến. Pricing: WTP miệng yếu; [pre-sell](/concepts/pre-selling) / hóa đơn mạnh.
+</Callout>
+
+<Callout title="Nhớ nhé">
+Miệng cho chuyện cũ. Tay cho cửa. Tương lai giả không thuộc về cuộc phỏng vấn.
+</Callout>
+
+## Đọc thêm
+
+- [First Rule of Usability? Don't Listen to Users — Nielsen, NN/g](https://www.nngroup.com/articles/first-rule-of-usability-dont-listen-to-users/) — Ý kiến ≠ hành vi; nhìn.
+- [The Mom Test](/concepts/the-mom-test) — Khi *nên* nói: quá khứ thật.
+- [Five-user test](/concepts/five-user-test) — Tool thay phỏng vấn UI.
+
+## Tự kiểm tra
+
+1. Câu hỏi trên lịch tuần này: quá khứ / UI / tương lai giả — tool nào?
+2. "Bạn có thích?" đổi thành việc *nhìn được* trong 10 phút. Đổi được không? Không → chưa có câu hỏi.
+3. (Siêu) Sau test, bạn hỏi "tổng thể anh thấy sao?". Quote đẹp, tín hiệu nào — và bạn sẽ bỏ câu đó chứ?

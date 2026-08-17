@@ -1,0 +1,50 @@
+---
+id: concept-synthetic-media
+title: "Synthetic Media & Source Verification"
+type: "concept"
+aliases: ["synthetic media", "deepfake", "content credentials", "C2PA", "xác minh nguồn", "provenance"]
+tags: [thinking, synthetic-media, media-literacy, epistemic-hygiene, trust, ai-engineering]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Clip CEO đối tác "xin gửi lại hóa đơn vào tài khoản mới" — giọng đúng, mặt đúng, 40 giây. Phòng kế toán chuyển tiền. Tài khoản là của kẻ lạ.
+
+Mắt và tai từng là bằng chứng. Năm 2026 chúng là *gợi ý*.
+
+## Là gì
+
+**Synthetic media** là ảnh, tiếng, video do mô hình sinh ra hoặc ghép, đủ thật để não bỏ qua bước "đây có thể là giả". Deepfake là trường hợp nặng. Phần lớn thứ bạn thấy nhẹ hơn: ảnh minh họa, quote bịa, screenshot chat, demo sản phẩm không tồn tại.
+
+Cách phòng không phải "đoán bằng mắt" — mắt thua rồi. Cách phòng là **provenance** (nguồn gốc) + **thói quen xác minh**:
+
+- Ai *lợi* nếu bạn tin?
+- Có kênh thứ hai không? (gọi số cũ, vào domain chính thức, không reply trong clip)
+- File có **Content Credentials** (chuẩn [C2PA](https://c2pa.org/)) không — nhãn dinh dưỡng của media: máy nào chụp, model nào sinh, đã sửa gì. Thiếu nhãn *không* chứng minh giả; có nhãn giúp truy nguồn.
+- Việc hệ trọng (tiền, mật khẩu, pháp lý, tin đồn nhân sự) — mặc định *chưa tin* cho đến khi đối chiếu ngoài băng.
+
+[Trust but verify](/concepts/trust-but-verify) dạy bạn với *code của agent*. Bài này là cùng cơ, áp cho *thế giới vào mắt bạn*.
+
+## Ví dụ thật
+
+Một thread bảo model X vừa leak API key của đối thủ, kèm screenshot dashboard. High-agency move không phải retweet. Là: mở status page hãng, hỏi người trong cuộc qua kênh đã biết, tìm nguồn gốc ảnh (metadata / credentials), nhớ base rate tin đồn leak. Mười cái như thế, chín cái là engagement bait.
+
+<Callout title="Cẩn thận">
+Detector "đây là AI" không phải pháp lý. Chúng sai cả hai phía. C2PA cũng không thần thánh — kẻ xấu có thể không gắn nhãn, hoặc gắn nhãn rồi cắt. Provenance là *tín hiệu*, không phải án. Với việc lớn: out-of-band, luôn.
+</Callout>
+
+<Callout title="Nhớ nhé">
+Với media: mắt là nhân chứng tệ. Hỏi nguồn, hỏi lợi ích, hỏi kênh thứ hai. Clip càng gấp và càng đánh vào sợ/tham, càng phải chậm lại.
+</Callout>
+
+## Đọc thêm
+
+- [C2PA — Coalition for Content Provenance and Authenticity](https://c2pa.org/) — Chuẩn mở Content Credentials: nhãn nguồn gốc và lịch sử chỉnh sửa cho media số.
+- [Content Credentials](https://contentcredentials.org/) — Mặt người dùng của C2PA: pin "dinh dưỡng" trên ảnh/video, xem ai tạo, có AI không.
+- [C2PA Explainer (spec)](https://spec.c2pa.org/specifications/specifications/2.4/explainer/Explainer.html) — Provenance bổ sung — không thay — fact-check và digital forensics; chữ ký chống sửa trộm.
+
+## Tự kiểm tra
+
+1. Bạn nhận một clip "sếp nhờ chuyển tiền gấp". Liệt kê 4 bước xác minh *trước* khi làm gì khác. Bước nào là out-of-band?
+2. Content Credentials chứng minh được gì và *không* chứng minh được gì?
+3. Vì sao "nhìn là biết fake" là chiến lược đang hết hạn — cho một ví dụ bạn (hoặc người quen) suýt tin?

@@ -1,0 +1,49 @@
+---
+id: concept-fat-tails
+title: "Fat Tails"
+type: "concept"
+aliases: ["đuôi dày", "fat-tailed distribution", "black swan lite"]
+tags: [thinking, probability, risk-of-ruin, decision-making, numeracy]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Não tưởng thế giới hình chuông: hầu hết ở giữa, mép hiếm và nhỏ. Rồi một tháng ads "bình thường" — hoặc một outage — ăn cả năm lãi. Đó không phải xui. Đó là *đuôi dày*: mép vừa hay xảy ra hơn não nghĩ, vừa *to* hơn não nghĩ.
+
+Chuông là trường học. Đuôi dày là hóa đơn, virus, traffic, kiện.
+
+## Là gì (cơ bản)
+
+**Fat tails**: phân phối mà xác suất biến cực *không* tắt nhanh như phân phối chuẩn — vài sự kiện mang phần lớn tổng.
+
+Taleb (và thống kê đuôi): trung bình *bị một điểm kéo*. 100 tháng lãi 2%, một tháng −80% — "trung bình" trên slide không phải cuộc đời bạn.
+
+Khác [ruin](/concepts/ruin-and-margin) (cửa chết). Đây là *hình dạng thế giới* khiến cửa chết tới.
+
+## Ví dụ thật
+
+Doanh thu 12 tháng: 11 tháng 8 triệu, 1 tháng 80 triệu vì một khách. "Trung bình 14". Bạn thuê người theo 14. Tháng 13 khách đi. Đuôi dương đã dạy sai; đuôi âm mới thu học phí.
+
+## Nâng cao
+
+Hai câu hỏi: (1) sự kiện xấu nhất *đã thấy* đã gần trần chưa, hay trần còn mở? (2) Bạn sống bằng *trung bình* hay bằng *tháng tệ*? Sống bằng trung bình trên đuôi dày = [ergodicity](/concepts/ergodicity) sai.
+
+<Callout title="Góc kỹ thuật">
+Chuẩn: đuôi ~ e^(−x²). Power law: P(|X|>x) ~ x^(−α). α nhỏ → trung bình/phương sai có thể *không tồn tại* trên lý thuyết — mẫu càng lâu, số càng nhảy. Không cần fit α trên Excel founder. Cần: không lấy 12 tháng làm "luật"; cắt lỗ [ruin](/concepts/ruin-and-margin); đừng average một outlier rồi lập ngân sách. Insurance / barbell: chấp nhận đuôi nhỏ thường xuyên để không chết đuôi to.
+</Callout>
+
+<Callout title="Nhớ nhé">
+Nếu một điểm kéo trung bình, bạn không sống ở trung bình. Sống ở tháng tệ + cửa chết.
+</Callout>
+
+## Đọc thêm
+
+- [Fat-tailed distribution — Wikipedia](https://en.wikipedia.org/wiki/Fat-tailed_distribution) — Đuôi tắt chậm; khác chuông.
+- [Ruin and margin](/concepts/ruin-and-margin) — Cửa chết; bài này là vì sao cửa tới thường xuyên hơn slide.
+- [Expected value](/concepts/expected-value-thinking) — EV mẫu ≠ một đời (xem ergodicity).
+
+## Tự kiểm tra
+
+1. Số "trung bình" bạn đang dùng lập kế hoạch: bỏ tháng lớn nhất / nhỏ nhất — còn đứng không?
+2. Sự kiện xấu nhất *đã thấy* — bạn tin đó gần trần hay mới là mẫu?
+3. (Siêu) Thuê người theo tháng tốt nhất trong 12. Đó là lập kế hoạch hay đánh bạc đuôi?

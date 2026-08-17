@@ -1,0 +1,42 @@
+---
+id: exercise-solo-009
+title: "Một checkout: rail, giá, STK, hai giấy"
+type: "exercise"
+track: solo-founder
+skill: local-payments
+estimatedMinutes: 40
+related: [lesson-solo-009, concept-vn-payment-rails, concept-vnd-vs-usd-pricing, concept-payout-account-match, concept-invoice-local-vs-export, concept-merchant-of-record, rubric-solo-founder]
+status: published
+---
+import Callout from '../../../components/content/Callout.astro';
+
+## Tình huống
+
+Sản phẩm bạn (thật hoặc giả lập) bán cho *ít nhất một* khách VN. Vẽ ống tiền — không viết "sẽ tích hợp sau".
+
+---
+
+## Nhiệm vụ 1 — Rail + giá
+
+1. ICP nội: họ đang trả tiền *cái gì* hàng ngày (CK / MoMo / thẻ…)?
+2. Một rail chính + một dự phòng. Cấm "Stripe only" nếu ICP là SME VN — trừ khi bạn viết rõ vì sao ICP *có* thẻ USD.
+3. Một giá list VND (số tròn). Nếu có khách ngoại: một giá list USD *riêng*, không phải "VND ÷ tỷ giá lúc checkout".
+
+---
+
+## Nhiệm vụ 2 — Tên + giấy
+
+- Tên trên giấy entity hiện tại.
+- Tên trên STK sẽ nhận payout. Khớp? Nếu không: bước đổi trước ngày nào (TT 25/2025).
+- Khách VN B2B nhận giấy gì (HĐĐT / bảng kê / không bán B2B).
+- Khách ngoại nhận giấy gì (invoice / MoR receipt). Hai template, không một PDF.
+
+---
+
+## Nhiệm vụ 3 — MoR hay tự đứng
+
+Với *phần doanh thu ngoại* 12 tháng tới: tự đứng (entity nước ngoài / không bán) / MoR / chưa có kênh ngoại. Một câu lý do. Nếu MoR: viết rõ kênh B2B VN *không* đi ống đó.
+
+<Callout title="Nhớ nhé">
+Đạt = rail khách thật + giá đúng đơn vị + tên STK/giấy + hai loại chứng từ (hoặc tuyên bố không bán kênh đó). Không đạt = "tích hợp Stripe như Product Hunt".
+</Callout>

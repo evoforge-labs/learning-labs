@@ -1,0 +1,53 @@
+---
+id: concept-dont-harm-to-grow
+title: "Don't Harm to Grow"
+type: "concept"
+aliases: ["không hại khách để growth", "dark patterns", "growth không đốt khách"]
+tags: [thinking, ethics, growth, founder, product]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Nút hủy gói nằm sau bốn màn, chữ xám, hỏi "bạn chắc chứ?" ba lần. Conversion giữ chân tăng. Khách ghét bạn. FTC gọi một phần việc này là **dark pattern**: thiết kế *lừa hoặc bẫy* người ta chọn điều họ không chọn nếu thấy rõ.
+
+Tăng trưởng lấy từ sự nhầm của khách là vay nặng lãi.
+
+## Là gì (cơ bản)
+
+**Don't harm to grow**: cấm metric lên bằng cách làm khách *khó hiểu, khó thoát, khó từ chối*.
+
+FTC (2022, *Bringing Dark Patterns to Light*): dark pattern = design trick/manipulate cho lựa chọn họ không làm và có thể gây hại — e-commerce, cookie, app trẻ em, **subscription**. Một phần vi phạm luật (Section 5 FTC Act: unfair/deceptive). VN chưa copy nguyên văn — khách vẫn giận như khách Mỹ.
+
+Khác [landing conversion](/concepts/landing-page-conversion) (rõ → dễ mua). Đây là *rõ → dễ thoát* cũng phải đúng.
+
+## Ví dụ thật
+
+Trial hết, tự trừ thẻ vì checkbox mặc định. MRR đẹp một quý. Chargeback + tweet + "không recommend". CAC ẩn nằm ở tháng 4.
+
+## Nâng cao
+
+Ba cửa luôn *cùng độ khó* với cửa vào: hủy, xuất data, nói không. Nếu vào 2 click, ra 12 click — bạn đang thu thuế ma sát. Ghi vào spec như ghi auth.
+
+<Callout title="Góc kỹ thuật">
+FTC nêu nhóm lặp: nagging, obstruction (cản hủy), sneak into basket, disguised ads, confirmshaming, hidden costs, forced continuity (subscription). ROSCA (US) siết negative option — đọc nếu charge thẻ US. EU: Digital Services / consumer law cùng hướng. Test: đưa máy cho người không phải bạn, bảo "hủy gói". Quá 2 phút hoặc phải hỏi bạn = fail. [Friction](/concepts/friction-in-ux) tốt khi bảo vệ; xấu khi chỉ bảo vệ doanh thu khỏi ý định thật của khách.
+</Callout>
+
+<Callout title="Cẩn thận">
+Đây là nguyên tắc sản phẩm + rủi ro pháp lý *ở một số thị trường*. Không phải tư vấn compliance VN/US.
+</Callout>
+
+<Callout title="Nhớ nhé">
+Growth lấy từ nhầm lẫn của khách sẽ trả bằng churn, kiện, và cái tên. Cửa ra phải trung thực như cửa vào.
+</Callout>
+
+## Đọc thêm
+
+- [FTC — Bringing Dark Patterns to Light](https://www.ftc.gov/reports/bringing-dark-patterns-light) — Báo cáo 2022: trick/trap, subscription, có thể vi phạm luật.
+- [FTC press release (2022)](https://www.ftc.gov/news-events/news/press-releases/2022/09/ftc-report-shows-rise-sophisticated-dark-patterns-designed-trick-trap-consumers) — Tóm tắt ngắn, cùng báo cáo.
+- [Friction in UX](/concepts/friction-in-ux) — Ma sát có chủ đích ≠ bẫy.
+
+## Tự kiểm tra
+
+1. Hủy gói sản phẩm bạn (hoặc một app bạn dùng): số click so với đăng ký?
+2. Confirmshaming ("không, tôi không muốn tiết kiệm") — growth hay hại? Vì sao FTC quan tâm?
+3. (Siêu) Một experiment tăng trial-to-paid 8% bằng checkbox mặc định. Bạn ship hay chặn — metric nào trên dashboard *không* đo được cái giá?

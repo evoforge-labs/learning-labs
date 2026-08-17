@@ -1,0 +1,49 @@
+---
+id: concept-vnd-vs-usd-pricing
+title: "VND vs USD Pricing"
+type: "concept"
+aliases: ["giá VND hay USD", "presentment currency", "định giá nội địa"]
+tags: [solo-founder, pricing, payments, go-to-market, founder]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Bạn ghi $9/tháng. Não khách VN phải nhân tỷ giá, cộng ~3% phí FX, rồi đoán "khoảng 230.000?". Họ không đoán. Họ đóng tab.
+
+Giá không chỉ là số. Là *đơn vị khách nghĩ hàng ngày*.
+
+## Là gì (cơ bản)
+
+**Presentment currency**: loại tiền *hiển thị và trừ* lúc checkout. Stripe (hướng dẫn payments in Vietnam, 2025): khi checkout không phải VND, phải đổi tiền — phí chuyển đổi thường khoảng 1–3%, hay bị đẩy sang khách.
+
+Khách VN nghĩ bằng đồng. Khách US nghĩ bằng đô. Một số $9 cho cả hai = một bên thấy rẻ bất thường, một bên thấy ma.
+
+Không phải "neo USD cho sang". Là *ai trả, nghĩ bằng gì*.
+
+## Ví dụ thật
+
+Bạn bán 199.000đ và $8 (cùng gói). Tỷ giá hôm đó 199.000 ≈ $7,8. Khách US thấy rẻ hơn niêm yết $8. Khách VN không bao giờ thấy $8. Hai giá, hai thị trường — không phải "một giá nhân tỷ giá lúc thanh toán".
+
+## Nâng cao
+
+Ba lớp: **list** (số trên trang), **charge** (số cổng trừ), **settle** (số về STK bạn). Lệch lớp = bạn tưởng lãi 40% rồi FX + phí cổng ăn hết. Ghi cả ba trên một dòng mỗi gói.
+
+<Callout title="Góc kỹ thuật">
+VND là zero-decimal trên nhiều PSP (không có xu) — đừng gửi 199000.50. Làm tròn *có chủ đích* (199.000 không 198.743). Đừng auto-convert mỗi ngày: giá nhảy = khách thấy bạn không ổn định. Chọn một tỷ giá nội bộ, rà theo quý hoặc khi lệch >5–7%. Gói VN có VAT/GTGT trên hóa đơn; gói export thường không — trộn một SKU là sổ thuế khóc. Xem [hóa đơn nội vs ngoại](/concepts/invoice-local-vs-export).
+</Callout>
+
+<Callout title="Nhớ nhé">
+Hiện giá bằng tiền khách tiêu. Đổi tiền là việc của ống, không phải bài toán đầu của khách.
+</Callout>
+
+## Đọc thêm
+
+- [How to accept payments in Vietnam — Stripe](https://stripe.com/resources/more/payments-in-vietnam) — FX 1–3%; presentment đúng tiền khách.
+- [Stripe — Supported currencies](https://docs.stripe.com/currencies) — VND zero-decimal; presentment ≠ settlement.
+- [Pricing strategy](/concepts/pricing-strategy) — Giá trị trước đơn vị; bài này là *đơn vị địa phương*.
+
+## Tự kiểm tra
+
+1. Một trang $9 cho khách VN. Họ phải làm phép gì trước khi bấm mua — và tại sao họ thường không làm?
+2. List / charge / settle khác nhau thế nào trên một giao dịch VietQR?
+3. (Siêu) Tỷ giá nhảy 8% trong tháng. Bạn giữ 199.000đ hay đổi — tiêu chí nào, không phải "cảm giác"?

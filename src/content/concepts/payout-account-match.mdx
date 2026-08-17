@@ -1,0 +1,57 @@
+---
+id: concept-payout-account-match
+title: "Payout Account Match"
+type: "concept"
+aliases: ["tài khoản đúng tên hộ", "STK khớp giấy phép", "Thông tư 25/2025/TT-NHNN"]
+tags: [solo-founder, payments, vn-tax, legal-entity, founder]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Cổng duyệt xong. Khách trả. Ngân hàng / cổng treo tiền vì STK ghi "NGUYEN VAN A" trong khi giấy hộ là "Hộ kinh doanh A Software". Bạn không bị hack. Bạn *sai tên*.
+
+Tiền về đúng người chỉ khi tên trên ống = tên trên giấy.
+
+## Là gì (cơ bản)
+
+**Khớp tên tài khoản**: chủ STK nhận tiền kinh doanh phải trùng giấy tờ tương ứng.
+
+Cổng TTĐT dẫn **Thông tư 25/2025/TT-NHNN** (sửa TT 17/2024): từ **1/3/2026**,
+
+- STK cá nhân: tên = họ tên trên giấy tờ tùy thân.
+- STK tổ chức: tên *phải gồm* tên trên giấy phép / GCNĐKDN.
+- Hộ kinh doanh: tài khoản phục vụ KD phải đúng tên trên giấy chứng nhận đăng ký hộ.
+
+Không phải "cho đẹp". Là điều kiện mở và giữ STK + điều kiện cổng giải ngân.
+
+## Ví dụ thật
+
+Bạn nhận 40 triệu/tháng vào STK cá nhân tên mình, giấy hộ tên khác. Tháng 3/2026 ngân hàng yêu cầu đổi. Cổng payOS/MoMo đối soát KYC — không khớp, ngừng payout. Doanh thu còn, ống tắc.
+
+## Nâng cao
+
+Một người, hai việc: STK *chi tiêu cá nhân* và STK *KD* (đúng tên hộ/công ty). Trộn = [tách khay](/concepts/personal-vs-business-money) chết, và KYC cổng chết. Cổng A2A (payOS) chỉ cho thêm STK *cùng tên đã định danh*.
+
+<Callout title="Góc kỹ thuật">
+TT 25/2025 không tự "đóng" hộ không đổi tên — ngân hàng thực thi khi mở/sửa/rà soát. Chủ động đổi trước khi cổng reject. Công ty: không nhận doanh thu vào STK giám đốc. Hộ: hỏi quầy là STK hộ (tên giấy hộ) hay STK cá nhân chủ hộ — hai thứ, hai KYC. FX inbound (USD về VND): thêm giấy tờ nguồn tiền; không phải chủ đề bài này nhưng cùng nguyên tắc *giấy khớp ống*.
+</Callout>
+
+<Callout title="Cẩn thận">
+Không phải tư vấn ngân hàng. Đọc TT 25 / hỏi quầy nơi bạn mở STK.
+</Callout>
+
+<Callout title="Nhớ nhé">
+Ống tiền và giấy phép phải cùng một tên. Lệch tên = tiền treo, không phải tiền mất — vẫn đủ để chết cashflow.
+</Callout>
+
+## Đọc thêm
+
+- [Từ 1/3/2026 STK hộ phải đúng tên đăng ký — Cổng TTĐT](https://xaydungchinhsach.chinhphu.vn/tu-1-3-2026-tai-khoan-ngan-hang-cua-ho-kinh-doanh-phai-dung-ten-dang-ky-119260301172630364.htm) — TT 25/2025/TT-NHNN, cá nhân / tổ chức / hộ.
+- [payOS — FAQ tên tài khoản](https://payos.vn/) — Chỉ thêm STK khớp tên đã định danh.
+- [Hộ vs TNHH](/concepts/ho-kd-vs-tnhh) — Entity quyết định *tên nào* được in trên STK.
+
+## Tự kiểm tra
+
+1. Giấy hộ một tên, STK nhận tiền một tên. Rủi ro nào tới trước — thuế hay payout?
+2. TT 25 bắt STK tổ chức *gồm* tên giấy phép. "Gồm" khác "trùng khít" chỗ nào — bạn sẽ hỏi quầy câu gì?
+3. (Siêu) Bạn sắp lên TNHH. STK hộ còn nhận subscription. Kế hoạch cắt ống 30 ngày: bước nào trước — đổi cổng hay đổi pháp nhân?

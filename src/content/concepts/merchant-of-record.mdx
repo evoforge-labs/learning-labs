@@ -1,0 +1,49 @@
+---
+id: concept-merchant-of-record
+title: "Merchant of Record"
+type: "concept"
+aliases: ["MoR", "Paddle", "Stripe Managed Payments", "người bán trên giấy"]
+tags: [solo-founder, payments, go-to-market, pricing, founder]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Bạn muốn bán cho 40 nước mà không mở 40 MST. Ai đó đứng *tên người bán* trên thẻ tín dụng khách, thu VAT nước họ, chịu chargeback. Bạn là nhà cung cấp phía sau.
+
+Đó là Merchant of Record. Thuận — và bạn *không còn là người bán* trên giấy.
+
+## Là gì (cơ bản)
+
+**Merchant of Record (MoR)**: pháp nhân *khách thấy trên sao kê* — tính, thu, nộp thuế bán hàng/VAT/GST, giữ payment account, xử lý tranh chấp (Stripe, explainer MoR).
+
+Bạn (seller of record nếu tự đứng): tự mở cổng, tự hóa đơn, tự thuế từng nước.
+
+MoR ăn % cao hơn cổng thuần. Đổi lại: không cần entity US chỉ để có Stripe.
+
+## Ví dụ thật
+
+Indie VN bán $12/tháng cho dev US/EU. Không muốn Atlas + 9903. Dùng MoR: khách trả, MoR xuất invoice, bạn nhận net. Khách công ty VN hỏi HĐĐT MST bạn — MoR không có. Kênh đó phải [rail nội + hóa đơn nội](/concepts/invoice-local-vs-export).
+
+## Nâng cao
+
+Ba lựa chọn, không phải hai: (1) pháp nhân VN + rail VN, (2) entity nước Stripe hỗ trợ + Stripe, (3) MoR. Nhiều founder làm (1)+(3): nội địa tự đứng, ngoại MoR. Đừng (2) chỉ vì Twitter bảo "phải có Delaware".
+
+<Callout title="Góc kỹ thuật">
+Stripe Global (2026): VN không phải nước mở merchant. Stripe *có* Global Payouts preview vào STK VN — đó là *nhận*, không phải *bán với MST VN*. Atlas = lập công ty US; MoR = không cần. Phí MoR (Stripe Managed Payments từng niêm yết ~3,5% +…) đổi theo gói — đọc bảng hiện hành, đừng ghi số blog vào hợp đồng với chính mình. Chargeback và hoàn tiền: chính sách MoR, không phải "bạn quyết 100%". Thuế VN trên phần bạn nhận từ MoR: hỏi đại lý — thường là doanh thu dịch vụ, không phải "đã nộp VAT Mỹ nên hết nghĩa vụ VN".
+</Callout>
+
+<Callout title="Nhớ nhé">
+MoR mua *sự đứng tên*. Bạn mất quyền hóa đơn MST mình. Chọn khi kênh ngoại > công sức entity; đừng chọn khi ICP là B2B Việt Nam.
+</Callout>
+
+## Đọc thêm
+
+- [What Is a Merchant of Record? — Stripe](https://stripe.com/resources/more/merchant-of-record) — MoR thu/nộp VAT; khác payment gateway.
+- [Stripe — Global availability](https://stripe.com/global) — Nước được làm merchant; VN không có.
+- [VN payment rails](/concepts/vn-payment-rails) — Ống khi *bạn* là người bán.
+
+## Tự kiểm tra
+
+1. Khách EU cần VAT invoice. MoR vs tự đứng: ai nộp VAT — và bạn mất giấy gì?
+2. ICP 80% SME VN. MoR giải quyết bài toán nào, tạo bài toán nào?
+3. (Siêu) Vừa MoR vừa HĐĐT MST mình cho cùng một subscription. Sai ở lớp nào — thuế, kế toán khách, hay cả hai?

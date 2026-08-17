@@ -1,0 +1,53 @@
+---
+id: concept-writing-english-that-ships
+title: "Writing English That Ships"
+type: "concept"
+aliases: ["writing English that ships", "viết tiếng Anh để ship", "README English", "email English builder"]
+tags: [thinking, english, writing, communication, leverage]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Người đọc không chấm ngữ pháp. Họ chấm: *mình biết phải làm gì không, trong 20 giây*. Câu sai thì `the` nhưng rõ vẫn thắng câu đẹp mà vòng.
+
+Đây không phải [plain language](/concepts/plain-language) (rõ, mọi ngôn ngữ). Đây là *Anh đủ để artifact sống được trên internet*.
+
+## Là gì (cơ bản)
+
+**Writing English that ships**: README, issue, commit, email khách, landing một đoạn — câu ngắn, động từ mạnh, [BLUF](/concepts/bluf) lên trước.
+
+Cấu trúc: việc cần / vì sao / bước / hạn. Không mở bằng "I hope you are doing well" trừ khi quan hệ đã có.
+
+AI được *soát* ngữ pháp sau khi bạn viết ý. Không được viết ý hộ — cùng luật [AI second brain](/concepts/ai-second-brain).
+
+## Ví dụ thật
+
+Tệ: "I think maybe there is some issue with the payment that users sometimes feel."
+
+Ship: "Checkout returns 402 for ~8% of Visa in VN. Repro: … Need: confirm if 3DS is required. Deadline: Thu."
+
+Khách không cần mạo từ đúng. Họ cần 402 và Thursday.
+
+## Nâng cao
+
+Ba artifact luyện: (1) issue 8–12 dòng, (2) email 6–10 dòng BLUF, (3) README "Quick start" 10 dòng. Lặp chúng, không luyện IELTS Writing Task 2.
+
+<Callout title="Góc kỹ thuật">
+Siêu nâng cao: register — README ≠ hợp đồng ≠ tweet. Lệch register (hợp đồng viết như meme, issue viết như tiểu luận) làm mất tín. Hedge ("maybe", "I think", "kind of") ăn credibility trong tiếng Anh kỹ thuật hơn bạn tưởng — cắt trừ khi thật sự bất định, lúc đó ghi số ([calibration](/concepts/calibration)). Subject line email là BLUF, không phải "Question". Passive ("it was decided") để trốn trách nhiệm — native cũng ghét. Bạn không cần idiom. Bạn cần noun đúng (scope, invoice, outage) và verb đúng (ship, revert, charge).
+</Callout>
+
+<Callout title="Nhớ nhé">
+Viết ý trước, sửa the/a sau. Người lạ hiểu trong 20 giây = đạt. Native-like = vanity metric.
+</Callout>
+
+## Đọc thêm
+
+- [BLUF](/concepts/bluf) — Câu đầu là kết luận; Anh kỹ thuật sống bằng cái này.
+- [Plain Language](/concepts/plain-language) — Cùng xương rõ; bài này khoác kênh Anh.
+- [Async Writing](/concepts/async-writing) — Viết để người ta không cần họp — đa số họp đó đang bằng Anh.
+
+## Tự kiểm tra
+
+1. Viết lại một email/issue gần đây: câu 1 là việc + hạn. Dài hơn 12 dòng thì cắt.
+2. Bạn đang để AI viết *ý* hay chỉ *the/a*? Khác nhau chỗ nào?
+3. (Siêu) Chọn 10 hedge word bạn lạm dụng (maybe, just, a bit). Xóa chúng trong một artifact tuần này — còn nghĩa không?

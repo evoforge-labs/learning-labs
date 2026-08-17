@@ -1,0 +1,47 @@
+---
+id: concept-units-and-magnitude
+title: "Units and Magnitude"
+type: "concept"
+aliases: ["đơn vị và bậc độ lớn", "order of magnitude", "unit check"]
+tags: [thinking, numeracy, estimation, decision-making]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+"Chi phí AI 3". 3 đô một request? 3 nghìn một tháng? 3 triệu token? Não cộng được số. Não không cộng được *đơn vị*. Tàu Mars Climate Orbiter (1999) mất vì một đội dùng pound-giây, một đội dùng newton-giây. Không phải không biết nhân. Là không *khớp đơn vị*.
+
+Số không có đơn vị là hình xăm, không phải đo.
+
+## Là gì (cơ bản)
+
+**Units and magnitude**: mọi số trong quyết định phải có (1) đơn vị, (2) bậc — 10, 100, 1000 — trước khi tranh 3 số lẻ.
+
+Khác [Fermi đời](/concepts/fermi-for-life) (bẻ nhân tử). Đây là *cửa trước*: đơn vị sai thì nhân tử đúng cũng vô nghĩa.
+
+## Ví dụ thật
+
+"Churn 5". 5% tháng hay 5 khách? 5% tháng ≈ một nửa khách còn lại sau một năm. 5 khách trên 500 = khác thế giới. Cùng chữ "năm".
+
+## Nâng cao
+
+Đổi đơn vị có chủ đích: $/tháng → $/năm; token → đô; giờ → tuần người. Nếu đổi đơn vị làm số *trông* nhỏ hơn để dễ duyệt — bạn đang trang điểm, không đang đo.
+
+<Callout title="Góc kỹ thuật">
+NASA MCO: mismatch English vs SI trong software lực đẩy — báo cáo điều tra chính thức, không phải dụ ngôn internet. Thực hành: viết `số × đơn vị / mẫu số` mỗi dòng (12%/năm, không "12"). Bậc: làm tròn 3, 10, 30, 100… trước khi tối ưu. Hai số cộng được chỉ khi cùng đơn vị *và* cùng mẫu (không cộng % với điểm phần trăm mù — xem [percentages that lie](/concepts/percentages-that-lie)).
+</Callout>
+
+<Callout title="Nhớ nhé">
+Không đơn vị, không quyết. Không bậc, đừng tối ưu số lẻ.
+</Callout>
+
+## Đọc thêm
+
+- [Mars Climate Orbiter Mishap Investigation Board Phase I Report (PDF, NASA)](https://llis.nasa.gov/llis_lib/pdf/1009464main1_0641-mr.pdf) — Mất tàu vì lệch đơn vị; formal, không meme.
+- [Fermi (life)](/concepts/fermi-for-life) — Bẻ nhân tử sau khi đơn vị đã thẳng.
+- [Back-of-envelope hệ thống](/concepts/back-of-envelope-estimation) — QPS/GB; cùng xương đơn vị.
+
+## Tự kiểm tra
+
+1. Ba số trên dashboard bạn: viết lại mỗi số với đơn vị + mẫu số. Số nào đang trần?
+2. "3" trong "chi phí AI 3" — bạn đang giả định đơn vị nào, và sai đơn vị đổi quyết ra sao?
+3. (Siêu) Một slide cộng 8% + 12 điểm phần trăm thành "20". Lỗi tên là gì?

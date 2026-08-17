@@ -1,0 +1,51 @@
+---
+id: concept-ergodicity
+title: "Ergodicity (One Life vs Ensemble)"
+type: "concept"
+aliases: ["ergodicity", "time average vs ensemble", "một đời không phải mẫu"]
+tags: [thinking, probability, risk-of-ruin, expected-value, numeracy]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Sòng: tung đồng xu, thắng +50% tài sản, thua −40%. EV dương. 1000 người chơi song song: *trung bình nhóm* tăng. **Một** người chơi 1000 lần: hầu hết đường về gần 0.
+
+EV là trung bình *nhiều vũ trụ*. Bạn chỉ có một vũ trụ. Nhầm hai cái là cách đẹp nhất để phá sản khi "toán bảo có lãi".
+
+## Là gì (cơ bản)
+
+**Ergodic** (Ole Peters, *ergodicity economics*): trung bình theo thời gian của *một* hệ = trung bình của *nhiều* hệ tại một thời điểm.
+
+Tiền, sức khỏe, danh tiếng: thường **không** ergodic. Phá sản không gỡ bằng "lần sau thắng bù" — bạn đã ra khỏi trò.
+
+Khác [expected value](/concepts/expected-value-thinking) (khi EV dùng được). Đây là *khi EV nói dối một đời*.
+
+Khác [ruin](/concepts/ruin-and-margin) (cửa). Đây là *vì sao EV không thấy cửa*.
+
+## Ví dụ thật
+
+Casino "edge" nhỏ, họ chơi *triệu ván song song* (khách). Bạn chơi một đường. Họ ergodic hơn bạn. Copy chiến lược nhà cái khi bạn là một người = nhầm ensemble.
+
+## Nâng cao
+
+Câu hỏi Peters: không "EV bao nhiêu" mà "nếu tôi lặp *đường này* 20 năm, tôi còn trong trò không?". Nếu một lần thua đuổi ra — không được dùng EV nhóm.
+
+<Callout title="Góc kỹ thuật">
+Peters (Nature Physics 2019, *The ergodicity problem in economics*): lý thuyết kỳ vọng thường *giả* ergodicity. Cược nhân tài sản (multiplicative) phá ergodicity: time-average tăng trưởng = E[ln(1+R)], không phải E[R]. Kelly criterion cùng xương. Tranh cãi học thuật còn (không phải mọi nhà kinh tế đồng ý Peters). Phần *dùng được*: đừng tối đa EV khi phá sản hấp thụ; tối đa đường sống. [Fat tails](/concepts/fat-tails) làm ensemble-vs-time lệch hơn.
+</Callout>
+
+<Callout title="Nhớ nhé">
+EV là nhiều đời. Bạn có một. Nếu thua một lần là ra trò — đừng lấy EV nhóm làm la bàn.
+</Callout>
+
+## Đọc thêm
+
+- [The ergodicity problem in economics — Peters, Nature Physics](https://www.nature.com/articles/s41567-019-0732-0) — Time average ≠ ensemble; giả định ẩn của EV.
+- [Ergodicity economics — Wikipedia](https://en.wikipedia.org/wiki/Ergodicity_economics) — Lịch sử và tranh cãi; đọc cả hai phía.
+- [Ruin](/concepts/ruin-and-margin) — Cửa hấp thụ; bài này là toán phía dưới.
+
+## Tự kiểm tra
+
+1. Một cược bạn sắp đánh: thua hết thì còn chơi không? Nếu không — EV dương có đủ để vào không?
+2. Nhà cái vs bạn: ai đang trung bình *nhiều đường*, ai một đường?
+3. (Siêu) E[R] dương, E[ln(1+R)] âm. Bạn tối đa cái nào nếu đây là tài khoản sống — và vì sao slide hay giấu cái thứ hai?

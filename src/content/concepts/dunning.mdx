@@ -1,0 +1,47 @@
+---
+id: concept-dunning
+title: "Dunning (Failed Payments)"
+type: "concept"
+aliases: ["dunning", "failed payment recovery", "Smart Retries", "thu nợ thẻ"]
+tags: [solo-founder, payments, billing, churn]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Thẻ hết hạn. Bạn không biết. Khách không thù. Họ quên. Bạn gọi là churn. Stripe gọi là *involuntary* — mất tiền vì ống, không vì sản phẩm.
+
+Dunning: nhắc + thử lại *trước khi* cắt. Không phải đòi nợ kiểu hùng hổ. Là giúp họ tiếp tục trả thứ họ vẫn muốn.
+
+## Là gì (cơ bản)
+
+**Dunning**: chuỗi sau `payment_failed` — retry lúc có cửa + email/SMS rõ + hạn access + hành động cuối (cancel / pause).
+
+Stripe Revenue Recovery: **Smart Retries** chọn thời điểm thử lại (họ khuyến nghị hơn lịch cố định); email khách cấu hình riêng. Soft decline (insufficient funds) đáng retry. Hard (stolen, lost) — đừng spam thẻ, hãy xin thẻ mới.
+
+## Ví dụ thật
+
+Fail ngày 1. Im. Ngày 14 cắt. Khách hay: "tôi vẫn dùng mà?". Email ngày 1 + 4 + 10: "thẻ không trừ được, cập nhật tại đây, giữ gói đến ngày X". Một nửa quay lại. Đó không phải growth. Đó là *đừng làm rơi tiền đã kiếm*.
+
+## Nâng cao
+
+Một trang dunning: số retry, cửa sổ ngày, copy 3 email (lịch sự → rõ hạn → hết access), ai hard-decline đi thẳng "đổi thẻ". Đo recovery rate *trên fail*, không nhét vào conversion.
+
+<Callout title="Góc kỹ thuật">
+Stripe docs: Dashboard → Billing → Revenue recovery → Retries; `next_payment_attempt` khi bật dunning. Đừng bịa % recovery blog ($X per $1) vào kế hoạch — lấy *số fail của bạn* 90 ngày. Email: một CTA, không upsell. Luật/ROSCA một số nước siết negative option — hủy phải dễ ([don't harm](/concepts/dont-harm-to-grow)). VN: tin nhắn + link cập nhật thẻ; đừng gọi "nợ" khi là hết hạn.
+</Callout>
+
+<Callout title="Nhớ nhé">
+Fail ≠ bỏ. Retry lúc có cửa + một câu rõ + hạn. Im rồi cắt là tự nguyện hóa việc không tự nguyện.
+</Callout>
+
+## Đọc thêm
+
+- [Stripe — Automate payment retries (Smart Retries)](https://docs.stripe.com/billing/revenue-recovery/smart-retries) — Retry thông minh vs lịch tự viết.
+- [Stripe — Revenue recovery](https://docs.stripe.com/billing/revenue-recovery) — Email + retry + analytics.
+- [Billing states](/concepts/billing-states) — Past_due là nhà dunning.
+
+## Tự kiểm tra
+
+1. Fail tuần này: khách nhận email *khi nào*? Không có — bạn đang gọi ống hỏng là churn.
+2. Hard vs soft: chuỗi nào khác nhau trên giấy của bạn?
+3. (Siêu) Recovery 40% fail. Bạn tăng ads 20% hay sửa dunning trước — đơn vị tiền nào lớn hơn 30 ngày?

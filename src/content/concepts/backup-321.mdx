@@ -1,0 +1,51 @@
+---
+id: concept-backup-321
+title: "3-2-1 Backup (Life)"
+type: "concept"
+aliases: ["sao lưu 3-2-1", "backup đời", "3 copies 2 media 1 offsite"]
+tags: [security, solo-builder, backup, body-infrastructure]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Ổ chết. Điện thoại rơi sông. iCloud khóa vì quên mật. Ảnh con, hóa đơn thuế, export két mật khẩu — một chỗ. Bạn không mất "file". Bạn mất *bằng chứng đời*.
+
+Backup hệ thống ([backup and restore](/concepts/backup-and-restore)) là server. Đây là *bạn*.
+
+## Là gì (cơ bản)
+
+**3-2-1** (CISA, hướng dẫn SMB): 
+
+- **3** bản (gốc + 2 sao),
+- **2** loại nơi/media (đĩa + mây, không chỉ một ổ),
+- **1** bản *xa chỗ bạn ngồi* (off-site / máy khác / mây khác tài khoản).
+
+CISA: tự động, đều. StopRansomware: có bản *offline / không cắm* — ransomware thích xóa luôn bản sao đang gắn.
+
+## Ví dụ thật
+
+Founder chỉ Time Machine cùng bàn. Trộm laptop + ổ. Hết. 3-2-1: máy + ổ ngăn kéo + export mã hóa trên mây *khác* tài khoản Apple. Trộm lấy hai cái đầu; cái thứ ba còn.
+
+## Nâng cao
+
+Ba thứ solo hay quên: (1) export [password manager](/concepts/password-manager), (2) hóa đơn / giấy hộ, (3) repo *và* secrets. Restore *thử* 90 ngày một lần — bản không mở được = không có bản.
+
+<Callout title="Góc kỹ thuật">
+CISA: biết *cái gì* cần trước khi mua tool; 3-2-1; chạy đều. Không cần NAS đắt ngày đầu: đĩa mã hóa + một mây + máy đang dùng. Ảnh điện thoại: không tin "sẽ sync". Vault: export mã hóa, mật export *không* chỉ nằm trong cùng két. Test: xóa (bản thử) một file, kéo lại từ bản off-site — đồng hồ. [Disaster recovery](/concepts/disaster-recovery) là RTO/RPO shop; bài này là RTO đời bạn (ảnh, giấy, chìa).
+</Callout>
+
+<Callout title="Nhớ nhé">
+Ba bản, hai nơi, một bản xa. Chưa restore thử = chưa backup.
+</Callout>
+
+## Đọc thêm
+
+- [CISA — Back Up Business Data](https://www.cisa.gov/audiences/small-and-medium-businesses/secure-your-business/back-up-business-data) — 3-2-1 chính thức cho shop nhỏ.
+- [CISA — StopRansomware Guide](https://www.cisa.gov/stopransomware/ransomware-guide) — Bản offline/mã hóa; thử restore.
+- [Backup and restore](/concepts/backup-and-restore) — Server; bài này là đời + giấy + két.
+
+## Tự kiểm tra
+
+1. Ảnh + két mật + giấy thuế: đang có mấy bản, mấy nơi? Thiếu chân nào của 3-2-1?
+2. Lần cuối bạn *kéo file ra* từ bản sao — không phải "tin là có"?
+3. (Siêu) Bản mây cùng mật Apple với máy. Off-site còn độc lập không — nếu mất tài khoản?

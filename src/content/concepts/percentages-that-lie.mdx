@@ -1,0 +1,51 @@
+---
+id: concept-percentages-that-lie
+title: "Percentages That Lie"
+type: "concept"
+aliases: ["phần trăm lừa", "relative vs absolute risk", "điểm phần trăm"]
+tags: [thinking, numeracy, calibration, decision-making, metrics]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+"Giảm 50% rủi ro". Não thấy phép màu. Mẫu: từ 2/100 xuống 1/100. Tuyệt đối: bớt 1 người. Tương đối: 50%. Cùng data. Hai poster. Một poster bán thuốc. Một poster nói thật.
+
+Phần trăm là tỷ số. Tỷ số giấu *mẫu*.
+
+## Là gì (cơ bản)
+
+**Percentages that lie**: % không kèm số gốc + mẫu = bạn đang bị (hoặc đang) trang điểm.
+
+- **Relative**: đổi / số cũ (50% giảm).
+- **Absolute**: đổi / *toàn bộ* (1 điểm phần trăm).
+- **Percentage points**: hiệu hai % (từ 8% lên 10% = +2 điểm, = +25% tương đối).
+
+Y tế dạy việc này đau: Cochrane / NNT — hỏi "bao nhiêu người cần chữa để *một* người đỡ", không hỏi "% giảm".
+
+## Ví dụ thật
+
+Landing: "nhanh hơn 300%". 100ms → 25ms hay 4s → 1s? Khách cảm 4s. Họ không cảm 300. Ghi mili-giây trước, % sau — nếu còn cần.
+
+## Nâng cao
+
+Mọi % trên sales / ads / PR: đòi ba số (trước, sau, N). Không có N = tin đồn có dấu %.
+
+<Callout title="Góc kỹ thuật">
+Relative risk (RR) vs absolute risk reduction (ARR) vs NNT = 1/ARR. Báo cáo hay chọn RR vì to. Base rate thấp → RR kịch tính, ARR gần 0. Cùng bẫy [base rates](/concepts/base-rates-bayesian). "Tăng 10%" từ đâu: 10 → 11 khác 80 → 88. Compound: 10%/tháng ≠ 120%/năm (xem [exponential](/concepts/exponential-intuition)). Đừng bao giờ trung bình cộng các % khác mẫu.
+</Callout>
+
+<Callout title="Nhớ nhé">
+% không có tử, mẫu, và tuyệt đối là poster. Đòi ba số hoặc gập poster.
+</Callout>
+
+## Đọc thêm
+
+- [Relative risk — Wikipedia](https://en.wikipedia.org/wiki/Relative_risk) — RR vs risk tuyệt đối; vì sao một số trông lớn.
+- [Number needed to treat — Wikipedia](https://en.wikipedia.org/wiki/Number_needed_to_treat) — 1/ARR; câu hỏi "bao nhiêu người để một người đỡ".
+- [Base rates](/concepts/base-rates-bayesian) — Mẫu nền; % mồ côi mẫu.
+
+## Tự kiểm tra
+
+1. "Giảm 50%" gần nhất bạn share: trước/sau/N là gì? Không có — giữ hay gỡ?
+2. 8% → 10%: +2 điểm hay +25%? Bạn sẽ viết cái nào trên landing — và cái nào trung thực hơn?
+3. (Siêu) Churn 5% → 4%. Relative vs absolute vs khách tuyệt đối trên 200 tài khoản. Bạn tối ưu slide nào?

@@ -1,0 +1,52 @@
+---
+id: concept-vn-payment-rails
+title: "VN Payment Rails"
+type: "concept"
+aliases: ["cổng thanh toán Việt Nam", "MoMo VNPay", "VietQR", "payOS"]
+tags: [solo-founder, payments, vn-tax, go-to-market, founder]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Bạn gắn Stripe trên landing. Khách Hà Nội mở, không có thẻ USD, không quen "Pay with card". Họ quen MoMo, VNPay, chuyển khoản VietQR. Checkout chết trước khi sản phẩm được thử.
+
+Ống tiền không phải chi tiết kỹ thuật. Là *ngôn ngữ trả tiền của khách*.
+
+## Là gì (cơ bản)
+
+**Rail thanh toán VN**: đường tiền khách trong nước thực sự dùng.
+
+- **Chuyển khoản / VietQR**: NAPAS + mã QR chuẩn; tiền vào STK bạn. Rẻ, chậm đối soát nếu tự làm.
+- **Ví / cổng**: MoMo, VNPay, ZaloPay — khách bấm, bạn nhận qua hợp đồng cổng. Phí %; KYC pháp nhân hoặc hộ tùy cổng.
+- **A2A (account-to-account)**: payOS (Casso) xác nhận chuyển khoản vào *tài khoản ngân hàng của bạn* — họ công bố gói miễn phí từ 23/1/2026. Không thay thế ví; là lớp đối soát trên CK.
+
+[Stripe](https://stripe.com/global) (trang Global, 2026): **không** liệt kê Việt Nam là nước merchant được mở tài khoản. Bạn có thể *nhận payout vào STK VN* nếu entity ở nước Stripe hỗ trợ — khác với "gắn Stripe bằng MST Việt Nam".
+
+## Ví dụ thật
+
+SaaS 299.000đ/tháng cho kế toán VN. Checkout chỉ Visa. Conversion gần 0. Thêm VietQR + MoMo: cùng giá, cùng trang — khách trả được. Không phải "growth hack". Là mở cửa đúng đường.
+
+## Nâng cao
+
+Hai ống nếu bán hai thị trường: rail VN cho khách VN, Stripe/MoR cho khách ngoại. Một ống "chỉ Stripe" = tự cấm nội địa. Một ống "chỉ CK" = tự cấm thẻ quốc tế.
+
+<Callout title="Góc kỹ thuật">
+Cổng truyền thống = trung gian giữ tiền, settlement T+N, phí niêm yết trên hợp đồng — đừng copy % blog. A2A = tiền không nằm ví cổng; đối soát bằng nội dung CK / webhook. Dispute/chargeback thẻ quốc tế ≠ hoàn tiền ví VN — SLA khác. KYC: hộ vs công ty, tên STK phải khớp giấy (xem [tên tài khoản](/concepts/payout-account-match)). Không gắn 5 cổng ngày đầu: một rail khách thật dùng + một rail dự phòng.
+</Callout>
+
+<Callout title="Nhớ nhé">
+Khách trả bằng đường họ đã có. Bạn chọn rail theo *họ*, không theo demo founder nước ngoài.
+</Callout>
+
+## Đọc thêm
+
+- [Stripe — Global availability](https://stripe.com/global) — Danh sách nước được mở merchant; Việt Nam không có (đối chiếu lúc đọc).
+- [MoMo Developers — Cổng thanh toán](https://developers.momo.vn/v3/vi/docs/payment/guides/payment-with-aio/) — Ví lớn; một API checkout.
+- [VNPAY](https://vnpay.vn/) — Cổng/QR/thẻ nội địa; hợp đồng merchant.
+- [payOS](https://payos.vn/) — A2A, tiền về STK; gói miễn phí họ công bố 2026.
+
+## Tự kiểm tra
+
+1. Landing chỉ Stripe, ICP là SME Hà Nội. Bạn đang tối ưu phí hay đang *khóa cửa*?
+2. VietQR khác MoMo chỗ tiền nằm đâu trước khi về bạn?
+3. (Siêu) Khách US + khách VN trên một checkout. Hai rail, một invoice engine — cái gì phải tách?

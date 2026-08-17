@@ -1,0 +1,51 @@
+---
+id: concept-oss-licenses
+title: "Open Source Licenses (MIT, Apache, GPL)"
+type: "concept"
+aliases: ["open source licenses", "giấy phép mã nguồn mở", "MIT vs GPL", "copyleft", "permissive license"]
+tags: [thinking, ip, oss-license, copyright, solo-builder]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Không ghi license = không phải "thoáng". Nhiều công ty *không đụng* code không giấy phép — họ không biết có được phép không. Bạn tưởng mở. Họ tưởng bẫy.
+
+License là lời nói trước: người khác *được làm gì* với code của bạn — và bạn *nợ gì* khi dùng code họ.
+
+## Là gì (cơ bản)
+
+Ba họ solo hay gặp:
+
+- **Permissive** (MIT, BSD, Apache-2.0): dùng, sửa, nhét vào sản phẩm kín — giữ notice. Apache thêm patent grant / termination.
+- **Copyleft** (GPL, AGPL): phân phối bản sửa thì phải mở cùng điều kiện. AGPL siết cả SaaS (mạng = phân phối).
+- **Không license**: mặc định *all rights reserved*. Người khác không được chắc là được dùng.
+
+choosealicense.com: MIT nếu muốn đơn giản; GPL nếu muốn cải tiến phải trả lại cộng đồng.
+
+## Ví dụ thật
+
+Bạn npm một lib GPL vào SaaS kín, ship. Copyleft có thể đòi bạn mở *phần liên kết*. Khách B2B hỏi "code có GPL không?" — bạn không biết. Deal chết hoặc luật sư đắt hơn lib.
+
+## Nâng cao
+
+Dùng ≠ tuân. MIT vẫn phải giữ copyright notice. GPL không phải "cấm thương mại" — cấm *đóng* khi phân phối. Dual license (mở + bán ngoại lệ) là model có thật.
+
+<Callout title="Góc kỹ thuật">
+Siêu nâng cao: license *lan* theo cách liên kết (static/dynamic), không theo cảm xúc. AGPL + service công khai = đọc kỹ hoặc đừng. Proprietary code của khách trong cùng repo với GPL là đám cháy. SPDX identifier trong header rẻ hơn tranh cãi sau. Dependabot không thay license audit: một lần `license-checker` trước launch B2B. Contributor License Agreement (CLA) khi repo có người lạ — ai sở hữu patch? Không CLA, mỗi contributor giữ bản quyền phần họ — bạn không "sở hữu hết repo" để bán exclusive.
+</Callout>
+
+<Callout title="Nhớ nhé">
+Mọi repo ship: một file LICENSE. Mọi dependency: biết họ permissive hay copyleft *trước* khi build lên đó.
+</Callout>
+
+## Đọc thêm
+
+- [Choose an open source license](https://choosealicense.com/) — MIT vs GPL vs không license; tình huống chọn.
+- [MIT License](https://choosealicense.com/licenses/mit/) — Permissive ngắn: làm gần như mọi thứ, giữ notice.
+- [GNU GPLv3](https://choosealicense.com/licenses/gpl-3.0/) — Copyleft: được làm nhiều thứ *trừ* phân phối bản đóng.
+
+## Tự kiểm tra
+
+1. Repo chính của bạn có LICENSE không? Dependency nào là GPL/AGPL?
+2. Permissive khác copyleft bằng một câu, bằng một việc bạn muốn làm (đóng SaaS / mở plugin).
+3. (Siêu) Khách B2B hỏi "còn AGPL không?" — bạn tra bằng lệnh gì trong 10 phút, không phải bằng cảm giác?

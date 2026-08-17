@@ -1,0 +1,53 @@
+---
+id: concept-invoice-local-vs-export
+title: "Invoice Local vs Export"
+type: "concept"
+aliases: ["hóa đơn khách VN vs ngoại", "export invoice", "VAT invoice SaaS"]
+tags: [solo-founder, payments, einvoice, vn-tax, go-to-market]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Khách công ty VN xin hóa đơn. Bạn gửi receipt Stripe bằng tiếng Anh, USD, không MST. Kế toán họ không hạch toán được. Khách US xin invoice. Bạn gửi HĐĐT tiếng Việt, VND, mẫu cơ quan thuế. Họ không hiểu — và không cần.
+
+Hai khách, hai *loại giấy*. Một mẫu cho cả hai = một bên không trả.
+
+## Là gì (cơ bản)
+
+**Hóa đơn nội địa**: chứng từ thuế VN — thường HĐĐT, VND, MST người bán + người mua, đủ để khách *khấu trừ / ghi chi phí*. Xem [e-invoice](/concepts/einvoice-vn).
+
+**Giấy cho khách ngoại**: invoice thương mại (tiếng Anh, USD hoặc tiền họ, tax ID nếu họ cần) — *không* thay HĐĐT cho khách VN, và HĐĐT *không* thay invoice cho khách US.
+
+Cổng (Stripe, MoR) in receipt. Receipt ≠ hóa đơn VN. Đừng nói "Stripe xuất hóa đơn rồi".
+
+## Ví dụ thật
+
+Deal 12 triệu/năm với agency VN. Bạn chỉ có Stripe receipt. Họ trả 1 tháng rồi dừng: "pháp chế không duyệt". Cùng sản phẩm, khách Singapore nhận PDF invoice USD — ok. Thiếu không phải tính năng. Thiếu *giấy đúng thị trường*.
+
+## Nâng cao
+
+SKU tách: `plan_vn` (VND + HĐĐT + GTGT theo cơ chế bạn) và `plan_export` (USD + commercial invoice). Một subscription engine, hai template. Gộp một SKU rồi "đổi chữ trên PDF" là chỗ hay sai thuế.
+
+<Callout title="Góc kỹ thuật">
+Khách VN B2B: MST, địa chỉ, tên đúng đăng ký — sai một trường, họ không nhận. Hộ dưới ngưỡng HĐĐT vẫn *có thể* phải xuất nếu khách đòi và bạn muốn giữ deal. Khách ngoại: thương mại điện tử xuất khẩu / không chịu GTGT *tùy* điều kiện từng văn bản — đừng tự miễn; hỏi đại lý. MoR (Paddle, Stripe Managed Payments…) xuất giấy *theo nước họ đứng seller* — khách VN mua qua MoR có thể *không* nhận HĐĐT MST bạn; B2B VN thường không nuốt. Chọn MoR = chọn *bỏ* hoặc *hẹp* kênh B2B nội.
+</Callout>
+
+<Callout title="Cẩn thận">
+Không chỉ cách xuất. Sai loại giấy có thể sai kê khai. Người có giấy phép, không blog.
+</Callout>
+
+<Callout title="Nhớ nhé">
+Giấy theo *người trả và nước họ hạch toán*. Một PDF cho cả thế giới là lười, không phải simple.
+</Callout>
+
+## Đọc thêm
+
+- [HĐĐT hộ / cá nhân — Cục Thuế, Cổng TTĐT](https://xaydungchinhsach.chinhphu.vn/luu-y-khi-su-dung-hoa-don-dien-tu-cho-ho-kinh-doanh-ca-nhan-kinh-doanh-119260317100724355.htm) — Giấy nội địa.
+- [What is a Merchant of Record — Stripe](https://stripe.com/resources/more/merchant-of-record) — MoR đứng seller, thu/nộp thuế hộ; khác HĐĐT mang MST bạn.
+- [E-invoice Vietnam](/concepts/einvoice-vn) — Ngưỡng và mã cơ quan thuế.
+
+## Tự kiểm tra
+
+1. Receipt Stripe đủ cho kế toán công ty VN không — thiếu trường nào?
+2. Vì sao một SKU + "đổi chữ PDF" nguy hiểm hơn hai SKU?
+3. (Siêu) Bán qua MoR cho khách VN B2B. Ai là người bán trên giấy — và khách có khấu trừ được không?

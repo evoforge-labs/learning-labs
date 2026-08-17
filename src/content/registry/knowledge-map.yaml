@@ -1865,6 +1865,680 @@ edges:
   - source: rubric-thinking-and-learning
     target: exercise-mind-006
     rel: evaluates
+  # M5 -> M6 Personal Agency
+  - source: concept-antifragility
+    target: concept-high-agency
+    rel: leads-to
+  - source: concept-systems-vs-goals
+    target: concept-habit-loop
+    rel: leads-to
+  - source: concept-opportunity-cost
+    target: concept-saying-no
+    rel: supports
+  - source: concept-growth-mindset
+    target: concept-emotional-regulation
+    rel: supports
+  - source: concept-high-agency
+    target: concept-habit-loop
+    rel: supports
+  - source: concept-habit-loop
+    target: concept-saying-no
+    rel: supports
+  - source: concept-saying-no
+    target: concept-emotional-regulation
+    rel: supports
+  # M6 -> M7 Leverage & Compounding
+  - source: concept-high-agency
+    target: concept-leverage
+    rel: leads-to
+  - source: concept-leverage
+    target: concept-compounding
+    rel: leads-to
+  - source: concept-compounding
+    target: concept-specific-knowledge
+    rel: supports
+  - source: concept-specific-knowledge
+    target: concept-what-still-compounds
+    rel: leads-to
+  - source: concept-unfair-advantage
+    target: concept-specific-knowledge
+    rel: related
+  - source: concept-when-ai-adds-value
+    target: concept-what-still-compounds
+    rel: related
+  - source: concept-growth-loops
+    target: concept-compounding
+    rel: related
+  # M7 -> M8 Epistemic Hygiene
+  - source: concept-attention-management
+    target: concept-information-diet
+    rel: leads-to
+  - source: concept-expected-value-thinking
+    target: concept-base-rates-bayesian
+    rel: leads-to
+  - source: concept-cognitive-biases
+    target: concept-base-rates-bayesian
+    rel: supports
+  - source: concept-base-rates-bayesian
+    target: concept-calibration
+    rel: leads-to
+  - source: concept-trust-but-verify
+    target: concept-synthetic-media
+    rel: related
+  - source: concept-information-diet
+    target: concept-synthetic-media
+    rel: supports
+  # Drills M6–M8
+  - source: concept-high-agency
+    target: exercise-mind-007
+    rel: trains
+  - source: concept-habit-loop
+    target: exercise-mind-007
+    rel: trains
+  - source: concept-leverage
+    target: exercise-mind-008
+    rel: trains
+  - source: concept-what-still-compounds
+    target: exercise-mind-008
+    rel: trains
+  - source: concept-information-diet
+    target: exercise-mind-009
+    rel: trains
+  - source: concept-calibration
+    target: exercise-mind-009
+    rel: trains
+  - source: rubric-thinking-and-learning
+    target: exercise-mind-007
+    rel: evaluates
+  - source: rubric-thinking-and-learning
+    target: exercise-mind-008
+    rel: evaluates
+  - source: rubric-thinking-and-learning
+    target: exercise-mind-009
+    rel: evaluates
+  # M8 -> M9 Personal Finance
+  - source: concept-compounding
+    target: concept-personal-runway
+    rel: leads-to
+  - source: concept-ramen-profitability
+    target: concept-personal-runway
+    rel: related
+  - source: concept-personal-runway
+    target: concept-personal-vs-business-money
+    rel: leads-to
+  - source: concept-personal-vs-business-money
+    target: concept-enough-money
+    rel: leads-to
+  - source: concept-enough-money
+    target: concept-simple-investing
+    rel: leads-to
+  - source: concept-simple-investing
+    target: concept-ruin-and-margin
+    rel: supports
+  - source: concept-expected-value-thinking
+    target: concept-ruin-and-margin
+    rel: supports
+  - source: concept-antifragility
+    target: concept-ruin-and-margin
+    rel: related
+  # M9 -> M10 PKM
+  - source: concept-active-recall
+    target: concept-second-brain
+    rel: related
+  - source: concept-information-diet
+    target: concept-second-brain
+    rel: supports
+  - source: concept-second-brain
+    target: concept-code-method
+    rel: leads-to
+  - source: concept-code-method
+    target: concept-atomic-notes
+    rel: leads-to
+  - source: concept-atomic-notes
+    target: concept-notes-in-use
+    rel: leads-to
+  - source: concept-notes-in-use
+    target: concept-ai-second-brain
+    rel: leads-to
+  - source: concept-what-still-compounds
+    target: concept-ai-second-brain
+    rel: supports
+  # M10 -> M11 Social capital
+  - source: concept-compounding
+    target: concept-social-capital
+    rel: leads-to
+  - source: concept-community-building
+    target: concept-social-capital
+    rel: related
+  - source: concept-social-capital
+    target: concept-weak-ties
+    rel: leads-to
+  - source: concept-weak-ties
+    target: concept-give-first
+    rel: supports
+  - source: concept-give-first
+    target: concept-asking-for-help
+    rel: supports
+  - source: concept-asking-for-help
+    target: concept-high-trust-network
+    rel: leads-to
+  - source: concept-high-agency
+    target: concept-asking-for-help
+    rel: supports
+  - source: concept-saying-no
+    target: concept-give-first
+    rel: supports
+  # Drills M9–M11
+  - source: concept-personal-runway
+    target: exercise-mind-010
+    rel: trains
+  - source: concept-ruin-and-margin
+    target: exercise-mind-010
+    rel: trains
+  - source: concept-atomic-notes
+    target: exercise-mind-011
+    rel: trains
+  - source: concept-notes-in-use
+    target: exercise-mind-011
+    rel: trains
+  - source: concept-weak-ties
+    target: exercise-mind-012
+    rel: trains
+  - source: concept-asking-for-help
+    target: exercise-mind-012
+    rel: trains
+  - source: rubric-thinking-and-learning
+    target: exercise-mind-010
+    rel: evaluates
+  - source: rubric-thinking-and-learning
+    target: exercise-mind-011
+    rel: evaluates
+  - source: rubric-thinking-and-learning
+    target: exercise-mind-012
+    rel: evaluates
+  # M11 -> M12 Body infrastructure
+  - source: concept-energy-management
+    target: concept-sleep-as-infrastructure
+    rel: leads-to
+  - source: concept-sleep-as-infrastructure
+    target: concept-circadian-rhythm
+    rel: supports
+  - source: concept-circadian-rhythm
+    target: concept-sleep-debt
+    rel: leads-to
+  - source: concept-sleep-debt
+    target: concept-caffeine-and-judgment
+    rel: supports
+  - source: concept-sleep-as-infrastructure
+    target: concept-movement-minimum
+    rel: supports
+  - source: concept-solo-founder-burnout
+    target: concept-sleep-as-infrastructure
+    rel: related
+  - source: concept-calibration
+    target: concept-sleep-debt
+    rel: related
+  # M13 IP
+  - source: concept-gdpr-basics
+    target: concept-copyright-human-authorship
+    rel: related
+  - source: concept-copyright-human-authorship
+    target: concept-oss-licenses
+    rel: leads-to
+  - source: concept-oss-licenses
+    target: concept-ai-output-ownership
+    rel: leads-to
+  - source: concept-ai-output-ownership
+    target: concept-work-product-contracts
+    rel: leads-to
+  - source: concept-oss-licenses
+    target: concept-license-contamination
+    rel: leads-to
+  - source: concept-prompt-injection
+    target: concept-license-contamination
+    rel: related
+  - source: concept-trust-but-verify
+    target: concept-ai-output-ownership
+    rel: supports
+  # M14 English
+  - source: concept-leverage
+    target: concept-english-as-leverage
+    rel: leads-to
+  - source: concept-english-as-leverage
+    target: concept-reading-in-english
+    rel: leads-to
+  - source: concept-reading-in-english
+    target: concept-writing-english-that-ships
+    rel: leads-to
+  - source: concept-writing-english-that-ships
+    target: concept-good-enough-english
+    rel: supports
+  - source: concept-good-enough-english
+    target: concept-thinking-in-english
+    rel: leads-to
+  - source: concept-plain-language
+    target: concept-writing-english-that-ships
+    rel: supports
+  - source: concept-bluf
+    target: concept-writing-english-that-ships
+    rel: supports
+  - source: concept-information-diet
+    target: concept-reading-in-english
+    rel: supports
+  # Drills M12–M14
+  - source: concept-sleep-as-infrastructure
+    target: exercise-mind-013
+    rel: trains
+  - source: concept-sleep-debt
+    target: exercise-mind-013
+    rel: trains
+  - source: concept-oss-licenses
+    target: exercise-mind-014
+    rel: trains
+  - source: concept-work-product-contracts
+    target: exercise-mind-014
+    rel: trains
+  - source: concept-reading-in-english
+    target: exercise-mind-015
+    rel: trains
+  - source: concept-writing-english-that-ships
+    target: exercise-mind-015
+    rel: trains
+  - source: rubric-thinking-and-learning
+    target: exercise-mind-013
+    rel: evaluates
+  - source: rubric-thinking-and-learning
+    target: exercise-mind-014
+    rel: evaluates
+  - source: rubric-thinking-and-learning
+    target: exercise-mind-015
+    rel: evaluates
+  # M15 Weekly OS
+  - source: concept-deep-work
+    target: concept-time-audit
+    rel: leads-to
+  - source: concept-time-audit
+    target: concept-calendar-as-truth
+    rel: leads-to
+  - source: concept-calendar-as-truth
+    target: concept-weekly-review
+    rel: leads-to
+  - source: concept-weekly-review
+    target: concept-one-deep-thing
+    rel: supports
+  - source: concept-one-deep-thing
+    target: concept-open-loops
+    rel: supports
+  - source: concept-habit-loop
+    target: concept-weekly-review
+    rel: supports
+  - source: concept-time-audit
+    target: exercise-mind-016
+    rel: trains
+  - source: concept-weekly-review
+    target: exercise-mind-016
+    rel: trains
+  - source: rubric-thinking-and-learning
+    target: exercise-mind-016
+    rel: evaluates
+  # Solo M6 First hire
+  - source: concept-ramen-profitability
+    target: concept-when-to-hire
+    rel: related
+  - source: concept-when-to-hire
+    target: concept-contractor-before-employee
+    rel: leads-to
+  - source: concept-contractor-before-employee
+    target: concept-delegate-outcomes
+    rel: leads-to
+  - source: concept-delegate-outcomes
+    target: concept-keep-or-part
+    rel: leads-to
+  - source: concept-keep-or-part
+    target: concept-first-contractor-os
+    rel: supports
+  - source: concept-work-product-contracts
+    target: concept-first-contractor-os
+    rel: supports
+  - source: concept-when-to-hire
+    target: exercise-solo-007
+    rel: trains
+  - source: concept-delegate-outcomes
+    target: exercise-solo-007
+    rel: trains
+  - source: rubric-solo-founder
+    target: exercise-solo-007
+    rel: evaluates
+  # Solo M7 VN legal
+  - source: concept-personal-vs-business-money
+    target: concept-ho-kd-vs-tnhh
+    rel: leads-to
+  - source: concept-ho-kd-vs-tnhh
+    target: concept-vn-tax-declaration-2026
+    rel: leads-to
+  - source: concept-vn-tax-declaration-2026
+    target: concept-einvoice-vn
+    rel: supports
+  - source: concept-vn-tax-declaration-2026
+    target: concept-tax-reserve-fund
+    rel: leads-to
+  - source: concept-ho-kd-vs-tnhh
+    target: concept-when-to-incorporate-vn
+    rel: leads-to
+  - source: concept-tax-reserve-fund
+    target: exercise-solo-008
+    rel: trains
+  - source: concept-when-to-incorporate-vn
+    target: exercise-solo-008
+    rel: trains
+  - source: rubric-solo-founder
+    target: exercise-solo-008
+    rel: evaluates
+  # Solo M8 local payments
+  - source: concept-go-to-market
+    target: concept-vn-payment-rails
+    rel: leads-to
+  - source: concept-vn-payment-rails
+    target: concept-vnd-vs-usd-pricing
+    rel: supports
+  - source: concept-vn-tax-declaration-2026
+    target: concept-payout-account-match
+    rel: related
+  - source: concept-einvoice-vn
+    target: concept-invoice-local-vs-export
+    rel: leads-to
+  - source: concept-vn-payment-rails
+    target: concept-merchant-of-record
+    rel: related
+  - source: concept-vn-payment-rails
+    target: exercise-solo-009
+    rel: trains
+  - source: concept-invoice-local-vs-export
+    target: exercise-solo-009
+    rel: trains
+  - source: rubric-solo-founder
+    target: exercise-solo-009
+    rel: evaluates
+  # Solo M9 money in product
+  - source: concept-subscription-vs-one-time
+    target: concept-billing-states
+    rel: leads-to
+  - source: concept-billing-states
+    target: concept-dunning
+    rel: leads-to
+  - source: concept-invoice-local-vs-export
+    target: concept-saas-invoice-tax
+    rel: supports
+  - source: concept-dunning
+    target: exercise-solo-010
+    rel: trains
+  - source: concept-saas-invoice-tax
+    target: exercise-solo-010
+    rel: trains
+  - source: rubric-solo-founder
+    target: exercise-solo-010
+    rel: evaluates
+  # Mind M16 investigate
+  - source: concept-assumption-vs-fact
+    target: concept-research-question
+    rel: leads-to
+  - source: concept-research-question
+    target: concept-fermi-for-life
+    rel: supports
+  - source: concept-fermi-for-life
+    target: concept-primary-source
+    rel: leads-to
+  - source: concept-primary-source
+    target: concept-triangulate-a-claim
+    rel: leads-to
+  - source: concept-triangulate-a-claim
+    target: concept-stop-researching
+    rel: leads-to
+  - source: concept-research-question
+    target: exercise-mind-017
+    rel: trains
+  - source: concept-stop-researching
+    target: exercise-mind-017
+    rel: trains
+  - source: rubric-thinking-and-learning
+    target: exercise-mind-017
+    rel: evaluates
+  # Mind M17 status
+  - source: concept-enough-money
+    target: concept-status-vs-wealth
+    rel: leads-to
+  - source: concept-status-vs-wealth
+    target: concept-dont-copy-their-game
+    rel: leads-to
+  - source: concept-dont-copy-their-game
+    target: concept-relative-scoreboard
+    rel: supports
+  - source: concept-status-vs-wealth
+    target: concept-humility-with-teeth
+    rel: supports
+  - source: concept-status-vs-wealth
+    target: exercise-mind-018
+    rel: trains
+  - source: concept-humility-with-teeth
+    target: exercise-mind-018
+    rel: trains
+  - source: rubric-thinking-and-learning
+    target: exercise-mind-018
+    rel: evaluates
+  # Mind M18 power
+  - source: concept-give-first
+    target: concept-bases-of-power
+    rel: related
+  - source: concept-bases-of-power
+    target: concept-influence-without-title
+    rel: leads-to
+  - source: concept-influence-without-title
+    target: concept-room-of-three
+    rel: leads-to
+  - source: concept-influence-without-title
+    target: exercise-mind-019
+    rel: trains
+  - source: concept-room-of-three
+    target: exercise-mind-019
+    rel: trains
+  - source: rubric-thinking-and-learning
+    target: exercise-mind-019
+    rel: evaluates
+  # Mind M19 ethics
+  - source: concept-conflict-of-interest
+    target: concept-expensive-truth
+    rel: supports
+  - source: concept-expensive-truth
+    target: concept-dont-harm-to-grow
+    rel: related
+  - source: concept-conflict-of-interest
+    target: exercise-mind-020
+    rel: trains
+  - source: concept-dont-harm-to-grow
+    target: exercise-mind-020
+    rel: trains
+  - source: rubric-thinking-and-learning
+    target: exercise-mind-020
+    rel: evaluates
+  # Mind M20 numeracy
+  - source: concept-fermi-for-life
+    target: concept-units-and-magnitude
+    rel: related
+  - source: concept-units-and-magnitude
+    target: concept-percentages-that-lie
+    rel: leads-to
+  - source: concept-percentages-that-lie
+    target: concept-exponential-intuition
+    rel: leads-to
+  - source: concept-compounding
+    target: concept-exponential-intuition
+    rel: supports
+  - source: concept-units-and-magnitude
+    target: exercise-mind-021
+    rel: trains
+  - source: concept-exponential-intuition
+    target: exercise-mind-021
+    rel: trains
+  - source: rubric-thinking-and-learning
+    target: exercise-mind-021
+    rel: evaluates
+  # Mind M21 life probability
+  - source: concept-ruin-and-margin
+    target: concept-fat-tails
+    rel: related
+  - source: concept-distributions-you-meet
+    target: concept-fat-tails
+    rel: leads-to
+  - source: concept-fat-tails
+    target: concept-ergodicity
+    rel: leads-to
+  - source: concept-expected-value-thinking
+    target: concept-ergodicity
+    rel: related
+  - source: concept-ergodicity
+    target: exercise-mind-022
+    rel: trains
+  - source: concept-fat-tails
+    target: exercise-mind-022
+    rel: trains
+  - source: rubric-thinking-and-learning
+    target: exercise-mind-022
+    rel: evaluates
+  # Comm presence
+  - source: concept-pitch-narrative
+    target: concept-speak-to-five
+    rel: related
+  - source: concept-speak-to-five
+    target: concept-breath-then-speak
+    rel: supports
+  - source: concept-speak-to-five
+    target: concept-slides-dont-read
+    rel: supports
+  - source: concept-calendar-as-truth
+    target: concept-twenty-five-minute-meeting
+    rel: related
+  - source: concept-speak-to-five
+    target: exercise-comm-007
+    rel: trains
+  - source: concept-twenty-five-minute-meeting
+    target: exercise-comm-007
+    rel: trains
+  - source: rubric-communication-negotiation
+    target: exercise-comm-007
+    rel: evaluates
+  # Growth personal brand + long media
+  - source: concept-positioning
+    target: concept-personal-brand-as-asset
+    rel: related
+  - source: concept-personal-brand-as-asset
+    target: concept-one-line-anchor
+    rel: leads-to
+  - source: concept-one-line-anchor
+    target: concept-dont-hustle-the-feed
+    rel: supports
+  - source: concept-one-line-anchor
+    target: exercise-growth-007
+    rel: trains
+  - source: rubric-growth-marketing
+    target: exercise-growth-007
+    rel: evaluates
+  - source: concept-content-marketing
+    target: concept-eight-minute-script
+    rel: leads-to
+  - source: concept-eight-minute-script
+    target: concept-one-source-recording
+    rel: supports
+  - source: concept-one-source-recording
+    target: concept-good-enough-audio
+    rel: supports
+  - source: concept-eight-minute-script
+    target: exercise-growth-008
+    rel: trains
+  - source: concept-good-enough-audio
+    target: exercise-growth-008
+    rel: trains
+  - source: rubric-growth-marketing
+    target: exercise-growth-008
+    rel: evaluates
+  # UX light research
+  - source: concept-usability-heuristics
+    target: concept-when-not-to-interview
+    rel: related
+  - source: concept-when-not-to-interview
+    target: concept-five-user-test
+    rel: leads-to
+  - source: concept-five-user-test
+    target: concept-diary-study
+    rel: related
+  - source: concept-the-mom-test
+    target: concept-when-not-to-interview
+    rel: related
+  - source: concept-five-user-test
+    target: exercise-ux-007
+    rel: trains
+  - source: concept-when-not-to-interview
+    target: exercise-ux-007
+    rel: trains
+  - source: rubric-design-for-builders
+    target: exercise-ux-007
+    rel: evaluates
+  # Solo kill/sunset
+  - source: concept-ramen-profitability
+    target: concept-kill-criteria
+    rel: related
+  - source: concept-kill-criteria
+    target: concept-sunk-cost-fallacy
+    rel: supports
+  - source: concept-sunk-cost-fallacy
+    target: concept-sunset-a-product
+    rel: leads-to
+  - source: concept-opportunity-cost
+    target: concept-sunk-cost-fallacy
+    rel: related
+  - source: concept-kill-criteria
+    target: exercise-solo-011
+    rel: trains
+  - source: concept-sunset-a-product
+    target: exercise-solo-011
+    rel: trains
+  - source: rubric-solo-founder
+    target: exercise-solo-011
+    rel: evaluates
+  # Mind decision memo
+  - source: concept-bluf
+    target: concept-write-to-think
+    rel: supports
+  - source: concept-write-to-think
+    target: concept-decision-memo
+    rel: leads-to
+  - source: concept-premortem
+    target: concept-decision-memo
+    rel: supports
+  - source: concept-decision-memo
+    target: exercise-mind-023
+    rel: trains
+  - source: rubric-thinking-and-learning
+    target: exercise-mind-023
+    rel: evaluates
+  # Security personal secrets OS
+  - source: concept-mfa
+    target: concept-password-manager
+    rel: supports
+  - source: concept-password-manager
+    target: concept-backup-321
+    rel: supports
+  - source: concept-backup-and-restore
+    target: concept-backup-321
+    rel: related
+  - source: concept-password-manager
+    target: exercise-sec-007
+    rel: trains
+  - source: concept-backup-321
+    target: exercise-sec-007
+    rel: trains
+  - source: rubric-security-for-builders
+    target: exercise-sec-007
+    rel: evaluates
 
   # ============================================================
   # Founder Sales & Customer Success (sales) — progression + drills

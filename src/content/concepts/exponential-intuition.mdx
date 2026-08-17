@@ -1,0 +1,49 @@
+---
+id: concept-exponential-intuition
+title: "Exponential Intuition"
+type: "concept"
+aliases: ["cảm nhận tăng trưởng mũ", "rule of 72", "compounding intuition"]
+tags: [thinking, numeracy, compounding, estimation, personal-finance]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Não vẽ đường thẳng. Thế giới hay vẽ đường cong. 1% một ngày tưởng nhẹ. 1,01^365 ≈ 37. Não không thấy 37. Não thấy 1.
+
+Không phải bạn dốt. Não *không được tiến hóa* cho lãi kép. Phải vẽ tay.
+
+## Là gì (cơ bản)
+
+**Exponential intuition**: khi số nhân với *chính nó* theo thời gian (1+r)^t — không cộng.
+
+[Compounding](/concepts/compounding) là *vì sao quan trọng*. Đây là *cảm* sai chỗ nào.
+
+**Rule of 72** (xấp xỉ tài chính cổ): thời gian nhân đôi ≈ 72 / (r% một kỳ). 8%/năm ≈ 9 năm nhân đôi. Không phải định lý; là thước bỏ túi.
+
+## Ví dụ thật
+
+"Server +15%/tháng". Não: cuối năm +180%. Máy: 1,15^12 ≈ 5,4 lần. Bạn thiếu tiền *gấp ba lần* dự toán thẳng. Hóa đơn không thương lượng với trực giác.
+
+## Nâng cao
+
+Ba chỗ đời hay gặp mũ: chi phí cloud, infection/rumor, lãi/nợ. Một chỗ *giả* mũ: "viral" khi K < 1 ([viral coefficient](/concepts/viral-coefficient)) — đường chết, không phải tên lửa.
+
+<Callout title="Góc kỹ thuật">
+70/72/69,3: ln(2)≈0,693 → 69,3/r gần hơn; 72 chia đẹp. Chỉ tốt khi r nhỏ và kỳ đều. Âm: (0,99)^365 ≈ 0,025 — "chỉ mất 1%/ngày" gần về 0. Log: nếu nhân tử nhân nhau, *cộng* log (Fermi). Não cộng trên trục tuyến tính = underestimate mũ dương, overreact mũ trên headline ("tăng 10 lần" từ 0,1% base).
+</Callout>
+
+<Callout title="Nhớ nhé">
+Não thẳng. Máy mũ. Trước khi tin ruột, nhân một kỳ một năm — hoặc chia 72.
+</Callout>
+
+## Đọc thêm
+
+- [Compound interest — Wikipedia](https://en.wikipedia.org/wiki/Compound_interest) — (1+r)^t; Rule of 72 như xấp xỉ.
+- [Compounding](/concepts/compounding) — Ý nghĩa; bài này là trực giác sai.
+- [Fermi](/concepts/fermi-for-life) — Nhân tử; mũ là nhân tử *lặp*.
+
+## Tự kiểm tra
+
+1. 12%/năm: Rule of 72 cho thời gian nhân đôi? Bạn đã từng tính đường thẳng chưa?
+2. +15%/tháng × 12: não vs 1,15^12. Lệch bao nhiêu lần?
+3. (Siêu) "Chỉ" giảm 3%/tháng khách. Còn lại sau 24 tháng? Đó là churn hay "nhẹ"?

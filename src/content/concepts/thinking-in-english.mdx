@@ -1,0 +1,47 @@
+---
+id: concept-thinking-in-english
+title: "Thinking in English (Stop Translating)"
+type: "concept"
+aliases: ["thinking in English", "nghĩ bằng tiếng Anh", "stop translating", "inner voice English"]
+tags: [thinking, english, learning, specific-knowledge]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Bạn nghĩ câu tiếng Việt, dịch trong đầu, rồi nói. Độ trễ 2 giây. Trong 2 giây đó cuộc gọi đã đi tiếp. Dịch là compiler chậm. Người trôi chảy không giỏi dịch hơn — họ *không bật* compiler với việc hàng ngày.
+
+## Là gì (cơ bản)
+
+**Thinking in English**: với *miền bạn đã biết* (code, product, khách), giọng trong đầu dùng luôn từ Anh của miền đó: ship, churn, scope, invoice — không "vận chuyển / tỷ lệ bỏ / phạm vi / hóa đơn" rồi dịch ngược.
+
+Không phải phản quốc. Là [chunking](/concepts/chunking) đúng kênh. Não giữ thuật ngữ nơi nó sống (docs, issue).
+
+## Ví dụ thật
+
+Debug: bạn đã nghĩ `race condition` chứ không "điều kiện chạy đua". Giữ vậy khi *nói*. Đừng dịch rồi dịch lại — mất chunk, thêm lỗi.
+
+## Nâng cao
+
+Chỉ nghĩ Anh ở miền có input Anh. Không ép nghĩ Anh khi nói với mẹ. Code-switch là năng lực, không phải tội.
+
+Luyện: narrate việc đang làm 3 phút (rubber duck bằng Anh). Viết commit message *trước* khi code xong — buộc não ở kênh Anh của repo.
+
+<Callout title="Góc kỹ thuật">
+Siêu nâng cao: lexical transfer — bạn mang cấu trúc Việt vào Anh ("I very like"), người đọc vẫn hiểu, native vẫn khúc. Sửa *mẫu câu miền* (I shipped X so that Y; X is blocked on Y) còn hơn sửa 200 từ rời. Inner speech chuyển khi *giờ tiếp xúc nguồn* đủ dày (đọc/viết hàng ngày), không khi "quyết tâm nghĩ Anh". Immersion giả (phim phụ đề Việt) không chuyển inner speech kỹ thuật. Immersion thật: issue, docs, email khách — đúng việc kiếm tiền. Đo: thời gian từ ý → câu Anh *không* qua câu Việt, trên 10 thuật ngữ nghề. >3 giây = vẫn đang compile.
+</Callout>
+
+<Callout title="Nhớ nhé">
+Thuật ngữ nghề để nguyên Anh trong đầu. Dịch là khi nói với người không cùng nghề — không phải khi nói với compiler hay với khách kỹ thuật.
+</Callout>
+
+## Đọc thêm
+
+- [Chunking](/concepts/chunking) — Não nhớ cụm; cụm nghề đang sống bằng Anh.
+- [Reading in English](/concepts/reading-in-english) — Input dày mới chuyển inner speech; quyết tâm không đủ.
+- [Writing English That Ships](/concepts/writing-english-that-ships) — Output ép não ở lại kênh; commit/issue là máy tập.
+
+## Tự kiểm tra
+
+1. 10 thuật ngữ bạn dùng mỗi tuần: bạn nghĩ chúng bằng Anh hay Việt-rồi-dịch? Đo 10 cái.
+2. Lần nói chuyện kỹ thuật gần nhất, chỗ nào bạn dừng để dịch? Thuật ngữ hay ngữ pháp?
+3. (Siêu) 5 ngày: mỗi ngày 3 phút rubber-duck Anh một bug/feature. Ngày 5 còn compile qua Việt không?

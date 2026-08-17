@@ -1,0 +1,47 @@
+---
+id: concept-base-rates-bayesian
+title: "Base Rates & Bayesian Updating"
+type: "concept"
+aliases: ["base rate", "base rate neglect", "bayesian updating", "cập nhật bayes", "tỷ lệ nền", "prior"]
+tags: [thinking, bayesian, base-rate, decision-making, probability, mental-models, epistemic-hygiene]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Một xét nghiệm bệnh hiếm đúng 99%. Bạn dương tính. Não hét: "Mình gần như chắc bệnh."
+
+Khoan. Bệnh này 1/1.000 người. Trong 1.000 người: khoảng 1 người thật sự bệnh (xét nghiệm bắt được), và khoảng 10 người khỏe bị dương tính giả (1% của 999). Bạn dương tính — khả năng *thật sự* bệnh khoảng 1/11, không phải 99%.
+
+Não vừa quên **tỷ lệ nền**. Đó là sai lầm đắt nhất khi bạn có một câu chuyện đẹp.
+
+## Là gì
+
+**Base rate** là tần suất sẵn có của một việc *trước* khi bạn nhìn case cụ thể. **Bayesian updating** là phép lịch sự với thực tế: bắt đầu từ tỷ lệ nền (prior), rồi *cập nhật* khi có bằng chứng mới — không vứt prior đi vì câu chuyện hay.
+
+Kahneman và Tversky chỉ ra ta hay làm ngược: gặp mô tả "Tom W. trông như dân computer science", ta bỏ qua việc khoa giáo dục có nhiều sinh viên hơn rất nhiều. Ta tin *bức chân dung*, quên *đám đông*.
+
+[Expected value](/concepts/expected-value-thinking) hỏi: cược này kỳ vọng bao nhiêu? Bayes hỏi *trước đó*: việc này vốn hay xảy ra không? EV trên prior sai vẫn là phép tính đẹp và kết luận hỏng.
+
+## Ví dụ thật
+
+Bạn phỏng vấn 8 người, 3 người nói "mình sẽ trả". Não: 3/8 = gần 40% conversion. Base rate indie SaaS cold conversation convert khoảng vài phần trăm. 3/8 là mẫu nhỏ + người lịch sự. Cập nhật: nhích prior lên một chút, *không* viết model doanh thu như thể 40% là sự thật. Pre-sell mới là bằng chứng mạnh; lời nói là bằng chứng yếu.
+
+<Callout title="Cẩn thận">
+Base rate không phải định mệnh. Startup thắng *vì* phá được tỷ lệ nền — nhưng phá bằng bằng chứng nặng (tiền, retention), không bằng câu chuyện. Bỏ prior vì "mình đặc biệt" chính là cách phần lớn xác suất đặc biệt bị xóa sổ.
+</Callout>
+
+<Callout title="Nhớ nhé">
+Trước khi tin một case đẹp, hỏi: việc này vốn xảy ra bao nhiêu lần trên 100? Rồi mới hỏi bằng chứng mới nặng bao nhiêu.
+</Callout>
+
+## Đọc thêm
+
+- [Base Rate Fallacy — The Decision Lab](https://thedecisionlab.com/biases/base-rate-fallacy) — Định nghĩa, thí nghiệm Tom W. của Kahneman & Tversky, và vì sao chân dung lấn át thống kê.
+- [Base rate fallacy — Wikipedia](https://en.wikipedia.org/wiki/Base_rate_fallacy) — Formal hóa, liên hệ representativeness heuristic, ví dụ y khoa và luật.
+- [Ten Commandments for Aspiring Superforecasters — Farnam Street](https://fs.blog/ten-commandments-for-superforecasters/) — Tetlock: bắt đầu từ outside view (base rate), rồi mới cập nhật — đừng bao giờ 100%.
+
+## Tự kiểm tra
+
+1. Lấy một dự đoán bạn đang tin >70% (sản phẩm sẽ hit, deal sẽ chốt, skill sẽ "hot"). Base rate của *loại việc này* là bao nhiêu? Bạn đã cập nhật từ đâu, bằng chứng nào?
+2. Vì sao xét nghiệm 99% vẫn có thể cho xác suất hậu nghiệm thấp? Giải thích bằng số, không bằng cảm giác.
+3. Khi nào *đúng* khi bỏ qua base rate? (Gợi ý: khi bạn có bằng chứng rất mạnh, lặp lại — không phải khi câu chuyện hay.)

@@ -1,0 +1,49 @@
+---
+id: concept-work-product-contracts
+title: "Work Product & Simple Contracts"
+type: "concept"
+aliases: ["work product", "work made for hire", "hợp đồng deliverable", "MSA ToS", "ai sở hữu code khách"]
+tags: [thinking, ip, contracts, solo-builder, founder]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Khách trả tiền. Não bảo: "Code là của họ." Có khi hợp đồng im. Im thì mặc định (nhiều nơi) *bạn* còn cầm bản quyền, khách chỉ có giấy phép dùng — hoặc ngược lại tùy nước. Im không phải hòa bình. Im là mìn.
+
+## Là gì (cơ bản)
+
+**Work product**: thứ bạn giao (code, copy, model, thiết kế). Hợp đồng phải nói: ai *sở hữu*, ai được *dùng*, khi nào chuyển (khi trả đủ tiền?), thứ có sẵn của bạn (background IP) có bị cuốn theo không.
+
+Tối thiểu một trang: phạm vi, giá, deadline, sở hữu, bảo mật, *không* bảo hành "AI hoàn hảo", luật áp dụng. [Email negotiation](/concepts/email-negotiation) chốt giá. Bài này chốt *giấy*.
+
+## Ví dụ thật
+
+Bạn tái sử dụng module auth của mình cho 3 khách. Hợp đồng 1 nói "mọi code viết cho dự án thuộc khách, exclusive". Không loại trừ background IP. Khách 1 có thể cấm bạn dùng lại auth — hoặc kiện. Một câu "pre-existing tools remain Vendor's; Client gets a license" rẻ hơn luật sư sau.
+
+## Nâng cao
+
+Work-made-for-hire (Mỹ) không tự dính freelancer trừ vài loại tác phẩm + văn bản. Đừng copy điều khoản Mỹ vào deal VN mà không đọc. ToS sản phẩm (SaaS) khác MSA dịch vụ. SaaS: khách thuê *dùng*, bạn giữ IP nền.
+
+<Callout title="Góc kỹ thuật">
+Siêu nâng cao: bốn mảnh IP trong mọi deal builder: (1) background — bạn mang tới, (2) foreground — làm riêng cho khách, (3) third-party / OSS, (4) AI-assisted. Hợp đồng hay gộp 2+4 thành "của khách" và quên 1+3. Indemnity hai chiều: họ đỡ nếu data họ bẩn; bạn đỡ nếu bạn cố ý copy. Không nhận indemnity vô hạn cho "mọi output AI". Thanh toán giữ lại 10–20% đến khi giao + chuyển IP *cùng lúc* tiền cuối — không chuyển IP trước khi thanh toán. Dispute: trọng tài / tòa ở đâu — đừng để mặc định nước bạn chưa bao giờ làm việc.
+</Callout>
+
+<Callout title="Cẩn thận">
+Không phải mẫu hợp đồng để copy-paste ra tòa. Deal lớn: luật sư. Bài này là *danh sách không được im*.
+</Callout>
+
+<Callout title="Nhớ nhé">
+Im về sở hữu = mìn. Viết: background còn của mình, foreground chuyển khi trả đủ, OSS/AI nói rõ.
+</Callout>
+
+## Đọc thêm
+
+- [Choose a License](https://choosealicense.com/) — OSS bạn *nhúng* vào work product phải khớp lời hứa với khách.
+- [Copyright and AI — USCO](https://www.copyright.gov/ai/) — Đừng hứa exclusive copyright trên phần không chắc có copyright.
+- [Interest-based negotiation](/concepts/interest-based-negotiation) — Khách cần *dùng được và không bị kiện*, không phải sở hữu từng dòng vì ngầu.
+
+## Tự kiểm tra
+
+1. Deal gần nhất: câu nào nói ai sở hữu code? Không có câu — đó là lỗ.
+2. Liệt kê một thứ background IP bạn tái sử dụng. Hợp đồng có bảo vệ nó không?
+3. (Siêu) Viết 6 gạch đầu dòng bạn sẽ không bao giờ im trong MSA solo (sở hữu, background, OSS, AI, indemnity, thanh toán/IP).

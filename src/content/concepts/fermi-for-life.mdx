@@ -1,0 +1,47 @@
+---
+id: concept-fermi-for-life
+title: "Fermi Estimate (Life)"
+type: "concept"
+aliases: ["Fermi đời", "ước lượng bậc độ lớn", "order of magnitude life"]
+tags: [thinking, estimation, research, decision-making, expected-value]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+"Thị trường 10 tỷ". Não choáng. Tờ giấy hỏi: 10 tỷ ÷ giá bạn = bao nhiêu khách? ÷ 12 tháng = bao nhiêu/tháng? ICP của bạn có *tồn tại* từng ấy người không?
+
+Fermi không cho số đúng. Fermi cho biết claim *có cửa đứng không* trước khi bạn mở 20 tab.
+
+## Là gì (cơ bản)
+
+**Fermi estimate** (bài toán Fermi): bẻ đại lượng thành nhân tử bạn *ước được bậc* — 10, 100, 1000 — rồi nhân. Sai mỗi nhân tử 2 lần; 4 nhân tử có thể sai ~16 lần — vẫn phân biệt 10 tỷ với 10 triệu.
+
+Khác [back-of-envelope hệ thống](/concepts/back-of-envelope-estimation) (QPS, GB). Đây là claim *đời*: thị trường, giờ, xác suất tin đồn, "mọi người đều".
+
+## Ví dụ thật
+
+Thread: "1 triệu freelancer VN sẽ trả $20/tháng". 1e6 × 20 × 12 = 240 triệu USD. Có 1 triệu người *đang trả* phần mềm bất kỳ $20? Bạn đếm job board, cộng 10x cho phần không lên mạng — vẫn khó tới 1 triệu. Claim gãy ở nhân tử đầu, không cần survey.
+
+## Nâng cao
+
+Ghi **khoảng** (thấp / giữa / cao) cho mỗi nhân tử. Nếu cả khoảng cao vẫn không đủ để đổi quyết định — dừng, đừng tìm số đẹp hơn. Đó là cầu nối [khi nào dừng](/concepts/stop-researching).
+
+<Callout title="Góc kỹ thuật">
+Fermi (Wikipedia, Fermi problem): ước số đàn piano tuner ở Chicago bằng dân số × tỷ lệ hộ × piano / hộ × lần sửa / năm ÷ năng suất thợ. Cùng xương cho "TAM" trên Twitter. Bẫy: nhân tử *tương quan* (bạn nhân hai lần cùng một sự lạc quan). Bẫy 2: lấy điểm giữa log (hình học) khi nhân nhiều hệ số dương — trung bình cộng làm phình. Một dòng: `n × p × v × t`. Nếu không viết được 3–5 nhân tử, bạn chưa hiểu claim.
+</Callout>
+
+<Callout title="Nhớ nhé">
+Bậc độ lớn trước số đẹp. Claim không qua Fermi thì chưa đáng đi tìm nguồn.
+</Callout>
+
+## Đọc thêm
+
+- [Fermi problem — Wikipedia](https://en.wikipedia.org/wiki/Fermi_problem) — Piano tuners; bậc độ lớn, không 3 số lẻ.
+- [Back-of-envelope (hệ thống)](/concepts/back-of-envelope-estimation) — Cùng cơ, khác đối tượng.
+- [Base rates](/concepts/base-rates-bayesian) — Nhân tử *p* hay bị bịa; lấy tỷ lệ nền trước.
+
+## Tự kiểm tra
+
+1. Bẻ "chợ này 10 tỷ USD" thành 4 nhân tử. Nhân tử nào bạn *không* có cảm giác — đó là chỗ điều tra.
+2. Sai 2 lần mỗi nhân tử, 4 nhân tử: khoảng cuối? Còn đủ để cấm hoặc cho phép claim không?
+3. (Siêu) TAM / SAM / SOM trên slide: cái nào là Fermi, cái nào là ước mơ nhân thêm một số?

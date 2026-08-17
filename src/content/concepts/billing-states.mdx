@@ -1,0 +1,49 @@
+---
+id: concept-billing-states
+title: "Billing States"
+type: "concept"
+aliases: ["trạng thái billing", "subscription status", "invoice lifecycle"]
+tags: [solo-founder, payments, billing, saas]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Bạn nghĩ khách "đang trả" hoặc "đã hủy". Stripe nghĩ nhiều hơn: trial, active, past_due, unpaid, canceled, incomplete. Não gộp. Ống tiền không gộp. Khách past_due vẫn mở app — bạn tưởng hạnh phúc, thẻ đã chết tuần trước.
+
+Billing không phải nút trừ tiền. Là *máy trạng thái*.
+
+## Là gì (cơ bản)
+
+**Billing states**: mỗi subscription/hóa đơn đứng ở một trạng thái có *quyền dùng* + *việc thu* khác nhau.
+
+Stripe Billing (docs Revenue Recovery / Invoices): thanh toán fail không phải "hết khách". Là past_due → retry → dunning → cancel/pause. Gộp fail = churn tự nguyện là tự bịa.
+
+Khác [subscription vs one-time](/concepts/subscription-vs-one-time) (mô hình). Đây là *ống sau khi họ đã chọn mô hình*.
+
+## Ví dụ thật
+
+MRR dashboard +12%. 8% đang past_due. Bạn thuê ads theo 12. Tháng sau Smart Retry hết, 8% rơi. Bạn không tăng trưởng. Bạn *chưa thu*.
+
+## Nâng cao
+
+Hai đồng hồ: **access** (còn dùng được không) và **collection** (còn đòi không). Cắt access ngay lần fail đầu = phạt khách thẻ hết hạn. Không cắt mãi = cho xài miễn phí. Chọn *số ngày + số retry* có ý thức — xem [dunning](/concepts/dunning).
+
+<Callout title="Góc kỹ thuật">
+Stripe: `invoice.payment_failed`, `customer.subscription.updated`, `past_due`. Hard decline (thẻ mất, stolen) ≠ soft (insufficient funds) — hard thường không retry vô ích. Một lần: hóa đơn open → paid / uncollectible / void. Đừng xóa lịch sử để "sạch dashboard". Báo cáo: MRR *collected* vs MRR *booked*. [Churn](/concepts/churn) tự nguyện (bấm hủy) vs không tự nguyện (thẻ chết) — chữa khác nhau.
+</Callout>
+
+<Callout title="Nhớ nhé">
+"Đang trả" không phải trạng thái. Past_due là trạng thái. Dashboard gộp hai cái là bạn đang bay bằng số chưa có.
+</Callout>
+
+## Đọc thêm
+
+- [Stripe — Revenue recovery](https://docs.stripe.com/billing/revenue-recovery) — Fail không phải hết; retry + email.
+- [Stripe — Subscriptions](https://docs.stripe.com/billing/subscriptions/overview) — Vòng đời gói; trạng thái.
+- [Churn](/concepts/churn) — Tự nguyện vs không; bài này là máy tạo loại hai.
+
+## Tự kiểm tra
+
+1. Dashboard MRR của bạn có tách past_due không? Không — số tăng trưởng đang gồm gì?
+2. Access vs collection: khách fail 3 ngày còn vào app không — bạn đã *chọn* hay để mặc định?
+3. (Siêu) Hard vs soft decline: cùng một email dunning — sai chỗ nào?

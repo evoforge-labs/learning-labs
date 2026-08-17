@@ -1,0 +1,37 @@
+---
+id: exercise-solo-010
+title: "Một trang thu: trạng thái, dunning, dòng thuế"
+type: "exercise"
+track: solo-founder
+skill: billing-ops
+estimatedMinutes: 35
+related: [lesson-solo-010, concept-billing-states, concept-dunning, concept-saas-invoice-tax, rubric-solo-founder]
+status: published
+---
+import Callout from '../../../components/content/Callout.astro';
+
+## Tình huống
+
+Sản phẩm có (hoặc sắp có) trừ tiền lặp. Vẽ ống — không "Stripe lo hết".
+
+---
+
+## Nhiệm vụ 1 — Trạng thái
+
+Liệt kê trạng thái bạn *thừa nhận* (active / past_due / canceled…). MRR dashboard đang gộp past_due vào tăng trưởng không? Access khi fail: bao nhiêu ngày — viết số, không "mặc định".
+
+---
+
+## Nhiệm vụ 2 — Dunning 1 trang
+
+Soft fail: số retry + cửa sổ ngày + 3 email (ngày, một CTA). Hard fail: một đường "đổi thẻ", không spam. Hành động cuối: pause hay cancel. Cấm copy % recovery blog.
+
+---
+
+## Nhiệm vụ 3 — Dòng thuế
+
+Một câu checkout: giá đã gồm / chưa gồm thuế. Khách VN B2B nhận giấy gì. Khách ngoại nhận giấy gì. Hai SKU nếu hai nước. Chỗ chưa biết %: ghi "hỏi đại lý trước ngày Y" — không bịa.
+
+<Callout title="Nhớ nhé">
+Đạt = trạng thái tách + dunning có hạn + hai câu thuế/giấy. Không đạt = "churn là churn".
+</Callout>

@@ -1,0 +1,49 @@
+---
+id: concept-five-user-test
+title: "Five-User Usability Test"
+type: "concept"
+aliases: ["usability test 5 người", "Nielsen 5 users", "test dùng không hỏi thích"]
+tags: [design, ux, research, usability]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Bạn hỏi 20 người "bạn có dùng không?". Họ gật. Bạn ship. Họ không dùng. Bạn không thiếu mẫu. Bạn đang *hỏi ý kiến* thay vì *nhìn tay*.
+
+Nielsen: 5 người *làm việc trên UI* lộ phần lớn lỗi dùng — vì lỗi lặp. Không phải 5 người đại diện nhân loại. Là 5 lần thấy cùng chỗ kẹt.
+
+## Là gì (cơ bản)
+
+**Five-user test** (Nielsen & Landauer; NN/g): qualitative usability — đưa việc, nhìn, im.
+
+Công thức họ: với L ≈ 31% (một người lộ khoảng ấy phần lỗi), 5 người → phần lớn vấn đề *dùng*, lợi ích/chi phí tốt. NN/g tự viết: "5, trừ khi không phải" — không dùng cho đo tỷ lệ, so hai phiên bản bằng số, hay nhiều nhóm ICP khác nhau.
+
+Khác [Mom Test](/concepts/the-mom-test) (nhu cầu đời). Đây là *cửa có mở được không*.
+
+## Ví dụ thật
+
+5 người cùng ICP: "tìm giá rồi hủy gói". 4 người kẹt màn 2. Bạn không cần người thứ 20 để biết màn 2 hỏng. Cần *sửa rồi test 5 người khác*.
+
+## Nâng cao
+
+Một vòng 5 → sửa → vòng 5 mới. Ngân sách 15 người: 3 vòng, không 1 vòng 15. Nhiều persona: 5 *mỗi* nhóm khác hẳn — không gộp.
+
+<Callout title="Góc kỹ thuật">
+Nielsen 2000 / cập nhật 2012: 5 cho *tìm lỗi* cùng nhóm. MeasuringU và chính NN/g: không dùng N=5 cho completion rate, thời gian, so A/B. Đó là [sample size](/concepts/sample-size-and-power). Moderator: việc cụ thể, không "đi lang thang"; nghĩ to; không cứu sau 3 giây. Ghi nơi kẹt, không ghi "họ thích màu". Remote unmoderated được nếu việc rõ — mất nghĩ to.
+</Callout>
+
+<Callout title="Nhớ nhé">
+Năm người *làm*, không hai mươi người *thích*. Sửa rồi test vòng mới — đừng thổi một vòng cho đủ N.
+</Callout>
+
+## Đọc thêm
+
+- [Why You Only Need to Test with 5 Users — Nielsen, NN/g](https://www.nngroup.com/articles/why-you-only-need-to-test-with-5-users/) — L≈31%; 5 người, nhiều vòng.
+- [How Many Test Users — NN/g](https://www.nngroup.com/articles/how-many-test-users/) — "5, trừ khi không"; khi phải đông hơn.
+- [Usability heuristics](/concepts/usability-heuristics) — Sau test, gọi tên lỗi.
+
+## Tự kiểm tra
+
+1. Lần "user research" gần nhất: họ *làm việc trên UI* hay *trả lời có dùng không*?
+2. 15 người một vòng vs 3×5. NN/g chọn cái nào — vì diminishing return nào?
+3. (Siêu) Hai ICP khác (kế toán vs dev). 5 người lẫn. Bạn đang tiết kiệm N hay đang trộn hai hình?

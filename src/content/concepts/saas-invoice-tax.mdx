@@ -1,0 +1,56 @@
+---
+id: concept-saas-invoice-tax
+title: "SaaS Invoice Tax"
+type: "concept"
+aliases: ["thuế trên hóa đơn SaaS", "VAT on invoice", "GTGT subscription"]
+tags: [solo-founder, payments, billing, vn-tax, einvoice]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Giá 199.000đ. Khách công ty xin hóa đơn. 199.000 *đã gồm* thuế hay *chưa*? Bạn ghi một dòng. Kế toán họ ghi một dòng khác. Tháng sau họ đòi điều chỉnh. Bạn không sai toán. Bạn không *nói thuế trên giấy*.
+
+Hóa đơn SaaS không phải receipt đẹp. Là giá + sắc thuế + ai chịu — in ra, không để trong đầu.
+
+## Là gì (cơ bản)
+
+**SaaS invoice tax**: trên mỗi hóa đơn, tách (hoặc tuyên bố gộp) *tiền hàng* và *thuế* theo đúng entity + nước khách.
+
+- Khách VN + bạn hộ/công ty VN: [HĐĐT](/concepts/einvoice-vn) / [nội vs ngoại](/concepts/invoice-local-vs-export) — GTGT theo cơ chế bạn, không theo cảm.
+- Khách ngoại + MoR: thuế nước họ do MoR; giấy không mang MST bạn.
+- Khách ngoại + bạn tự đứng: commercial invoice; *đừng* tự miễn GTGT nếu chưa đủ điều kiện xuất khẩu dịch vụ — hỏi đại lý.
+
+Lab không in biểu thuế. Lab bắt bạn *có dòng*.
+
+## Ví dụ thật
+
+List 199.000 "all-in". Hóa đơn ghi 199.000 không thuế. Khách muốn tách 10% (số *ví dụ*, không phải luật). Không khớp sổ. Deal kế toán chặn. Một dòng "giá đã gồm / chưa gồm X" trên checkout cứu quý.
+
+## Nâng cao
+
+Một SKU một chính sách thuế. Hai nước = hai SKU ([VND vs USD](/concepts/vnd-vs-usd-pricing)). Đổi giữa năm: hóa đơn mới, không sửa PDF cũ im lặng.
+
+<Callout title="Góc kỹ thuật">
+Stripe Tax / MoR tính VAT theo *địa chỉ khách* — khác GTGT VN trên HĐĐT MST bạn. Bật cả hai trên một charge = rủi ro hai lần hoặc không lần nào đúng. Checkout: hiển thị "đã gồm thuế" vs "cộng tại bước hóa đơn" — chọn một, viết một. [Kê khai 2026](/concepts/vn-tax-declaration-2026): doanh thu kê là số *đúng định nghĩa văn bản*, không phải số marketing. Không phải tư vấn thuế.
+</Callout>
+
+<Callout title="Cẩn thận">
+Không copy % GTGT/TNCN từ blog vào sản phẩm. Đối chiếu thông tư/NĐ hiện hành hoặc đại lý.
+</Callout>
+
+<Callout title="Nhớ nhé">
+Giá list và dòng thuế là hai câu. Một câu trên checkout, một câu trên hóa đơn — phải cùng thế giới.
+</Callout>
+
+## Đọc thêm
+
+- [Invoice local vs export](/concepts/invoice-local-vs-export) — Hai giấy, hai nước.
+- [E-invoice VN](/concepts/einvoice-vn) — HĐĐT nội.
+- [NĐ 68/2026 — Cổng TTĐT](https://xaydungchinhsach.chinhphu.vn/toan-van-nghi-dinh-68-2026-nd-cp-quy-dinh-ve-chinh-sach-thue-quan-ly-thue-voi-ho-kinh-doanh-119260306102906789.htm) — Cơ chế hộ khi bạn *là* hộ.
+- [Stripe Tax](https://docs.stripe.com/tax) — Thuế theo địa chỉ khách khi Stripe/MoR đứng tính — khác HĐĐT VN.
+
+## Tự kiểm tra
+
+1. Checkout 199.000: đã gồm thuế hay chưa — *một câu* khách đọc được trước khi trả?
+2. Khách VN B2B và khách US: cùng một dòng thuế trên một SKU được không — vì sao?
+3. (Siêu) MoR + HĐĐT MST mình trên một subscription. Ai là người bán trên giấy — và kế toán khách khấu trừ được không?

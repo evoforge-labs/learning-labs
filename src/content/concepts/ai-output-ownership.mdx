@@ -1,0 +1,49 @@
+---
+id: concept-ai-output-ownership
+title: "Who Owns AI Output"
+type: "concept"
+aliases: ["who owns AI output", "sở hữu output AI", "Copilot ownership", "model terms of use"]
+tags: [thinking, ip, ai-legal, copyright, solo-builder]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Ba lớp hay bị trộn: (1) luật bản quyền — có tác giả người không; (2) *điều khoản* nhà model — họ có đòi output không; (3) *hợp đồng khách* — ai được coi là chủ khi bạn dùng Copilot/Claude.
+
+Não muốn một câu. Thực tế là ba cửa.
+
+## Là gì (cơ bản)
+
+**Lớp luật:** xem [copyright needs a human](/concepts/copyright-human-authorship). Output thuần máy có thể *không* có copyright.
+
+**Lớp ToS:** GitHub Copilot / nhiều vendor *không* nhận mình là chủ suggestion; họ gán "your content" cho bạn *theo hợp đồng* — khác với "bản quyền chắc như viết tay". Đọc trang terms phiên bản *bạn đang trả tiền* (Free ≠ Enterprise).
+
+**Lớp khách:** nếu hợp đồng nói "work product thuộc khách" mà output không copyright được — bạn đang hứa thứ luật chưa chắc cho bạn có.
+
+## Ví dụ thật
+
+Bạn generate gần hết module, commit, gửi khách. Khách đòi exclusive copyright. Vendor ToS nói bạn được dùng. USCO nói phần không sửa có thể không đăng ký. Bạn đã bán *quyền bạn không chắc đang cầm*.
+
+## Nâng cao
+
+ToS còn nói training: output/input có bị dùng train không. Khách B2B đọc đúng dòng này. [Trust but verify](/concepts/trust-but-verify) với code agent: verify cả *giấy*, không chỉ test.
+
+<Callout title="Góc kỹ thuật">
+Siêu nâng cao: "compiler analogy" (output thuộc operator như compiler) là lập luận ngành, không phải án lệ thống nhất toàn cầu. Doe v. GitHub (Copilot/training/license) kéo dài — đừng xây chính sách công ty trên tweet 2021. Enterprise tier thường: không train trên data bạn, indemnity hẹp hơn bạn tưởng. Indemnity "chúng tôi đỡ nếu output dính IP" luôn có trần, loại trừ, và điều kiện (bạn phải dùng filter, không tắt). Tắt filter Copilot để "nhanh" = tự cắt khiên. Log prompt+model+thời điểm cho deliverable lớn — forensic khi khách hỏi nguồn.
+</Callout>
+
+<Callout title="Nhớ nhé">
+Ba câu riêng: luật cho mình quyền gì / vendor cho mình quyền gì / mình đã hứa khách quyền gì. Lệch nhau là rủi ro, không phải chi tiết pháp lý để sau.
+</Callout>
+
+## Đọc thêm
+
+- [Copyright and AI — USCO](https://www.copyright.gov/ai/) — Lớp luật: người phải đủ dày.
+- [Ownership of AI-generated code — IEEE Spectrum](https://spectrum.ieee.org/ai-code-generation-ownership) — Tranh chấp Copilot / training / license từ góc kỹ thuật.
+- [USCO Part 2 (2025)](https://www.copyright.gov/newsnet/2025/1060.html) — Prompt suông không tạo authorship; chỉnh/sắp xếp của người thì có thể.
+
+## Tự kiểm tra
+
+1. Tool AI bạn dùng hàng ngày: ToS có câu "you own output" không? Có câu "we train on your data" không?
+2. Hợp đồng khách gần nhất hứa exclusive copyright — bạn có phần AI chưa sửa trong deliverable không?
+3. (Siêu) Viết 4 dòng policy nội bộ: model nào được, filter nào bật, cái gì phải viết tay, cái gì log.

@@ -1,0 +1,51 @@
+---
+id: concept-distributions-you-meet
+title: "Distributions You Meet"
+type: "concept"
+aliases: ["phân phối đời", "chuông vs đuôi", "không phải mọi thứ là trung bình"]
+tags: [thinking, probability, numeracy, calibration]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Giáo viên vẽ chuông. Điểm thi: được. Doanh thu app, thời gian incident, khách "trung bình": thường không. Bạn lập kế hoạch như điểm thi rồi giận "xui". Không xui. Sai *hình*.
+
+Phân phối không phải đồ thị cho đẹp. Là câu trả lời: *sự kiện điển hình có gần trung bình không?*
+
+## Là gì (cơ bản)
+
+Ba hình bạn gặp:
+
+1. **Chuông / mỏng đuôi** — chiều cao, nhiều lỗi máy nhỏ: điển hình ≈ trung bình.
+2. **Lệch (skew)** — thu nhập, thời gian support: điển hình *thấp hơn* trung bình vì vài case kéo.
+3. **Đuôi dày** — xem [fat tails](/concepts/fat-tails): điển hình không kể câu chuyện; mép kể.
+
+Não mặc định (1). Đời founder hay (2) và (3).
+
+## Ví dụ thật
+
+"Thời gian xử lý ticket trung bình 2 giờ". 90% xong 20 phút, 3 ticket/tháng mất 2 ngày. Bạn staff theo 2 giờ — vừa thừa ngày thường, vừa thiếu ngày cháy. Median 20 phút + đuôi mới là kế hoạch.
+
+## Nâng cao
+
+Luôn hỏi **median + p90** trước mean. Mean một mình trên (2)/(3) là trang điểm.
+
+<Callout title="Góc kỹ thuật">
+Median chịu outlier. Mean không. p90/p99 là nơi on-call sống. A/B [sample size](/concepts/sample-size-and-power) giả gần-chuông — conversion thường ổn; doanh thu/user thì đuôi, đừng t-test mù. Đếm: nếu 5% khách = 50% doanh thu, bạn không có "khách trung bình" — bạn có một đuôi đang nuôi shop và một thân đang tạo support.
+</Callout>
+
+<Callout title="Nhớ nhé">
+Mean là một số. Hình mới là kế hoạch. Hỏi điển hình có gần mean không — không thì bỏ mean ra slide.
+</Callout>
+
+## Đọc thêm
+
+- [Fat tails](/concepts/fat-tails) — Khi mép thống trị.
+- [Skewness — Wikipedia](https://en.wikipedia.org/wiki/Skewness) — Mean ≠ median khi lệch.
+- [Sample size](/concepts/sample-size-and-power) — Chuông ẩn trong nhiều test.
+
+## Tự kiểm tra
+
+1. Một "trung bình" trên dashboard: median và p90 là gì? Không biết — bạn đang lập kế hoạch bằng hình nào?
+2. 5% khách = ?% doanh thu. Nếu >40% — "khách điển hình" còn dùng được không?
+3. (Siêu) A/B trên revenue/user với đuôi dày. Bạn tin p-value hay nhìn phân vị — vì sao?

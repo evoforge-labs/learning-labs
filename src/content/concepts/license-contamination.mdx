@@ -1,0 +1,49 @@
+---
+id: concept-license-contamination
+title: "License Contamination (AI and Copyleft Leak)"
+type: "concept"
+aliases: ["license contamination", "GPL leak", "copyleft contamination", "AI generated licensed code"]
+tags: [thinking, ip, oss-license, ai-legal, agent-security]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Bạn không paste GPL vào repo. Agent *nhớ hộ* một hàm nổi tiếng và gõ ra gần như nguyên. Bạn commit. License không đi theo file — nhưng nghĩa vụ có thể đi theo *đoạn*.
+
+Đó là nhiễm (contamination): copyleft / copyright người khác lọt vào sản phẩm kín qua tay AI, không qua `npm install` có ghi chú.
+
+## Là gì (cơ bản)
+
+Model train trên public code (MIT *và* GPL). Suggestion có lúc là *gần như* đoạn có chủ. Bạn không thấy header license. Khách B2B hoặc đối thủ có thể thấy.
+
+[OSS licenses](/concepts/oss-licenses) dạy khi *bạn chọn* dependency. Bài này: khi *máy nhét* đoạn bạn không chọn.
+
+GitHub và các vendor thêm filter "public code matching". Tắt để nhanh = tắt máy dò kim.
+
+## Ví dụ thật
+
+Hàm parse JWT trông "generic". Thực ra 40 dòng gần một repo GPL. Ship SaaS. Audit khách: "đây là GPL, mở hoặc gỡ." Bạn gỡ 3 ngày + mất mặt. Filter bật + review người đã chặn phút đầu.
+
+## Nâng cao / siêu
+
+Nhiễm không chỉ GPL: code nội bộ khách lần trước trong prompt, secret, comment có tên. [Prompt injection](/concepts/prompt-injection) + agent đọc repo = đường rò khác.
+
+<Callout title="Góc kỹ thuật">
+Siêu nâng cao: matching filter là heuristic (n-gram / search), không phải pháp lý. Trượt cả hai phía: false positive (đoạn 5 dòng tầm thường) và false negative (viết lại đủ khác để lọt, đủ giống để tranh cãi). "Clean room" cổ điển: người implement không nhìn code gốc — AI *đã nhìn* lúc train, nên clean room sụp. Phòng vệ thực dụng: (1) filter bật, (2) cấm paste output dài không hiểu vào path lõi, (3) origin review cho >N dòng "quá hay, quá hoàn chỉnh", (4) `reuse` nội bộ có allowlist, (5) policy: không generate code *lõi phân biệt* (crypto tự chế, billing, license check). Tranh chấp Copilot còn mở — rủi ro là *đuôi phân phối*, không phải xác suất tweet.
+</Callout>
+
+<Callout title="Nhớ nhé">
+Đoạn AI "quá hoàn chỉnh" là tín hiệu soi nguồn, không phải tín hiệu ship. Filter + mắt người. Tắt filter = chọn nhiễm.
+</Callout>
+
+## Đọc thêm
+
+- [IEEE Spectrum — AI code ownership](https://spectrum.ieee.org/ai-code-generation-ownership) — Copilot, training data, kiện license.
+- [Choose a License](https://choosealicense.com/) — Nhận ra GPL/AGPL *trông thế nào* trước khi chúng lọt.
+- [USCO AI hub](https://www.copyright.gov/ai/) — Lớp copyright chồng lên lớp license (hai rủi ro khác nhau).
+
+## Tự kiểm tra
+
+1. Filter "public code" / tương đương trên tool bạn dùng: đang bật hay tắt?
+2. Một PR tuần này có đoạn AI >20 dòng bạn *không* giải thích được từng dòng — đó là ứng viên nhiễm. Xử lý thế nào?
+3. (Siêu) Viết rule 5 dòng cho agent: path nào cấm generate, khi nào phải cite/search nguồn, khi nào bắt người viết lại từ đầu.

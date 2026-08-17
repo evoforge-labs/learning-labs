@@ -1,0 +1,47 @@
+---
+id: concept-calibration
+title: "Calibration (Knowing How Sure You Are)"
+type: "concept"
+aliases: ["calibration", "hiệu chỉnh độ chắc", "overconfidence", "brier score", "superforecasting"]
+tags: [thinking, calibration, forecasting, decision-making, probability, epistemic-hygiene]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Bạn nói "chắc 90% khách này chốt tuần sau." Mười lần như thế, bao nhiêu lần *thật sự* chốt? Nếu chỉ 6 — bạn không giỏi dự đoán. Bạn giỏi *cảm thấy chắc*.
+
+Đồng hồ sai đều 5 phút vẫn dùng được: bạn biết lệch. Đồng hồ chạy lung tung thì nguy hơn đồng hồ chết. Cái đầu cũng vậy.
+
+## Là gì
+
+**Calibration** là độ khớp giữa *số bạn tuyên bố* và *tần suất thật*. Nói 80% mười lần thì khoảng tám lần phải đúng. Nói 60% thì khoảng sáu. Người hiệu chỉnh tốt không phải người hay đúng nhất — là người biết mình *mơ hồ tới đâu*.
+
+Philip Tetlock, trong nghiên cứu Superforecasting, thấy người thường thiên quá tự tin. Superforecaster thì gần chuẩn: khi họ nói 70%, thế giới đáp khoảng 70%. Họ làm được vì họ *ghi điểm* — xác suất rõ, đối chiếu sau, không trốn vào "tôi cảm thấy đúng".
+
+Công cụ đơn giản: mọi dự đoán quan trọng viết thành số (55, 70, 85 — tránh 0 và 100), ghi ngày hết hạn, khi đến hạn đánh đúng/sai. Làm 20 lần, bạn sẽ thấy mình hay phóng hay co.
+
+Khác [base rates](/concepts/base-rates-bayesian): base rate là *bắt đầu từ đâu*. Calibration là *bạn có thành thật về độ chắc sau khi cập nhật không*.
+
+## Ví dụ thật
+
+Trước khi ship feature AI, bạn nói "70% tuần này eval pass." Pass. Lần sau 70% lại. Lần thứ ba fail. Ba phát 70% mà đúng 2 — tạm ổn. Đồng nghiệp luôn nói "chắc chắn" rồi đúng một nửa — đừng để người đó cầm rollback production.
+
+<Callout title="Cẩn thận">
+Calibration không phải khiêm tốn giả. Nói 50% mọi thứ thì calibrated nhưng vô dụng (không phân giải được). Mục tiêu là vừa đúng tần suất, vừa dám nói số cao khi bằng chứng mạnh — Tetlock gọi cặp này là calibration + resolution.
+</Callout>
+
+<Callout title="Nhớ nhé">
+Cảm giác chắc không phải dữ liệu. Chỉ số phần trăm viết ra rồi đối chiếu mới là dữ liệu. Không ghi điểm thì không hiệu chỉnh được.
+</Callout>
+
+## Đọc thêm
+
+- [Ten Commandments for Aspiring Superforecasters — Farnam Street](https://fs.blog/ten-commandments-for-superforecasters/) — Mười thói quen Tetlock: nghĩ xác suất, cập nhật, tránh 100%, giữ điểm.
+- [The Science of Superforecasting — Good Judgment](https://goodjudgment.com/about/the-science-of-superforecasting/) — Nghiên cứu gốc: đào tạo + ghi điểm cải thiện calibration; superforecaster gần chuẩn, người thường quá tự tin.
+- [Open-Minded Forecasting — Good Judgment](https://goodjudgment.com/open-minded-forecasting-in-a-deeply-polarized-world/) — Vì sao phải ghi điểm, dùng Brier score, và quá tự tin phổ biến hơn thiếu tự tin.
+
+## Tự kiểm tra
+
+1. Viết 5 dự đoán sẽ phân định trong 30 ngày, mỗi cái một số % (không dùng "chắc" / "có lẽ"). Đặt reminder đối chiếu. Đó là bài tập, không phải lý thuyết.
+2. Bạn nói "90%" thường nghĩa là gì trong miệng bạn — gần như chắc, hay chỉ là "mình muốn nó đúng"? Làm sao phân biệt bằng lịch sử?
+3. Vì sao người *luôn* nói 50% thì calibrated nhưng vẫn là forecaster tệ?

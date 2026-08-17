@@ -1,0 +1,53 @@
+---
+id: concept-ai-second-brain
+title: "AI and the Second Brain"
+type: "concept"
+aliases: ["AI second brain", "AI PKM", "ghi chú với AI", "không để AI nghĩ hộ"]
+tags: [thinking, learning, pkm, second-brain, ai-assisted-development]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+
+Bạn nhét 40 PDF vào một chatbot. Nó trả một tóm tắt mượt. Bạn gật. Tuần sau, lúc khách hỏi đúng chỗ khó — bạn không nói được *câu của mình*. Não hai vừa bị thay bằng não thuê, và bạn không giữ chìa.
+
+AI giỏi *kéo* và *trộn*. Nó kém *hiểu hộ bạn*.
+
+## Là gì (cơ bản)
+
+**AI trong PKM** dùng đúng khi nó: hỏi note của bạn, chỉ chỗ trống, so hai ý, sinh câu hỏi kiểm tra. Dùng sai khi nó: đọc dùm, ghi dùm, rồi bạn archive cái tóm tắt như thể đã học.
+
+Cùng luật [what still compounds](/concepts/what-still-compounds): generate rẻ. Cái còn đắt là *câu bạn viết được khi AI tắt*.
+
+## Ví dụ thật
+
+Đúng: "Đây là 5 atomic note của mình về eval. Cái nào mâu thuẫn? Hỏi mình 3 câu để kiểm tra mình còn nhớ."
+
+Sai: "Tóm 8 paper RAG thành một note 'để sau'." Sau không bao giờ đến, và note đó không phải lời bạn — không evergreen.
+
+## Nâng cao
+
+Nguồn sự thật: note *bạn* đã viết + primary source. Model là lớp truy vấn. Nếu câu trả lời không trỏ được về một note hoặc một link bạn đã mở — đó là hallucination có UI đẹp.
+
+<Callout title="Góc kỹ thuật">
+Siêu nâng cao: RAG lên *chính* second brain chỉ sạch khi chunk là atomic note lời bạn, không phải dump PDF. Embed highlight người khác = tìm lại rác nhanh hơn. Workflow bền: (1) bạn viết 5–10 câu trước, (2) mới hỏi model "tôi thiếu gì / đối lập với note X", (3) bạn sửa note, không lưu chat. Chat là scratch; note là sổ cái. Đánh giá PKM+AI bằng một bài kiểm: tắt mạng, giải thích ý bằng miệng trong 90 giây. Không được → AI đã ăn phần hiểu. Được → AI chỉ là đòn bẩy.
+</Callout>
+
+<Callout title="Cẩn thận">
+"Second brain bằng AI" bán khóa học đang đảo nhân tử: họ bán capture vô hạn. Bạn cần Express có xương. Vô hạn đầu vào + AI tóm = béo rác phiên bản 2026.
+</Callout>
+
+<Callout title="Nhớ nhé">
+AI được phép tăng tốc hỏi. Không được phép thay bạn viết câu đầu tiên. Câu đầu tiên mới là note.
+</Callout>
+
+## Đọc thêm
+
+- [Evergreen notes — Matuschak](https://notes.andymatuschak.org/z5E5QawiXCMbtNtupvxeoEX) — Chuẩn vàng: note lời mình, nuôi lâu; AI không miễn chuẩn này.
+- [What Still Compounds When AI Is Cheap](/concepts/what-still-compounds) — Judgment và câu hỏi gốc còn đắt; tóm tắt thì không.
+- [Trust but Verify](/concepts/trust-but-verify) — Cùng cơ: output model là gợi ý, không phải sổ cái.
+
+## Tự kiểm tra
+
+1. Lần gần nhất bạn để AI "học hộ": tắt chat, nói lại ý trong 90 giây. Được không?
+2. Một việc AI được phép làm trên note của bạn tuần này, và một việc bị cấm — viết thành luật 2 dòng.
+3. (Siêu) Thiết kế 3 câu hỏi bạn sẽ bắt model hỏi *ngược* bạn, thay vì tóm tắt. Câu đó kiểm tra được ý nào?
