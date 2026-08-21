@@ -2757,3 +2757,155 @@ edges:
   - source: concept-thought-experiment
     target: concept-premortem
     rel: related
+
+  # --- Philosophy M2: epistemology ---
+  - source: concept-necessary-vs-sufficient
+    target: concept-knowledge-as-justified-belief
+    rel: supports
+  - source: concept-knowledge-as-justified-belief
+    target: concept-gettier-problem
+    rel: leads-to
+  - source: concept-knowledge-as-justified-belief
+    target: concept-skepticism-and-cogito
+    rel: leads-to
+  - source: concept-skepticism-and-cogito
+    target: concept-foundationalism-vs-coherentism
+    rel: leads-to
+  - source: concept-rationalism-vs-empiricism
+    target: concept-a-priori-a-posteriori
+    rel: leads-to
+  - source: concept-rationalism-vs-empiricism
+    target: concept-problem-of-induction
+    rel: leads-to
+  - source: concept-a-priori-a-posteriori
+    target: concept-problem-of-induction
+    rel: related
+  - source: concept-foundationalism-vs-coherentism
+    target: concept-deduction-induction-abduction
+    rel: related
+  - source: concept-gettier-problem
+    target: concept-thought-experiment
+    rel: related
+  - source: concept-problem-of-induction
+    target: concept-base-rates-bayesian
+    rel: supports
+  - source: concept-problem-of-induction
+    target: concept-ruin-and-margin
+    rel: related
+  - source: concept-knowledge-as-justified-belief
+    target: concept-calibration
+    rel: leads-to
+  - source: concept-skepticism-and-cogito
+    target: concept-triangulate-a-claim
+    rel: supports
+
+  # --- Philosophy M3: philosophy of science ---
+  - source: concept-problem-of-induction
+    target: concept-falsifiability
+    rel: leads-to
+  - source: concept-falsifiability
+    target: concept-demarcation-problem
+    rel: leads-to
+  - source: concept-falsifiability
+    target: concept-underdetermination
+    rel: related
+  - source: concept-underdetermination
+    target: concept-demarcation-problem
+    rel: supports
+  - source: concept-paradigm-and-normal-science
+    target: concept-demarcation-problem
+    rel: supports
+  - source: concept-falsifiability
+    target: concept-paradigm-and-normal-science
+    rel: related
+  - source: concept-underdetermination
+    target: concept-scientific-realism-vs-instrumentalism
+    rel: leads-to
+  - source: concept-scientific-realism-vs-instrumentalism
+    target: concept-deduction-induction-abduction
+    rel: related
+  - source: concept-paradigm-and-normal-science
+    target: concept-map-vs-territory
+    rel: related
+  - source: concept-falsifiability
+    target: concept-hypothesis-validation
+    rel: supports
+  - source: concept-demarcation-problem
+    target: concept-triangulate-a-claim
+    rel: supports
+
+  # --- Philosophy M4: metaphysics ---
+  - source: concept-being-and-substance
+    target: concept-universals-vs-particulars
+    rel: leads-to
+  - source: concept-universals-vs-particulars
+    target: concept-possible-worlds-and-modality
+    rel: leads-to
+  - source: concept-causality
+    target: concept-possible-worlds-and-modality
+    rel: leads-to
+  - source: concept-causality
+    target: concept-free-will-and-determinism
+    rel: leads-to
+  - source: concept-time-a-series-b-series
+    target: concept-free-will-and-determinism
+    rel: related
+  - source: concept-being-and-substance
+    target: concept-time-a-series-b-series
+    rel: related
+  - source: concept-possible-worlds-and-modality
+    target: concept-a-priori-a-posteriori
+    rel: related
+  - source: concept-problem-of-induction
+    target: concept-causality
+    rel: leads-to
+  - source: concept-thought-experiment
+    target: concept-being-and-substance
+    rel: supports
+  - source: concept-universals-vs-particulars
+    target: concept-occams-razor
+    rel: related
+  - source: concept-causality
+    target: concept-second-order-thinking
+    rel: related
+  - source: concept-free-will-and-determinism
+    target: concept-high-agency
+    rel: related
+
+  # --- Philosophy M5: philosophy of mind ---
+  - source: concept-mind-body-problem
+    target: concept-dualism-vs-physicalism
+    rel: leads-to
+  - source: concept-dualism-vs-physicalism
+    target: concept-hard-problem-of-consciousness
+    rel: leads-to
+  - source: concept-hard-problem-of-consciousness
+    target: concept-qualia-and-marys-room
+    rel: leads-to
+  - source: concept-qualia-and-marys-room
+    target: concept-dualism-vs-physicalism
+    rel: evaluates
+  - source: concept-dualism-vs-physicalism
+    target: concept-chinese-room-and-turing-test
+    rel: leads-to
+  - source: concept-mind-body-problem
+    target: concept-personal-identity
+    rel: related
+  - source: concept-being-and-substance
+    target: concept-personal-identity
+    rel: leads-to
+  - source: concept-possible-worlds-and-modality
+    target: concept-hard-problem-of-consciousness
+    rel: supports
+  - source: concept-chinese-room-and-turing-test
+    target: concept-llm
+    rel: related
+  - source: concept-chinese-room-and-turing-test
+    target: concept-ai-agent
+    rel: related
+  - source: concept-personal-identity
+    target: concept-time-a-series-b-series
+    rel: related
+  - source: concept-hard-problem-of-consciousness
+    target: concept-ai-ux-trust
+    rel: related

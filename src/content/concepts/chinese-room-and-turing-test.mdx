@@ -1,0 +1,70 @@
+---
+id: concept-chinese-room-and-turing-test
+title: "The Chinese Room and the Turing Test"
+type: "concept"
+aliases: ["căn phòng Trung Hoa", "chinese room", "test Turing", "Turing test", "hiểu hay xử lý ký hiệu"]
+tags: [philosophy, philosophy-of-mind, consciousness, ai, critical-thinking]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+import Sketch from '../../components/content/Sketch.astro';
+
+Một người bị khoá trong phòng, không biết một chữ Trung Hoa nào. Người ta luồn qua khe cửa những tờ giấy có chữ Trung Hoa. Trong phòng có một quyển sách quy tắc khổng lồ: *thấy dãy ký hiệu này thì viết ra dãy ký hiệu kia*. Anh ta làm đúng sách, luồn giấy ra.
+
+Người bên ngoài đọc và thấy câu trả lời hoàn hảo, đúng ngữ pháp, đúng nội dung. Họ kết luận: trong phòng có người hiểu tiếng Trung Hoa.
+
+Anh ta không hiểu một chữ nào.
+
+<Sketch src="/sketches/phil/chinese-room-and-turing-test.webp" alt="Một căn phòng đóng kín có khe cửa; bên ngoài một người nhét tờ giấy vào, bên trong một người tra quyển sách quy tắc khổng lồ rồi đẩy tờ giấy khác ra" caption="Đúng đầu ra, không có hiểu. Hoặc: hiểu ở đâu, nếu không ở trong người ấy?" />
+
+## Là gì
+
+**Test Turing** (1950): Turing thay câu hỏi siêu hình *"máy có suy nghĩ được không"* — mà ông cho là quá mù mờ — bằng một câu hỏi vận hành được: nếu qua đối thoại bằng chữ, người hỏi không phân biệt được máy với người, ta còn cơ sở nào để từ chối gọi nó là suy nghĩ? Đây là một nước đi **hành vi luận**: bỏ phần bên trong, chấm bằng đầu ra.
+
+**Căn phòng Trung Hoa** (Searle, 1980) là phản biện nhắm thẳng vào đó: xử lý ký hiệu đúng cú pháp **không tạo ra ngữ nghĩa**. Cấu trúc lập luận:
+
+1. Chương trình chỉ vận hành hình thức trên ký hiệu (cú pháp).
+2. Tâm có nội dung (ngữ nghĩa).
+3. Cú pháp không đủ cho ngữ nghĩa.
+4. Vậy chạy đúng chương trình không đủ để có tâm.
+
+Searle gọi lập trường ông chống là **"AI mạnh"**: chạy đúng chương trình *chính là* có tâm. Ông không phản đối rằng máy có thể *mô phỏng* hiểu, cũng không phản đối rằng bộ não sinh ra tâm — ông chỉ phủ nhận rằng phần mềm là chỗ tâm trú.
+
+## Ví dụ
+
+Đây là ca hiếm trong triết học mà mọi phản biện đều thành tên riêng:
+
+- **Phản biện hệ thống**: đúng, *người trong phòng* không hiểu; nhưng câu hỏi là **cả hệ thống** (người + sách + giấy + phòng) có hiểu không. Searle đáp bằng cách cho anh ta học thuộc cả quyển sách: giờ hệ thống nằm trong một cái đầu, và vẫn không hiểu gì.
+- **Phản biện robot**: cho hệ thống thân thể, camera, tay, để ký hiệu **gắn** vào thế giới (bài toán *symbol grounding*). Searle: thêm cảm biến chỉ là thêm ký hiệu đầu vào, không thêm hiểu.
+- **Phản biện mô phỏng não**: nếu chương trình mô phỏng từng neuron một? Searle: mô phỏng mưa không làm ai ướt.
+- **Phản biện thay neuron dần** (Chalmers): thay từng neuron bằng chip chức năng tương đương. Ở bước nào hiểu biến mất? Nếu không có bước nào, kết luận của Searle sập; nếu có, hãy chỉ ra nó.
+
+## Phản biện chính
+
+Điểm yếu sâu nhất của lập luận Searle nằm ở tiền đề 3, và nó có hai dạng.
+
+**Dạng một — vấn đề trực giác**: "phòng không hiểu" là một [trực giác](/concepts/thought-experiment) về một hệ thống có tốc độ chậm hơn não người hàng tỉ lần và kích cỡ bằng một thành phố. Trực giác của ta về những hệ thống như vậy không đáng tin cậy đặc biệt — cùng loại phản biện đã dùng cho "Trung Quốc quốc gia" của Block.
+
+**Dạng hai — nó chứng minh quá nhiều**: đúng lập luận đó áp cho **bộ não** vẫn chạy. Từng neuron chỉ chuyển ion theo quy luật hoá học, không neuron nào hiểu tiếng Việt. Nếu "không thành phần nào hiểu, vậy hệ thống không hiểu" là hợp lệ, thì bạn cũng không hiểu tiếng Việt. Searle phải nói có gì đặc biệt về *sinh học* của não tạo ra ngữ nghĩa — ông gọi là "năng lực nhân quả của sinh chất" — nhưng chưa ai làm rõ được nó là gì mà không rơi lại vào nhị nguyên.
+
+Còn về phía Turing: test của ông cũng bị chỉ trích từ chiều ngược lại. Nó **quá dễ** (dễ lừa người hỏi bằng mánh, và các mô hình ngôn ngữ hiện nay cho thấy trôi chảy không kéo theo hiểu) và đồng thời **quá khó** (một hệ thống thông minh phi-người có thể trượt vì không giả người giỏi). Nói cách khác: nó đo *khả năng đóng vai người*, không đo tư duy.
+
+<Callout title="Cẩn thận">
+Đừng dùng Căn phòng Trung Hoa như câu trả lời sẵn cho "LLM có hiểu không". Lập luận của Searle, nếu đúng, đúng cho **mọi** chương trình — kể cả một chương trình hành xử hoàn hảo mãi mãi. Nên nó không phân biệt được mô hình hôm nay với mô hình tương lai, và nó cũng không nói được điều gì về ý thức [hiện tượng](/concepts/hard-problem-of-consciousness), chỉ nói về ngữ nghĩa. Ba câu hỏi khác nhau: nó *hiểu* không, nó *cảm* không, nó *đáng được đối xử thế nào*.
+</Callout>
+
+<Callout title="Nhớ nhé">
+Turing bỏ phần bên trong để câu hỏi trả lời được. Searle nói chính phần bên trong mới là câu hỏi. Cả hai vẫn chưa ai thắng.
+</Callout>
+
+## Đọc thêm
+
+- [SEP — The Chinese Room Argument](https://plato.stanford.edu/entries/chinese-room/) — Lập luận gốc và toàn bộ họ phản biện có tên.
+- [SEP — The Turing Test](https://plato.stanford.edu/entries/turing-test/) — Bài gốc của Turing, các biến thể, và phê phán.
+- [SEP — Functionalism](https://plato.stanford.edu/entries/functionalism/) — Lập trường mà Searle đang tấn công, phát biểu ở dạng mạnh nhất.
+
+## Tự kiểm tra
+
+1. Trả lời phản biện hệ thống thay cho Searle, rồi phản biện lại câu trả lời của bạn.
+2. Áp lập luận Căn phòng cho bộ não người. Nó cho kết luận gì, và Searle chặn bước nào?
+3. (Siêu) Tách ba câu hỏi về một mô hình AI: hiểu, cảm, và tư cách đạo đức. Lập luận nào ở chặng này chạm tới câu nào?
