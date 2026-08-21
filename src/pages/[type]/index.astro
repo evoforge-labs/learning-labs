@@ -1,30 +1,103 @@
 ---
 import type { GetStaticPaths } from 'astro';
 import BaseLayout from '../../components/layout/BaseLayout.astro';
-import Card from '../../components/ui/Card.astro';
-import Badge from '../../components/ui/Badge.astro';
-import { COLLECTION_TYPES } from '../../lib/types';
+import { ArrowUpRight, FileSearch } from '@lucide/astro';
+import { COLLECTION_TYPES, typeColor, trackColor } from '../../lib/types';
 import { getAll } from '../../lib/content';
 
 export const getStaticPaths = (() =>
   COLLECTION_TYPES.map((type) => ({ params: { type } }))) satisfies GetStaticPaths;
 
 const { type } = Astro.params;
-const entries = await getAll(type as any);
+const entries = (await getAll(type as any)) as any[];
 const labels: Record<string, string> = { tracks: 'Tracks', concepts: 'Concepts', lessons: 'Lessons', exercises: 'Exercises', sessions: 'Sessions', rubrics: 'Rubrics', templates: 'Templates' };
+const descriptions: Record<string, string> = {
+  tracks: 'Các lộ trình học — mỗi track là một chuyên đề trọn vẹn.',
+  concepts: 'Khái niệm canonical — mỗi khái niệm một trang, chống trùng lặp.',
+  lessons: 'Bài học theo từng track, đọc theo thứ tự.',
+  exercises: 'Đề luyện tập AI dùng để hỏi bạn — đọc đề, không nhập đáp án ở đây.',
+  sessions: 'Lịch sử luyện tập: transcript hỏi–đáp kèm điểm và nhận xét.',
+  rubrics: 'Thang chấm điểm cho từng dạng bài.',
+  templates: 'Khuôn mẫu cho AI khi ghi nội dung mới vào repo.',
+};
+
+const dotColor = (e: any) => (type === 'tracks' ? trackColor(e.id) : typeColor(e.data.type));
+const byTitle = (a: any, b: any) => a.data.title.localeCompare(b.data.title, 'en');
+
+// Lessons/exercises/sessions belong to a track — group them so the page reads
+// as a course catalogue instead of one flat wall of links.
+const groupByTrack = ['lessons', 'exercises', 'sessions'].includes(type!);
+let groups: { slug: string; title: string; items: any[] }[] = [];
+if (groupByTrack) {
+  const tracks = (await getAll('tracks')) as any[];
+  const titleOf = new Map(tracks.map((t) => [t.id, t.data.title]));
+  const byId = (a: any, b: any) => String(a.data.id).localeCompare(String(b.data.id));
+  const m = new Map<string, any[]>();
+  for (const e of entries) {
+    const k = e.data.track ?? 'khác';
+    if (!m.has(k)) m.set(k, []);
+    m.get(k)!.push(e);
+  }
+  groups = [...m.entries()]
+    .map(([slug, items]) => ({ slug, title: titleOf.get(slug) ?? slug, items: items.sort(byId) }))
+    .sort((a, b) => a.title.localeCompare(b.title, 'en'));
+}
+const flat = groupByTrack ? [] : [...entries].sort(byTitle);
+const fmtDate = (d: Date) => new Intl.DateTimeFormat('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric' }).format(d);
 ---
-<BaseLayout title={labels[type!]}>
-  <main class="max-w-6xl mx-auto px-4 py-10">
-    <h1 class="text-2xl font-bold tracking-tight text-zinc-900 dark:text-white mb-6">{labels[type!]}</h1>
-    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-      {entries.map((e: any) => (
-        <Card href={`/${type}/${e.id}`} class="group">
-          <div class="mb-2"><Badge type={e.data.type} /></div>
-          <h3 class="font-semibold text-zinc-900 dark:text-white group-hover:text-brand">{e.data.title}</h3>
-          {e.data.tags?.length > 0 && <div class="mt-2 text-xs text-zinc-400">{e.data.tags.join(' · ')}</div>}
-        </Card>
-      ))}
-      {entries.length === 0 && <p class="text-zinc-400 text-sm">Chưa có nội dung.</p>}
-    </div>
+<BaseLayout title={labels[type!]} description={descriptions[type!]}>
+  <main id="main" class="max-w-4xl mx-auto px-4 sm:px-6 py-12 sm:py-16">
+    <header class="mb-10">
+      <p class="anim eyebrow mb-3">thư viện</p>
+      <h1 class="anim font-read font-extrabold text-4xl sm:text-5xl tracking-[-0.02em] text-stone-900 dark:text-stone-100">{labels[type!]}</h1>
+      <p class="anim mt-3 text-stone-500 dark:text-stone-400 max-w-xl">{descriptions[type!]} <span class="tabular-nums text-stone-400">· {entries.length} mục</span></p>
+    </header>
+
+    {entries.length === 0 && (
+      <div class="anim rounded-xl border border-dashed border-stone-300 dark:border-stone-700 px-6 py-14 text-center">
+        <FileSearch class="w-6 h-6 mx-auto text-stone-400" />
+        <p class="mt-3 text-sm text-stone-500 dark:text-stone-400">Chưa có nội dung — AI sẽ ghi những tài liệu đầu tiên vào đây.</p>
+      </div>
+    )}
+
+    {groupByTrack ? (
+      <div class="space-y-12">
+        {groups.map((g) => (
+          <section class="anim">
+            <div class="flex items-center gap-3 mb-4">
+              <span class="w-2 h-2 rounded-full shrink-0" style={`background:${trackColor(g.slug)}`}></span>
+              <a href={`/tracks/${g.slug}`} class="text-sm font-semibold text-stone-900 dark:text-stone-100 hover:text-brand transition-colors">{g.title}</a>
+              <span class="text-xs text-stone-400 tabular-nums">{g.items.length}</span>
+              <span class="flex-1 h-px bg-stone-200 dark:bg-stone-800"></span>
+            </div>
+            <ul class="grid sm:grid-cols-2 gap-x-8">
+              {g.items.map((e) => (
+                <li>
+                  <a href={`/${type}/${e.id}`} class="group flex items-center gap-3 py-2.5 border-b border-stone-200/60 dark:border-stone-800/60 text-sm text-stone-700 dark:text-stone-300 hover:text-brand transition-colors">
+                    <span class="flex-1 min-w-0 truncate">{e.data.title}</span>
+                    {type === 'sessions' && typeof e.data.score === 'number' && <span class="text-xs font-semibold tabular-nums text-emerald-700 dark:text-emerald-400">{e.data.score}/100</span>}
+                    {type === 'sessions' && e.data.date && <time class="text-xs text-stone-400 tabular-nums">{fmtDate(e.data.date)}</time>}
+                    <ArrowUpRight class="w-3.5 h-3.5 shrink-0 text-stone-300 dark:text-stone-600 group-hover:text-brand transition-colors" />
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </section>
+        ))}
+      </div>
+    ) : (
+      <ul class:list={['anim grid gap-x-8', type === 'concepts' ? 'sm:grid-cols-2' : 'max-w-2xl']}>
+        {flat.map((e) => (
+          <li>
+            <a href={`/${type}/${e.id}`} class="group flex items-center gap-3 py-3 border-b border-stone-200/60 dark:border-stone-800/60 text-sm hover:pl-1 transition-all duration-200">
+              <span class="w-1.5 h-1.5 rounded-full shrink-0" style={`background:${dotColor(e)}`}></span>
+              <span class="flex-1 min-w-0 text-stone-700 dark:text-stone-300 group-hover:text-brand transition-colors truncate">{e.data.title}</span>
+              {e.data.tags?.length > 0 && <span class="hidden sm:block text-xs text-stone-400 truncate max-w-[40%]">{e.data.tags.slice(0, 3).join(' · ')}</span>}
+              <ArrowUpRight class="w-3.5 h-3.5 shrink-0 text-stone-300 dark:text-stone-600 group-hover:text-brand transition-colors" />
+            </a>
+          </li>
+        ))}
+      </ul>
+    )}
   </main>
 </BaseLayout>

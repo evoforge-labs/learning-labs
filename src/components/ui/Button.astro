@@ -2,9 +2,9 @@
 interface Props { href?: string; variant?: 'primary' | 'outline'; class?: string; }
 const { href, variant = 'primary', class: cls = '' } = Astro.props;
 const styles = {
-  primary: 'bg-brand text-white hover:opacity-90',
-  outline: 'border border-zinc-200 dark:border-zinc-800 hover:bg-zinc-100 dark:hover:bg-zinc-900',
+  primary: 'bg-brand text-white dark:text-stone-950 hover:brightness-110 shadow-sm shadow-brand/25',
+  outline: 'border border-stone-300 dark:border-stone-700 text-stone-700 dark:text-stone-300 hover:border-brand/60 hover:text-brand',
 };
 const Tag = href ? 'a' : 'button';
 ---
-<Tag href={href} class={`inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium ${styles[variant]} ${cls}`}><slot /></Tag>
+<Tag href={href} class={`inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 active:scale-[0.98] ${styles[variant]} ${cls}`}><slot /></Tag>

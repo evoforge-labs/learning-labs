@@ -1,16 +1,22 @@
 ---
 import '../../styles/global.css';
-import '@fontsource-variable/inter';
+import '@fontsource/be-vietnam-pro/400.css';
+import '@fontsource/be-vietnam-pro/500.css';
+import '@fontsource/be-vietnam-pro/600.css';
+import '@fontsource/be-vietnam-pro/700.css';
 import '@fontsource/spectral/400.css';
+import '@fontsource/spectral/400-italic.css';
+import '@fontsource/spectral/500-italic.css';
 import '@fontsource/spectral/600.css';
 import '@fontsource/spectral/700.css';
+import '@fontsource/spectral/800.css';
 import { ClientRouter } from 'astro:transitions';
 import Header from './Header.astro';
+import Footer from './Footer.astro';
 import BottomNav from './BottomNav.astro';
 import Drawer from './Drawer.astro';
-import Sidebar from './Sidebar.astro';
-interface Props { title: string; }
-const { title } = Astro.props;
+interface Props { title: string; description?: string; }
+const { title, description = 'Learning Lab — nhật ký học tập cá nhân: lộ trình, khái niệm, bài luyện tập và lịch sử session.' } = Astro.props;
 ---
 <!doctype html>
 <html lang="vi">
@@ -19,6 +25,10 @@ const { title } = Astro.props;
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <title>{title} · Learning Lab</title>
+    <meta name="description" content={description} />
+    <meta property="og:title" content={`${title} · Learning Lab`} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
     {/* Apply theme before paint on first load AND after every view-transition swap.
         Astro reconciles <html> to the server markup on nav (which has no .dark),
         so we must re-apply on astro:after-swap or dark mode is lost when navigating. */}
@@ -35,15 +45,28 @@ const { title } = Astro.props;
     </script>
     <ClientRouter />
   </head>
-  <body class="bg-zinc-50 text-zinc-800 dark:bg-zinc-950 dark:text-zinc-200 antialiased pb-16 lg:pb-0">
+  <body class="bg-paper text-stone-800 dark:bg-paper-dark dark:text-stone-300 antialiased min-h-dvh flex flex-col pb-16 lg:pb-0">
+    <a href="#main" class="sr-only focus:not-sr-only focus:fixed focus:z-[90] focus:top-3 focus:left-3 focus:bg-brand focus:text-white dark:focus:text-stone-950 focus:px-4 focus:py-2 focus:rounded-lg focus:text-sm focus:font-medium">Bỏ qua điều hướng</a>
     <Header />
     <Drawer />
-    <aside class="hidden lg:block fixed left-0 top-14 bottom-0 w-60 overflow-y-auto border-r border-zinc-200 dark:border-zinc-800 p-4">
-      <Sidebar />
-    </aside>
-    <div class="lg:pl-60">
+    <div class="flex-1 w-full">
       <slot />
     </div>
+    <Footer />
     <BottomNav />
+    <script>
+      // Staggered fade-up for any element tagged .anim, on first load and
+      // every view-transition. Skipped for users who prefer reduced motion.
+      // Delay is capped so long pages don't keep below-the-fold content
+      // invisible for seconds while the stagger works through the queue.
+      import { animate } from 'motion';
+      function run() {
+        if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+        document.querySelectorAll('.anim').forEach((el, i) =>
+          animate(el, { opacity: [0, 1], transform: ['translateY(12px)', 'translateY(0)'] }, { delay: Math.min(i * 0.05, 0.45), duration: 0.5 }));
+      }
+      run();
+      document.addEventListener('astro:page-load', run);
+    </script>
   </body>
 </html>

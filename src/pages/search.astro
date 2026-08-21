@@ -5,13 +5,14 @@ import BaseLayout from '../components/layout/BaseLayout.astro';
 // page. Only wire up Pagefind for production builds; show a hint in dev.
 const isProd = import.meta.env.PROD;
 ---
-<BaseLayout title="Search">
-  <main class="max-w-3xl mx-auto px-4 py-10">
-    <h1 class="text-2xl font-bold tracking-tight text-zinc-900 dark:text-white mb-6">Search</h1>
+<BaseLayout title="Search" description="Tìm kiếm toàn văn trong mọi tài liệu của Learning Lab.">
+  <main id="main" class="max-w-3xl mx-auto px-4 sm:px-6 py-12 sm:py-16">
+    <p class="anim eyebrow mb-3">tìm kiếm toàn văn</p>
+    <h1 class="anim font-read font-extrabold text-4xl sm:text-5xl tracking-[-0.02em] text-stone-900 dark:text-stone-100 mb-8">Search</h1>
     {isProd ? (
       <div id="search"></div>
     ) : (
-      <p class="text-sm text-zinc-500 dark:text-zinc-400">
+      <p class="text-sm text-stone-500 dark:text-stone-400">
         Tìm kiếm chỉ khả dụng sau khi <code class="font-mono">pnpm build</code> (Pagefind index được sinh lúc build).
       </p>
     )}

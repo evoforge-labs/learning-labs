@@ -1,25 +1,64 @@
 ---
-import Sidebar from './Sidebar.astro';
+import { Compass, BookOpen, GraduationCap, Dumbbell, MessageSquareText, ClipboardCheck, LayoutTemplate, GitFork, BookA, Search, X } from '@lucide/astro';
+import { typeColor } from '../../lib/types';
+const items = [
+  { href: '/tracks', label: 'Tracks', Icon: Compass, dot: typeColor('track') },
+  { href: '/concepts', label: 'Concepts', Icon: BookOpen, dot: typeColor('concept') },
+  { href: '/lessons', label: 'Lessons', Icon: GraduationCap, dot: typeColor('lesson') },
+  { href: '/exercises', label: 'Exercises', Icon: Dumbbell, dot: typeColor('exercise') },
+  { href: '/sessions', label: 'Sessions', Icon: MessageSquareText, dot: typeColor('session') },
+  { href: '/rubrics', label: 'Rubrics', Icon: ClipboardCheck, dot: typeColor('rubric') },
+  { href: '/templates', label: 'Templates', Icon: LayoutTemplate, dot: typeColor('template') },
+  { href: '/glossary', label: 'Glossary', Icon: BookA, dot: null },
+  { href: '/knowledge-map', label: 'Knowledge Map', Icon: GitFork, dot: null },
+  { href: '/search', label: 'Search', Icon: Search, dot: null },
+];
+const path = Astro.url.pathname;
 ---
-<div id="drawer" class="fixed inset-0 z-[60] hidden lg:hidden">
-  <div id="drawer-backdrop" class="absolute inset-0 bg-black/40"></div>
-  <div class="absolute inset-y-0 left-0 w-72 bg-white dark:bg-zinc-900 p-3 shadow-2xl overflow-y-auto">
-    <Sidebar />
+<div id="drawer" class="fixed inset-0 z-[60] hidden lg:hidden" role="dialog" aria-modal="true" aria-label="Menu">
+  <div id="drawer-backdrop" class="absolute inset-0 bg-stone-950/50 opacity-0 transition-opacity duration-200"></div>
+  <div id="drawer-panel" class="absolute inset-y-0 left-0 w-72 bg-paper dark:bg-stone-900 shadow-2xl overflow-y-auto -translate-x-full transition-transform duration-200 ease-out">
+    <div class="flex items-center justify-between px-4 h-14 border-b border-stone-200 dark:border-stone-800">
+      <span class="eyebrow">thư viện</span>
+      <button id="drawer-close" aria-label="Đóng menu" class="w-9 h-9 grid place-items-center rounded-lg text-stone-500 hover:bg-stone-200/60 dark:hover:bg-stone-800"><X class="w-4 h-4" /></button>
+    </div>
+    <nav class="p-3 text-sm space-y-0.5">
+      {items.map(({ href, label, Icon, dot }) => (
+        <a href={href} class:list={[
+            'flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors',
+            path.startsWith(href) ? 'bg-brand/10 text-brand font-medium' : 'text-stone-600 dark:text-stone-300 hover:bg-stone-200/50 dark:hover:bg-stone-800/70',
+          ]}>
+          <Icon class="w-4 h-4" />
+          <span class="flex-1">{label}</span>
+          {dot && <span class="w-1.5 h-1.5 rounded-full" style={`background:${dot}`}></span>}
+        </a>
+      ))}
+    </nav>
   </div>
 </div>
 <script>
   // Re-bind on every navigation (View Transitions swaps the DOM).
   function bindDrawer() {
     const drawer = document.getElementById('drawer');
-    const openBtn = document.getElementById('drawer-open');
+    const panel = document.getElementById('drawer-panel');
     const backdrop = document.getElementById('drawer-backdrop');
-    if (!drawer || openBtn?.dataset.bound) return;
-    const close = () => drawer.classList.add('hidden');
-    openBtn?.addEventListener('click', () => drawer.classList.remove('hidden'));
+    const openBtn = document.getElementById('drawer-open');
+    const closeBtn = document.getElementById('drawer-close');
+    if (!drawer || !panel || !backdrop || openBtn?.dataset.bound) return;
     if (openBtn) openBtn.dataset.bound = 'true';
-    backdrop?.addEventListener('click', close);
-    // close when a nav link inside the drawer is tapped
-    drawer.querySelectorAll('a').forEach((a) => a.addEventListener('click', close));
+    const open = () => {
+      drawer.classList.remove('hidden');
+      requestAnimationFrame(() => { backdrop.classList.remove('opacity-0'); panel.classList.remove('-translate-x-full'); });
+    };
+    const close = () => {
+      backdrop.classList.add('opacity-0');
+      panel.classList.add('-translate-x-full');
+      setTimeout(() => drawer.classList.add('hidden'), 200);
+    };
+    openBtn?.addEventListener('click', open);
+    closeBtn?.addEventListener('click', close);
+    backdrop.addEventListener('click', close);
+    drawer.querySelectorAll('nav a').forEach((a) => a.addEventListener('click', close));
     document.addEventListener('keydown', (e) => { if (e.key === 'Escape') close(); });
   }
   document.addEventListener('astro:page-load', bindDrawer);

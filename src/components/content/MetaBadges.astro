@@ -1,14 +1,16 @@
 ---
 import Badge from '../ui/Badge.astro';
-import { Clock } from '@lucide/astro';
-interface Props { type: string; status?: string; level?: string; minutes?: number; reviewedBy?: string | null; score?: number | null; }
-const { type, status, level, minutes, reviewedBy, score } = Astro.props;
+import { Clock, Gauge } from '@lucide/astro';
+interface Props { type: string; status?: string; level?: string; minutes?: number; reviewedBy?: string | null; score?: number | null; hideType?: boolean; }
+const { type, status, level, minutes, reviewedBy, score, hideType = false } = Astro.props;
 ---
-<div class="flex flex-wrap items-center gap-2 text-[11px]">
-  <Badge type={type} />
+<div class="flex flex-wrap items-center gap-x-3 gap-y-2 text-xs text-stone-500 dark:text-stone-400">
+  {!hideType && <Badge type={type} />}
   {status && <Badge status={status} />}
-  {level && <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full border border-zinc-200 dark:border-zinc-700 text-zinc-500"><span class="w-2 h-2 rounded-full" style="background:var(--type-lesson)"></span>{level}</span>}
-  {minutes && <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full border border-zinc-200 dark:border-zinc-700 text-zinc-500"><Clock class="w-3 h-3" />{minutes}m</span>}
-  {reviewedBy && <span class="px-2 py-0.5 rounded-full border border-zinc-200 dark:border-zinc-700 text-zinc-500">reviewed by {reviewedBy}</span>}
-  {typeof score === 'number' && <span class="px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-600 border border-emerald-500/30 font-semibold">{score} / 100</span>}
+  {level && <span class="inline-flex items-center gap-1"><Gauge class="w-3.5 h-3.5" />{level}</span>}
+  {minutes && <span class="inline-flex items-center gap-1 tabular-nums"><Clock class="w-3.5 h-3.5" />{minutes} phút</span>}
+  {reviewedBy && <span class="font-read italic">reviewed by {reviewedBy}</span>}
+  {typeof score === 'number' && (
+    <span class="inline-flex items-center gap-1 px-2 py-[3px] rounded-md bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 font-semibold tabular-nums">{score} / 100</span>
+  )}
 </div>
