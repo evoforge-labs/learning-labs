@@ -32,3 +32,6 @@ outputs/
 # transient agent worktrees
 .claude/worktrees/
 .claude/scheduled_tasks.lock
+
+# raw sketch art (source PNGs from codex image gen; committed artifact is public/sketches/**/*.webp)
+sketches-raw/

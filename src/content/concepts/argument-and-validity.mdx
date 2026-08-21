@@ -1,0 +1,69 @@
+---
+id: concept-argument-and-validity
+title: "Argument, Validity, Soundness"
+type: "concept"
+aliases: ["luận cứ", "tính hợp lệ", "valid vs sound", "hợp lệ và kiện toàn"]
+tags: [philosophy, logic, argumentation, critical-thinking, validity]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+import Sketch from '../../components/content/Sketch.astro';
+
+Một câu nói mạnh không phải một lập luận. *"Chính sách này vô lý!"* — không có lập luận nào ở đây, chỉ có âm lượng.
+
+Lập luận là một cái **cầu**: vài tấm ván bạn đã đứng được (tiền đề) bắc sang bờ bạn muốn tới (kết luận). Có hai cách để cầu sập: ván mục, hoặc ván tốt nhưng bắc không tới.
+
+<Sketch src="/sketches/phil/argument-and-validity.webp" alt="Một cổng đá ba viên: hai viên trụ đỡ một viên nằm ngang; viên trụ bên trái có vết nứt nên viên trên nghiêng đi" caption="Ống kín mà đá nứt: hợp lệ vẫn có thể ra kết luận sai." />
+
+## Là gì
+
+**Luận cứ (argument)** = một tập **tiền đề** cộng một **kết luận** mà các tiền đề đó được đưa ra để đỡ.
+
+Hai tính chất khác nhau, tiếng Việt hay gộp làm một:
+
+- **Hợp lệ (valid)**: *nếu* tiền đề đúng thì kết luận **không thể** sai. Đây là chuyện của **hình thức**, hoàn toàn không quan tâm nội dung có thật hay không.
+- **Kiện toàn (sound)**: hợp lệ **và** các tiền đề đúng thật. Chỉ luận cứ kiện toàn mới bảo đảm kết luận đúng.
+
+Ván tốt mà bắc không tới = không hợp lệ. Ván mục mà bắc đúng hướng = hợp lệ nhưng không kiện toàn.
+
+## Ví dụ
+
+**Hợp lệ nhưng kết luận sai:**
+
+> Mọi loài chim đều bay được. Chim cánh cụt là chim. Vậy chim cánh cụt bay được.
+
+Hình thức hoàn hảo — nếu hai tiền đề đúng thì kết luận buộc phải đúng. Nó chỉ sập vì tiền đề đầu sai. Nên: **hợp lệ không bảo đảm sự thật.**
+
+**Kết luận đúng nhưng lập luận không hợp lệ:**
+
+> Trời mưa thì đường ướt. Đường đang ướt. Vậy trời đang mưa.
+
+Đường có thể ướt vì xe rửa đường vừa chạy qua. Kết luận *tình cờ* đúng hôm nay không cứu được lập luận: đây là ngụy biện **khẳng định hậu quả** (affirming the consequent). Cấu trúc đúng phải là *đường không ướt, vậy trời không mưa* (modus tollens).
+
+Hệ quả thực tế: khi ai đó ra kết luận đúng, đừng vội gật. Kết luận đúng và lập luận đúng là hai chuyện.
+
+## Phản biện chính
+
+Đòi hỏi "hợp lệ" là tiêu chuẩn của **suy diễn** — và đó là tiêu chuẩn quá khắt khe cho gần hết những gì bạn tin. *"Mặt trời mai sẽ mọc"*, *"thuốc này an toàn vì thử trên 30.000 người"*: không có luận cứ hợp lệ nào cho hai câu đó, vì tiền đề đúng vẫn để hở khả năng kết luận sai. Chúng là luận cứ **mạnh**, không phải hợp lệ — địa hạt của chương sau, [suy diễn – quy nạp – abduction](/concepts/deduction-induction-abduction).
+
+Nên đừng dùng "không hợp lệ" như một lời phủ đầu. Câu hỏi đúng là: *lập luận này thuộc loại nào, và tiêu chuẩn của loại đó là gì?*
+
+<Callout title="Cẩn thận">
+Trong đời thật, tiền đề nguy hiểm nhất là tiền đề **không được nói ra** (enthymeme). *"Nó học Harvard nên chắc làm được việc này"* ẩn tiền đề "người học Harvard thì làm được việc này". Khi phục hồi tiền đề ẩn lên giấy, phần lớn lập luận tự tan — không cần bạn phản bác gì cả.
+</Callout>
+
+<Callout title="Nhớ nhé">
+Hợp lệ nói về đường ống, đúng nói về nước chảy trong ống. Ống kín mà nước bẩn thì kết luận vẫn bẩn.
+</Callout>
+
+## Đọc thêm
+
+- [IEP — Validity and Soundness](https://iep.utm.edu/val-snd/) — Định nghĩa chuẩn kèm ví dụ đối chiếu; đọc cái này trước.
+- [SEP — Logical Consequence](https://plato.stanford.edu/entries/logical-consequence/) — "Ra được từ" nghĩa là gì: hai cách hiểu (bảo toàn chân lý vs dẫn xuất bằng quy tắc).
+- [SEP — Classical Logic](https://plato.stanford.edu/entries/logic-classical/) — Bộ máy hình thức đằng sau modus ponens/tollens, cho ai muốn xuống tận ký hiệu.
+
+## Tự kiểm tra
+
+1. Dựng một luận cứ **hợp lệ nhưng kết luận sai** về chủ đề bạn đang làm. Nếu không dựng nổi, bạn chưa tách được hợp lệ khỏi đúng.
+2. Câu *"Nó đi làm sớm thế thì chắc là người có trách nhiệm"*: viết lại thành tiền đề — kết luận, phục hồi tiền đề ẩn, rồi nói nó hợp lệ hay không.
+3. (Siêu) Tại sao một luận cứ có tiền đề mâu thuẫn nhau lại **hợp lệ với mọi kết luận**? Điều đó cho thấy "hợp lệ" là tiêu chuẩn yếu tới đâu?

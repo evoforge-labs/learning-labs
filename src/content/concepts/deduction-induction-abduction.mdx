@@ -1,0 +1,56 @@
+---
+id: concept-deduction-induction-abduction
+title: "Deduction, Induction, Abduction"
+type: "concept"
+aliases: ["suy diễn quy nạp abduction", "inference to the best explanation", "suy luận tới giải thích tốt nhất", "ba lối suy luận"]
+tags: [philosophy, logic, argumentation, deduction, induction, abduction, critical-thinking]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+import Sketch from '../../components/content/Sketch.astro';
+
+Sáng ra thấy sàn nhà ướt một vũng. Bạn có thể làm ba nước đi rất khác nhau với cái vũng đó — và triết học gọi tên từng nước.
+
+<Sketch src="/sketches/phil/deduction-induction-abduction.webp" alt="Ba khung vẽ: cái phễu nhỏ dần thành một giọt; giỏ táo với ba quả được nhấc lên; một dấu chân chim trên bùn với hình con chim vẽ nét đứt phía trên" caption="Phễu, giỏ táo, dấu chân: ba lối đi từ cái đã biết sang cái chưa biết." />
+
+## Là gì
+
+**Suy diễn (deduction)** — từ luật xuống ca. *Mọi kim loại nở khi nóng; đồng là kim loại; vậy đồng nở khi nóng.* Nếu tiền đề đúng, kết luận **buộc** đúng. Giá phải trả: nó không cho bạn thông tin nào mới — kết luận đã nằm sẵn trong tiền đề, chỉ là gói lại cho gọn.
+
+**Quy nạp (induction)** — từ ca lên luật. *Ba mươi nghìn người uống thuốc này không sao; vậy thuốc an toàn.* Bạn được thứ suy diễn không cho: kết luận **vượt ra ngoài** dữ liệu. Giá phải trả: mất bảo đảm. Tiền đề đúng hết mà kết luận vẫn có thể sai — người thứ 30.001 có thể sốc phản vệ.
+
+**Abduction** — từ dấu vết tới nguyên nhân. *Sàn ướt; đêm qua mưa và cửa sổ mở; vậy chắc là nước mưa tạt vào.* Bạn không suy ra điều đó từ luật nào, cũng không đếm mẫu; bạn chọn **giải thích tốt nhất** trong các giải thích đang có. Còn gọi là *inference to the best explanation*. Tiêu chí "tốt nhất" thường là: đơn giản, ăn khớp với những gì đã biết, giải thích được nhiều thứ, ít giả định đặc chế.
+
+Ba tiêu chuẩn khác nhau, nên đừng chấm chéo: đòi một luận cứ quy nạp phải "hợp lệ" là hiểu sai luật chơi.
+
+## Ví dụ
+
+Sherlock Holmes tự gọi việc mình làm là *deduction*, nhưng gần như luôn làm **abduction**: từ vết bùn trên gấu quần suy ra người này vừa từ hướng đông nam tới. Không có luật nào bảo "ai có bùn đó thì từ hướng đó tới" — chỉ là trong các giải thích khả dĩ, cái đó khớp nhất với những gì ông biết về đất London.
+
+Và đó cũng là chỗ nghề bác sĩ, thợ sửa máy, người debug đều đứng: từ triệu chứng tới nguyên nhân. Không bao giờ chắc chắn, luôn có thể sai, nhưng không phải đoán bừa — có tiêu chí để so hai giải thích.
+
+## Phản biện chính
+
+Với **quy nạp**: Hume hỏi lấy gì biện minh nó. Nói *"quy nạp vẫn chạy tốt xưa nay"* là dùng quy nạp để bảo lãnh quy nạp — vòng tròn. Đây là vấn đề quy nạp (chặng 2 của track), một trong những vết nứt chưa bít được của triết học.
+
+Với **abduction**: van Fraassen nói bạn chỉ đang chọn *cái tốt nhất trong một rổ tồi* — không gì bảo đảm giải thích đúng có mặt trong rổ ngay từ đầu. Sâu hơn: "đơn giản", "gọn gàng" là dấu chỉ của **sự thật**, hay chỉ là khẩu vị của bộ não người? Chưa ai chứng minh được vế đầu.
+
+<Callout title="Góc kỹ thuật">
+Abduction có bản hình thức hoá bằng Bayes: hậu nghiệm tỉ lệ với khả năng (likelihood) nhân tiền nghiệm (prior). "Đơn giản" khi đó thành tiền nghiệm cao, "giải thích được nhiều" thành likelihood cao. Cách này biến câu chuyện định tính thành phép tính, nhưng đẩy tranh cãi sang chỗ khác: prior lấy đâu ra. Xem thêm [base rates và Bayes](/concepts/base-rates-bayesian).
+</Callout>
+
+<Callout title="Nhớ nhé">
+Suy diễn chắc mà rỗng. Quy nạp giàu mà hở. Abduction là nghề của mọi người phải hành động trước khi biết chắc.
+</Callout>
+
+## Đọc thêm
+
+- [IEP — Deductive and Inductive Arguments](https://iep.utm.edu/deductive-inductive-arguments/) — Phân biệt hai loại đầu, kèm cách nhận diện trong văn nói thường ngày.
+- [SEP — Abduction](https://plato.stanford.edu/entries/abduction/) — Peirce, IBE, và các phản biện; phần 3 về tiêu chí "tốt nhất" là phần đáng đọc chậm.
+- [SEP — The Problem of Induction](https://plato.stanford.edu/entries/induction-problem/) — Nguyên văn vấn đề Hume và các đường thoát đã thử.
+
+## Tự kiểm tra
+
+1. Lần gần nhất bạn kết luận "chắc là do X" khi debug hoặc chẩn đoán một việc: đó là suy diễn, quy nạp hay abduction? Bạn đã liệt kê được mấy giải thích thay thế?
+2. Nêu một kết luận bạn đang tin bằng quy nạp. Nếu nó sai, thứ đầu tiên bạn nhìn thấy là gì?
+3. (Siêu) Nếu "đơn giản hơn" không phải dấu chỉ của sự thật, abduction còn lại gì để dựa vào?
