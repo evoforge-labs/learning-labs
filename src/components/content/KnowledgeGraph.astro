@@ -95,6 +95,7 @@ const payload = JSON.stringify({ nodes, edges, typeColors: TYPE_HEX, trackColors
   import Sigma from 'sigma';
   import forceAtlas2 from 'graphology-layout-forceatlas2';
   import FA2Layout from 'graphology-layout-forceatlas2/worker';
+  import { EdgeRectangleProgram } from 'sigma/rendering';
 
   // ---------------------------------------------------------------------------
   // Why this is smooth, unlike the old cytoscape/cola version:
@@ -111,10 +112,68 @@ const payload = JSON.stringify({ nodes, edges, typeColors: TYPE_HEX, trackColors
   // *program* name (circle/image/…). Node kind is stored as `kind`.
   // ---------------------------------------------------------------------------
 
+  // Sigma scales item sizes with zoom, so an edge that reads fine at fit-zoom
+  // becomes a fat rope up close. Edges stay thin + low-alpha; only the edges of
+  // the node you're pointing at get to be loud (`edgeHi`).
   const THEMES = {
-    light: { label: '#3f3f46', edge: 'rgba(161,161,170,0.45)', edgeDim: 'rgba(161,161,170,0.08)', dim: '#e4e4e7' },
-    dark: { label: '#a1a1aa', edge: 'rgba(113,113,122,0.50)', edgeDim: 'rgba(113,113,122,0.10)', dim: '#27272a' },
+    light: { label: '#27272a', edge: 'rgba(100,116,139,0.30)', edgeHi: 'rgba(51,65,85,0.75)',
+             edgeDim: 'rgba(100,116,139,0.05)', dim: '#e7e7ea',
+             chipBg: '#ffffff', chipText: '#18181b', chipBorder: 'rgba(0,0,0,0.10)',
+             chipShadow: 'rgba(0,0,0,0.18)', ring: 'rgba(99,102,241,0.95)' },
+    dark:  { label: '#e4e4e7', edge: 'rgba(113,113,122,0.32)', edgeHi: 'rgba(212,212,216,0.62)',
+             edgeDim: 'rgba(113,113,122,0.04)', dim: '#232326',
+             chipBg: '#27272a', chipText: '#fafafa', chipBorder: 'rgba(255,255,255,0.14)',
+             chipShadow: 'rgba(0,0,0,0.55)', ring: 'rgba(129,140,248,0.95)' },
   };
+
+  /**
+   * Sigma's built-in hover renderer hardcodes a `#FFF` label box, so in dark mode
+   * it painted near-white text on a white chip — unreadable. This draws the same
+   * idea (ring on the node + a label chip beside it) with theme colours.
+   */
+  function drawHover(context: CanvasRenderingContext2D, data: any, settings: any) {
+    const size = settings.labelSize;
+    context.font = `${settings.labelWeight} ${size}px ${settings.labelFont}`;
+
+    context.beginPath();
+    context.arc(data.x, data.y, data.size + 2.5, 0, Math.PI * 2);
+    context.lineWidth = 2;
+    context.strokeStyle = pal.ring;
+    context.stroke();
+
+    // The canvas label is clipped to keep the map readable; the chip has room
+    // for the real title, so show that.
+    const label = data.full || (typeof data.label === 'string' ? data.label : '');
+    if (!label) return;
+
+    const padX = 7, padY = 5;
+    const w = context.measureText(label).width + padX * 2;
+    const h = size + padY * 2;
+    const x = data.x + data.size + 7;
+    const y = data.y - h / 2;
+
+    context.beginPath();
+    context.roundRect(x, y, w, h, 5);
+    context.shadowOffsetX = 0;
+    context.shadowOffsetY = 1;
+    context.shadowBlur = 8;
+    context.shadowColor = pal.chipShadow;
+    context.fillStyle = pal.chipBg;
+    context.fill();
+    context.shadowBlur = 0;
+    context.shadowColor = 'transparent';
+    context.lineWidth = 1;
+    context.strokeStyle = pal.chipBorder;
+    context.stroke();
+
+    context.fillStyle = pal.chipText;
+    context.fillText(label, x + padX, data.y + size / 3);
+  }
+
+  // Long Vietnamese titles overlap badly as graph labels, so the canvas gets a
+  // clipped version and the peek panel keeps the full title.
+  const MAX_LABEL = 24;
+  const clip = (s: string) => (s && s.length > MAX_LABEL ? s.slice(0, MAX_LABEL - 1).trimEnd() + '…' : s);
 
   let renderer: any = null;
   let graph: any = null;
@@ -126,7 +185,8 @@ const payload = JSON.stringify({ nodes, edges, typeColors: TYPE_HEX, trackColors
   let pal = THEMES.light;
   let colorBy: 'type' | 'track' = 'type';
   let selected: string | null = null;
-  let focusSet: Set<string> | null = null;   // hovered/selected node + neighbours
+  let focusNode: string | null = null;       // node being hovered or selected
+  let focusSet: Set<string> | null = null;   // focusNode + its neighbours
   let matchSet: Set<string> | null = null;   // search hits
   const hiddenTypes = new Set<string>();
   const hiddenNodes = new Set<string>();     // derived from hiddenTypes, for the edge reducer
@@ -149,7 +209,8 @@ const payload = JSON.stringify({ nodes, edges, typeColors: TYPE_HEX, trackColors
         x: n.x, y: n.y,
         // Obsidian-style: well-connected nodes are bigger and get labelled first.
         size: 3.5 + Math.min(Math.sqrt(n.degree || 0) * 2.1, 11),
-        label: n.label,
+        label: clip(n.label),
+        full: n.label,
         kind: n.type,
         url: n.url,
         summary: n.summary || '',
@@ -170,10 +231,18 @@ const payload = JSON.stringify({ nodes, edges, typeColors: TYPE_HEX, trackColors
       labelSize: 12,
       labelWeight: '500',
       labelColor: { color: pal.label },
+      defaultDrawNodeHover: drawHover,
       labelRenderedSizeThreshold: 10,    // only labels nodes big enough on screen
-      labelDensity: 1,
-      labelGridCellSize: 70,             // sigma's anti-overlap grid
+      labelDensity: 0.45,
+      // The anti-overlap grid keys off node position, but a label extends well
+      // past its own cell — so the cell has to be roughly label-width for long
+      // titles to stop colliding.
+      labelGridCellSize: 200,
       defaultEdgeColor: pal.edge,
+      // 'line' (sigma's default) is a gl.LINES hairline — half a CSS pixel on
+      // retina, i.e. invisible. Rectangle edges honour `size`.
+      defaultEdgeType: 'straight',
+      edgeProgramClasses: { straight: EdgeRectangleProgram },
       minCameraRatio: 0.03,
       maxCameraRatio: 8,
       enableEdgeEvents: false,           // 2.5k edges — don't pay for edge hit-testing
@@ -184,8 +253,6 @@ const payload = JSON.stringify({ nodes, edges, typeColors: TYPE_HEX, trackColors
     fa2 = new FA2Layout(graph, {
       settings: { ...forceAtlas2.inferSettings(graph), barnesHutOptimize: true, slowDown: 20 },
     });
-
-    (window as any).__km = { renderer, graph, get fa2(){return fa2} }; // TEMP DEBUG
 
     wireControls();
 
@@ -201,24 +268,27 @@ const payload = JSON.stringify({ nodes, edges, typeColors: TYPE_HEX, trackColors
     observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
   }
 
-  /** Reducers run on refresh (not per frame), so they can be this expressive. */
+  // Reducers run on refresh, not per frame.
+  //
+  // Hover deliberately leaves node colours ALONE. Repainting all ~700 nodes grey
+  // every time the pointer crossed one read as flicker, and the grey blobs were
+  // harder to look at than the graph itself. Hover now only lights up the edges
+  // of the node under the pointer and names its neighbours. Node dimming is kept
+  // for search, where washing out non-matches is the whole point.
   function nodeReducer(node: string, data: any) {
     const res: any = { ...data };
     if (hiddenTypes.has(data.kind)) { res.hidden = true; return res; }
 
     res.color = colorBy === 'track' ? data.colorTrack : data.colorType;
 
-    const inFocus = !focusSet || focusSet.has(node);
-    const inMatch = !matchSet || matchSet.has(node);
-    if (!inFocus || !inMatch) {
+    if (matchSet && !matchSet.has(node)) {
       res.color = pal.dim;
       res.label = '';
-      res.zIndex = 0;
-    } else if (focusSet || matchSet) {
-      res.forceLabel = true;             // always name what you're pointing at
-      res.zIndex = 1;
+      return res;
     }
-    if (node === selected) res.highlighted = true;
+    if (matchSet) res.forceLabel = true;
+    if (focusSet?.has(node)) { res.forceLabel = true; res.zIndex = 1; }
+    if (node === focusNode) res.highlighted = true;
     return res;
   }
 
@@ -228,18 +298,36 @@ const payload = JSON.stringify({ nodes, edges, typeColors: TYPE_HEX, trackColors
     const t = graph.target(edge);
     if (hiddenNodes.has(s) || hiddenNodes.has(t)) { res.hidden = true; return res; }
 
-    const lit =
-      (!focusSet || (focusSet.has(s) && focusSet.has(t))) &&
-      (!matchSet || (matchSet.has(s) && matchSet.has(t)));
-    res.color = lit ? pal.edge : pal.edgeDim;
-    res.size = lit ? 1 : 0.6;
+    if (matchSet && !(matchSet.has(s) && matchSet.has(t))) {
+      res.color = pal.edgeDim; res.size = 0.6; return res;
+    }
+    if (focusNode) {
+      const incident = s === focusNode || t === focusNode;
+      res.color = incident ? pal.edgeHi : pal.edgeDim;
+      res.size = incident ? 1.6 : 0.55;
+      return res;
+    }
+    res.color = pal.edge;
+    res.size = 0.9;
     return res;
   }
 
   // Attributes never change here, only the reducers' inputs — skip reindexation.
-  function refresh() { renderer?.refresh({ skipIndexation: true }); }
+  // Coalesced to one refresh per frame: a fast pointer sweep fires enterNode /
+  // leaveNode far more often than once per frame, and each refresh re-uploads
+  // the edge buffers.
+  let refreshQueued = false;
+  function refresh() {
+    if (refreshQueued || !renderer) return;
+    refreshQueued = true;
+    requestAnimationFrame(() => {
+      refreshQueued = false;
+      renderer?.refresh({ skipIndexation: true });
+    });
+  }
 
   function setFocus(node: string | null) {
+    focusNode = node;
     focusSet = node ? new Set([node, ...graph.neighbors(node)]) : null;
     refresh();
   }
@@ -385,7 +473,7 @@ const payload = JSON.stringify({ nodes, edges, typeColors: TYPE_HEX, trackColors
     (document.getElementById('km-peek-dot') as HTMLElement).style.background =
       colorBy === 'track' ? a.colorTrack : a.colorType;
     (document.getElementById('km-peek-type') as HTMLElement).textContent = a.kind || '';
-    (document.getElementById('km-peek-title') as HTMLElement).textContent = a.label || '';
+    (document.getElementById('km-peek-title') as HTMLElement).textContent = a.full || a.label || '';
     (document.getElementById('km-peek-summary') as HTMLElement).textContent = a.summary || '';
     (document.getElementById('km-peek-link') as HTMLAnchorElement).href = a.url || '#';
     peek.classList.remove('hidden');
@@ -403,7 +491,8 @@ const payload = JSON.stringify({ nodes, edges, typeColors: TYPE_HEX, trackColors
     fa2?.kill(); fa2 = null;
     renderer?.kill(); renderer = null;
     graph = null;
-    selected = null; focusSet = null; matchSet = null;
+    selected = null; focusNode = null; focusSet = null; matchSet = null;
+    refreshQueued = false;
     hiddenTypes.clear(); hiddenNodes.clear();
     physicsPinned = false; dragged = null; didDrag = false;
   }
