@@ -2757,3 +2757,401 @@ edges:
   - source: concept-thought-experiment
     target: concept-premortem
     rel: related
+
+  # --- Philosophy M2: epistemology ---
+  - source: concept-necessary-vs-sufficient
+    target: concept-knowledge-as-justified-belief
+    rel: supports
+  - source: concept-knowledge-as-justified-belief
+    target: concept-gettier-problem
+    rel: leads-to
+  - source: concept-knowledge-as-justified-belief
+    target: concept-skepticism-and-cogito
+    rel: leads-to
+  - source: concept-skepticism-and-cogito
+    target: concept-foundationalism-vs-coherentism
+    rel: leads-to
+  - source: concept-rationalism-vs-empiricism
+    target: concept-a-priori-a-posteriori
+    rel: leads-to
+  - source: concept-rationalism-vs-empiricism
+    target: concept-problem-of-induction
+    rel: leads-to
+  - source: concept-a-priori-a-posteriori
+    target: concept-problem-of-induction
+    rel: related
+  - source: concept-foundationalism-vs-coherentism
+    target: concept-deduction-induction-abduction
+    rel: related
+  - source: concept-gettier-problem
+    target: concept-thought-experiment
+    rel: related
+  - source: concept-problem-of-induction
+    target: concept-base-rates-bayesian
+    rel: supports
+  - source: concept-problem-of-induction
+    target: concept-ruin-and-margin
+    rel: related
+  - source: concept-knowledge-as-justified-belief
+    target: concept-calibration
+    rel: leads-to
+  - source: concept-skepticism-and-cogito
+    target: concept-triangulate-a-claim
+    rel: supports
+
+  # --- Philosophy M3: philosophy of science ---
+  - source: concept-problem-of-induction
+    target: concept-falsifiability
+    rel: leads-to
+  - source: concept-falsifiability
+    target: concept-demarcation-problem
+    rel: leads-to
+  - source: concept-falsifiability
+    target: concept-underdetermination
+    rel: related
+  - source: concept-underdetermination
+    target: concept-demarcation-problem
+    rel: supports
+  - source: concept-paradigm-and-normal-science
+    target: concept-demarcation-problem
+    rel: supports
+  - source: concept-falsifiability
+    target: concept-paradigm-and-normal-science
+    rel: related
+  - source: concept-underdetermination
+    target: concept-scientific-realism-vs-instrumentalism
+    rel: leads-to
+  - source: concept-scientific-realism-vs-instrumentalism
+    target: concept-deduction-induction-abduction
+    rel: related
+  - source: concept-paradigm-and-normal-science
+    target: concept-map-vs-territory
+    rel: related
+  - source: concept-falsifiability
+    target: concept-hypothesis-validation
+    rel: supports
+  - source: concept-demarcation-problem
+    target: concept-triangulate-a-claim
+    rel: supports
+
+  # --- Philosophy M4: metaphysics ---
+  - source: concept-being-and-substance
+    target: concept-universals-vs-particulars
+    rel: leads-to
+  - source: concept-universals-vs-particulars
+    target: concept-possible-worlds-and-modality
+    rel: leads-to
+  - source: concept-causality
+    target: concept-possible-worlds-and-modality
+    rel: leads-to
+  - source: concept-causality
+    target: concept-free-will-and-determinism
+    rel: leads-to
+  - source: concept-time-a-series-b-series
+    target: concept-free-will-and-determinism
+    rel: related
+  - source: concept-being-and-substance
+    target: concept-time-a-series-b-series
+    rel: related
+  - source: concept-possible-worlds-and-modality
+    target: concept-a-priori-a-posteriori
+    rel: related
+  - source: concept-problem-of-induction
+    target: concept-causality
+    rel: leads-to
+  - source: concept-thought-experiment
+    target: concept-being-and-substance
+    rel: supports
+  - source: concept-universals-vs-particulars
+    target: concept-occams-razor
+    rel: related
+  - source: concept-causality
+    target: concept-second-order-thinking
+    rel: related
+  - source: concept-free-will-and-determinism
+    target: concept-high-agency
+    rel: related
+
+  # --- Philosophy M5: philosophy of mind ---
+  - source: concept-mind-body-problem
+    target: concept-dualism-vs-physicalism
+    rel: leads-to
+  - source: concept-dualism-vs-physicalism
+    target: concept-hard-problem-of-consciousness
+    rel: leads-to
+  - source: concept-hard-problem-of-consciousness
+    target: concept-qualia-and-marys-room
+    rel: leads-to
+  - source: concept-qualia-and-marys-room
+    target: concept-dualism-vs-physicalism
+    rel: evaluates
+  - source: concept-dualism-vs-physicalism
+    target: concept-chinese-room-and-turing-test
+    rel: leads-to
+  - source: concept-mind-body-problem
+    target: concept-personal-identity
+    rel: related
+  - source: concept-being-and-substance
+    target: concept-personal-identity
+    rel: leads-to
+  - source: concept-possible-worlds-and-modality
+    target: concept-hard-problem-of-consciousness
+    rel: supports
+  - source: concept-chinese-room-and-turing-test
+    target: concept-llm
+    rel: related
+  - source: concept-chinese-room-and-turing-test
+    target: concept-ai-agent
+    rel: related
+  - source: concept-personal-identity
+    target: concept-time-a-series-b-series
+    rel: related
+  - source: concept-hard-problem-of-consciousness
+    target: concept-ai-ux-trust
+    rel: related
+
+  # --- Philosophy M6: ethics ---
+  - source: concept-is-ought-gap
+    target: concept-moral-realism-vs-relativism
+    rel: leads-to
+  - source: concept-moral-realism-vs-relativism
+    target: concept-consequentialism
+    rel: leads-to
+  - source: concept-consequentialism
+    target: concept-deontology
+    rel: related
+  - source: concept-deontology
+    target: concept-virtue-ethics
+    rel: related
+  - source: concept-consequentialism
+    target: concept-trolley-problem
+    rel: evaluates
+  - source: concept-deontology
+    target: concept-trolley-problem
+    rel: evaluates
+  - source: concept-trolley-problem
+    target: concept-thought-experiment
+    rel: related
+  - source: concept-free-will-and-determinism
+    target: concept-moral-luck
+    rel: leads-to
+  - source: concept-moral-luck
+    target: concept-virtue-ethics
+    rel: related
+  - source: concept-is-ought-gap
+    target: concept-argument-and-validity
+    rel: related
+  - source: concept-consequentialism
+    target: concept-expected-value-thinking
+    rel: related
+  - source: concept-virtue-ethics
+    target: concept-deliberate-practice
+    rel: related
+  - source: concept-deontology
+    target: concept-conflict-of-interest
+    rel: supports
+  - source: concept-moral-luck
+    target: concept-ergodicity
+    rel: related
+
+  # --- Philosophy M7: political philosophy ---
+  - source: concept-state-of-nature-and-social-contract
+    target: concept-justice-as-fairness
+    rel: leads-to
+  - source: concept-justice-as-fairness
+    target: concept-desert-and-entitlement
+    rel: related
+  - source: concept-state-of-nature-and-social-contract
+    target: concept-harm-principle
+    rel: leads-to
+  - source: concept-harm-principle
+    target: concept-desert-and-entitlement
+    rel: related
+  - source: concept-desert-and-entitlement
+    target: concept-alienation-and-labor
+    rel: related
+  - source: concept-alienation-and-labor
+    target: concept-power-and-discourse
+    rel: leads-to
+  - source: concept-consequentialism
+    target: concept-justice-as-fairness
+    rel: related
+  - source: concept-deontology
+    target: concept-justice-as-fairness
+    rel: supports
+  - source: concept-moral-luck
+    target: concept-justice-as-fairness
+    rel: supports
+  - source: concept-power-and-discourse
+    target: concept-vanity-vs-actionable-metrics
+    rel: related
+  - source: concept-harm-principle
+    target: concept-privacy-and-consent
+    rel: related
+  - source: concept-alienation-and-labor
+    target: concept-delegate-outcomes
+    rel: related
+
+  # --- Philosophy M8: eastern philosophy ---
+  - source: concept-four-noble-truths
+    target: concept-anatta-and-anicca
+    rel: leads-to
+  - source: concept-anatta-and-anicca
+    target: concept-dependent-origination
+    rel: leads-to
+  - source: concept-dependent-origination
+    target: concept-zen-koan-and-satori
+    rel: leads-to
+  - source: concept-anatta-and-anicca
+    target: concept-atman-and-brahman
+    rel: evaluates
+  - source: concept-dao-and-wu-wei
+    target: concept-zhuangzi-butterfly
+    rel: leads-to
+  - source: concept-dao-and-wu-wei
+    target: concept-confucian-role-ethics
+    rel: evaluates
+  - source: concept-zhuangzi-butterfly
+    target: concept-zen-koan-and-satori
+    rel: supports
+  - source: concept-anatta-and-anicca
+    target: concept-personal-identity
+    rel: related
+  - source: concept-dependent-origination
+    target: concept-causality
+    rel: related
+  - source: concept-confucian-role-ethics
+    target: concept-virtue-ethics
+    rel: related
+  - source: concept-atman-and-brahman
+    target: concept-being-and-substance
+    rel: related
+  - source: concept-zen-koan-and-satori
+    target: concept-qualia-and-marys-room
+    rel: related
+  - source: concept-four-noble-truths
+    target: concept-emotional-regulation
+    rel: related
+  - source: concept-dao-and-wu-wei
+    target: concept-when-not-to-optimize
+    rel: related
+
+  # --- Philosophy M9: existentialism & meaning ---
+  - source: concept-nietzsche-death-of-god
+    target: concept-sartre-bad-faith
+    rel: leads-to
+  - source: concept-kierkegaard-leap-of-faith
+    target: concept-camus-absurd-and-sisyphus
+    rel: evaluates
+  - source: concept-camus-absurd-and-sisyphus
+    target: concept-sartre-bad-faith
+    rel: related
+  - source: concept-sartre-bad-faith
+    target: concept-heidegger-being-toward-death
+    rel: related
+  - source: concept-heidegger-being-toward-death
+    target: concept-memento-mori
+    rel: leads-to
+  - source: concept-stoic-dichotomy-of-control
+    target: concept-memento-mori
+    rel: supports
+  - source: concept-kierkegaard-leap-of-faith
+    target: concept-nietzsche-death-of-god
+    rel: related
+  - source: concept-nietzsche-death-of-god
+    target: concept-moral-realism-vs-relativism
+    rel: related
+  - source: concept-sartre-bad-faith
+    target: concept-free-will-and-determinism
+    rel: related
+  - source: concept-stoic-dichotomy-of-control
+    target: concept-four-noble-truths
+    rel: related
+  - source: concept-stoic-dichotomy-of-control
+    target: concept-emotional-regulation
+    rel: supports
+  - source: concept-memento-mori
+    target: concept-possible-worlds-and-modality
+    rel: related
+  - source: concept-heidegger-being-toward-death
+    target: concept-personal-identity
+    rel: related
+  - source: concept-camus-absurd-and-sisyphus
+    target: concept-antifragility
+    rel: related
+
+  # --- Philosophy M10: aesthetics ---
+  - source: concept-what-is-beauty
+    target: concept-kant-disinterested-judgment
+    rel: leads-to
+  - source: concept-kant-disinterested-judgment
+    target: concept-the-sublime
+    rel: leads-to
+  - source: concept-what-is-beauty
+    target: concept-mimesis-to-institutional-theory
+    rel: leads-to
+  - source: concept-mimesis-to-institutional-theory
+    target: concept-taste-and-canon
+    rel: leads-to
+  - source: concept-necessary-vs-sufficient
+    target: concept-mimesis-to-institutional-theory
+    rel: supports
+  - source: concept-taste-and-canon
+    target: concept-power-and-discourse
+    rel: related
+  - source: concept-the-sublime
+    target: concept-memento-mori
+    rel: related
+  - source: concept-taste-and-canon
+    target: concept-design-taste-and-critique
+    rel: related
+  - source: concept-what-is-beauty
+    target: concept-universals-vs-particulars
+    rel: related
+  - source: concept-mimesis-to-institutional-theory
+    target: concept-gettier-problem
+    rel: related
+
+  # --- Philosophy M11: technology & AI ---
+  - source: concept-enframing-and-technology
+    target: concept-technological-determinism
+    rel: leads-to
+  - source: concept-technological-determinism
+    target: concept-attention-and-autonomy
+    rel: leads-to
+  - source: concept-attention-and-autonomy
+    target: concept-value-alignment-as-philosophy
+    rel: related
+  - source: concept-hard-problem-of-consciousness
+    target: concept-ai-moral-status
+    rel: leads-to
+  - source: concept-chinese-room-and-turing-test
+    target: concept-ai-moral-status
+    rel: supports
+  - source: concept-ai-moral-status
+    target: concept-value-alignment-as-philosophy
+    rel: related
+  - source: concept-is-ought-gap
+    target: concept-value-alignment-as-philosophy
+    rel: supports
+  - source: concept-justice-as-fairness
+    target: concept-value-alignment-as-philosophy
+    rel: supports
+  - source: concept-enframing-and-technology
+    target: concept-dao-and-wu-wei
+    rel: related
+  - source: concept-attention-and-autonomy
+    target: concept-deep-work
+    rel: related
+  - source: concept-attention-and-autonomy
+    target: concept-harm-principle
+    rel: related
+  - source: concept-value-alignment-as-philosophy
+    target: concept-guardrails
+    rel: related
+  - source: concept-value-alignment-as-philosophy
+    target: concept-responsible-ai-product
+    rel: related
+  - source: concept-technological-determinism
+    target: concept-power-and-discourse
+    rel: related
