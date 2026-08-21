@@ -2718,3 +2718,42 @@ edges:
   - source: concept-feedback-giving-receiving
     target: concept-difficult-conversations
     rel: leads-to
+
+  # --- Philosophy M1: logic & argument ---
+  - source: concept-what-is-philosophy
+    target: concept-argument-and-validity
+    rel: leads-to
+  - source: concept-argument-and-validity
+    target: concept-deduction-induction-abduction
+    rel: leads-to
+  - source: concept-argument-and-validity
+    target: concept-logical-fallacies
+    rel: leads-to
+  - source: concept-necessary-vs-sufficient
+    target: concept-argument-and-validity
+    rel: supports
+  - source: concept-thought-experiment
+    target: concept-necessary-vs-sufficient
+    rel: supports
+  - source: concept-socratic-method
+    target: concept-what-is-philosophy
+    rel: supports
+  - source: concept-logical-fallacies
+    target: concept-thought-experiment
+    rel: leads-to
+  # cross-track: triết học <-> công cụ tư duy đã có trong lab
+  - source: concept-what-is-philosophy
+    target: concept-first-principles-thinking
+    rel: supports
+  - source: concept-deduction-induction-abduction
+    target: concept-base-rates-bayesian
+    rel: leads-to
+  - source: concept-logical-fallacies
+    target: concept-cognitive-biases
+    rel: related
+  - source: concept-socratic-method
+    target: concept-feynman-technique
+    rel: supports
+  - source: concept-thought-experiment
+    target: concept-premortem
+    rel: related

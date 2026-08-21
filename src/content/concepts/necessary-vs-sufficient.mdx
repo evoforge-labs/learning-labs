@@ -1,0 +1,57 @@
+---
+id: concept-necessary-vs-sufficient
+title: "Necessary vs Sufficient Conditions"
+type: "concept"
+aliases: ["điều kiện cần và đủ", "necessary condition", "sufficient condition", "cần vs đủ"]
+tags: [philosophy, logic, argumentation, critical-thinking, definitions]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+import Sketch from '../../components/content/Sketch.astro';
+
+Cái cửa có hai ổ khoá. Bạn tra chìa vào ổ trên, xoay đúng — cửa vẫn không mở. Chìa đó **cần**, nhưng chưa **đủ**.
+
+Gần như mọi tranh cãi kiểu *"tôi làm đúng hết mà sao vẫn không được"* nằm ở chỗ lẫn hai chữ này.
+
+<Sketch src="/sketches/phil/necessary-vs-sufficient.webp" alt="Cánh cửa gỗ nặng có hai ổ khoá riêng biệt; một chìa đã tra vào ổ trên nhưng cửa vẫn đóng; chìa thứ hai nằm dưới sàn" caption="Cần mà chưa đủ: xoay đúng một ổ vẫn không mở được cửa." />
+
+## Là gì
+
+- **A là điều kiện cần cho B**: không có A thì không có B. (Không oxy thì không có lửa.)
+- **A là điều kiện đủ cho B**: có A thì chắc chắn có B. (Chặt đầu là đủ để chết.)
+
+Hai chiều độc lập nhau, nên có đủ bốn khả năng: cần mà không đủ (oxy cho lửa), đủ mà không cần (chặt đầu cho chết — còn nhiều cách khác), cả cần cả đủ (là số chia hết cho 2 cho việc là số chẵn), không cần không đủ (mặc áo đỏ cho việc thi đỗ).
+
+Trong logic: *A đủ cho B* viết là "nếu A thì B"; *A cần cho B* viết là "nếu B thì A". Đảo ngược hai cái này là ngụy biện khẳng định hậu quả trong hình dạng đời thường nhất của nó.
+
+## Ví dụ
+
+*"Học giỏi thì đỗ trường đó."* Đây là tuyên bố **đủ**. Còn *"đỗ trường đó thì phải học giỏi"* là tuyên bố **cần**. Hai câu khác nhau hoàn toàn, và cả hai đều có thể sai theo cách riêng: câu đầu sai nếu trường còn xét phỏng vấn, câu sau sai nếu có suất ưu tiên.
+
+Tại sao chuyện này quan trọng ngoài lớp học logic: **định nghĩa** là gì, nếu không phải một tập điều kiện cần và đủ? Từ Socrates trở đi, triết học tìm định nghĩa theo đúng công thức đó — *cái gì làm một hành động là công bằng, ở mọi trường hợp công bằng và chỉ ở đó?* Và đòn tấn công kinh điển vào một định nghĩa luôn là: nêu một ca thoả đủ điều kiện mà **không** phải cái được định nghĩa. Bạn sẽ gặp lại nước đi này ở phản ví dụ Gettier (chặng 2 của track), nơi ba điều kiện của "biết" thoả hết mà vẫn không ai gọi đó là biết.
+
+## Phản biện chính
+
+Wittgenstein đặt câu hỏi ngược: nếu nhiều khái niệm ta dùng trơn tru **không có** tập điều kiện cần-và-đủ nào thì sao? Thử định nghĩa "trò chơi": bóng đá có thắng thua, xếp hình một mình thì không; cờ có luật cứng, trẻ con ném bóng qua tường thì không. Không có sợi chỉ nào chạy suốt — chỉ có **tương đồng gia đình**, các ca giống nhau chồng lấn từng đoạn như những sợi trong một cuộn dây.
+
+Nếu đúng vậy thì việc đòi định nghĩa chặt cho mọi khái niệm là một sai lầm phương pháp, không phải một tiêu chuẩn cao. Đây là tranh chấp còn mở: phần lớn triết học phân tích vẫn làm việc bằng điều kiện cần/đủ, đồng thời thừa nhận có những khái niệm cụm mà lối đó bó tay.
+
+<Callout title="Góc kỹ thuật">
+Ngoài đời, nguyên nhân hiếm khi đủ một mình. Mackie đề xuất điều kiện **INUS**: một nguyên nhân là *phần không đủ nhưng cần thiết của một tổ hợp không cần thiết nhưng đủ*. Tia lửa không đủ để gây cháy; nhưng tia lửa cộng khí gas cộng oxy thì đủ, và trong tổ hợp đó tia lửa là phần không thể thiếu. Đó là lý do câu "nguyên nhân của vụ cháy là X" luôn nói dối một chút.
+</Callout>
+
+<Callout title="Nhớ nhé">
+"Nếu A thì B" và "chỉ khi A thì B" là hai câu khác nhau. Nhầm chiều là nhầm cả kết luận.
+</Callout>
+
+## Đọc thêm
+
+- [SEP — Necessary and Sufficient Conditions](https://plato.stanford.edu/entries/necessary-sufficient/) — Bài chuẩn mực; đọc phần phân biệt điều kiện với hàm ý vật chất.
+- [SEP — Indicative Conditionals](https://plato.stanford.edu/entries/conditionals/) — Vì sao câu "nếu... thì" trong tiếng người không trùng khớp với phép hàm ý trong logic.
+- [SEP — Analysis](https://plato.stanford.edu/entries/analysis/) — Truyền thống phân tích khái niệm bằng điều kiện cần và đủ, và những khủng hoảng của nó.
+
+## Tự kiểm tra
+
+1. Với "một startup thành công": nêu một điều kiện cần mà không đủ, và một điều kiện đủ mà không cần. Nếu không nêu được cái thứ hai, điều đó nói gì?
+2. Câu *"Chỉ khi có mật khẩu bạn mới vào được hệ thống"* nói về điều kiện cần hay đủ? Viết lại dưới dạng "nếu... thì".
+3. (Siêu) Chọn một khái niệm bạn dùng hằng ngày ("bug", "công bằng", "bạn bè"). Nó có định nghĩa cần-và-đủ, hay chỉ có tương đồng gia đình?
