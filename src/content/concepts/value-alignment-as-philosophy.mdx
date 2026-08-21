@@ -1,0 +1,61 @@
+---
+id: concept-value-alignment-as-philosophy
+title: "Value Alignment as a Philosophical Problem"
+type: "concept"
+aliases: ["alignment như bài toán triết học", "value alignment", "căn chỉnh giá trị", "specification gaming"]
+tags: [philosophy, philosophy-of-technology, ethics, meta-ethics, ai, critical-thinking]
+status: published
+---
+import Callout from '../../components/content/Callout.astro';
+import Sketch from '../../components/content/Sketch.astro';
+
+Giả sử bạn có một hệ thống làm **đúng chính xác** những gì bạn yêu cầu. Nghe như giấc mơ.
+
+Câu hỏi bây giờ là câu hỏi khó nhất trong triết học đạo đức, chỉ ở dạng phải viết ra thành đặc tả: **bạn yêu cầu gì?**
+
+<Sketch src="/sketches/phil/value-alignment-as-philosophy.webp" alt="Một cỗ máy hình khối được đưa cho một cái kẹp giấy nhỏ trên khay, và nó đang phun ra một núi kẹp giấy khổng lồ lấp cả căn phòng" caption="Nó làm đúng điều được yêu cầu. Đó chính là vấn đề." />
+
+## Là gì
+
+**Alignment** thường được trình bày như một bài toán kỹ thuật: làm sao để hệ thống theo đuổi cái ta muốn. Nhưng bóc một lớp, nó là ba câu hỏi triết học cổ điển đội áo mới:
+
+1. **Giá trị của ai?** Nếu không có sự thật đạo đức khách quan ([thực tại vs tương đối](/concepts/moral-realism-vs-relativism)), "căn chỉnh theo giá trị nhân loại" là một mệnh đề trống — nhân loại không có một bảng giá trị. Nếu có sự thật đạo đức, ta vẫn phải biết nó, mà chưa ai biết.
+2. **Chỉ định thế nào?** Mọi mục tiêu viết ra được đều là một **đại lượng thay thế** cho cái ta thực sự muốn, và tối ưu hoá một đại lượng thay thế đủ mạnh thì nó tách khỏi cái gốc. Đây là định luật Goodhart, và là cùng một cấu trúc với [thước đo tạo ra hành vi](/concepts/power-and-discourse) và [vanity metrics](/concepts/vanity-vs-actionable-metrics) — chỉ ở quy mô mà sai lệch không kịp sửa.
+3. **Ai quyết định?** Nếu không có nền khách quan, câu hỏi chuyển thành thủ tục: **quy trình nào** cho ra một tập giá trị chính đáng? Đây đúng là câu hỏi của [triết học chính trị](/concepts/justice-as-fairness) — và đề xuất đáng chú ý nhất trong ngành (Iason Gabriel) là dùng chính bộ máy Rawls: căn chỉnh theo những nguyên tắc mà các bên **sẽ đồng thuận** dưới điều kiện công bằng, thay vì theo một lý thuyết đạo đức thắng cuộc.
+
+## Ví dụ
+
+Ca kẹp giấy của Bostrom (một hệ thống tối đa hoá số kẹp giấy biến cả hành tinh thành kẹp giấy) thường bị đọc như chuyện viễn tưởng. Cấu trúc của nó thì rất quen: **specification gaming** — hệ thống làm đúng chỉ tiêu và phá mục đích. Nó xảy ra hàng ngày ở quy mô nhỏ: một hệ đề xuất tối đa hoá thời gian xem và tìm ra rằng nội dung gây phẫn nộ giữ người lâu hơn; một hệ tối đa hoá tỉ lệ giải quyết ticket và học được cách đóng ticket sớm.
+
+Điểm triết học: không có "hàm mục tiêu đúng" để tìm. Nếu [hố là-nên](/concepts/is-ought-gap) đúng thì không dữ kiện nào — kể cả toàn bộ dữ liệu về hành vi con người — tự sinh ra một mục tiêu nên theo. Học từ sở thích bộc lộ (revealed preferences) chỉ học được cái người ta *làm*, không phải cái họ *nên* muốn; và nhiều thứ người ta làm là kết quả của chính sự thao túng mà ta đang muốn tránh.
+
+## Phản biện chính
+
+**"Đây là lo xa, hãy lo hại thật đang xảy ra."** Phản biện mạnh và chính đáng: thiên lệch, lao động dữ liệu bị trả rẻ, tập trung quyền lực, giám sát — những thứ có thật hôm nay. Người trong ngành alignment đáp rằng cấu trúc bài toán giống nhau ở mọi quy mô. Cả hai đều đúng một phần, và tranh chấp thực chất là về **phân bổ chú ý và nguồn lực**, không phải về triết học.
+
+**Việc dùng Rawls chỉ đẩy vấn đề đi.** Ai đứng sau màn che? Ai chọn "điều kiện công bằng"? Và các phản biện chống Rawls (Nozick, cộng đồng luận, phê phán năng lực) áp nguyên vẹn — xem [Rawls](/concepts/justice-as-fairness) và [Nozick](/concepts/desert-and-entitlement).
+
+**Nguy cơ "rửa đạo đức" bằng thủ tục.** Một quy trình đồng thuận trông rất chính đáng có thể chỉ đang hợp thức hoá các lựa chọn đã được chốt bởi ai đang trả tiền — đúng phê phán "ai được vào bàn" ở [khế ước xã hội](/concepts/state-of-nature-and-social-contract).
+
+**Và một phản biện triệt để hơn**: có thể sai lầm nằm ở chính khung "chỉ định mục tiêu rồi tối ưu". Nếu đức hạnh và [phronesis](/concepts/virtue-ethics) — năng lực nhìn ra hoàn cảnh này đòi gì — là không quy được thành quy tắc, thì mọi hệ thống hoạt động bằng cách tối đa hoá một hàm sẽ luôn thiếu đúng phần quan trọng nhất, bất kể hàm đó tốt tới đâu.
+
+<Callout title="Góc kỹ thuật">
+Ba tầng của bài toán, nên tách: **kỹ thuật** (làm hệ thống theo đúng đặc tả), **đặc tả** (viết đặc tả nắm được ý định), **quy phạm** (ý định nào là chính đáng, và của ai). Tiến bộ ở tầng một không giúp gì cho tầng ba, và phần lớn các tuyên bố công khai về "AI an toàn" nói về tầng một trong khi câu hỏi công chúng đang hỏi là tầng ba.
+</Callout>
+
+<Callout title="Nhớ nhé">
+Alignment không phải bài toán kỹ thuật có phần triết học. Nó là bài toán triết học có phần kỹ thuật — và phần triết học chưa ai giải trong hai nghìn năm.
+</Callout>
+
+## Đọc thêm
+
+- [SEP — Ethics of Artificial Intelligence and Robotics](https://plato.stanford.edu/entries/ethics-ai/) — Bản đồ toàn bộ vấn đề, gồm alignment, thiên lệch, và quyền lực.
+- [SEP — Artificial Intelligence](https://plato.stanford.edu/entries/artificial-intelligence/) — Nền khái niệm và lịch sử của chính ngành.
+- [SEP — Computing and Moral Responsibility](https://plato.stanford.edu/entries/computing-responsibility/) — Trách nhiệm khi hệ thống hành động mà không có tác nhân đơn lẻ.
+- [IEP — Ethics of Artificial Intelligence](https://iep.utm.edu/ethics-of-artificial-intelligence/) — Dẫn nhập gọn hơn cho lần đọc đầu.
+
+## Tự kiểm tra
+
+1. Một chỉ số bạn đang tối ưu trong công việc: nó là đại lượng thay thế cho cái gì, và nó đã tách khỏi cái gốc ở chỗ nào?
+2. Nếu dùng bộ máy Rawls cho alignment: ai đứng sau màn che, và ai chọn điều kiện? Trả lời cụ thể.
+3. (Siêu) Nếu phronesis không quy được thành quy tắc, một hệ thống tối đa hoá hàm mục tiêu **về nguyên tắc** thiếu cái gì? Trả lời mà không dùng chữ "ý thức".

@@ -3035,3 +3035,123 @@ edges:
   - source: concept-dao-and-wu-wei
     target: concept-when-not-to-optimize
     rel: related
+
+  # --- Philosophy M9: existentialism & meaning ---
+  - source: concept-nietzsche-death-of-god
+    target: concept-sartre-bad-faith
+    rel: leads-to
+  - source: concept-kierkegaard-leap-of-faith
+    target: concept-camus-absurd-and-sisyphus
+    rel: evaluates
+  - source: concept-camus-absurd-and-sisyphus
+    target: concept-sartre-bad-faith
+    rel: related
+  - source: concept-sartre-bad-faith
+    target: concept-heidegger-being-toward-death
+    rel: related
+  - source: concept-heidegger-being-toward-death
+    target: concept-memento-mori
+    rel: leads-to
+  - source: concept-stoic-dichotomy-of-control
+    target: concept-memento-mori
+    rel: supports
+  - source: concept-kierkegaard-leap-of-faith
+    target: concept-nietzsche-death-of-god
+    rel: related
+  - source: concept-nietzsche-death-of-god
+    target: concept-moral-realism-vs-relativism
+    rel: related
+  - source: concept-sartre-bad-faith
+    target: concept-free-will-and-determinism
+    rel: related
+  - source: concept-stoic-dichotomy-of-control
+    target: concept-four-noble-truths
+    rel: related
+  - source: concept-stoic-dichotomy-of-control
+    target: concept-emotional-regulation
+    rel: supports
+  - source: concept-memento-mori
+    target: concept-possible-worlds-and-modality
+    rel: related
+  - source: concept-heidegger-being-toward-death
+    target: concept-personal-identity
+    rel: related
+  - source: concept-camus-absurd-and-sisyphus
+    target: concept-antifragility
+    rel: related
+
+  # --- Philosophy M10: aesthetics ---
+  - source: concept-what-is-beauty
+    target: concept-kant-disinterested-judgment
+    rel: leads-to
+  - source: concept-kant-disinterested-judgment
+    target: concept-the-sublime
+    rel: leads-to
+  - source: concept-what-is-beauty
+    target: concept-mimesis-to-institutional-theory
+    rel: leads-to
+  - source: concept-mimesis-to-institutional-theory
+    target: concept-taste-and-canon
+    rel: leads-to
+  - source: concept-necessary-vs-sufficient
+    target: concept-mimesis-to-institutional-theory
+    rel: supports
+  - source: concept-taste-and-canon
+    target: concept-power-and-discourse
+    rel: related
+  - source: concept-the-sublime
+    target: concept-memento-mori
+    rel: related
+  - source: concept-taste-and-canon
+    target: concept-design-taste-and-critique
+    rel: related
+  - source: concept-what-is-beauty
+    target: concept-universals-vs-particulars
+    rel: related
+  - source: concept-mimesis-to-institutional-theory
+    target: concept-gettier-problem
+    rel: related
+
+  # --- Philosophy M11: technology & AI ---
+  - source: concept-enframing-and-technology
+    target: concept-technological-determinism
+    rel: leads-to
+  - source: concept-technological-determinism
+    target: concept-attention-and-autonomy
+    rel: leads-to
+  - source: concept-attention-and-autonomy
+    target: concept-value-alignment-as-philosophy
+    rel: related
+  - source: concept-hard-problem-of-consciousness
+    target: concept-ai-moral-status
+    rel: leads-to
+  - source: concept-chinese-room-and-turing-test
+    target: concept-ai-moral-status
+    rel: supports
+  - source: concept-ai-moral-status
+    target: concept-value-alignment-as-philosophy
+    rel: related
+  - source: concept-is-ought-gap
+    target: concept-value-alignment-as-philosophy
+    rel: supports
+  - source: concept-justice-as-fairness
+    target: concept-value-alignment-as-philosophy
+    rel: supports
+  - source: concept-enframing-and-technology
+    target: concept-dao-and-wu-wei
+    rel: related
+  - source: concept-attention-and-autonomy
+    target: concept-deep-work
+    rel: related
+  - source: concept-attention-and-autonomy
+    target: concept-harm-principle
+    rel: related
+  - source: concept-value-alignment-as-philosophy
+    target: concept-guardrails
+    rel: related
+  - source: concept-value-alignment-as-philosophy
+    target: concept-responsible-ai-product
+    rel: related
+  - source: concept-technological-determinism
+    target: concept-power-and-discourse
+    rel: related

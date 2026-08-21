@@ -2,6 +2,7 @@
 import BaseLayout from '../components/layout/BaseLayout.astro';
 import KnowledgeGraph from '../components/content/KnowledgeGraph.astro';
 import { buildGraph } from '../lib/graph';
+import { layoutGraph } from '../lib/graph-layout';
 import { COLLECTION_TYPES } from '../lib/types';
 import { getAll } from '../lib/content';
 import { readFileSync } from 'node:fs';
@@ -18,11 +19,13 @@ for (const type of COLLECTION_TYPES) {
 let extra: any[] = [];
 try { extra = (yaml.load(readFileSync('src/content/registry/knowledge-map.yaml', 'utf8'), { schema: yaml.CORE_SCHEMA }) as any)?.edges ?? []; } catch {}
 const { nodes, edges } = buildGraph(docs, extra);
+// ForceAtlas2 runs here, at build time — the browser gets finished coordinates.
+const positioned = layoutGraph(nodes, edges);
 ---
 <BaseLayout title="Knowledge Map">
   <main class="max-w-[1700px] mx-auto px-4 py-8">
     <h1 class="text-2xl font-bold tracking-tight text-zinc-900 dark:text-white mb-4">Knowledge Map</h1>
     <p class="text-sm text-zinc-500 mb-4">Click legend để lọc theo loại · rê chuột để làm nổi node liên quan · click một node để xem nhanh · kéo-thả & zoom.</p>
-    <KnowledgeGraph nodes={nodes} edges={edges} />
+    <KnowledgeGraph nodes={positioned} edges={edges} />
   </main>
 </BaseLayout>
