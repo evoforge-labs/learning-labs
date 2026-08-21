@@ -1,11 +1,10 @@
 ---
-import type { GraphEdge } from '../../lib/types';
-import type { PositionedNode } from '../../lib/graph-layout';
-interface Props { nodes: PositionedNode[]; edges: GraphEdge[]; }
+import type { GraphNode, GraphEdge } from '../../lib/types';
+interface Props { nodes: GraphNode[]; edges: GraphEdge[]; }
 const { nodes, edges } = Astro.props;
 
-// WebGL needs real hex values (CSS vars don't reach the shaders), so we mirror
-// the tokens from global.css here.
+// Canvas-rendered nodes need real hex values (CSS vars don't resolve in the
+// cytoscape canvas), so we mirror the tokens from global.css here.
 const TYPE_HEX: Record<string, string> = { concept: '#3b82f6', lesson: '#22c55e', exercise: '#f59e0b', session: '#8b5cf6', rubric: '#f43f5e', template: '#64748b', track: '#6366f1' };
 const TRACK_HEX: Record<string, string> = {
   'ai-engineering': '#6366f1', 'building-with-ai-agents': '#8b5cf6',
@@ -48,7 +47,6 @@ const payload = JSON.stringify({ nodes, edges, typeColors: TYPE_HEX, trackColors
             <option value="track">Track</option>
           </select>
         </label>
-        <button id="km-physics" title="Physics: tắt (kéo node vẫn tạm bật)" class="km-toggle rounded-lg border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 px-2 py-1 text-sm hover:border-brand/60">◉</button>
         <button id="km-reset" title="Reset view" class="rounded-lg border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 px-2 py-1 text-sm hover:border-brand/60">⟳</button>
       </div>
 
@@ -85,202 +83,120 @@ const payload = JSON.stringify({ nodes, edges, typeColors: TYPE_HEX, trackColors
   #km-panel.km-collapsed .km-panel-body { display: none; }
   #km-panel.km-collapsed .km-chevron { transform: rotate(-90deg); }
   #km-panel.km-collapsed { width: auto; }
-  /* physics button lit while the simulation is running */
-  #km-physics.km-on { border-color: var(--color-brand); color: var(--color-brand); }
 </style>
 
 <script type="application/json" id="cy-data" set:html={payload}></script>
 <script>
-  import Graph from 'graphology';
-  import Sigma from 'sigma';
-  import forceAtlas2 from 'graphology-layout-forceatlas2';
-  import FA2Layout from 'graphology-layout-forceatlas2/worker';
+  import cytoscape from 'cytoscape';
+  import cola from 'cytoscape-cola';
+  cytoscape.use(cola);
 
-  // ---------------------------------------------------------------------------
-  // Why this is smooth, unlike the old cytoscape/cola version:
-  //  1. Positions are computed at BUILD time (lib/graph-layout.ts), so the first
-  //     frame costs zero layout work.
-  //  2. Sigma renders nodes/edges/labels in WebGL — pan/zoom is a camera matrix
-  //     change, not a redraw of 3k elements.
-  //  3. Physics lives in a web worker and is asleep by default. It wakes only
-  //     while you drag a node, or when you flip the physics button on. An idle
-  //     map burns 0% CPU.
-  //  4. Labels are culled by sigma (labelRenderedSizeThreshold + label grid),
-  //     so we never draw 800 overlapping strings.
-  // NOTE: never put a `type` attribute on a node — sigma reads that as the node
-  // *program* name (circle/image/…). Node kind is stored as `kind`.
-  // ---------------------------------------------------------------------------
-
-  const THEMES = {
-    light: { label: '#3f3f46', edge: 'rgba(161,161,170,0.45)', edgeDim: 'rgba(161,161,170,0.08)', dim: '#e4e4e7' },
-    dark: { label: '#a1a1aa', edge: 'rgba(113,113,122,0.50)', edgeDim: 'rgba(113,113,122,0.10)', dim: '#27272a' },
-  };
-
-  let renderer: any = null;
-  let graph: any = null;
-  let fa2: any = null;
-  let observer: MutationObserver | null = null;
-  let sleepTimer: any = null;
-
-  // render state — reducers read these, so mutate then refresh()
-  let pal = THEMES.light;
-  let colorBy: 'type' | 'track' = 'type';
-  let selected: string | null = null;
-  let focusSet: Set<string> | null = null;   // hovered/selected node + neighbours
-  let matchSet: Set<string> | null = null;   // search hits
+  let running: any = null;       // stop the physics sim when leaving the page
+  let cy: any = null;
+  let selectedNode: any = null;  // node whose peek panel is open (persistent highlight)
   const hiddenTypes = new Set<string>();
-  const hiddenNodes = new Set<string>();     // derived from hiddenTypes, for the edge reducer
-
-  function currentTheme() {
-    return document.documentElement.classList.contains('dark') ? THEMES.dark : THEMES.light;
-  }
 
   function renderGraph() {
     const el = document.getElementById('cy');
     const dataEl = document.getElementById('cy-data');
-    if (!el || !dataEl) return; // not on this page
-
+    if (!el || !dataEl) return;  // not on this page
     const { nodes, edges, typeColors, trackColors } = JSON.parse(dataEl.textContent || '{}');
-    pal = currentTheme();
 
-    graph = new Graph({ type: 'undirected', multi: false, allowSelfLoops: false });
-    for (const n of nodes) {
-      graph.addNode(n.id, {
-        x: n.x, y: n.y,
-        // Obsidian-style: well-connected nodes are bigger and get labelled first.
-        size: 3.5 + Math.min(Math.sqrt(n.degree || 0) * 2.1, 11),
-        label: n.label,
-        kind: n.type,
-        url: n.url,
-        summary: n.summary || '',
-        colorType: typeColors[n.type] || '#888',
-        colorTrack: (n.track && trackColors[n.track]) || '#a1a1aa',
-        color: typeColors[n.type] || '#888',
-      });
-    }
-    for (const e of edges) {
-      if (e.source === e.target) continue;
-      if (graph.hasNode(e.source) && graph.hasNode(e.target)) graph.mergeEdge(e.source, e.target);
-    }
-
-    renderer = new Sigma(graph, el as HTMLElement, {
-      allowInvalidContainer: true,       // the container height can resolve a frame late
-      renderLabels: true,
-      labelFont: '"Inter Variable", ui-sans-serif, system-ui, sans-serif',
-      labelSize: 12,
-      labelWeight: '500',
-      labelColor: { color: pal.label },
-      labelRenderedSizeThreshold: 10,    // only labels nodes big enough on screen
-      labelDensity: 1,
-      labelGridCellSize: 70,             // sigma's anti-overlap grid
-      defaultEdgeColor: pal.edge,
-      minCameraRatio: 0.03,
-      maxCameraRatio: 8,
-      enableEdgeEvents: false,           // 2.5k edges — don't pay for edge hit-testing
-      nodeReducer,
-      edgeReducer,
+    cy = cytoscape({
+      container: el,
+      elements: [
+        ...nodes.map((n: any) => ({ data: {
+          id: n.id, label: n.label, url: n.url, type: n.type,
+          summary: n.summary || '', title: n.label,
+          colorType: typeColors[n.type] || '#888',
+          colorTrack: (n.track && trackColors[n.track]) || '#a1a1aa',
+        } })),
+        ...edges.map((e: any, i: number) => ({ data: { id: `e${i}`, source: e.source, target: e.target } })),
+      ],
+      style: [
+        { selector: 'node', style: { 'background-color': 'data(colorType)', label: 'data(label)', color: '#a1a1aa', 'font-size': 10, 'text-valign': 'bottom', 'text-margin-y': 4, 'transition-property': 'opacity', 'transition-duration': 150 } },
+        { selector: 'edge', style: { width: 1.5, 'line-color': '#a1a1aa66', 'curve-style': 'bezier', 'transition-property': 'opacity', 'transition-duration': 150 } },
+        { selector: '.faded', style: { opacity: 0.12 } },
+        { selector: 'edge.faded', style: { opacity: 0.05 } },
+        { selector: '.km-hidden', style: { display: 'none' } },
+        // search match + selected node share the same ring
+        { selector: 'node.match, node.km-selected', style: { 'border-width': 3, 'border-color': '#6366f1' } },
+      ],
     });
 
-    fa2 = new FA2Layout(graph, {
-      settings: { ...forceAtlas2.inferSettings(graph), barnesHutOptimize: true, slowDown: 20 },
-    });
-
-    (window as any).__km = { renderer, graph, get fa2(){return fa2} }; // TEMP DEBUG
+    // Continuous physics: nodes keep gently settling and dragging one perturbs
+    // its neighbours live (the "bouncing" feel). Filtering hides nodes via
+    // display:none — they stay in the simulation, so the layout never jumps.
+    // Larger edgeLength + nodeSpacing spread the graph out so it reads clearly.
+    // The sim is stopped on page-leave (astro:before-swap) to free CPU.
+    const layout = cy.layout({ name: 'cola', infinite: true, fit: false, avoidOverlap: true, handleDisconnected: true, nodeSpacing: 28, edgeLength: 150 } as any);
+    layout.run();
+    running = layout;
+    // The container is absolutely positioned, so its height can resolve a frame
+    // after cytoscape inits — resize() before fitting so it doesn't lock to 0.
+    setTimeout(() => { cy.resize(); cy.animate({ fit: { eles: cy.elements(), padding: 50 }, duration: 400 }); }, 600);
 
     wireControls();
-
-    // Keep graph colors in sync with the site theme toggle.
-    observer = new MutationObserver(() => {
-      const next = currentTheme();
-      if (next === pal) return;
-      pal = next;
-      renderer.setSetting('labelColor', { color: pal.label });
-      renderer.setSetting('defaultEdgeColor', pal.edge);
-      refresh();
-    });
-    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
-  }
-
-  /** Reducers run on refresh (not per frame), so they can be this expressive. */
-  function nodeReducer(node: string, data: any) {
-    const res: any = { ...data };
-    if (hiddenTypes.has(data.kind)) { res.hidden = true; return res; }
-
-    res.color = colorBy === 'track' ? data.colorTrack : data.colorType;
-
-    const inFocus = !focusSet || focusSet.has(node);
-    const inMatch = !matchSet || matchSet.has(node);
-    if (!inFocus || !inMatch) {
-      res.color = pal.dim;
-      res.label = '';
-      res.zIndex = 0;
-    } else if (focusSet || matchSet) {
-      res.forceLabel = true;             // always name what you're pointing at
-      res.zIndex = 1;
-    }
-    if (node === selected) res.highlighted = true;
-    return res;
-  }
-
-  function edgeReducer(edge: string, data: any) {
-    const res: any = { ...data };
-    const s = graph.source(edge);
-    const t = graph.target(edge);
-    if (hiddenNodes.has(s) || hiddenNodes.has(t)) { res.hidden = true; return res; }
-
-    const lit =
-      (!focusSet || (focusSet.has(s) && focusSet.has(t))) &&
-      (!matchSet || (matchSet.has(s) && matchSet.has(t)));
-    res.color = lit ? pal.edge : pal.edgeDim;
-    res.size = lit ? 1 : 0.6;
-    return res;
-  }
-
-  // Attributes never change here, only the reducers' inputs — skip reindexation.
-  function refresh() { renderer?.refresh({ skipIndexation: true }); }
-
-  function setFocus(node: string | null) {
-    focusSet = node ? new Set([node, ...graph.neighbors(node)]) : null;
-    refresh();
   }
 
   function wireControls() {
-    // hover = temporary focus; falls back to the selected node on leave
-    renderer.on('enterNode', ({ node }: any) => setFocus(node));
-    renderer.on('leaveNode', () => setFocus(selected));
-
-    // click = persistent focus + peek panel (skipped if the click was a drag)
-    renderer.on('clickNode', ({ node }: any) => {
-      if (didDrag) return;
-      selected = node;
-      setFocus(node);
-      showPeek(graph.getNodeAttributes(node));
+    // hover highlight (temporary) — restores the selected node's highlight on out
+    cy.on('mouseover', 'node', (evt: any) => fadeExcept(evt.target));
+    cy.on('mouseout', 'node', () => {
+      if (selectedNode) fadeExcept(selectedNode);
+      else cy.elements().removeClass('faded');
     });
-    renderer.on('clickStage', () => hidePeek());
 
-    wireDrag();
-    wireFilters();
-    wireSearch();
-
-    document.getElementById('km-reset')?.addEventListener('click', () => {
-      renderer.getCamera().animatedReset({ duration: 400 });
+    // click node -> keep it selected (persistent neighborhood highlight) + peek panel
+    cy.on('tap', 'node', (evt: any) => {
+      selectedNode = evt.target;
+      cy.nodes().removeClass('km-selected');
+      selectedNode.addClass('km-selected');
+      fadeExcept(selectedNode);
+      showPeek(selectedNode.data());
     });
-    document.getElementById('km-peek-close')?.addEventListener('click', hidePeek);
+    cy.on('tap', (evt: any) => { if (evt.target === cy) hidePeek(); });
 
+    // legend = filter
+    document.querySelectorAll('.km-legend-item').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const t = (btn as HTMLElement).dataset.type!;
+        if (hiddenTypes.has(t)) { hiddenTypes.delete(t); btn.classList.remove('opacity-40'); }
+        else { hiddenTypes.add(t); btn.classList.add('opacity-40'); }
+        applyFilter();
+      });
+    });
+
+    // color-by toggle
     const colorby = document.getElementById('km-colorby') as HTMLSelectElement;
     colorby?.addEventListener('change', () => {
-      colorBy = colorby.value === 'track' ? 'track' : 'type';
-      refresh();
+      const key = colorby.value === 'track' ? 'data(colorTrack)' : 'data(colorType)';
+      cy.style().selector('node').style('background-color', key).update();
     });
 
-    // physics on/off — off by default, since the build-time layout is already good
-    const physicsBtn = document.getElementById('km-physics');
-    physicsBtn?.addEventListener('click', () => {
-      clearTimeout(sleepTimer);
-      if (fa2.isRunning()) { fa2.stop(); physicsPinned = false; }
-      else { fa2.start(); physicsPinned = true; }
-      syncPhysicsBtn();
+    // search: highlight matches; Enter centers on first match
+    const search = document.getElementById('km-search') as HTMLInputElement;
+    search?.addEventListener('input', () => {
+      const q = search.value.trim().toLowerCase();
+      cy.nodes().removeClass('match');
+      if (!q) { cy.elements().removeClass('faded'); return; }
+      const matches = cy.nodes().filter((n: any) => n.data('label')?.toLowerCase().includes(q));
+      cy.elements().addClass('faded');
+      matches.removeClass('faded').addClass('match');
+      matches.connectedEdges().removeClass('faded');
     });
+    search?.addEventListener('keydown', (e: any) => {
+      if (e.key !== 'Enter') return;
+      const q = search.value.trim().toLowerCase();
+      const first = cy.nodes().filter((n: any) => n.data('label')?.toLowerCase().includes(q))[0];
+      if (first) cy.animate({ center: { eles: first }, zoom: 1.6, duration: 350 });
+    });
+
+    document.getElementById('km-reset')?.addEventListener('click', () => {
+      cy.animate({ fit: { eles: cy.elements(':visible'), padding: 50 }, duration: 350 });
+    });
+
+    document.getElementById('km-peek-close')?.addEventListener('click', hidePeek);
 
     // collapsible control panel — collapsed by default on small screens.
     const panel = document.getElementById('km-panel');
@@ -289,125 +205,37 @@ const payload = JSON.stringify({ nodes, edges, typeColors: TYPE_HEX, trackColors
     toggle?.addEventListener('click', () => panel?.classList.toggle('km-collapsed'));
   }
 
-  let physicsPinned = false;   // true when the user turned physics on explicitly
-  let dragged: string | null = null;
-  let didDrag = false;
-
-  function syncPhysicsBtn() {
-    const btn = document.getElementById('km-physics');
-    if (!btn) return;
-    const on = !!fa2?.isRunning();
-    btn.classList.toggle('km-on', on);
-    btn.title = on ? 'Physics: đang chạy — click để tắt' : 'Physics: tắt (kéo node vẫn tạm bật)';
+  // Fade everything except the given node and its closed neighbourhood.
+  function fadeExcept(node: any) {
+    cy.elements().addClass('faded');
+    node.closedNeighborhood().removeClass('faded');
   }
 
-  /** Drag a node and the graph settles around it, then physics goes back to sleep. */
-  function wireDrag() {
-    renderer.on('downNode', ({ node }: any) => {
-      dragged = node;
-      didDrag = false;
-      clearTimeout(sleepTimer);
-      graph.setNodeAttribute(node, 'highlighted', true);
-      // Freeze the auto-fit box so dragging a node outside it doesn't zoom the view.
-      if (!renderer.getCustomBBox()) renderer.setCustomBBox(renderer.getBBox());
-    });
-
-    renderer.on('moveBody', ({ event }: any) => {
-      if (!dragged) return;
-      // Wake physics on the first real movement, not on a plain click.
-      if (!didDrag) {
-        didDrag = true;
-        if (!fa2.isRunning()) { fa2.start(); syncPhysicsBtn(); }
-      }
-      const pos = renderer.viewportToGraph(event);
-      graph.setNodeAttribute(dragged, 'x', pos.x);
-      graph.setNodeAttribute(dragged, 'y', pos.y);
-      event.preventSigmaDefault();
-      event.original.preventDefault();
-      event.original.stopPropagation();
-    });
-
-    const drop = () => {
-      if (!dragged) return;
-      graph.removeNodeAttribute(dragged, 'highlighted');
-      dragged = null;
-      if (didDrag && !physicsPinned) {
-        // let the neighbourhood relax, then stop burning CPU
-        sleepTimer = setTimeout(() => { fa2?.stop(); syncPhysicsBtn(); }, 1400);
-      }
-    };
-    renderer.on('upNode', drop);
-    renderer.on('upStage', drop);
-  }
-
-  function wireFilters() {
-    document.querySelectorAll('.km-legend-item').forEach((btn) => {
-      btn.addEventListener('click', () => {
-        const t = (btn as HTMLElement).dataset.type!;
-        if (hiddenTypes.has(t)) { hiddenTypes.delete(t); btn.classList.remove('opacity-40'); }
-        else { hiddenTypes.add(t); btn.classList.add('opacity-40'); }
-        hiddenNodes.clear();
-        graph.forEachNode((n: string, a: any) => { if (hiddenTypes.has(a.kind)) hiddenNodes.add(n); });
-        refresh();
+  function applyFilter() {
+    cy.batch(() => {
+      cy.nodes().forEach((n: any) => {
+        if (hiddenTypes.has(n.data('type'))) n.addClass('km-hidden');
+        else n.removeClass('km-hidden');
       });
     });
   }
 
-  function wireSearch() {
-    const search = document.getElementById('km-search') as HTMLInputElement;
-    const hits = (q: string) => {
-      const out: string[] = [];
-      graph.forEachNode((n: string, a: any) => {
-        if (a.label?.toLowerCase().includes(q)) out.push(n);
-      });
-      return out;
-    };
-
-    search?.addEventListener('input', () => {
-      const q = search.value.trim().toLowerCase();
-      matchSet = q ? new Set(hits(q)) : null;
-      refresh();
-    });
-
-    search?.addEventListener('keydown', (e: any) => {
-      if (e.key !== 'Enter') return;
-      const q = search.value.trim().toLowerCase();
-      if (!q) return;
-      const first = hits(q)[0];
-      if (!first) return;
-      const d = renderer.getNodeDisplayData(first);
-      if (d) renderer.getCamera().animate({ x: d.x, y: d.y, ratio: 0.15 }, { duration: 450 });
-    });
-  }
-
-  function showPeek(a: any) {
+  function showPeek(d: any) {
     const peek = document.getElementById('km-peek'); if (!peek) return;
-    (document.getElementById('km-peek-dot') as HTMLElement).style.background =
-      colorBy === 'track' ? a.colorTrack : a.colorType;
-    (document.getElementById('km-peek-type') as HTMLElement).textContent = a.kind || '';
-    (document.getElementById('km-peek-title') as HTMLElement).textContent = a.label || '';
-    (document.getElementById('km-peek-summary') as HTMLElement).textContent = a.summary || '';
-    (document.getElementById('km-peek-link') as HTMLAnchorElement).href = a.url || '#';
+    const colorby = (document.getElementById('km-colorby') as HTMLSelectElement)?.value;
+    (document.getElementById('km-peek-dot') as HTMLElement).style.background = colorby === 'track' ? d.colorTrack : d.colorType;
+    (document.getElementById('km-peek-type') as HTMLElement).textContent = d.type || '';
+    (document.getElementById('km-peek-title') as HTMLElement).textContent = d.title || d.label || '';
+    (document.getElementById('km-peek-summary') as HTMLElement).textContent = d.summary || '';
+    (document.getElementById('km-peek-link') as HTMLAnchorElement).href = d.url || '#';
     peek.classList.remove('hidden');
   }
-
   function hidePeek() {
     document.getElementById('km-peek')?.classList.add('hidden');
-    selected = null;
-    setFocus(null);
+    selectedNode = null;
+    if (cy) { cy.nodes().removeClass('km-selected'); cy.elements().removeClass('faded'); }
   }
 
-  function teardown() {
-    clearTimeout(sleepTimer);
-    observer?.disconnect(); observer = null;
-    fa2?.kill(); fa2 = null;
-    renderer?.kill(); renderer = null;
-    graph = null;
-    selected = null; focusSet = null; matchSet = null;
-    hiddenTypes.clear(); hiddenNodes.clear();
-    physicsPinned = false; dragged = null; didDrag = false;
-  }
-
-  document.addEventListener('astro:before-swap', teardown);
+  document.addEventListener('astro:before-swap', () => { running?.stop?.(); running = null; cy = null; });
   document.addEventListener('astro:page-load', renderGraph);
 </script>
