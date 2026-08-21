@@ -4,6 +4,3 @@
 declare module '@fontsource/be-vietnam-pro/*.css';
 declare module '@fontsource/spectral/*.css';
 
-// cytoscape layout extensions ship no type declarations
-declare module 'cytoscape-fcose';
-declare module 'cytoscape-cola';
