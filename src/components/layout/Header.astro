@@ -1,16 +1,43 @@
 ---
-import { Moon, Sun, Search, FlaskConical } from '@lucide/astro';
+import { Moon, Sun, Search } from '@lucide/astro';
+const nav = [
+  { href: '/tracks', label: 'Tracks' },
+  { href: '/concepts', label: 'Concepts' },
+  { href: '/exercises', label: 'Exercises' },
+  { href: '/sessions', label: 'Sessions' },
+  { href: '/glossary', label: 'Glossary' },
+  { href: '/knowledge-map', label: 'Map' },
+];
+const path = Astro.url.pathname;
+const isActive = (href: string) => path === href || path.startsWith(href + '/');
 ---
-<header class="sticky top-0 z-50 border-b border-zinc-200/70 dark:border-zinc-800 bg-white/80 dark:bg-zinc-950/80 backdrop-blur">
-  <div class="max-w-6xl mx-auto px-4 h-14 flex items-center gap-3">
-    <a href="/" aria-label="Learning Lab home" class="flex items-center gap-2 font-semibold tracking-tight">
-      <span class="grid place-items-center w-8 h-8 rounded-lg bg-brand text-white"><FlaskConical class="w-5 h-5" /></span>
-      Learning Lab
+<header class="sticky top-0 z-50 border-b border-stone-200 dark:border-stone-800 bg-paper/90 dark:bg-paper-dark/90 backdrop-blur">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 h-14 flex items-center gap-6">
+    <a href="/" aria-label="Learning Lab — trang chủ" class="flex items-baseline gap-0.5 shrink-0">
+      <span class="font-read font-extrabold text-[1.35rem] tracking-tight text-stone-900 dark:text-stone-100">Learning</span>
+      <span class="font-read font-extrabold italic text-[1.35rem] tracking-tight text-brand">Lab</span>
+      <span class="ml-1 w-1.5 h-1.5 rounded-full bg-brand translate-y-[-2px]"></span>
     </a>
+    <nav class="hidden lg:flex items-center gap-1 text-sm" aria-label="Điều hướng chính">
+      {nav.map(({ href, label }) => (
+        <a href={href} aria-current={isActive(href) ? 'page' : undefined}
+          class:list={[
+            'relative px-3 py-2 rounded-md transition-colors',
+            isActive(href)
+              ? 'text-stone-900 dark:text-stone-100 font-medium after:absolute after:left-3 after:right-3 after:-bottom-[9px] after:h-[2px] after:bg-brand'
+              : 'text-stone-500 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-100',
+          ]}>{label}</a>
+      ))}
+    </nav>
     <div class="ml-auto flex items-center gap-1">
-      <a href="/search" class="w-9 h-9 grid place-items-center rounded-md hover:bg-zinc-100 dark:hover:bg-zinc-900"><Search class="w-4 h-4" /></a>
-      <button id="theme-toggle" class="w-9 h-9 grid place-items-center rounded-md border border-zinc-200 dark:border-zinc-800 hover:bg-zinc-100 dark:hover:bg-zinc-900">
-        <Moon class="w-4 h-4 dark:hidden" /><Sun class="w-4 h-4 hidden dark:block" />
+      <a href="/search" aria-label="Tìm kiếm"
+        class:list={[
+          'w-9 h-9 grid place-items-center rounded-lg transition-colors hover:bg-stone-200/60 dark:hover:bg-stone-800/80 active:scale-95',
+          isActive('/search') ? 'text-brand' : 'text-stone-600 dark:text-stone-400',
+        ]}><Search class="w-[18px] h-[18px]" /></a>
+      <button id="theme-toggle" aria-label="Đổi giao diện sáng / tối"
+        class="w-9 h-9 grid place-items-center rounded-lg text-stone-600 dark:text-stone-400 transition-colors hover:bg-stone-200/60 dark:hover:bg-stone-800/80 active:scale-95">
+        <Moon class="w-[18px] h-[18px] dark:hidden" /><Sun class="w-[18px] h-[18px] hidden dark:block" />
       </button>
     </div>
   </div>

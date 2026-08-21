@@ -28,6 +28,8 @@ const components = { Callout, Mermaid, Ask, Answer, Explain };
 
 const kicker = d.type === 'session' ? `Session · ${d.exercise}` :
   d.module ? `${d.module}` : d.skill ? `${d.skill}` : d.type;
+const kickerColor = d.type === 'track' ? trackColor(entry.id) :
+  d.track ? trackColor(d.track) : typeColor(d.type);
 const trackLabel = d.track;
 const related = [...(d.prerequisites ?? []), ...(d.related ?? [])];
 const usedInLinks = d.type === 'concept' ? await usedIn(d.id) : [];
@@ -48,79 +50,93 @@ if (d.type === 'lesson') {
   if (i >= 0 && i < sibs.length - 1) nextLesson = sibs[i + 1];
 }
 ---
-<ReadingLayout title={d.title} kicker={kicker} trackLabel={trackLabel}
+<ReadingLayout title={d.title} kicker={kicker} kickerColor={kickerColor} trackLabel={trackLabel}
   headings={headings.filter((h: any) => h.depth === 2).map((h: any) => ({ text: h.text, slug: h.slug }))}>
-  {d.type === 'track' && (
-    <div class="anim mt-4 flex items-center gap-2.5">
-      <span class="inline-block h-5 w-1.5 rounded-full" style={`background:${trackColor(entry.id)}`}></span>
-      <span class="text-[11px] font-medium uppercase tracking-wider" style={`color:${trackColor(entry.id)}`}>Track</span>
-    </div>
-  )}
   <div class="anim mt-6">
-    <MetaBadges type={d.type} status={d.status} level={d.level} minutes={d.estimatedMinutes} reviewedBy={d.reviewedBy} score={d.score} />
+    <MetaBadges type={d.type} status={d.status} level={d.level} minutes={d.estimatedMinutes} reviewedBy={d.reviewedBy} score={d.score} hideType={kicker === d.type} />
   </div>
-  <hr class="anim my-8 border-zinc-200 dark:border-zinc-800" />
-  <div class="anim read-body text-zinc-700 dark:text-zinc-300 prose dark:prose-invert max-w-none prose-headings:font-read">
+  <div class="anim my-9 flex items-center gap-1.5" aria-hidden="true">
+    <span class="w-10 h-px bg-stone-300 dark:bg-stone-700"></span>
+    <span class="w-1 h-1 rounded-full bg-stone-300 dark:bg-stone-700"></span>
+  </div>
+  {/* [&>h1:first-child]:hidden — nhiều doc mở đầu body bằng `# <title>` trùng với
+      title đã render từ frontmatter ở trên; ẩn đúng h1 đứng đầu, giữ h1 giữa bài. */}
+  <div class="anim read-body text-stone-700 dark:text-stone-300 prose dark:prose-invert max-w-none prose-headings:font-read [&>h1:first-child]:hidden">
     <Content components={components} />
   </div>
   {d.type === 'track' && (trackLessons.length > 0 || trackExercises.length > 0) && (
-    <div class="anim mt-12 space-y-8">
+    <div class="anim mt-14 space-y-10">
       {trackLessons.length > 0 && (
         <section>
-          <div class="text-[11px] uppercase tracking-wider text-zinc-400 mb-3">Lessons · học theo thứ tự</div>
-          <div class="grid sm:grid-cols-2 gap-2">
-            {trackLessons.map((l: any) => (
-              <a href={`/lessons/${l.id}`} class="flex items-center gap-2.5 rounded-lg border border-zinc-200 dark:border-zinc-800 px-4 py-2.5 hover:border-brand/50 text-sm">
-                <span class="w-2 h-2 rounded-full shrink-0" style={`background:${typeColor('lesson')}`}></span>{l.data.title}
-              </a>
-            ))}
+          <div class="flex items-center gap-3 mb-4">
+            <span class="eyebrow">lessons — học theo thứ tự</span>
+            <span class="flex-1 h-px bg-stone-200 dark:bg-stone-800"></span>
           </div>
+          <ol class="space-y-1">
+            {trackLessons.map((l: any, i: number) => (
+              <li>
+                <a href={`/lessons/${l.id}`} class="group flex items-center gap-4 px-4 py-3 rounded-lg hover:bg-stone-100/70 dark:hover:bg-stone-900/70 transition-colors text-sm">
+                  <span class="font-read italic text-stone-300 dark:text-stone-600 tabular-nums w-6 shrink-0">{String(i + 1).padStart(2, '0')}</span>
+                  <span class="flex-1 text-stone-700 dark:text-stone-300 group-hover:text-brand transition-colors">{l.data.title}</span>
+                  {l.data.level && <span class="text-xs text-stone-400">{l.data.level}</span>}
+                </a>
+              </li>
+            ))}
+          </ol>
         </section>
       )}
       {trackExercises.length > 0 && (
         <section>
-          <div class="text-[11px] uppercase tracking-wider text-zinc-400 mb-3">Exercises · luyện tập</div>
-          <div class="grid sm:grid-cols-2 gap-2">
+          <div class="flex items-center gap-3 mb-4">
+            <span class="eyebrow">exercises — luyện tập</span>
+            <span class="flex-1 h-px bg-stone-200 dark:bg-stone-800"></span>
+          </div>
+          <ul class="grid sm:grid-cols-2 gap-2">
             {trackExercises.map((ex: any) => (
-              <a href={`/exercises/${ex.id}`} class="flex items-center gap-2.5 rounded-lg border border-zinc-200 dark:border-zinc-800 px-4 py-2.5 hover:border-brand/50 text-sm">
-                <span class="w-2 h-2 rounded-full shrink-0" style={`background:${typeColor('exercise')}`}></span>{ex.data.title}
+              <a href={`/exercises/${ex.id}`} class="flex items-center gap-2.5 rounded-lg bg-white dark:bg-stone-900 ring-1 ring-stone-200 dark:ring-stone-800 px-4 py-2.5 hover:ring-brand/50 hover:-translate-y-px transition-all duration-200 text-sm text-stone-700 dark:text-stone-300">
+                <span class="w-1.5 h-1.5 rounded-full shrink-0" style={`background:${typeColor('exercise')}`}></span>{ex.data.title}
               </a>
             ))}
-          </div>
+          </ul>
         </section>
       )}
     </div>
   )}
   {d.type === 'concept' && d.aliases?.length > 0 && (
-    <div class="anim mt-8 flex flex-wrap gap-2 text-xs items-center"><span class="text-zinc-400">aka:</span>
-      {d.aliases.map((a: string) => <span class="px-2 py-0.5 rounded-full border border-zinc-200 dark:border-zinc-700 text-zinc-500">{a}</span>)}
+    <div class="anim mt-10 flex flex-wrap gap-2 text-xs items-center">
+      <span class="font-read italic text-stone-400">còn gọi là</span>
+      {d.aliases.map((a: string) => <span class="px-2.5 py-1 rounded-md bg-stone-100 dark:bg-stone-900 text-stone-500 dark:text-stone-400">{a}</span>)}
     </div>
   )}
   {usedInLinks.length > 0 && (
-    <div class="anim mt-12 rounded-xl border border-zinc-200 dark:border-zinc-800 p-5">
-      <div class="text-[11px] uppercase tracking-wider text-zinc-400 mb-3">Used in</div>
+    <div class="anim mt-12">
+      <div class="flex items-center gap-3 mb-4">
+        <span class="eyebrow">xuất hiện trong</span>
+        <span class="flex-1 h-px bg-stone-200 dark:bg-stone-800"></span>
+      </div>
       <div class="flex flex-wrap gap-2 text-sm">
         {usedInLinks.map((link) => (
-          <a href={`/${link.type}/${link.slug}`} class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-zinc-200 dark:border-zinc-800 hover:border-brand/50">
-            <span class="w-2 h-2 rounded-full" style={`background:${typeColor(link.dataType)}`}></span>{link.title}
+          <a href={`/${link.type}/${link.slug}`}
+            class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white dark:bg-stone-900 ring-1 ring-stone-200 dark:ring-stone-800 hover:ring-brand/60 hover:-translate-y-px transition-all duration-200 text-stone-700 dark:text-stone-300">
+            <span class="w-1.5 h-1.5 rounded-full" style={`background:${typeColor(link.dataType)}`}></span>{link.title}
           </a>
         ))}
       </div>
     </div>
   )}
-  {related.length > 0 && <div class="anim"><RelatedLinks ids={related} title="Related · từ frontmatter" /></div>}
+  {related.length > 0 && <div class="anim"><RelatedLinks ids={related} title="Liên quan" /></div>}
   {(prevLesson || nextLesson) && (
-    <nav class="anim mt-12 grid grid-cols-2 gap-3">
+    <nav class="anim mt-14 grid grid-cols-2 gap-3" aria-label="Bài trước / bài tiếp">
       {prevLesson ? (
-        <a href={`/lessons/${prevLesson.id}`} class="rounded-xl border border-zinc-200 dark:border-zinc-800 p-4 hover:border-brand/50">
-          <div class="text-[11px] uppercase tracking-wider text-zinc-400">← Bài trước</div>
-          <div class="mt-1 text-sm font-medium text-zinc-800 dark:text-zinc-200">{prevLesson.data.title}</div>
+        <a href={`/lessons/${prevLesson.id}`} class="group rounded-xl bg-white dark:bg-stone-900 ring-1 ring-stone-200 dark:ring-stone-800 p-4 hover:ring-brand/50 hover:-translate-y-0.5 transition-all duration-200">
+          <div class="text-[11px] uppercase tracking-[0.08em] text-stone-400">← Bài trước</div>
+          <div class="mt-1.5 text-sm font-medium text-stone-800 dark:text-stone-200 group-hover:text-brand transition-colors">{prevLesson.data.title}</div>
         </a>
       ) : <span></span>}
       {nextLesson ? (
-        <a href={`/lessons/${nextLesson.id}`} class="rounded-xl border border-zinc-200 dark:border-zinc-800 p-4 hover:border-brand/50 text-right">
-          <div class="text-[11px] uppercase tracking-wider text-zinc-400">Bài tiếp →</div>
-          <div class="mt-1 text-sm font-medium text-zinc-800 dark:text-zinc-200">{nextLesson.data.title}</div>
+        <a href={`/lessons/${nextLesson.id}`} class="group rounded-xl bg-white dark:bg-stone-900 ring-1 ring-stone-200 dark:ring-stone-800 p-4 hover:ring-brand/50 hover:-translate-y-0.5 transition-all duration-200 text-right">
+          <div class="text-[11px] uppercase tracking-[0.08em] text-stone-400">Bài tiếp →</div>
+          <div class="mt-1.5 text-sm font-medium text-stone-800 dark:text-stone-200 group-hover:text-brand transition-colors">{nextLesson.data.title}</div>
         </a>
       ) : <span></span>}
     </nav>

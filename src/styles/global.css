@@ -5,40 +5,120 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
-  --color-brand: #6366f1;
-  --font-sans: "Inter Variable", ui-sans-serif, system-ui, sans-serif;
+  /* "paper & ink": warm paper neutrals + a deep teal ink accent */
+  --color-brand: #0f766e;
+  --color-paper: #faf9f7;
+  --color-paper-dark: #12100e;
+  --font-sans: "Be Vietnam Pro", ui-sans-serif, system-ui, sans-serif;
   --font-read: "Spectral", Georgia, serif;
 }
 
-/* type colors used by badges + graph nodes */
-:root {
-  --type-concept: #3b82f6;
-  --type-lesson: #22c55e;
-  --type-exercise: #f59e0b;
-  --type-session: #8b5cf6;
-  --type-rubric: #f43f5e;
-  --type-template: #64748b;
-  --type-track: #6366f1;
-
-  /* per-track accent colors — used only on track-level surfaces
-     (home track cards, track detail header). Independent of --type-*. */
-  --track-ai-engineering: #6366f1;
-  --track-building-with-ai-agents: #8b5cf6;
-  --track-product-minded-builder: #14b8a6;
-  --track-solo-founder: #f97316;
-  --track-system-design-for-builders: #0ea5e9;
+/* dark mode needs a brighter ink or text/borders lose contrast;
+   surfaces using bg-brand must pair it with dark:text-stone-950 */
+.dark {
+  --color-brand: #2dd4bf;
 }
 
-html { scroll-behavior: smooth; }
-body { font-family: var(--font-sans); }
+html {
+  scroll-behavior: smooth;
+}
+body {
+  font-family: var(--font-sans);
+}
+
+h1, h2, h3 {
+  text-wrap: balance;
+}
+
+::selection {
+  background: color-mix(in srgb, var(--color-brand) 25%, transparent);
+}
+
+/* one global keyboard-focus treatment instead of per-component rings */
+:focus-visible {
+  outline: 2px solid var(--color-brand);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* paper grain — breaks digital flatness without being visible as a pattern.
+   z-scale: page content < header/bottom-nav (50) < drawer (60) < grain (80) */
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  pointer-events: none;
+  opacity: 0.05;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='128' height='128'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+.dark body::after {
+  opacity: 0.07;
+}
 
 /* Substack-style reading body */
-.read-body { font-family: var(--font-read); font-size: 20px; line-height: 1.75; letter-spacing: .1px; }
+.read-body {
+  font-family: var(--font-read);
+  font-size: 20px;
+  line-height: 1.75;
+  letter-spacing: 0.1px;
+}
 .read-body p { margin: 1.15em 0; }
-.read-body h2 { font-weight: 600; font-size: 1.45rem; margin: 1.6em 0 .2em; }
-.read-body a { text-decoration: underline; text-underline-offset: 3px; }
+.read-body h2 {
+  font-weight: 700;
+  font-size: 1.5rem;
+  letter-spacing: -0.01em;
+  margin: 1.7em 0 0.2em;
+}
+.read-body a {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-color: color-mix(in srgb, var(--color-brand) 50%, transparent);
+  transition: color 0.15s;
+}
+.read-body a:hover { color: var(--color-brand); }
+
+/* lowercase serif-italic section label — replaces all-caps micro-headers */
+.eyebrow {
+  font-family: var(--font-read);
+  font-style: italic;
+  font-size: 0.95rem;
+  color: var(--color-stone-500);
+  letter-spacing: 0.01em;
+}
 
 /* floating TOC */
 .toc-wrap:hover .toc-panel { opacity: 1; visibility: visible; transform: translateX(0); }
 .toc-wrap:hover .toc-handle { opacity: 0; }
-.toc-panel { opacity: 0; visibility: hidden; transform: translateX(-6px); transition: .18s; }
+.toc-panel { opacity: 0; visibility: hidden; transform: translateX(-6px); transition: 0.18s; }
+
+/* reading progress — thin ink line pinned to the very top */
+#read-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 2px;
+  width: 100%;
+  z-index: 70;
+  background: var(--color-brand);
+  transform-origin: 0 50%;
+  transform: scaleX(0);
+  pointer-events: none;
+}
+
+/* Pagefind widget → match the paper theme */
+#search .pagefind-ui {
+  --pagefind-ui-scale: 0.9;
+  --pagefind-ui-primary: var(--color-brand);
+  --pagefind-ui-text: var(--color-stone-800);
+  --pagefind-ui-background: #ffffff;
+  --pagefind-ui-border: var(--color-stone-200);
+  --pagefind-ui-border-width: 1px;
+  --pagefind-ui-border-radius: 10px;
+  --pagefind-ui-font: var(--font-sans);
+}
+.dark #search .pagefind-ui {
+  --pagefind-ui-text: var(--color-stone-200);
+  --pagefind-ui-background: var(--color-stone-900);
+  --pagefind-ui-border: var(--color-stone-800);
+}

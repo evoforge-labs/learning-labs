@@ -45,42 +45,46 @@ for (const c of concepts) {
 }
 const letters = [...groups.keys()].sort();
 ---
-<BaseLayout title="Glossary">
-  <main class="max-w-3xl mx-auto px-4 py-10">
-    <h1 class="text-2xl font-bold tracking-tight text-zinc-900 dark:text-white mb-2">Glossary</h1>
-    <p class="text-sm text-zinc-500 mb-6">
-      Tra cứu nhanh mọi thuật ngữ — {concepts.length} khái niệm, kèm tên gọi khác (song ngữ).
+<BaseLayout title="Glossary" description="Tra cứu nhanh mọi thuật ngữ trong Learning Lab, kèm tên gọi khác song ngữ.">
+  <main id="main" class="max-w-3xl mx-auto px-4 sm:px-6 py-12 sm:py-16">
+    <p class="anim eyebrow mb-3">tra cứu</p>
+    <h1 class="anim font-read font-extrabold text-4xl sm:text-5xl tracking-[-0.02em] text-stone-900 dark:text-stone-100 mb-3">Glossary</h1>
+    <p class="anim text-stone-500 dark:text-stone-400 mb-8 max-w-xl">
+      Tra cứu nhanh mọi thuật ngữ — <span class="tabular-nums">{concepts.length}</span> khái niệm, kèm tên gọi khác (song ngữ).
       Click để mở bài đầy đủ.
     </p>
 
     {letters.length > 1 && (
-      <div class="flex flex-wrap gap-1.5 mb-8 text-xs">
+      <div class="anim sticky top-14 z-30 -mx-4 px-4 py-2.5 bg-paper/90 dark:bg-paper-dark/90 backdrop-blur flex flex-wrap gap-1.5 mb-8 text-xs">
         {letters.map((l) => (
-          <a href={`#letter-${l}`} class="w-7 h-7 grid place-items-center rounded-md border border-zinc-200 dark:border-zinc-800 hover:bg-brand/10 hover:text-brand font-medium">{l}</a>
+          <a href={`#letter-${l}`} class="w-7 h-7 grid place-items-center rounded-md ring-1 ring-stone-200 dark:ring-stone-800 hover:bg-brand/10 hover:text-brand hover:ring-brand/40 font-medium transition-colors">{l}</a>
         ))}
       </div>
     )}
 
     <div class="space-y-8">
       {letters.map((l) => (
-        <section id={`letter-${l}`}>
-          <h2 class="text-xs uppercase tracking-wider text-zinc-400 border-b border-zinc-200 dark:border-zinc-800 pb-1 mb-3">{l}</h2>
-          <dl class="space-y-4">
+        <section id={`letter-${l}`} class="scroll-mt-28">
+          <div class="flex items-center gap-4 mb-4">
+            <h2 class="font-read italic text-2xl text-stone-300 dark:text-stone-600">{l}</h2>
+            <span class="flex-1 h-px bg-stone-200 dark:bg-stone-800"></span>
+          </div>
+          <dl class="space-y-5">
             {groups.get(l)!.map((c) => (
               <div>
                 <dt>
-                  <a href={`/concepts/${c.slug}`} class="font-semibold text-zinc-900 dark:text-white hover:text-brand">{c.title}</a>
+                  <a href={`/concepts/${c.slug}`} class="font-read font-bold text-lg text-stone-900 dark:text-stone-100 hover:text-brand transition-colors">{c.title}</a>
                   {c.aliases.length > 0 && (
-                    <span class="ml-2 text-xs text-zinc-400">còn gọi là: {c.aliases.join(' · ')}</span>
+                    <span class="ml-2 text-xs font-read italic text-stone-400">còn gọi là: {c.aliases.join(' · ')}</span>
                   )}
                 </dt>
-                {c.def && <dd class="mt-0.5 text-sm text-zinc-600 dark:text-zinc-300 leading-relaxed">{c.def}</dd>}
+                {c.def && <dd class="mt-1 text-sm text-stone-600 dark:text-stone-400 leading-relaxed max-w-2xl">{c.def}</dd>}
               </div>
             ))}
           </dl>
         </section>
       ))}
-      {concepts.length === 0 && <p class="text-zinc-400 text-sm">Chưa có khái niệm nào.</p>}
+      {concepts.length === 0 && <p class="text-stone-400 text-sm">Chưa có khái niệm nào.</p>}
     </div>
   </main>
 </BaseLayout>

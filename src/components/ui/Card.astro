@@ -1,7 +1,0 @@
----
-interface Props { href?: string; class?: string; style?: string; }
-const { href, class: cls = '', style } = Astro.props;
-const base = 'block rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-5 transition hover:border-brand/60 hover:shadow-sm';
-const Tag = href ? 'a' : 'div';
----
-<Tag href={href} class={`${base} ${cls}`} style={style}><slot /></Tag>

@@ -1,5 +1,5 @@
 ---
-import { Compass, BookOpen, Dumbbell, Search, Ellipsis } from '@lucide/astro';
+import { Compass, BookOpen, Dumbbell, Search, Menu } from '@lucide/astro';
 const items = [
   { href: '/tracks', label: 'Tracks', Icon: Compass },
   { href: '/concepts', label: 'Concepts', Icon: BookOpen },
@@ -8,13 +8,16 @@ const items = [
 ];
 const path = Astro.url.pathname;
 ---
-<nav class="lg:hidden fixed bottom-0 inset-x-0 z-50 h-14 grid grid-cols-5 border-t border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 text-[10px] text-zinc-500">
+<nav aria-label="Điều hướng nhanh" class="lg:hidden fixed bottom-0 inset-x-0 z-50 h-14 grid grid-cols-5 border-t border-stone-200 dark:border-stone-800 bg-paper/95 dark:bg-stone-900/95 backdrop-blur text-[10px] pb-[env(safe-area-inset-bottom)]">
   {items.map(({ href, label, Icon }) => (
-    <a href={href} class:list={["grid place-items-center gap-0.5", path.startsWith(href) ? 'text-brand' : '']}>
-      <Icon class="w-4 h-4" />{label}
+    <a href={href} class:list={[
+        'grid place-items-center gap-0.5 transition-colors active:scale-95',
+        path.startsWith(href) ? 'text-brand font-medium' : 'text-stone-500 dark:text-stone-400',
+      ]}>
+      <Icon class="w-[18px] h-[18px]" />{label}
     </a>
   ))}
-  <button id="drawer-open" type="button" aria-label="Mở menu" class="grid place-items-center gap-0.5 text-zinc-500">
-    <Ellipsis class="w-4 h-4" />Thêm
+  <button id="drawer-open" type="button" aria-label="Mở menu" class="grid place-items-center gap-0.5 text-stone-500 dark:text-stone-400 active:scale-95">
+    <Menu class="w-[18px] h-[18px]" />Thêm
   </button>
 </nav>

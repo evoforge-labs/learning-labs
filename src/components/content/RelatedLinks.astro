@@ -7,12 +7,16 @@ const idx = await idIndex();
 const links = ids.map((id) => ({ id, hit: idx.get(id) })).filter((x) => x.hit);
 ---
 {links.length > 0 && (
-  <div class="mt-12 rounded-xl border border-zinc-200 dark:border-zinc-800 p-5">
-    <div class="text-[11px] uppercase tracking-wider text-zinc-400 mb-3">{title}</div>
+  <div class="mt-12">
+    <div class="flex items-center gap-3 mb-4">
+      <span class="eyebrow">{title.toLowerCase()}</span>
+      <span class="flex-1 h-px bg-stone-200 dark:bg-stone-800"></span>
+    </div>
     <div class="flex flex-wrap gap-2 text-sm">
       {links.map(({ hit }) => (
-        <a href={`/${hit!.type}/${hit!.slug}`} class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-zinc-200 dark:border-zinc-800 hover:border-brand/50">
-          <span class="w-2 h-2 rounded-full" style={`background:${typeColor(hit!.dataType)}`}></span>{hit!.title}
+        <a href={`/${hit!.type}/${hit!.slug}`}
+          class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white dark:bg-stone-900 ring-1 ring-stone-200 dark:ring-stone-800 hover:ring-brand/60 hover:-translate-y-px transition-all duration-200 text-stone-700 dark:text-stone-300">
+          <span class="w-1.5 h-1.5 rounded-full" style={`background:${typeColor(hit!.dataType)}`}></span>{hit!.title}
         </a>
       ))}
     </div>
