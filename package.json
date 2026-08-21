@@ -10,7 +10,8 @@
     "build": "astro build && pagefind --site dist",
     "preview": "astro preview",
     "validate:content": "tsx scripts/validate-content.ts",
-    "test": "vitest run"
+    "test": "vitest run",
+    "sketches:optimize": "node scripts/optimize-sketches.mjs"
   },
   "dependencies": {
     "@astrojs/mdx": "^6.0.1",
@@ -36,6 +37,7 @@
     "@types/node": "^25.9.1",
     "gray-matter": "^4.0.3",
     "pagefind": "^1.5.2",
+    "sharp": "^0.35.3",
     "tsx": "^4.22.4",
     "typescript": "^6.0.3",
     "vitest": "^4.1.8"
