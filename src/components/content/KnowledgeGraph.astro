@@ -1,34 +1,27 @@
 ---
 import type { GraphEdge } from '../../lib/types';
+import { TYPE_COLOR, TRACK_COLOR, TYPE_LABEL } from '../../lib/types';
 import type { PositionedNode } from '../../lib/graph-layout';
 interface Props { nodes: PositionedNode[]; edges: GraphEdge[]; }
 const { nodes, edges } = Astro.props;
-
-// WebGL needs real hex values (CSS vars don't reach the shaders), so we mirror
-// the tokens from global.css here.
-const TYPE_HEX: Record<string, string> = { concept: '#3b82f6', lesson: '#22c55e', exercise: '#f59e0b', session: '#8b5cf6', rubric: '#f43f5e', template: '#64748b', track: '#6366f1' };
-const TRACK_HEX: Record<string, string> = {
-  'ai-engineering': '#6366f1', 'building-with-ai-agents': '#8b5cf6',
-  'product-minded-builder': '#14b8a6', 'solo-founder': '#f97316',
-  'system-design-for-builders': '#0ea5e9',
-};
-const TYPE_LABEL: Record<string, string> = { concept: 'Concept', lesson: 'Lesson', exercise: 'Exercise', session: 'Session', rubric: 'Rubric', template: 'Template', track: 'Track' };
 
 // Per-type counts for the legend (server-side, from the nodes we already have).
 const typeOrder = ['concept', 'lesson', 'exercise', 'track', 'rubric', 'session', 'template'];
 const counts: Record<string, number> = {};
 for (const n of nodes) counts[n.type] = (counts[n.type] ?? 0) + 1;
-const legend = typeOrder.filter((t) => counts[t]).map((t) => ({ type: t, label: TYPE_LABEL[t] ?? t, hex: TYPE_HEX[t] ?? '#888', count: counts[t] }));
+const legend = typeOrder.filter((t) => counts[t]).map((t) => ({ type: t, label: TYPE_LABEL[t] ?? t, hex: TYPE_COLOR[t] ?? '#888', count: counts[t] }));
 
-const payload = JSON.stringify({ nodes, edges, typeColors: TYPE_HEX, trackColors: TRACK_HEX });
+// TYPE_COLOR/TRACK_COLOR are raw hex on purpose: WebGL shaders can't resolve
+// CSS custom properties.
+const payload = JSON.stringify({ nodes, edges, typeColors: TYPE_COLOR, trackColors: TRACK_COLOR });
 ---
 <!-- Graph fills the full width; all controls float on top of it. -->
-<div class="km-graph relative w-full h-[78vh] rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 overflow-hidden">
+<div class="km-graph relative w-full h-[78dvh] rounded-xl ring-1 ring-stone-200 dark:ring-stone-800 bg-white dark:bg-stone-900 overflow-hidden">
   <div id="cy" class="w-full h-full"></div>
 
   <!-- floating control panel (top-left) -->
-  <div id="km-panel" class="absolute z-10 top-3 left-3 w-52 max-w-[70%] rounded-xl border border-zinc-200/80 dark:border-zinc-700/80 bg-white/85 dark:bg-zinc-900/85 backdrop-blur-md shadow-lg">
-    <button id="km-panel-toggle" class="flex w-full items-center justify-between px-3 py-2 text-sm font-medium text-zinc-700 dark:text-zinc-200">
+  <div id="km-panel" class="absolute z-10 top-3 left-3 w-52 max-w-[70%] rounded-xl border border-stone-200/80 dark:border-stone-700/80 bg-white/85 dark:bg-stone-900/85 backdrop-blur-md shadow-lg">
+    <button id="km-panel-toggle" class="flex w-full items-center justify-between px-3 py-2 text-sm font-medium text-stone-700 dark:text-stone-200">
       <span class="flex items-center gap-1.5">
         <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
         Bộ lọc
@@ -38,28 +31,28 @@ const payload = JSON.stringify({ nodes, edges, typeColors: TYPE_HEX, trackColors
 
     <div class="km-panel-body px-2.5 pb-2.5 space-y-2.5">
       <input id="km-search" type="search" placeholder="Tìm node…" autocomplete="off"
-        class="w-full rounded-lg border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 px-2.5 py-1.5 text-sm focus:outline-none focus:border-brand/60" />
+        class="w-full rounded-lg border border-stone-200 dark:border-stone-700 bg-white dark:bg-stone-800 px-2.5 py-1.5 text-sm focus:outline-none focus:border-brand/60" />
 
       <div class="flex items-center gap-1.5">
-        <label class="flex flex-1 items-center gap-1.5 text-xs text-zinc-500">
+        <label class="flex flex-1 items-center gap-1.5 text-xs text-stone-500">
           Màu:
-          <select id="km-colorby" class="flex-1 rounded-lg border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 px-1.5 py-1 text-sm">
+          <select id="km-colorby" class="flex-1 rounded-lg border border-stone-200 dark:border-stone-700 bg-white dark:bg-stone-800 px-1.5 py-1 text-sm">
             <option value="type">Type</option>
             <option value="track">Track</option>
           </select>
         </label>
-        <button id="km-physics" title="Physics: tắt (kéo node vẫn tạm bật)" class="km-toggle rounded-lg border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 px-2 py-1 text-sm hover:border-brand/60">◉</button>
-        <button id="km-reset" title="Reset view" class="rounded-lg border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 px-2 py-1 text-sm hover:border-brand/60">⟳</button>
+        <button id="km-physics" title="Physics: tắt (kéo node vẫn tạm bật)" class="km-toggle rounded-lg border border-stone-200 dark:border-stone-700 bg-white dark:bg-stone-800 px-2 py-1 text-sm hover:border-brand/60">◉</button>
+        <button id="km-reset" title="Reset view" class="rounded-lg border border-stone-200 dark:border-stone-700 bg-white dark:bg-stone-800 px-2 py-1 text-sm hover:border-brand/60">⟳</button>
       </div>
 
-      <div class="border-t border-zinc-200/70 dark:border-zinc-700/70 pt-2">
-        <div class="text-[10px] uppercase tracking-wider text-zinc-400 mb-1.5">Legend · click để lọc</div>
+      <div class="border-t border-stone-200/70 dark:border-stone-700/70 pt-2">
+        <div class="text-[10px] uppercase tracking-wider text-stone-400 mb-1.5">Legend · click để lọc</div>
         <div id="km-legend" class="space-y-1 max-h-56 overflow-y-auto">
           {legend.map((l) => (
-            <button class="km-legend-item flex w-full items-center gap-2 rounded-md px-1.5 py-1 text-sm transition hover:bg-zinc-100 dark:hover:bg-zinc-800" data-type={l.type}>
+            <button class="km-legend-item flex w-full items-center gap-2 rounded-md px-1.5 py-1 text-sm transition hover:bg-stone-100 dark:hover:bg-stone-800" data-type={l.type}>
               <span class="w-2.5 h-2.5 rounded-full shrink-0" style={`background:${l.hex}`}></span>
               <span class="flex-1 text-left">{l.label}</span>
-              <span class="text-xs text-zinc-400 tabular-nums">{l.count}</span>
+              <span class="text-xs text-stone-400 tabular-nums">{l.count}</span>
             </button>
           ))}
         </div>
@@ -68,15 +61,15 @@ const payload = JSON.stringify({ nodes, edges, typeColors: TYPE_HEX, trackColors
   </div>
 
   <!-- peek panel (top-right) -->
-  <div id="km-peek" class="hidden absolute z-10 right-3 top-3 w-64 max-w-[70%] rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white/95 dark:bg-zinc-900/95 backdrop-blur-md shadow-lg p-4">
-    <button id="km-peek-close" class="absolute right-2 top-2 text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200 text-sm leading-none">✕</button>
+  <div id="km-peek" class="hidden absolute z-10 right-3 top-3 w-64 max-w-[70%] rounded-xl border border-stone-200 dark:border-stone-800 bg-white/95 dark:bg-stone-900/95 backdrop-blur-md shadow-lg p-4">
+    <button id="km-peek-close" class="absolute right-2 top-2 text-stone-400 hover:text-stone-700 dark:hover:text-stone-200 text-sm leading-none">✕</button>
     <div class="flex items-center gap-2 mb-1.5">
       <span id="km-peek-dot" class="w-2 h-2 rounded-full shrink-0"></span>
-      <span id="km-peek-type" class="text-[11px] uppercase tracking-wider text-zinc-400"></span>
+      <span id="km-peek-type" class="text-[11px] uppercase tracking-wider text-stone-400"></span>
     </div>
-    <h3 id="km-peek-title" class="font-semibold text-sm text-zinc-900 dark:text-white"></h3>
-    <p id="km-peek-summary" class="mt-1.5 text-xs text-zinc-500 dark:text-zinc-400 line-clamp-4"></p>
-    <a id="km-peek-link" href="#" class="mt-3 inline-block rounded-lg bg-brand px-3 py-1.5 text-xs font-medium text-white hover:opacity-90">Mở trang →</a>
+    <h3 id="km-peek-title" class="font-semibold text-sm text-stone-900 dark:text-white"></h3>
+    <p id="km-peek-summary" class="mt-1.5 text-xs text-stone-500 dark:text-stone-400 line-clamp-4"></p>
+    <a id="km-peek-link" href="#" class="mt-3 inline-block rounded-lg bg-brand px-3 py-1.5 text-xs font-medium text-white dark:text-stone-950 hover:brightness-110 transition active:scale-95">Mở trang →</a>
   </div>
 </div>
 
@@ -115,15 +108,16 @@ const payload = JSON.stringify({ nodes, edges, typeColors: TYPE_HEX, trackColors
   // Sigma scales item sizes with zoom, so an edge that reads fine at fit-zoom
   // becomes a fat rope up close. Edges stay thin + low-alpha; only the edges of
   // the node you're pointing at get to be loud (`edgeHi`).
+  // Paper & ink: stone greys instead of zinc/slate, teal (brand) instead of indigo.
   const THEMES = {
-    light: { label: '#27272a', edge: 'rgba(100,116,139,0.30)', edgeHi: 'rgba(51,65,85,0.75)',
-             edgeDim: 'rgba(100,116,139,0.05)', dim: '#e7e7ea',
-             chipBg: '#ffffff', chipText: '#18181b', chipBorder: 'rgba(0,0,0,0.10)',
-             chipShadow: 'rgba(0,0,0,0.18)', ring: 'rgba(99,102,241,0.95)' },
-    dark:  { label: '#e4e4e7', edge: 'rgba(113,113,122,0.32)', edgeHi: 'rgba(212,212,216,0.62)',
-             edgeDim: 'rgba(113,113,122,0.04)', dim: '#232326',
-             chipBg: '#27272a', chipText: '#fafafa', chipBorder: 'rgba(255,255,255,0.14)',
-             chipShadow: 'rgba(0,0,0,0.55)', ring: 'rgba(129,140,248,0.95)' },
+    light: { label: '#292524', edge: 'rgba(120,113,108,0.30)', edgeHi: 'rgba(68,64,60,0.75)',
+             edgeDim: 'rgba(120,113,108,0.05)', dim: '#e7e5e4',
+             chipBg: '#ffffff', chipText: '#1c1917', chipBorder: 'rgba(0,0,0,0.10)',
+             chipShadow: 'rgba(0,0,0,0.18)', ring: 'rgba(13,148,136,0.95)' },
+    dark:  { label: '#e7e5e4', edge: 'rgba(120,113,108,0.32)', edgeHi: 'rgba(214,211,209,0.62)',
+             edgeDim: 'rgba(120,113,108,0.04)', dim: '#231f1e',
+             chipBg: '#292524', chipText: '#fafaf9', chipBorder: 'rgba(255,255,255,0.14)',
+             chipShadow: 'rgba(0,0,0,0.55)', ring: 'rgba(45,212,191,0.95)' },
   };
 
   /**
@@ -215,7 +209,7 @@ const payload = JSON.stringify({ nodes, edges, typeColors: TYPE_HEX, trackColors
         url: n.url,
         summary: n.summary || '',
         colorType: typeColors[n.type] || '#888',
-        colorTrack: (n.track && trackColors[n.track]) || '#a1a1aa',
+        colorTrack: (n.track && trackColors[n.track]) || '#a8a29e',
         color: typeColors[n.type] || '#888',
       });
     }
@@ -227,7 +221,7 @@ const payload = JSON.stringify({ nodes, edges, typeColors: TYPE_HEX, trackColors
     renderer = new Sigma(graph, el as HTMLElement, {
       allowInvalidContainer: true,       // the container height can resolve a frame late
       renderLabels: true,
-      labelFont: '"Inter Variable", ui-sans-serif, system-ui, sans-serif',
+      labelFont: '"Be Vietnam Pro", ui-sans-serif, system-ui, sans-serif',
       labelSize: 12,
       labelWeight: '500',
       labelColor: { color: pal.label },
