@@ -2909,3 +2909,129 @@ edges:
   - source: concept-hard-problem-of-consciousness
     target: concept-ai-ux-trust
     rel: related
+
+  # --- Philosophy M6: ethics ---
+  - source: concept-is-ought-gap
+    target: concept-moral-realism-vs-relativism
+    rel: leads-to
+  - source: concept-moral-realism-vs-relativism
+    target: concept-consequentialism
+    rel: leads-to
+  - source: concept-consequentialism
+    target: concept-deontology
+    rel: related
+  - source: concept-deontology
+    target: concept-virtue-ethics
+    rel: related
+  - source: concept-consequentialism
+    target: concept-trolley-problem
+    rel: evaluates
+  - source: concept-deontology
+    target: concept-trolley-problem
+    rel: evaluates
+  - source: concept-trolley-problem
+    target: concept-thought-experiment
+    rel: related
+  - source: concept-free-will-and-determinism
+    target: concept-moral-luck
+    rel: leads-to
+  - source: concept-moral-luck
+    target: concept-virtue-ethics
+    rel: related
+  - source: concept-is-ought-gap
+    target: concept-argument-and-validity
+    rel: related
+  - source: concept-consequentialism
+    target: concept-expected-value-thinking
+    rel: related
+  - source: concept-virtue-ethics
+    target: concept-deliberate-practice
+    rel: related
+  - source: concept-deontology
+    target: concept-conflict-of-interest
+    rel: supports
+  - source: concept-moral-luck
+    target: concept-ergodicity
+    rel: related
+
+  # --- Philosophy M7: political philosophy ---
+  - source: concept-state-of-nature-and-social-contract
+    target: concept-justice-as-fairness
+    rel: leads-to
+  - source: concept-justice-as-fairness
+    target: concept-desert-and-entitlement
+    rel: related
+  - source: concept-state-of-nature-and-social-contract
+    target: concept-harm-principle
+    rel: leads-to
+  - source: concept-harm-principle
+    target: concept-desert-and-entitlement
+    rel: related
+  - source: concept-desert-and-entitlement
+    target: concept-alienation-and-labor
+    rel: related
+  - source: concept-alienation-and-labor
+    target: concept-power-and-discourse
+    rel: leads-to
+  - source: concept-consequentialism
+    target: concept-justice-as-fairness
+    rel: related
+  - source: concept-deontology
+    target: concept-justice-as-fairness
+    rel: supports
+  - source: concept-moral-luck
+    target: concept-justice-as-fairness
+    rel: supports
+  - source: concept-power-and-discourse
+    target: concept-vanity-vs-actionable-metrics
+    rel: related
+  - source: concept-harm-principle
+    target: concept-privacy-and-consent
+    rel: related
+  - source: concept-alienation-and-labor
+    target: concept-delegate-outcomes
+    rel: related
+
+  # --- Philosophy M8: eastern philosophy ---
+  - source: concept-four-noble-truths
+    target: concept-anatta-and-anicca
+    rel: leads-to
+  - source: concept-anatta-and-anicca
+    target: concept-dependent-origination
+    rel: leads-to
+  - source: concept-dependent-origination
+    target: concept-zen-koan-and-satori
+    rel: leads-to
+  - source: concept-anatta-and-anicca
+    target: concept-atman-and-brahman
+    rel: evaluates
+  - source: concept-dao-and-wu-wei
+    target: concept-zhuangzi-butterfly
+    rel: leads-to
+  - source: concept-dao-and-wu-wei
+    target: concept-confucian-role-ethics
+    rel: evaluates
+  - source: concept-zhuangzi-butterfly
+    target: concept-zen-koan-and-satori
+    rel: supports
+  - source: concept-anatta-and-anicca
+    target: concept-personal-identity
+    rel: related
+  - source: concept-dependent-origination
+    target: concept-causality
+    rel: related
+  - source: concept-confucian-role-ethics
+    target: concept-virtue-ethics
+    rel: related
+  - source: concept-atman-and-brahman
+    target: concept-being-and-substance
+    rel: related
+  - source: concept-zen-koan-and-satori
+    target: concept-qualia-and-marys-room
+    rel: related
+  - source: concept-four-noble-truths
+    target: concept-emotional-regulation
+    rel: related
+  - source: concept-dao-and-wu-wei
+    target: concept-when-not-to-optimize
+    rel: related
