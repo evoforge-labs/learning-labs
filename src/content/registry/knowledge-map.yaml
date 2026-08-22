@@ -3342,3 +3342,58 @@ edges:
   - source: exercise-phil-015
     target: concept-cosmological-argument
     rel: trains
+  # --- P2/P3: ý nghĩa cuộc sống, quyền, bình đẳng ---
+  - source: concept-philosophy-map
+    target: concept-meaning-of-life
+    rel: leads-to
+  - source: concept-camus-absurd-and-sisyphus
+    target: concept-meaning-of-life
+    rel: leads-to
+  - source: concept-nietzsche-death-of-god
+    target: concept-meaning-of-life
+    rel: leads-to
+  - source: concept-memento-mori
+    target: concept-meaning-of-life
+    rel: supports
+  - source: concept-is-ought-gap
+    target: concept-meaning-of-life
+    rel: supports
+  - source: concept-meaning-of-life
+    target: concept-stoic-dichotomy-of-control
+    rel: related
+  - source: concept-faith-and-reason
+    target: concept-meaning-of-life
+    rel: related
+  - source: concept-state-of-nature-and-social-contract
+    target: concept-rights
+    rel: leads-to
+  - source: concept-rights
+    target: concept-equality
+    rel: related
+  - source: concept-rights
+    target: concept-natural-law-vs-legal-positivism
+    rel: supports
+  - source: concept-rights
+    target: concept-harm-principle
+    rel: supports
+  - source: concept-deontology
+    target: concept-rights
+    rel: supports
+  - source: concept-consequentialism
+    target: concept-rights
+    rel: related
+  - source: concept-rights
+    target: concept-ai-moral-status
+    rel: supports
+  - source: concept-justice-as-fairness
+    target: concept-equality
+    rel: leads-to
+  - source: concept-desert-and-entitlement
+    target: concept-equality
+    rel: related
+  - source: concept-equality
+    target: concept-alienation-and-labor
+    rel: supports
+  - source: concept-equality
+    target: concept-theories-of-punishment
+    rel: related
