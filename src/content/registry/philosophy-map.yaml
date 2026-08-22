@@ -1,0 +1,238 @@
+# Bản đồ triết học — cây câu hỏi, nguồn duy nhất cho trang /philosophy/map.
+# Cây này là bản đồ định vị, KHÔNG phải thứ tự đọc (xem `reading-order`).
+# validate:content gác: mọi concept id phải tồn tại, và mọi concept trong
+# lesson của track philosophy phải nằm đúng một chỗ trong cây.
+
+entry: concept-philosophy-map
+track: philosophy
+
+# Thứ tự học đi ngược cây: logic trước, vì nó là công cụ dùng ở mọi chặng sau.
+reading-order: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]
+
+groups:
+  - id: questions
+    label: "Câu hỏi gốc"
+    note: "Mỗi câu hỏi mà con người hỏi mãi không dứt sinh ra một lĩnh vực; cái tên là nhãn dán lên sau. Sáu câu, nhưng câu về giá trị to nên tách ba: hành động nào đúng, cái gì đẹp, và điều gì khiến một đời đáng sống."
+    branches:
+      - question: "Thực tại thật sự gồm những gì?"
+        field: "Siêu hình học"
+        en: "Metaphysics"
+        module: 4
+        level: advanced
+        concepts:
+          - concept-being-and-substance   # Being and Substance
+          - concept-universals-vs-particulars   # Universals vs Particulars
+          - concept-causality   # Causation
+          - concept-time-a-series-b-series   # Time: A-Series and B-Series
+          - concept-possible-worlds-and-modality   # Possible Worlds and Modality
+          - concept-free-will-and-determinism   # Free Will and Determinism
+      - question: "Dựa vào đâu tôi được quyền nói: tôi biết?"
+        field: "Nhận thức luận"
+        en: "Epistemology"
+        module: 2
+        level: intermediate
+        concepts:
+          - concept-knowledge-as-justified-belief   # Knowledge as Justified True Belief
+          - concept-gettier-problem   # The Gettier Problem
+          - concept-skepticism-and-cogito   # Skepticism and the Cogito
+          - concept-rationalism-vs-empiricism   # Rationalism vs Empiricism
+          - concept-a-priori-a-posteriori   # A Priori and A Posteriori
+          - concept-foundationalism-vs-coherentism   # Foundationalism vs Coherentism
+          - concept-problem-of-induction   # The Problem of Induction
+          - concept-epistemology-of-testimony   # The Epistemology of Testimony
+          - concept-memory-as-evidence   # Memory as Evidence
+      - question: "Kết luận có thật đi theo từ lý do không?"
+        field: "Logic"
+        en: "Logic"
+        module: 1
+        level: beginner
+        concepts:
+          - concept-what-is-philosophy   # What Is Philosophy?
+          - concept-philosophy-map   # The Map of Philosophy
+          - concept-argument-and-validity   # Argument, Validity, Soundness
+          - concept-deduction-induction-abduction   # Deduction, Induction, Abduction
+          - concept-logical-fallacies   # Logical Fallacies
+          - concept-necessary-vs-sufficient   # Necessary vs Sufficient Conditions
+          - concept-thought-experiment   # Thought Experiment
+          - concept-socratic-method   # Socratic Method (Elenchus)
+      - question: "Cái gì đang suy nghĩ và trải nghiệm?"
+        field: "Triết học tâm thức"
+        en: "Philosophy of Mind"
+        module: 5
+        level: advanced
+        concepts:
+          - concept-mind-body-problem   # The Mind-Body Problem
+          - concept-dualism-vs-physicalism   # Dualism vs Physicalism
+          - concept-hard-problem-of-consciousness   # The Hard Problem of Consciousness
+          - concept-qualia-and-marys-room   # Qualia and Mary's Room
+          - concept-chinese-room-and-turing-test   # The Chinese Room and the Turing Test
+          - concept-personal-identity   # Personal Identity
+      - question: "Hành động nào là đúng, và vì sao?"
+        field: "Đạo đức học"
+        en: "Ethics"
+        module: 6
+        level: intermediate
+        concepts:
+          - concept-is-ought-gap   # The Is-Ought Gap
+          - concept-moral-realism-vs-relativism   # Moral Realism vs Relativism
+          - concept-consequentialism   # Consequentialism
+          - concept-deontology   # Deontology
+          - concept-virtue-ethics   # Virtue Ethics
+          - concept-trolley-problem   # The Trolley Problem
+          - concept-moral-luck   # Moral Luck
+      - question: "Cái đẹp là gì, và ai được quyền nói cái gì hay?"
+        field: "Mỹ học"
+        en: "Aesthetics"
+        module: 10
+        level: intermediate
+        concepts:
+          - concept-what-is-beauty   # What Is Beauty?
+          - concept-kant-disinterested-judgment   # Kant: Disinterested Judgment
+          - concept-the-sublime   # The Sublime
+          - concept-mimesis-to-institutional-theory   # From Mimesis to the Institutional Theory of Art
+          - concept-taste-and-canon   # Taste and the Canon
+      - question: "Điều gì khiến một đời người đáng sống?"
+        field: "Ý nghĩa cuộc sống"
+        en: "Meaning of Life"
+        module: 9
+        level: intermediate
+        concepts:
+          - concept-stoic-dichotomy-of-control   # The Stoic Dichotomy of Control
+          - concept-memento-mori   # Memento Mori
+          - concept-meaning-of-life   # The Meaning of Life
+      - question: "Vì sao ai được ra lệnh cho ai?"
+        field: "Triết học chính trị"
+        en: "Political Philosophy"
+        module: 7
+        level: intermediate
+        concepts:
+          - concept-state-of-nature-and-social-contract   # State of Nature and the Social Contract
+          - concept-justice-as-fairness   # Justice as Fairness (Rawls)
+          - concept-harm-principle   # The Harm Principle
+          - concept-desert-and-entitlement   # Desert and Entitlement (Nozick)
+          - concept-alienation-and-labor   # Alienation and Labor (Marx)
+          - concept-power-and-discourse   # Power and Discourse (Foucault)
+          - concept-rights   # Rights
+          - concept-equality   # Equality
+  - id: applied
+    label: "Giao thoa"
+    note: "Sinh ra khi một câu hỏi gốc đâm vào một vùng cụ thể của đời sống."
+    branches:
+      - question: "Khoa học là gì, và nó tiến bộ bằng cách nào?"
+        field: "Triết học khoa học"
+        en: "Philosophy of Science"
+        module: 3
+        level: intermediate
+        concepts:
+          - concept-falsifiability   # Falsifiability
+          - concept-paradigm-and-normal-science   # Paradigm and Normal Science
+          - concept-demarcation-problem   # The Demarcation Problem
+          - concept-underdetermination   # Underdetermination of Theory by Data
+          - concept-scientific-realism-vs-instrumentalism   # Scientific Realism vs Instrumentalism
+      - question: "Từ ngữ có nghĩa bằng cách nào?"
+        field: "Triết học ngôn ngữ"
+        en: "Philosophy of Language"
+        module: 12
+        level: advanced
+        concepts:
+          - concept-sense-and-reference   # Sense and Reference
+          - concept-definite-descriptions   # Definite Descriptions
+          - concept-meaning-as-use   # Meaning as Use
+          - concept-speech-acts   # Speech Acts
+          - concept-rigid-designation-and-reference   # Rigid Designation and Reference
+          - concept-indeterminacy-of-translation   # The Indeterminacy of Translation
+      - question: "Luật hợp pháp có nhất thiết là luật đúng?"
+        field: "Triết học pháp luật"
+        en: "Philosophy of Law"
+        module: 13
+        level: intermediate
+        concepts:
+          - concept-natural-law-vs-legal-positivism   # Natural Law vs Legal Positivism
+          - concept-hart-fuller-debate   # The Hart-Fuller Debate
+          - concept-rule-of-recognition   # The Rule of Recognition
+          - concept-obligation-to-obey-and-civil-disobedience   # The Obligation to Obey and Civil Disobedience
+          - concept-theories-of-punishment   # Theories of Punishment
+      - question: "Có lý do nào để tin — và cái ác nói gì về điều đó?"
+        field: "Triết học tôn giáo"
+        en: "Philosophy of Religion"
+        module: 14
+        level: intermediate
+        concepts:
+          - concept-cosmological-argument   # The Cosmological Argument
+          - concept-design-argument   # The Design Argument
+          - concept-ontological-argument   # The Ontological Argument
+          - concept-problem-of-evil   # The Problem of Evil
+          - concept-faith-and-reason   # Faith and Reason
+          - concept-religious-experience   # Religious Experience
+      - question: "Công nghệ có thật chỉ là công cụ trung tính?"
+        field: "Triết học công nghệ & AI"
+        en: "Philosophy of Technology"
+        module: 11
+        level: advanced
+        concepts:
+          - concept-enframing-and-technology   # Enframing: Heidegger on Technology
+          - concept-technological-determinism   # Technological Determinism
+          - concept-attention-and-autonomy   # Attention and Autonomy
+          - concept-ai-moral-status   # Moral Status of AI
+          - concept-value-alignment-as-philosophy   # Value Alignment as a Philosophical Problem
+  - id: other-axis
+    label: "Chiều khác — không phải lĩnh vực"
+    note: "Hai chặng này trả lời các câu hỏi ở trên, chứ không phải là câu hỏi. Trộn chúng vào cây là cái nhầm phổ biến nhất."
+    branches:
+      - question: "Nếu không ai viết sẵn ý nghĩa thì sao?"
+        field: "Hiện sinh"
+        en: "Existentialism"
+        module: 9
+        level: intermediate
+        concepts:
+          - concept-kierkegaard-leap-of-faith   # Kierkegaard's Leap of Faith
+          - concept-nietzsche-death-of-god   # Nietzsche: The Death of God
+          - concept-sartre-bad-faith   # Sartre: Bad Faith and Radical Freedom
+          - concept-camus-absurd-and-sisyphus   # Camus: The Absurd and Sisyphus
+          - concept-heidegger-being-toward-death   # Heidegger: Being-toward-Death
+      - question: "Nếu bắt đầu từ một truyền thống khác, câu hỏi có đổi không?"
+        field: "Triết học Đông phương"
+        en: "Eastern Philosophy"
+        module: 8
+        level: intermediate
+        concepts:
+          - concept-four-noble-truths   # The Four Noble Truths
+          - concept-anatta-and-anicca   # Anatta and Anicca (Non-self and Impermanence)
+          - concept-dependent-origination   # Dependent Origination
+          - concept-dao-and-wu-wei   # Dao and Wu Wei
+          - concept-zhuangzi-butterfly   # Zhuangzi's Butterfly
+          - concept-confucian-role-ethics   # Confucian Role Ethics
+          - concept-zen-koan-and-satori   # Zen: Koan and Satori
+          - concept-atman-and-brahman   # Atman and Brahman
+
+# Node mà cây phải giấu: mỗi cái thuộc nhiều lĩnh vực cùng lúc.
+# Đây là lý do lớp thật bên dưới là graph, không phải cây.
+crossings:
+  - concept: concept-free-will-and-determinism
+    home: "Siêu hình học"
+    also:
+      - "Triết học tâm thức"
+      - "Đạo đức học"
+      - "Triết học pháp luật"
+  - concept: concept-is-ought-gap
+    home: "Đạo đức học"
+    also:
+      - "Nhận thức luận"
+  - concept: concept-chinese-room-and-turing-test
+    home: "Triết học tâm thức"
+    also:
+      - "Triết học ngôn ngữ"
+  - concept: concept-ontological-argument
+    home: "Triết học tôn giáo"
+    also:
+      - "Siêu hình học"
+      - "Logic"
+  - concept: concept-epistemology-of-testimony
+    home: "Nhận thức luận"
+    also:
+      - "Triết học tôn giáo"
+  - concept: concept-rights
+    home: "Triết học chính trị"
+    also:
+      - "Triết học pháp luật"
+      - "Đạo đức học"

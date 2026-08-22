@@ -68,6 +68,22 @@ See the Codex CLI notes: one `codex exec` session at a time (concurrent sessions
 reuse the same STYLE CONTRACT paragraph across a set so the art stays visually identical. Raw PNGs
 stay in gitignored `sketches-raw/` — **never** in `public/`, or Astro copies them into `dist`.
 
+## The philosophy map page
+
+`/philosophy/map` renders `src/content/registry/philosophy-map.yaml` — the question tree for the
+philosophy track. **The tree is data, not prose.** That is deliberate: the earlier version lived
+only as a table inside `concepts/philosophy-map.mdx`, drifted from the content it claimed to map,
+and nothing noticed until a reader did. `validate:content` now fails when a concept a philosophy
+lesson teaches has no place in the tree, or when the tree names an id that does not exist.
+
+So: adding a philosophy concept means adding it to a lesson's `prerequisites` **and** to a branch
+in the registry. The gate will tell you if you forget.
+
+Display labels come from `aliases[0]`, not `title`. Concept titles are English by convention; on a
+Vietnamese orientation page the Vietnamese reading has to lead or the page defeats its own point
+about asking in plain language. The English term stays beside it, muted, so the canon name is still
+findable.
+
 ## Working in this repo
 
 Multiple Claude sessions often share this working tree, and another session may `git add -A`,
