@@ -1,0 +1,226 @@
+---
+import BaseLayout from '../../components/layout/BaseLayout.astro';
+import { getAll } from '../../lib/content';
+import { readFileSync } from 'node:fs';
+import yaml from 'js-yaml';
+
+// Rendered from the registry, not from prose, so the tree cannot drift away from
+// the content it maps — `pnpm validate:content` fails if a concept a philosophy
+// lesson teaches has no place here. See scripts/validate-content.ts.
+const map: any = yaml.load(
+  readFileSync('src/content/registry/philosophy-map.yaml', 'utf8'),
+  { schema: yaml.CORE_SCHEMA },
+);
+
+const concepts = await getAll('concepts');
+// The canon term lives in `title` and is English by convention; the Vietnamese
+// reading of it is aliases[0]. On an orientation map the Vietnamese one has to
+// lead, or the page defeats its own point about asking in plain language.
+const viLabel = (d: any) => {
+  const a = d.aliases?.[0];
+  return a ? String(a).charAt(0).toLocaleUpperCase('vi') + String(a).slice(1) : d.title;
+};
+const byId = new Map(
+  concepts.map((e: any) => [e.data.id, { label: viLabel(e.data), title: e.data.title, slug: e.id }]),
+);
+
+const lessons = (await getAll('lessons')).filter((e: any) => e.data.track === 'philosophy');
+// module number -> lesson entry, matched through the lesson file name (module-N-*)
+const lessonByNumber = new Map<number, { slug: string; title: string }>();
+for (const e of lessons as any[]) {
+  const m = /^module-(\d+)-/.exec(e.id);
+  if (m) lessonByNumber.set(Number(m[1]), { slug: e.id, title: e.data.title });
+}
+
+const entry = byId.get(map.entry);
+const totalConcepts = map.groups.reduce(
+  (n: number, g: any) => n + g.branches.reduce((k: number, b: any) => k + b.concepts.length, 0),
+  0,
+);
+
+const LEVEL_LABEL: Record<string, string> = {
+  beginner: 'dễ',
+  intermediate: 'vừa',
+  advanced: 'khó',
+};
+---
+
+<BaseLayout
+  title="Bản đồ triết học"
+  description="Sáu câu hỏi gốc, và cách chúng sinh ra các lĩnh vực triết học. Click một câu hỏi để mở ra các concept của nó."
+>
+  <main id="main" class="max-w-[1100px] mx-auto px-5 py-10 sm:py-14">
+    <p class="anim eyebrow mb-2">bản đồ · triết học</p>
+    <h1
+      class="anim font-read font-extrabold text-3xl sm:text-4xl tracking-[-0.02em] text-stone-900 dark:text-stone-100 mb-4"
+    >
+      Bản đồ triết học
+    </h1>
+
+    <div class="anim max-w-[62ch] text-stone-600 dark:text-stone-400 space-y-3 mb-8">
+      <p>
+        Đừng bắt đầu từ tên nhánh — bắt đầu từ <strong class="text-stone-800 dark:text-stone-200"
+          >câu hỏi</strong
+        >. Mỗi nhánh triết học là một câu hỏi mà con người hỏi mãi không dứt; cái tên chỉ là nhãn dán
+        lên sau. Click một câu hỏi để mở ra các concept của nó.
+      </p>
+      <p class="text-sm">
+        {totalConcepts} concept, {map.groups.flatMap((g: any) => g.branches).length} nhánh.
+        {
+          entry && (
+            <>
+              Muốn đọc phần giải thích thay vì tra cứu:{' '}
+              <a
+                href={`/concepts/${entry.slug}`}
+                class="underline decoration-stone-300 dark:decoration-stone-600 hover:text-brand hover:decoration-brand"
+                >{entry.title}</a
+              >.
+            </>
+          )
+        }
+      </p>
+    </div>
+
+    <div
+      class="anim mb-10 rounded-lg border border-amber-300/40 dark:border-amber-200/20 bg-amber-50/50 dark:bg-amber-100/5 px-4 py-3 text-sm text-stone-700 dark:text-stone-300"
+    >
+      <strong class="text-stone-900 dark:text-stone-100">Đây là bản đồ, không phải lộ trình.</strong>
+      Đọc theo đúng thứ tự cây dưới đây là bắt đầu bằng siêu hình học — khởi đầu tệ nhất có thể. Thứ
+      tự <em>học</em> đi ngược: chặng 1 là logic, vì nó là công cụ bạn cần ở mọi chặng sau.
+      <a
+        href="/tracks/philosophy"
+        class="underline decoration-amber-400/50 hover:text-brand hover:decoration-brand"
+        >Xem lộ trình 14 chặng</a
+      >.
+    </div>
+
+    {
+      map.groups.map((group: any) => (
+        <section class="anim mb-12">
+          <h2 class="font-read font-bold text-xl text-stone-900 dark:text-stone-100 mb-1">
+            {group.label}
+          </h2>
+          <p class="text-sm text-stone-500 dark:text-stone-400 mb-5 max-w-[62ch]">{group.note}</p>
+
+          <div class="grid gap-3 sm:grid-cols-2 items-start">
+            {group.branches.map((b: any) => {
+              const lesson = lessonByNumber.get(b.module);
+              return (
+                <details
+                  class="group rounded-lg border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-900/40 open:border-brand/40"
+                >
+                  <summary
+                    class="cursor-pointer list-none px-4 py-3.5 flex gap-3 items-start hover:bg-stone-50 dark:hover:bg-stone-800/40 rounded-lg"
+                  >
+                    <span
+                      class="mt-0.5 shrink-0 text-stone-400 dark:text-stone-500 transition-transform group-open:rotate-90"
+                      aria-hidden="true"
+                    >
+                      ›
+                    </span>
+                    <span class="min-w-0">
+                      <span class="block font-read text-[1.05rem] leading-snug text-stone-900 dark:text-stone-100">
+                        “{b.question}”
+                      </span>
+                      <span class="mt-1.5 flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-stone-500 dark:text-stone-400">
+                        <span class="font-medium text-brand">{b.field}</span>
+                        <span aria-hidden="true">·</span>
+                        <span>chặng {b.module}</span>
+                        <span aria-hidden="true">·</span>
+                        <span>{LEVEL_LABEL[b.level] ?? b.level}</span>
+                        <span aria-hidden="true">·</span>
+                        <span>{b.concepts.length} concept</span>
+                      </span>
+                    </span>
+                  </summary>
+
+                  <div class="px-4 pb-4 pl-11">
+                    <ul class="space-y-1.5 border-t border-stone-100 dark:border-stone-800 pt-3">
+                      {b.concepts.map((id: string) => {
+                        const c = byId.get(id);
+                        return (
+                          <li class="text-sm leading-snug">
+                            {c ? (
+                              <a
+                                href={`/concepts/${c.slug}`}
+                                class="group/c text-stone-700 dark:text-stone-300 hover:text-brand"
+                              >
+                                <span class="underline decoration-stone-200 dark:decoration-stone-700 group-hover/c:decoration-brand">
+                                  {c.label}
+                                </span>
+                                <span class="ml-1.5 text-xs text-stone-400 dark:text-stone-500">
+                                  {c.title}
+                                </span>
+                              </a>
+                            ) : (
+                              <span class="text-stone-400">{id}</span>
+                            )}
+                          </li>
+                        );
+                      })}
+                    </ul>
+                    {lesson && (
+                      <a
+                        href={`/lessons/${lesson.slug}`}
+                        class="mt-3 inline-block text-xs text-stone-500 dark:text-stone-400 underline decoration-stone-300 dark:decoration-stone-600 hover:text-brand hover:decoration-brand"
+                      >
+                        Lesson xâu chuỗi chặng này →
+                      </a>
+                    )}
+                  </div>
+                </details>
+              );
+            })}
+          </div>
+        </section>
+      ))
+    }
+
+    <section class="anim mb-8">
+      <h2 class="font-read font-bold text-xl text-stone-900 dark:text-stone-100 mb-1">
+        Chỗ cây này nói dối
+      </h2>
+      <p class="text-sm text-stone-500 dark:text-stone-400 mb-5 max-w-[62ch]">
+        Cây buộc mỗi node có đúng một cha. Các câu hỏi dưới đây thuộc nhiều lĩnh vực cùng lúc — đó là
+        lý do lớp thật bên dưới là <a
+          href="/knowledge-map"
+          class="underline decoration-stone-300 dark:decoration-stone-600 hover:text-brand hover:decoration-brand"
+          >graph</a
+        >, không phải cây.
+      </p>
+
+      <ul class="space-y-2.5">
+        {
+          map.crossings.map((x: any) => {
+            const c = byId.get(x.concept);
+            return (
+              <li class="text-sm flex flex-wrap items-baseline gap-x-2 gap-y-1">
+                {c ? (
+                  <a
+                    href={`/concepts/${c.slug}`}
+                    class="font-medium text-stone-800 dark:text-stone-200 underline decoration-stone-300 dark:decoration-stone-600 hover:text-brand hover:decoration-brand"
+                  >
+                    {c.label}
+                  </a>
+                ) : (
+                  <span>{x.concept}</span>
+                )}
+                <span class="text-stone-400 dark:text-stone-500">
+                  cây xếp ở <span class="text-stone-600 dark:text-stone-400">{x.home}</span> — cũng
+                  thuộc{' '}
+                  <span class="text-brand">{x.also.join(', ')}</span>
+                </span>
+              </li>
+            );
+          })
+        }
+      </ul>
+    </section>
+
+    <p class="anim text-sm text-stone-500 dark:text-stone-400">
+      Còn một chiều thứ ba không nằm trong cây: <strong class="text-stone-700 dark:text-stone-300"
+        >độ khó</strong
+      >. “Khó” không phải một nhánh triết học — nó chỉ nói một bài đọc nặng đến đâu.
+    </p>
+  </main>
+</BaseLayout>
