@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lĩnh vực và trường phái</title>
+  <link href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,400;0,600;1,400&family=Be+Vietnam+Pro:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --color-paper:  #faf9f7;
+      --color-ink:    #1c1917;
+      --color-muted:  #57534e;
+      --color-accent: #0f766e;
+      --font-sans:    'Be Vietnam Pro', ui-sans-serif, system-ui, sans-serif;
+      --font-serif:   'Spectral', Georgia, serif;
+      --font-mono:    ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    }
+    body {
+      font-family: var(--font-sans);
+      background: var(--color-paper); color: var(--color-ink);
+      min-height: 100vh; display: flex; align-items: center; justify-content: center;
+      padding: 3rem 2rem;
+    }
+    .frame { max-width: 1200px; width: 100%; }
+    .eyebrow {
+      font-family: var(--font-mono); font-size: 0.66rem; font-weight: 500;
+      letter-spacing: 0.18em; text-transform: uppercase;
+      color: var(--color-muted); margin-bottom: 0.5rem;
+    }
+    h1 {
+      font-family: var(--font-serif);
+      font-size: clamp(1.5rem, 2.4vw + 0.75rem, 2rem);
+      font-weight: 400; letter-spacing: -0.02em; line-height: 1.15;
+      color: var(--color-ink); margin-bottom: 0.5rem;
+    }
+    .sub { font-family: var(--font-serif); font-style: italic; font-size: 0.95rem; color: var(--color-muted); margin-bottom: 1.5rem; }
+    svg { width: 100%; min-width: 900px; display: block; }
+  </style>
+</head>
+<body>
+  <div class="frame">
+    <p class="eyebrow">Tree · Diagram Design</p>
+    <h1>Lĩnh vực và trường phái là hai chiều khác nhau</h1>
+    <p class="sub">Lĩnh vực là câu hỏi. Trường phái là câu trả lời. Đừng xếp chúng vào cùng một cây.</p>
+
+    <svg viewBox="0 0 1000 400" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="philmap-axes-title philmap-axes-desc">
+      <title id="philmap-axes-title">Lĩnh vực và trường phái là hai chiều khác nhau</title>
+      <desc id="philmap-axes-desc">Nhận thức luận là lĩnh vực đặt câu hỏi ta biết thế giới bằng cách nào; duy lý và kinh nghiệm luận là hai trường phái trả lời câu hỏi đó, nên chúng không phải hai nhánh triết học riêng.</desc>
+      <defs>
+        <marker id="arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#57534e"/></marker>
+        <marker id="arrow-accent" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#0f766e"/></marker>
+        <marker id="arrow-link" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#9333ea"/></marker>
+      </defs>
+
+      <rect width="100%" height="100%" fill="#faf9f7"/>
+
+      <!-- axis labels -->
+      <text x="40" y="128" fill="#78716c" font-size="8" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" letter-spacing="0.14em">CHIỀU 1 · LĨNH VỰC</text>
+      <text x="40" y="264" fill="#78716c" font-size="8" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" letter-spacing="0.14em">CHIỀU 2 · TRƯỜNG PHÁI</text>
+
+      <!-- connectors: parent drop, sibling bus, child drops -->
+      <path d="M 500 156 L 500 184" fill="none" stroke="#57534e" stroke-width="1"/>
+      <path d="M 348 192 L 644 192" fill="none" stroke="#57534e" stroke-width="1"/>
+      <path d="M 348 184 Q 348 192 356 192" fill="none" stroke="#57534e" stroke-width="1"/>
+      <path d="M 644 192 Q 652 192 652 184" fill="none" stroke="#57534e" stroke-width="1"/>
+      <path d="M 348 192 L 348 224" fill="none" stroke="#57534e" stroke-width="1" marker-end="url(#arrow)"/>
+      <path d="M 652 192 L 652 224" fill="none" stroke="#57534e" stroke-width="1" marker-end="url(#arrow)"/>
+
+      <!-- ROOT: lĩnh vực (focal) -->
+      <rect x="380" y="96" width="240" height="60" rx="6" fill="#faf9f7"/>
+      <rect x="380" y="96" width="240" height="60" rx="6" fill="rgba(15,118,110,0.08)" stroke="#0f766e" stroke-width="1"/>
+      <rect x="388" y="104" width="60" height="12" rx="2" fill="transparent" stroke="rgba(15,118,110,0.50)" stroke-width="0.8"/>
+      <text x="418" y="113" fill="#0f766e" font-size="7" font-weight="600" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" text-anchor="middle" letter-spacing="0.08em">LĨNH VỰC</text>
+      <text x="500" y="132" fill="#1c1917" font-size="12" font-weight="600" font-family="'Be Vietnam Pro', sans-serif" text-anchor="middle">Nhận thức luận</text>
+      <text x="500" y="147" fill="#57534e" font-size="9" font-family="'Spectral', Georgia, serif" font-style="italic" text-anchor="middle">“Ta biết thế giới bằng cách nào?”</text>
+
+      <!-- CHILD 1: Duy lý -->
+      <rect x="228" y="224" width="240" height="60" rx="6" fill="#faf9f7"/>
+      <rect x="228" y="224" width="240" height="60" rx="6" fill="#ffffff" stroke="#1c1917" stroke-width="1"/>
+      <rect x="236" y="232" width="72" height="12" rx="2" fill="transparent" stroke="rgba(28,25,23,0.40)" stroke-width="0.8"/>
+      <text x="272" y="241" fill="rgba(28,25,23,0.8)" font-size="7" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" text-anchor="middle" letter-spacing="0.08em">TRƯỜNG PHÁI</text>
+      <text x="348" y="260" fill="#1c1917" font-size="12" font-weight="600" font-family="'Be Vietnam Pro', sans-serif" text-anchor="middle">Duy lý</text>
+      <text x="348" y="275" fill="#57534e" font-size="9" font-family="'Spectral', Georgia, serif" font-style="italic" text-anchor="middle">“qua lý trí” · Descartes</text>
+
+      <!-- CHILD 2: Kinh nghiệm luận -->
+      <rect x="532" y="224" width="240" height="60" rx="6" fill="#faf9f7"/>
+      <rect x="532" y="224" width="240" height="60" rx="6" fill="#ffffff" stroke="#1c1917" stroke-width="1"/>
+      <rect x="540" y="232" width="72" height="12" rx="2" fill="transparent" stroke="rgba(28,25,23,0.40)" stroke-width="0.8"/>
+      <text x="576" y="241" fill="rgba(28,25,23,0.8)" font-size="7" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" text-anchor="middle" letter-spacing="0.08em">TRƯỜNG PHÁI</text>
+      <text x="652" y="260" fill="#1c1917" font-size="12" font-weight="600" font-family="'Be Vietnam Pro', sans-serif" text-anchor="middle">Kinh nghiệm luận</text>
+      <text x="652" y="275" fill="#57534e" font-size="9" font-family="'Spectral', Georgia, serif" font-style="italic" text-anchor="middle">“qua trải nghiệm” · Hume</text>
+
+      <!-- legend -->
+      <line x1="40" y1="324" x2="960" y2="324" stroke="rgba(28,25,23,0.10)" stroke-width="0.8"/>
+      <text x="40" y="344" fill="#57534e" font-size="8" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" letter-spacing="0.14em">LEGEND</text>
+      <rect x="120" y="336" width="16" height="10" rx="2" fill="rgba(15,118,110,0.08)" stroke="#0f766e" stroke-width="1"/>
+      <text x="144" y="344" fill="#57534e" font-size="8" font-family="ui-monospace, SFMono-Regular, Menlo, monospace">lĩnh vực — đang hỏi cái gì</text>
+      <rect x="360" y="336" width="16" height="10" rx="2" fill="#ffffff" stroke="#1c1917" stroke-width="1"/>
+      <text x="384" y="344" fill="#57534e" font-size="8" font-family="ui-monospace, SFMono-Regular, Menlo, monospace">trường phái — ai trả lời thế nào</text>
+      <text x="640" y="344" fill="#78716c" font-size="8" font-family="'Spectral', Georgia, serif" font-style="italic">“advanced” không phải nhánh nào cả — nó chỉ nói bài này khó đến đâu.</text>
+    </svg>
+  </div>
+</body>
+</html>

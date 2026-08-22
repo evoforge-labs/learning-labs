@@ -3155,3 +3155,190 @@ edges:
   - source: concept-technological-determinism
     target: concept-power-and-discourse
     rel: related
+  # --- M12-14 giao thoa + bản đồ định hướng ---
+  # Bản đồ: cửa vào, dẫn tới cả sáu nhánh gốc
+  - source: concept-what-is-philosophy
+    target: concept-philosophy-map
+    rel: leads-to
+  - source: concept-philosophy-map
+    target: concept-being-and-substance
+    rel: leads-to
+  - source: concept-philosophy-map
+    target: concept-knowledge-as-justified-belief
+    rel: leads-to
+  - source: concept-philosophy-map
+    target: concept-argument-and-validity
+    rel: leads-to
+  - source: concept-philosophy-map
+    target: concept-mind-body-problem
+    rel: leads-to
+  - source: concept-philosophy-map
+    target: concept-is-ought-gap
+    rel: leads-to
+  - source: concept-philosophy-map
+    target: concept-state-of-nature-and-social-contract
+    rel: leads-to
+  # M2 mở rộng: hai nguồn tri thức còn thiếu
+  - source: concept-problem-of-induction
+    target: concept-epistemology-of-testimony
+    rel: leads-to
+  - source: concept-epistemology-of-testimony
+    target: concept-memory-as-evidence
+    rel: related
+  - source: concept-memory-as-evidence
+    target: concept-personal-identity
+    rel: supports
+  - source: concept-foundationalism-vs-coherentism
+    target: concept-memory-as-evidence
+    rel: supports
+  # M12 nội bộ: nghĩa ở đâu
+  - source: concept-sense-and-reference
+    target: concept-definite-descriptions
+    rel: leads-to
+  - source: concept-sense-and-reference
+    target: concept-rigid-designation-and-reference
+    rel: leads-to
+  - source: concept-meaning-as-use
+    target: concept-speech-acts
+    rel: supports
+  - source: concept-meaning-as-use
+    target: concept-indeterminacy-of-translation
+    rel: leads-to
+  - source: concept-definite-descriptions
+    target: concept-ontological-argument
+    rel: supports
+  # M12 bắc sang các nhánh khác
+  - source: concept-speech-acts
+    target: concept-rule-of-recognition
+    rel: supports
+  - source: concept-meaning-as-use
+    target: concept-chinese-room-and-turing-test
+    rel: supports
+  - source: concept-rigid-designation-and-reference
+    target: concept-possible-worlds-and-modality
+    rel: related
+  - source: concept-indeterminacy-of-translation
+    target: concept-underdetermination
+    rel: related
+  - source: concept-a-priori-a-posteriori
+    target: concept-rigid-designation-and-reference
+    rel: supports
+  # M13 nội bộ
+  - source: concept-natural-law-vs-legal-positivism
+    target: concept-hart-fuller-debate
+    rel: leads-to
+  - source: concept-hart-fuller-debate
+    target: concept-rule-of-recognition
+    rel: leads-to
+  - source: concept-rule-of-recognition
+    target: concept-obligation-to-obey-and-civil-disobedience
+    rel: leads-to
+  - source: concept-obligation-to-obey-and-civil-disobedience
+    target: concept-theories-of-punishment
+    rel: related
+  # M13 bắc sang chính trị, đạo đức, tâm thức
+  - source: concept-state-of-nature-and-social-contract
+    target: concept-obligation-to-obey-and-civil-disobedience
+    rel: supports
+  - source: concept-justice-as-fairness
+    target: concept-obligation-to-obey-and-civil-disobedience
+    rel: supports
+  - source: concept-harm-principle
+    target: concept-natural-law-vs-legal-positivism
+    rel: related
+  - source: concept-moral-realism-vs-relativism
+    target: concept-natural-law-vs-legal-positivism
+    rel: supports
+  - source: concept-deontology
+    target: concept-theories-of-punishment
+    rel: supports
+  - source: concept-consequentialism
+    target: concept-theories-of-punishment
+    rel: supports
+  - source: concept-free-will-and-determinism
+    target: concept-theories-of-punishment
+    rel: supports
+  - source: concept-power-and-discourse
+    target: concept-rule-of-recognition
+    rel: related
+  # M14 nội bộ
+  - source: concept-cosmological-argument
+    target: concept-design-argument
+    rel: leads-to
+  - source: concept-design-argument
+    target: concept-ontological-argument
+    rel: leads-to
+  - source: concept-ontological-argument
+    target: concept-problem-of-evil
+    rel: leads-to
+  - source: concept-problem-of-evil
+    target: concept-faith-and-reason
+    rel: leads-to
+  - source: concept-faith-and-reason
+    target: concept-religious-experience
+    rel: leads-to
+  - source: concept-design-argument
+    target: concept-problem-of-evil
+    rel: supports
+  # M14 bắc sang siêu hình, nhận thức, hiện sinh, Đông phương
+  - source: concept-causality
+    target: concept-cosmological-argument
+    rel: supports
+  - source: concept-being-and-substance
+    target: concept-ontological-argument
+    rel: supports
+  - source: concept-possible-worlds-and-modality
+    target: concept-ontological-argument
+    rel: supports
+  - source: concept-deduction-induction-abduction
+    target: concept-design-argument
+    rel: supports
+  - source: concept-epistemology-of-testimony
+    target: concept-religious-experience
+    rel: supports
+  - source: concept-foundationalism-vs-coherentism
+    target: concept-faith-and-reason
+    rel: supports
+  - source: concept-faith-and-reason
+    target: concept-kierkegaard-leap-of-faith
+    rel: leads-to
+  - source: concept-problem-of-evil
+    target: concept-nietzsche-death-of-god
+    rel: leads-to
+  - source: concept-religious-experience
+    target: concept-anatta-and-anicca
+    rel: related
+  - source: concept-religious-experience
+    target: concept-atman-and-brahman
+    rel: related
+  - source: concept-religious-experience
+    target: concept-zen-koan-and-satori
+    rel: related
+  # --- Drills M12-14 ---
+  - source: exercise-phil-013
+    target: concept-meaning-as-use
+    rel: trains
+  - source: exercise-phil-013
+    target: concept-definite-descriptions
+    rel: trains
+  - source: exercise-phil-013
+    target: concept-speech-acts
+    rel: trains
+  - source: exercise-phil-014
+    target: concept-hart-fuller-debate
+    rel: trains
+  - source: exercise-phil-014
+    target: concept-obligation-to-obey-and-civil-disobedience
+    rel: trains
+  - source: exercise-phil-014
+    target: concept-theories-of-punishment
+    rel: trains
+  - source: exercise-phil-015
+    target: concept-problem-of-evil
+    rel: trains
+  - source: exercise-phil-015
+    target: concept-faith-and-reason
+    rel: trains
+  - source: exercise-phil-015
+    target: concept-cosmological-argument
+    rel: trains

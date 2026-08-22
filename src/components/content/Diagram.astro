@@ -1,0 +1,75 @@
+---
+// Editorial SVG diagram (diagram-design skill, profile `learning-lab`).
+// Wraps an inline <svg> slot and supplies the "paper & ink" tokens as CSS
+// custom properties so one SVG serves both themes — the SVG itself only ever
+// references var(--d-*), never a hex value.
+interface Props { caption?: string; }
+const { caption } = Astro.props;
+---
+
+<figure class="diagram not-prose my-8">
+  <div class="diagram-scroll">
+    <slot />
+  </div>
+  {caption && <figcaption>{caption}</figcaption>}
+</figure>
+
+<style>
+  .diagram {
+    --d-paper: #faf9f7;
+    --d-node: #ffffff;
+    --d-ink: #1c1917;
+    --d-muted: #57534e;
+    --d-soft: #78716c;
+    --d-accent: #0f766e;
+    --d-accent-tint: rgba(15, 118, 110, 0.08);
+    --d-accent-rule: rgba(15, 118, 110, 0.5);
+    --d-link: #9333ea;
+    --d-fill-soft: rgba(28, 25, 23, 0.05);
+    --d-rule: rgba(28, 25, 23, 0.3);
+    --d-rule-strong: rgba(28, 25, 23, 0.4);
+    --d-hairline: rgba(28, 25, 23, 0.1);
+    --d-ink-80: rgba(28, 25, 23, 0.8);
+  }
+
+  /* dark mode needs a brighter accent or the teal loses contrast on near-black */
+  :global(.dark) .diagram {
+    --d-paper: #12100e;
+    --d-node: #1c1917;
+    --d-ink: #faf9f7;
+    --d-muted: #a8a29e;
+    --d-soft: #78716c;
+    --d-accent: #2dd4bf;
+    --d-accent-tint: rgba(45, 212, 191, 0.1);
+    --d-accent-rule: rgba(45, 212, 191, 0.5);
+    --d-link: #c084fc;
+    --d-fill-soft: rgba(250, 249, 247, 0.05);
+    --d-rule: rgba(250, 249, 247, 0.3);
+    --d-rule-strong: rgba(250, 249, 247, 0.4);
+    --d-hairline: rgba(250, 249, 247, 0.1);
+    --d-ink-80: rgba(250, 249, 247, 0.8);
+  }
+
+  /* wide diagrams scroll inside their own box — the page never scrolls sideways */
+  .diagram-scroll {
+    overflow-x: auto;
+    border: 1px solid var(--d-hairline);
+    border-radius: 8px;
+    background: var(--d-paper);
+  }
+
+  .diagram :global(svg) {
+    display: block;
+    width: 100%;
+    min-width: 720px;
+    height: auto;
+  }
+
+  figcaption {
+    margin-top: 0.75rem;
+    font-size: 0.8rem;
+    line-height: 1.5;
+    color: var(--color-stone-500);
+    text-align: center;
+  }
+</style>
