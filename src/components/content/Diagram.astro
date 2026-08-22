@@ -1,16 +1,25 @@
 ---
 // Editorial SVG diagram (diagram-design skill, profile `learning-lab`).
-// Wraps an inline <svg> slot and supplies the "paper & ink" tokens as CSS
-// custom properties so one SVG serves both themes — the SVG itself only ever
-// references var(--d-*), never a hex value.
+// Supplies the "paper & ink" tokens as CSS custom properties so one SVG serves
+// both themes — the SVG only ever references var(--d-*), never a hex value.
+//
+// Two slots because a wide graph cannot be read on a phone: `landscape` is the
+// wide layout, `portrait` a stacked redraw with a bigger type ramp. Pass only
+// `landscape` (or the default slot) and it is used at every width.
 interface Props { caption?: string; }
 const { caption } = Astro.props;
+const hasPortrait = Astro.slots.has('portrait');
 ---
 
-<figure class="diagram not-prose my-8">
-  <div class="diagram-scroll">
-    <slot />
+<figure class:list={["diagram", "not-prose", { "has-portrait": hasPortrait }]}>
+  <div class="diagram-scroll d-landscape">
+    <slot name="landscape"><slot /></slot>
   </div>
+  {hasPortrait && (
+    <div class="diagram-scroll d-portrait">
+      <slot name="portrait" />
+    </div>
+  )}
   {caption && <figcaption>{caption}</figcaption>}
 </figure>
 
@@ -30,6 +39,21 @@ const { caption } = Astro.props;
     --d-rule-strong: rgba(28, 25, 23, 0.4);
     --d-hairline: rgba(28, 25, 23, 0.1);
     --d-ink-80: rgba(28, 25, 23, 0.8);
+
+    margin-block: 2rem;
+  }
+
+  /* The reading column is 640px of content; a 1000-unit viewBox shrinks to 64%
+     there and takes the type down with it. Break out of the column — but only
+     where there is room to spare, or the figure pushes the whole page sideways
+     and the body text gets clipped. Narrow screens get the portrait redraw. */
+  @media (min-width: 1024px) {
+    .diagram {
+      width: min(1040px, 100vw - 4rem);
+      position: relative;
+      left: 50%;
+      transform: translateX(-50%);
+    }
   }
 
   /* dark mode needs a brighter accent or the teal loses contrast on near-black */
@@ -50,24 +74,43 @@ const { caption } = Astro.props;
     --d-ink-80: rgba(250, 249, 247, 0.8);
   }
 
-  /* wide diagrams scroll inside their own box — the page never scrolls sideways */
   .diagram-scroll {
     overflow-x: auto;
     border: 1px solid var(--d-hairline);
     border-radius: 8px;
     background: var(--d-paper);
+    padding: 0.5rem;
   }
 
   .diagram :global(svg) {
     display: block;
     width: 100%;
-    min-width: 720px;
     height: auto;
+  }
+
+  .d-portrait {
+    display: none;
+  }
+
+  /* Below the landscape layout's readable floor, swap in the stacked redraw.
+     Diagrams with no portrait slot keep scrolling horizontally instead. */
+  @media (max-width: 720px) {
+    .has-portrait .d-landscape {
+      display: none;
+    }
+    .has-portrait .d-portrait {
+      display: block;
+    }
+    .has-portrait .d-portrait :global(svg) {
+      max-width: 420px;
+      margin-inline: auto;
+    }
   }
 
   figcaption {
     margin-top: 0.75rem;
-    font-size: 0.8rem;
+    padding-inline: 1rem;
+    font-size: 0.85rem;
     line-height: 1.5;
     color: var(--color-stone-500);
     text-align: center;
