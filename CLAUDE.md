@@ -86,17 +86,19 @@ findable.
 
 ## Working in this repo
 
-Multiple Claude sessions often share this working tree, and another session may `git add -A`,
-revert, or `pnpm install` at any moment. For anything longer than a couple of edits, take your own
-worktree first:
+**Work on `main`. Commit as you finish each piece. Push once at the end.** No feature branches, no
+PRs, no worktrees — this is a one-person repo and that ceremony buys nothing here.
 
-```
-git worktree add ../learning-lab-<topic> -b <branch>
-cd ../learning-lab-<topic> && pnpm install   # a symlinked node_modules gets pruned by other sessions
-```
+What still holds, because it has actually gone wrong:
 
-Run `git status` before every `git add`, and stage explicit paths — never `git add -A` on a tree you
-did not verify. Switching branches leaves a stale `.astro` cache; `rm -rf .astro dist` before
-rebuilding.
-
-Direct push to `main` is blocked. Open a PR and let the user merge it.
+- **`git status` before every `git add`, and stage explicit paths.** Another session sharing this
+  tree can leave work in progress; a blind `git add -A` once swept an unrelated migration into a
+  content commit.
+- **One commit per piece of work.** Finish a thing, commit it, move on. Do not batch unrelated
+  changes into one commit just because they happened in the same session.
+- **Gate every commit** through `pnpm validate:content` and `pnpm build`. Broken internal links
+  pass both — audit `](/x)` against `dist/x/index.html` by hand.
+- `rm -rf .astro dist` after any branch or dependency change; a stale `.astro` cache surfaces as
+  `UnknownContentCollectionError` on an unrelated file.
+- If `node_modules` looks pruned (a declared dep missing), just `pnpm install` — do not "fix" it by
+  editing `package.json`.
